@@ -1,0 +1,353 @@
+<div class="main-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner region -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card ">
+                <!--#region watermark-->
+                <div class="watermark" hidden>
+                    <h6>{{this.companyName}}</h6>
+                    <h6>{{this.userName}}</h6>
+                    <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+                </div>
+                <!--#endregion watermark-->
+
+                <div class="card-header ">
+                    <h4 class="card-title">Deskcoll inquiry Info</h4>
+                </div>
+                <div class="card-body ">
+                    <!--#region form-->
+                    <form #DeskcollForm="ngForm" (ngSubmit)="onFormSubmit(DeskcollForm.value, DeskcollForm.valid)">
+
+                        <!--#region button back-->
+                        <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+                        <!--#endregion button back-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region agreement external no-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="agreement_external_no" class="control-label">Agreement No </label>
+                                    <input type="text" class="form-control" [ngModel]="model.agreement_external_no"
+                                        name="p_agreement_external_no" [readonly]="isReadOnly">
+
+                                    <input type="hidden" [ngModel]="model.agreement_no" name="p_agreement_no">
+                                    <input type="hidden" [ngModel]="model.id" name="p_id">
+                                </div>
+                            </div>
+                            <!--#endregion agreement external no-->
+
+                            <!--#region Client Name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="client_name" class="control-label">Client Name </label>
+                                    <input type="text" class="form-control" [ngModel]="model.client_name"
+                                        name="p_client_name" [readonly]="isReadOnly">
+                                    <input type="hidden" class="form-control" [ngModel]="model.client_name"
+                                        name="p_client_name" [readonly]="isReadOnly">
+                                </div>
+                            </div>
+                            <!--#endregion Client Name-->
+
+                            <!--#region Change Status-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="desk_status" class="control-label">Status</label>
+                                    <input type="text" class="form-control" maxlength="10" [ngModel]="model.desk_status"
+                                        name="p_desk_status" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion Change Status-->
+
+                        </div>
+                        <!--#endregion row-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region Desk Date-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="desk_date" class="control-label">Desk Date
+                                    </label>
+                                    <input [ngStyle]="getStyles(isReadOnly)" class="form-control col-md-6"
+                                        placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.desk_date"
+                                        name="p_desk_date" [options]="myDatePickerOptions"
+                                        (click)="desk_date.toggleCalendar()" required #p_desk_date="ngModel"
+                                        #desk_date="angular-mydatepicker" autocomplete="off" [readonly]="isReadOnly" />
+                                </div>
+                            </div>
+                            <!--#endregion desk date-->
+
+                            <!--#region desk collector code-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="desk_collector_name" class="control-label">Deskcoll Staff
+                                    </label>
+                                    <input type="text" class="form-control" [ngModel]="model.desk_collector_name"
+                                        name="p_desk_collector_name" [readonly]="isReadOnly">
+                                </div>
+                            </div>
+                            <!--#endregion desk collector code-->
+                        </div>
+                        <!--#endregion row-->
+
+                        <!--#region row-->
+                        <div class="row">
+
+
+                            <!--#region result code-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="desk_collector_name" class="control-label">Result
+                                    </label>
+                                    <input type="text" class="form-control" [ngModel]="model.result_name"
+                                        name="p_result_name" [readonly]="isReadOnly">
+                                </div>
+                            </div>
+                            <!--#endregion result code-->
+
+                            <!--#region result detail code-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="desk_collector_name" class="control-label">Result Detail
+                                    </label>
+                                    <input type="text" class="form-control" [ngModel]="model.result_detail_name"
+                                        name="p_result_detail_name" [readonly]="isReadOnly">
+                                </div>
+                            </div>
+                            <!--#endregion result detail code-->
+
+                            <!--#region promise Date-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="result_promise_date" class="control-label">Promise Date
+                                    </label>
+                                    <input [ngStyle]="getStyles(isReadOnly)" class="form-control col-md-6"
+                                        placeholder="dd/mm/yyyy" angular-mydatepicker
+                                        [ngModel]="model.result_promise_date" name="p_result_promise_date"
+                                        [options]="myDatePickerOptions" (click)="result_promise_date.toggleCalendar()"
+                                        required #p_result_promise_date="ngModel"
+                                        #result_promise_date="angular-mydatepicker" autocomplete="off"
+                                        [readonly]="isReadOnly" />
+                                </div>
+                            </div>
+                            <!--#endregion promise date-->
+
+                            <!--#region result remarks-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="result_remarks" class="control-label">Remark </label>
+                                    <textarea type="text" class="form-control" maxlength="400"
+                                        [ngModel]="model.result_remarks" name="p_result_remarks"
+                                        [readonly]="isReadOnly"></textarea>
+                                </div>
+                            </div>
+                            <!--#endregion result remarks -->
+                        </div>
+                        <!--#endregion row-->
+
+                        <span layout=" horizontal-divider">
+                            <hr flex />
+                        </span>
+                        <br>
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region overdue days-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="overdue_days" class="control-label">Overdue Days </label>
+                                    <input readonly type="text" style="text-align:left" class="form-control col-md-3"
+                                        [ngModel]="model.overdue_days" name="p_overdue_days">
+                                </div>
+                            </div>
+                            <!--#endregion overdue_days-->
+
+                            <!--#region overdue installment amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="overdue_installment_amount" class="control-label">Overdue Installment
+                                        Amount </label>
+                                    <input type="text" style="text-align:right" class="form-control col-md-6"
+                                        [ngModel]="model.overdue_installment_amount | number : '1.2-2'"
+                                        name="p_overdue_installment_amount" [readonly]="isReadOnly">
+                                </div>
+                            </div>
+                            <!--#endregion overdue installment amount-->
+
+                            <!--#region outstanding installment amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="outstanding_installment_amount" class="control-label">Outstanding
+                                        Installment Amount </label>
+                                    <input type="text" style="text-align:right" class="form-control col-md-6"
+                                        [ngModel]="model.outstanding_installment_amount | number : '1.2-2'"
+                                        name="p_outstanding_installment_amount" [readonly]="isReadOnly">
+                                </div>
+                            </div>
+                            <!--#endregion outstanding installment amount-->
+                        </div>
+                        <!--#endregion row-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region overdue period-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="overdue_period" class="control-label">Overdue Period </label>
+                                    <input readonly type="text" style="text-align:left" class="form-control col-md-3"
+                                        [ngModel]="model.overdue_period" name="p_overdue_period">
+                                </div>
+                            </div>
+                            <!--#endregion overdue period-->
+
+                            <!--#region Overdue Penalty Amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="overdue_penalty_amount" class="control-label">Overdue Penalty Amount
+                                    </label>
+                                    <input type="text" style="text-align:right" class="form-control col-md-6"
+                                        [ngModel]="model.overdue_penalty_amount | number : '1.2-2'"
+                                        name="p_overdue_penalty_amount" [readonly]="isReadOnly">
+                                </div>
+                            </div>
+                            <!--#endregion Overdue Penalty Amount -->
+
+                            <!--#region Outstanding Deposit Amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="outstanding_deposit_amount" class="control-label">Outstanding Deposit
+                                        Amount </label>
+                                    <input type="text" style="text-align:right" class="form-control col-md-6"
+                                        [ngModel]="model.outstanding_deposit_amount | number : '1.2-2'"
+                                        name="p_outstanding_deposit_amount" [readonly]="isReadOnly">
+                                </div>
+                            </div>
+                            <!--#endregion Outstanding Deposit Amount -->
+
+                            <!--#region SKT Detail installment_due_date-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="installment_due_date" class="control-label">Installment Due Date
+                                    </label>
+                                    <input [ngStyle]="getStyles(isReadOnly)" class="form-control col-md-6"
+                                        placeholder="dd/mm/yyyy" angular-mydatepicker
+                                        [ngModel]="model.installment_due_date" name="p_installment_due_date"
+                                        [options]="myDatePickerOptions" (click)="installment_due_date.toggleCalendar()"
+                                        required #p_installment_due_date="ngModel"
+                                        #installment_due_date="angular-mydatepicker" autocomplete="off"
+                                        [readonly]="isReadOnly" />
+                                </div>
+                            </div>
+                            <!--#endregion SKT Detail installment_due_date-->
+
+                            <!--#region last paid installment no-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="last_paid_installment_no" class="control-label">Last Paid Installment No
+                                    </label>
+                                    <input readonly type="text" style="text-align:left" class="form-control col-md-3"
+                                        [ngModel]="model.last_paid_installment_no" name="p_last_paid_installment_no">
+                                </div>
+                            </div>
+                            <!--#endregion last paid installment no-->
+                        </div>
+                        <!--#endregion row-->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--#region lookup lookupMasterDeskcollResult-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalMasterDeskcollResult"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupMasterDeskcollResult" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th style="width: 20%;">Code</th>
+                                    <th style="width: 75%;">Name</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupMasterDeskcollResult;let i=index ">
+                                    <td style="display: none;"></td>
+                                    <td style="text-align: center;">{{lookupMasterDeskcollResult.numberIndex+i+1}}</td>
+                                    <td>{{ row.code }}</td>
+                                    <td>{{ row.result_name }}</td>
+                                    <td class="text-right">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowMasterDeskcollResult(row.code,row.result_name)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup lookupMasterDeskcollResult-->
+
+<!--#region lookup lookupMasterDeskcollResultdetail-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalMasterDeskcollResultDetail"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+
+                        <table id="datatableLookupMasterDeskcollResultDetail"
+                            class="table table-striped table-bordered hover" cellspacing="0" style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th style="width: 20%;">Code</th>
+                                    <th style="width: 75%;">Name</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupMasterDeskcollResultDetail;let i=index ">
+                                    <td style="display: none;"></td>
+                                    <td style="text-align: center;">{{lookupMasterDeskcollResultDetail.numberIndex+i+1}}
+                                    </td>
+                                    <td>{{ row.code }}</td>
+                                    <td>{{ row.result_detail_name }}</td>
+                                    <td class="text-right">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowMasterDeskcollResultDetail(row.code,row.result_detail_name)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup lookupMasterDeskcollResult-->

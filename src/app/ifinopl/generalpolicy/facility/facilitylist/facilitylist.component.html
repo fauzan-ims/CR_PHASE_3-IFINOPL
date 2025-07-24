@@ -1,0 +1,76 @@
+<router-outlet></router-outlet>
+
+
+<div id="hideMainPanel" class="main-content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header">
+          <h4 class="card-title">Facility List</h4>
+        </div>
+        <div class="card-body">
+          <!--#region button add-->
+          <div class="toolbar">
+            <button class="btn btn-info btn-round" (click)="btnAdd()" data-role="R00016850001686C">
+              Add
+            </button>
+          </div>
+          <!--#endregion button add-->
+
+          <!--#region list view-->
+          <table id="datatable" datatable [dtOptions]="dtOptions"
+            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th style="display: none;"></th>
+                <th class="disabled-sorting">No</th>
+                <th>Description</th>
+                <th>Deskcoll Min</th>
+                <th>Deskcoll Max</th>
+                <th>SP 1</th>
+                <th>SP 2</th>
+                <th>Somasi</th>
+                <th>Aging 1</th>
+                <th>Aging 2</th>
+                <th>Aging 3</th>
+                <th>Aging 4</th>
+                <th>Active</th>
+                <th style="text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of listfacility;let i=index ">
+                <td class="if-no-edit-btn" style="display: none;"></td>
+                <td class="if-no-edit-btn" style="text-align: center;">{{listfacility.numberIndex+i+1}}</td>
+                <td style="width: 20%;">{{row.description}}</td>
+                <td style="width: 10%;text-align: center;">{{row.deskcoll_min}}</td>
+                <td style="width: 10%;text-align: center;">{{row.deskcoll_max}}</td>
+                <td style="width: 5%;text-align: center;">{{row.sp1_days}}</td>
+                <td style="width: 5%;text-align: center;">{{row.sp2_days}}</td>
+                <td style="width: 5%;text-align: center;">{{row.somasi_days}}</td>
+                <td style="width: 10%;text-align: center;">{{row.aging_days1}}</td>
+                <td style="width: 10%;text-align: center;">{{row.aging_days2}}</td>
+                <td style="width: 10%;text-align: center;">{{row.aging_days3}}</td>
+                <td style="width: 10%;text-align: center;">{{row.aging_days4}}</td>
+                <td style="width: 5%;text-align: center;">{{row.is_active}}</td>
+                <td style="text-align: center;">
+                  <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit" (click)="btnEdit(row.code)"><i
+                      class="fa fa-edit"></i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--#endregion list view-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

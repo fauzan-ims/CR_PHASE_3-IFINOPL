@@ -1,0 +1,531 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header ">
+          <h4 class="card-title">Invoice Info</h4>
+        </div>
+        <div class="card-body ">
+
+          <div class="toolbar">
+            <!--#region button submit dan back-->
+            <button [hidden]="this.param === null || model.invoice_status !== 'NEW'" type="button"
+              (click)="btnPost(model.invoice_no)" class="btn btn-success btn-round"
+              data-role="R00020710012072O">Post</button>
+
+            <button [hidden]="this.param === null || model.invoice_status !== 'NEW'" type="button"
+              class="btn btn-warning btn-round" (click)="btnCancel(this.param)"
+              data-role="R00020710002072R">Cancel</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+
+            <!-- <button type="button" [hidden]="model.invoice_status === 'PAID' || model.invoice_status ==='CANCEL'"
+            (click)="btnPrint(model.invoice_no)" style='float: right;'
+            class="btn btn-info btn-round custom-button-width" data-role="R00020710012072P">Print Invoice</button> -->
+
+            <button type="button" [hidden]="model.invoice_status ==='CANCEL'" style='float: right;'
+              class="btn btn-info btn-print-round btn-round custom-button-width" (click)="btnPrintKwitansi()"
+              data-role="R00020710022072P" [hidden]="param == null">Print Kwitansi </button>
+
+            <button type="button" [hidden]="model.invoice_status ==='CANCEL'" style='float: right;'
+              class="btn btn-info btn-print-round btn-round custom-button-width" (click)="btnPrintInvoice()"
+              data-role="R00020710012072P">Print Invoice </button>
+
+            <span [hidden]="model.count_agreement === '1'">
+              <button type="button" style='float: right;'
+                class="btn btn-info btn-print-round btn-round custom-button-width"
+                (click)="btnPrintKeterlambatanPengembalianAsset()" data-role="R00020710022081P"
+                [hidden]="model.invoice_status ==='CANCEL' || model.total_lrap_amount === '0'">Print
+                Invoice Late Return</button>
+
+              <button type="button" style='float: right;'
+                class="btn btn-info btn-print-round btn-round custom-button-width" (click)="btnPrintKeterlambatan()"
+                data-role="R00020710022080P"
+                [hidden]="model.invoice_status ==='CANCEL' || model.total_ovd_amount === '0'">Print
+                Invoice Overdue</button>
+            </span>
+          </div>
+          <!-- <button type="button" [hidden]="model.invoice_status ==='CANCEL' || model.invoice_type !=='PENALTY' && model.invoice_type !=='ET PENALTY'" style='float: right;' 
+            class="btn btn-info btn-print-round btn-round custom-button-width" (click)="btnPrintInvoicePenalty()"
+            data-role="R00020710012072P" >Print Invoice</button> -->
+
+
+          <!-- <button [hidden]="model.invoice_status === 'PAID' || model.invoice_status ==='CANCEL'" type="button"
+            (click)="btnPrintFaktur(model.invoice_no)" style='float: right;'
+            class="btn btn-info btn-round custom-button-width" data-role="R00020710022072P">Print Faktur Pajak</button> -->
+          <!--#endregion button submit dan back-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region invoice_external_no-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Invoice No </label>
+                <input type="text" class="form-control" [ngModel]="model.invoice_no" name="p_invoice_no" hidden>
+                <input type="text" class="form-control" [ngModel]="model.invoice_external_no"
+                  name="p_invoice_external_no" readonly>
+              </div>
+            </div>
+            <!--#endregion invoice_external_no-->
+
+            <!--#region Invoice Name-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Description </label>
+                <textarea type="text" class="form-control" [ngModel]="model.invoice_name" name="p_invoice_name"
+                  readonly> </textarea>
+              </div>
+            </div>
+            <!--#endregion Invoice Name-->
+
+            <!--#region Invoice Status-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Status </label>
+                <input type="text" class="form-control" [ngModel]="model.invoice_status" name="p_invoice_status"
+                  readonly>
+              </div>
+            </div>
+            <!--#endregion Invoice Status-->
+          </div>
+          <!--#region row -->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region Invoice Date-->
+            <div class="col-md-4">
+              <div class="row">
+                <div class="col-md-5">
+                  <div class="form-group">
+                    <label>Invoice Date</label>
+                    <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker
+                      [ngModel]="model.invoice_date" name="p_invoice_date" [options]="myDatePickerOptions"
+                      #invoice_date="angular-mydatepicker" autocomplete="off" readonly />
+                  </div>
+                </div>
+                <div class="col-md-5">
+                  <div class="form-group">
+                    <label>New Invoice Date</label>
+                    <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker
+                      [ngModel]="model.new_invoice_date" name="p_new_invoice_date" [options]="myDatePickerOptions"
+                      #invoice_date="angular-mydatepicker" autocomplete="off" readonly />
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <br>
+                  <div class="form-group">
+                    <button style="margin-top: 0px;" type="button"
+                      class="btn btn-warning btn-round fa fa-edit custom-button-width"
+                      data-target="#lookupNewDateInvoice" data-toggle="modal" href="#"
+                      [hidden]="model.invoice_status !== 'NEW'" data-placement="bottom"
+                      title="Edit New Invoice Date"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--#endregion Invoice Date-->
+
+            <!--#region Invoice Type-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Invoice Type </label>
+                <input type="text" class="form-control" [ngModel]="model.invoice_type" name="p_invoice_type" readonly>
+              </div>
+            </div>
+            <!--#endregion Invoice Type-->
+
+            <!--#region Invoice Due Date-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Invoice Due Date</label>
+                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                  [ngModel]="model.invoice_due_date" name="p_invoice_due_date" [options]="myDatePickerOptions"
+                  #invoice_due_date="angular-mydatepicker" autocomplete="off" readonly />
+              </div>
+            </div>
+            <!--#endregion Invoice Due Date-->
+          </div>
+          <!--#region row -->
+
+          <span layout="row horizontal-divider">
+            <hr flex />
+          </span>
+          <br>
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region Client No-->
+            <!--Hide Rian-->
+            <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>Client No </label>
+                <input type="text" class="form-control" [ngModel]="model.client_no" name="p_client_no" readonly>
+              </div>
+            </div> -->
+            <!--#endregion Client No-->
+
+            <!--#region Client No-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Client Name </label>
+                <input type="text" class="form-control" [ngModel]="model.client_name" name="p_client_name" readonly>
+              </div>
+            </div>
+            <!--#endregion Client No-->
+
+            <!--#region Phone No-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label">Phone No</label>
+                <div class="row">
+                  <div class="col-md-4">
+                    <input readonly type="text" class="form-control" [ngModel]="model.client_area_phone_no"
+                      name="p_client_area_phone_no">
+                  </div>
+                  /
+                  <div class="col-md-7">
+                    <input readonly type="text" class="form-control" [ngModel]="model.client_phone_no"
+                      name="p_client_phone_no">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--#endregion Phone No-->
+
+            <!--#region Address-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Address</label>
+                <textarea type="text" class="form-control" [ngModel]="model.client_address" name="p_client_address"
+                  readonly></textarea>
+              </div>
+            </div>
+            <!--#endregion Address-->
+          </div>
+          <!--#endregion row -->
+
+          <span layout="row horizontal-divider">
+            <hr flex />
+          </span>
+          <br>
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region Billing/Discount Amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="total_billing_amount && total_discount_amount" class="control-label">
+                  Rental Amount / Total Discount Amount</label>
+                <div class="row">
+                  <div class="col-md-5">
+                    <input readonly type="text" class="form-control" style="text-align: right;"
+                      [ngModel]="model.total_billing_amount | number : '1.2-2'" amount="total_billing_amount"
+                      name="p_total_billing_amount" #total_billing_amount="ngModel">
+                  </div>
+                  -
+                  <div class="col-md-5">
+                    <input readonly type="text" class="form-control" style="text-align: right;"
+                      [ngModel]="model.total_discount_amount | number : '1.2-2'" amount="total_discount_amount"
+                      name="p_total_discount_amount">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--#endregion Billing/Discount Amount-->
+
+            <!--#region Total Billing Amount-->
+            <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>Total Billing Amount </label>
+                <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.total_billing_amount | number : '1.2-2'" amount="total_billing_amount"
+                  name="p_total_billing_amount" #total_billing_amount="ngModel">
+              </div>
+            </div> -->
+            <!--#endregion Total Billing Amount-->
+
+            <!--#region Total Discount Amount-->
+            <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>Total Discount Amount </label>
+                <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.total_discount_amount | number : '1.2-2'" amount="total_discount_amount"
+                  name="p_total_discount_amount">
+              </div>
+            </div> -->
+            <!--#endregion Total Discount Amount-->
+
+            <!--#region Total PPN Amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Total PPN Amount </label>
+                <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.total_ppn_amount | number : '1.2-2'" amount="total_ppn_amount"
+                  name="p_total_ppn_amount">
+              </div>
+            </div>
+            <!--#endregion Total PPN Amount-->
+
+            <!--#region Total PPH Amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Total PPH Amount </label>
+                <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.total_pph_amount | number : '1.2-2'" amount="total_pph_amount"
+                  name="p_total_pph_amount">
+              </div>
+            </div>
+            <!--#endregion Total PPH Amount-->
+          </div>
+          <!--#endregion row -->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region credit_billing_amount-->
+            <!--Hide Rian-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Credit Note Amount </label>
+                <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.credit_billing_amount | number : '1.2-2'" amount="credit_billing_amount"
+                  name="p_credit_billing_amount">
+              </div>
+            </div>
+            <!--#endregion credit_billing_amount-->
+            <!--#region dpp_nilai_lain-->
+            <!--Hide Rian-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>DPP Nilai Lain </label>
+                <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.dpp_nilai_lain | number : '1.2-2'" amount="dpp_nilai_lain"
+                  name="p_dpp_nilai_lain">
+              </div>
+            </div>
+            <!--#endregion dpp_nilai_lain-->
+
+            <!--#region credit_ppn_amount-->
+            <!--Hide Rian-->
+            <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>Credit PPN Amount </label>
+                <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.credit_ppn_amount | number : '1.2-2'" amount="credit_ppn_amount"
+                  name="p_credit_ppn_amount">
+              </div>
+            </div> -->
+            <!--#endregion credit_ppn_amount-->
+
+            <!--#region credit_pph_amount-->
+            <!--Hide Rian-->
+            <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>Credit PPH Amount </label>
+                <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.credit_pph_amount | number : '1.2-2'" amount="credit_pph_amount"
+                  name="p_credit_pph_amount">
+              </div>
+            </div> -->
+            <!--#endregion credit_pph_amount-->
+          </div>
+          <!--#endregion row -->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region Total Amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Billing Amount </label>
+                <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.total_amount | number : '1.2-2'" amount="total_amount" name="p_total_amount">
+              </div>
+            </div>
+            <!--#endregion Total Amount-->
+
+            <!--#region currency_code-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Currency </label>
+                <input type="text" class="form-control" [ngModel]="model.currency_code" name="p_currency_code" readonly>
+              </div>
+            </div>
+            <!--#endregion currency_code-->
+
+            <!--#region Faktur No-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Faktur No</label>
+                <input type="text" class="form-control" [ngModel]="model.faktur_no" name="p_faktur_no" readonly>
+              </div>
+            </div>
+            <!--#endregion Faktur No-->
+          </div>
+          <!--#endregion row -->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region Deliver Date-->
+            <!--Hide Rian-->
+            <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>Deliver Date</label>
+                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                  [ngModel]="model.deliver_date" name="p_deliver_date" [options]="myDatePickerOptions"
+                  #deliver_date="angular-mydatepicker" autocomplete="off" readonly />
+              </div>
+            </div> -->
+            <!--#endregion Deliver Date-->
+
+            <!--#region received_reff_date-->
+            <!--Hide Rian-->
+            <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>Received Reff Date</label>
+                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                  [ngModel]="model.received_reff_date" name="p_received_reff_date" [options]="myDatePickerOptions"
+                  #received_reff_date="angular-mydatepicker" autocomplete="off" readonly />
+              </div>
+            </div> -->
+            <!--#endregion received_reff_date-->
+
+            <!--#region Payment PPN Date-->
+            <!--Hide Rian-->
+            <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>Payment PPN Date</label>
+                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                  [ngModel]="model.payment_ppn_date" name="p_payment_ppn_date" [options]="myDatePickerOptions"
+                  #payment_ppn_date="angular-mydatepicker" autocomplete="off" readonly />
+              </div>
+            </div> -->
+            <!--#endregion Payment PPN Date-->
+          </div>
+          <!--#endregion row -->
+        </div>
+
+        <span layout="row horizontal-divider">
+          <hr flex />
+        </span>
+
+        <div *ngIf="param != null">
+          <!--#region list view-->
+          <div *ngIf="param != null" class="row">
+            <div class="col-md-12">
+              <div class="card-header">
+                <h4 class="card-title">Detail List</h4>
+                <button class="btn btn-info btn-round" (click)="btnSaveList()" data-role="R00020710022073C"
+                  [hidden]="model.invoice_status !== 'NEW'">
+                  Save
+                </button>
+              </div>
+              <div class="card-body">
+                <!--#region list view-->
+                <table id="datatableInvoiceDetail" datatable [dtOptions]="dtOptions"
+                  class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                  <thead>
+                    <tr>
+                      <th class="disabled-sorting">No</th>
+                      <th style="display: none;"></th>
+                      <th>Agreement No</th>
+                      <th>Asset No</th>
+                      <th>Description</th>
+                      <th>Quantity</th>
+                      <th>Rental Amount</th>
+                      <th>Discount</th>
+                      <th>Billing Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of listinvoicedetail;let i=index ">
+                      <td class="if-no-edit-btn" style="display: none;"></td>
+                      <td class="if-no-edit-btn" style="text-align: center;">{{listinvoicedetail.numberIndex+i+1}}
+                        <input type="hidden" value="{{row.id}}" name="p_id">
+                      </td>
+                      <td style="display: none;"></td>
+                      <td style="width: 15%;text-align: left;">{{row.agreement_external_no}} <br> {{row.client_name}}
+                      </td>
+                      <td style="width: 15%;text-align: left;">{{row.asset_no}} <br> {{row.fa_name}}</td>
+                      <td style="width: 30%;text-align: left;">
+                        <div class="form-group">
+                          <textarea [disabled]="model.invoice_status !== 'NEW'" type="int" class="form-control"
+                            id="description{{i}}" type="text" value="{{row.description}}" name="p_description"
+                            data-role-textbox="R00020710022074C"> </textarea>
+                        </div>
+                      </td>
+                      <td style="width: 10%;text-align: center;">{{row.quantity}}</td>
+                      <td style="width: 10%;text-align: right;">{{row.billing_amount | number : '1.2-2'}}</td>
+                      <td style="width: 10%;text-align: right;">
+                        <div class="form-group">
+                          <input [disabled]="model.invoice_status !== 'NEW'" type="int" class="form-control"
+                            id="discount_amount{{i}}" type="text" value="{{row.discount_amount | number : '1.2-2'}}"
+                            style="text-align: right" name="p_discount_amount" discount_amount="discount_amount"
+                            data-role-textbox="R00020710022074C">
+                        </div>
+                      </td>
+                      <td style="width: 10%;text-align: right;">{{row.total_amount | number : '1.2-2'}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!--#endregion list view-->
+              </div>
+            </div>
+          </div>
+          <!--#endregion list view-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region lookupNewDateInvoice-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupNewDateInvoice"
+  style="margin-top: -65px">
+  <div class="modal-dialog" style="width:330px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body ">
+            <!--#region form-->
+            <form #invoiceDateForm="ngForm" (ngSubmit)="onFormSubmit(invoiceDateForm.value, invoiceDateForm.valid)">
+              <div class="toolbar">
+                <button style="margin-top: 0px;" type="submit" class="btn btn-info btn-round"
+                  data-role="R00020710022076C">Save</button>
+              </div>
+              <div class="row">
+                <div class="col md-4">
+                  <label class="control-label">New Invoice Date</label>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.new_invoice_date" name="p_new_invoice_date" [options]="myDatePickerOptions"
+                    (click)="new_invoice_date.toggleCalendar()" #p_new_invoice_date="ngModel"
+                    #new_invoice_date="angular-mydatepicker" autocomplete="off" />
+                </div>
+              </div>
+              <div class="col-lg-3 text-center" style="height:275px;width:auto">
+              </div>
+              <!--#region row-->
+
+              <!--#endregion row-->
+            </form>
+            <!--#endregion form-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookupNewDateInvoice-->

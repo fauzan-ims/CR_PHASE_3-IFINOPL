@@ -1,0 +1,29 @@
+<div class="main-content mt-5">
+  <!--#region wizard container-->
+  <div class="card">
+    <div class="nav-tabs-navigation">
+      <ul id="tabs1" class="nav nav-pills nav-justified" role="tablist">
+        <!-- <li id="tabapplicationFeeChargesFEE" class="nav-item">
+          <a class="nav-link" (click)="feewiz()" href="#feelist" data-toggle="tab" role="tab" aria-controls="fee"
+            aria-selected="true">
+            FEE
+          </a>
+        </li> -->
+        <li id="tabapplicationFeeChargesCharges" class="nav-item">
+          <a class="nav-link" (click)="chargeswiz()" href="#chargeslist" data-toggle="tab" role="tab"
+            aria-controls="charges" aria-selected="true">
+            Charges
+          </a>
+        </li>
+        <li id="tabapplicationDocumentDocument" class="nav-item">
+          <a class="nav-link" (click)="documentwiz()" href="#doclist" data-toggle="tab" role="tab" aria-controls="doc"
+            aria-selected="true">
+            Document
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+  <!--#endregion wizard container-->
+</div>

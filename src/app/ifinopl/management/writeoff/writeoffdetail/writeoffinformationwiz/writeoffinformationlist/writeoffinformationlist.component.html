@@ -1,0 +1,34 @@
+<router-outlet></router-outlet>
+
+<div id="hideMainPanelWiz" class="main-content margin-wizard-content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="toolbar">
+      </div>
+
+      <!--#writeoffinformation list view-->
+      <table id="datatableWoInformation" datatable [dtOptions]="dtOptions"
+        class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th class="disabled-sorting">No</th>
+            <th style="display: none;"></th>
+            <th style="display: none;"></th>
+            <th>Transaction</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of listwriteoffinformation;let i=index">
+            <td style="text-align: center;">{{listwriteoffinformation.numberIndex+i+1}}</td>
+            <td style="display: none;"></td>
+            <td style="display: none;"></td>
+            <td style="text-align: left; width: 80%;">{{row.transaction_name}}</td>
+            <td style="text-align: right; width: 20%;">{{row.transaction_amount | number : '1.2-2'}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <!--#writeoffinformation list view-->
+    </div>
+  </div>
+</div>

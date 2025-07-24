@@ -1,0 +1,381 @@
+<div class="main-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner region -->
+    <div class="row">
+        <div class="col-md-12 buttons btn-lookup-margin">
+            <div class="card ">
+                <!--#region watermark-->
+                <div class="watermark" hidden>
+                    <h6>{{this.companyName}}</h6>
+                    <h6>{{this.userName}}</h6>
+                    <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+                </div>
+                <!--#endregion watermark-->
+
+                <div class="card-header ">
+                    <h5 class="card-title">Invoice Detail Info</h5>
+                </div>
+                <div class="card-body ">
+                    <!--#region form-->
+                    <form #invoicedeliverydetailForm="ngForm"
+                        (ngSubmit)="onFormSubmit(invoicedeliverydetailForm.value, invoicedeliverydetailForm.valid)">
+
+                        <!--#region button submit dan back-->
+                        <!-- <button type="submit" [hidden]="model.is_editable === '0'" class="btn btn-info btn-round"
+                            [hidden]="this.status_header !== 'ON PROCESS'" data-role="R00020740022075C">Save</button> -->
+                        <button type="submit" hidden class="btn btn-info btn-round"
+                            data-role="R00020740022075C">Save</button>
+                        <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+                        <!--#endregion button submit dan back-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region general_code-->
+                            <input hidden type="text" [ngModel]="this.param" name="p_delivery_code">
+                            <!--#endregion general_code-->
+
+                            <!--#region general_code-->
+                            <input hidden type="text" [ngModel]="this.params" name="p_id">
+                            <!--#endregion general_code-->
+
+                            <!--#region invoice_no-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="invoice_no" class="control-label">Invoice No</label>
+                                    <input type="text" class="form-control" [ngModel]="model.invoice_no" maxlength="50"
+                                        name="p_invoice_external_no" disabled #invoice_external_no="ngModel" hidden>
+                                    <input type="text" class="form-control" [ngModel]="model.invoice_external_no"
+                                        maxlength="50" name="p_invoice_external_no" disabled
+                                        #invoice_external_no="ngModel">
+                                </div>
+                            </div>
+                            <!--#endregion invoice_no-->
+
+                            <!--#region invoice_type-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="invoice_type" class="control-label">Invoice Type</label>
+                                    <input type="text" class="form-control" [ngModel]="model.invoice_type"
+                                        maxlength="50" name="p_invoice_type" disabled #invoice_type="ngModel">
+                                </div>
+                            </div>
+                            <!--#endregion invoice_type-->
+
+                            <!--#region invoice_status-->
+                            <!-- <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="invoice_status" class="control-label">Status</label>
+                                    <input type="text" class="form-control" [ngModel]="model.invoice_status"
+                                        maxlength="50" name="p_invoice_status" readonly #invoice_status="ngModel">
+                                </div>
+                            </div> -->
+                            <!--#endregion invoice_status-->
+
+                            <!--#region invoice_date-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="invoice_date" class="control-label">Invoice Date </label>
+                                    <div>
+                                        <input class="form-control col-md-6" placeholder="dd/mm/yyyy"
+                                            angular-mydatepicker [ngModel]="model.invoice_date" name="p_invoice_date"
+                                            [options]="myDatePickerOptions" #p_invoice_date="ngModel"
+                                            #invoice_date="angular-mydatepicker" autocomplete="off" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion invoice_date-->
+
+                            <!--#region invoice_due_date-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="invoice_due_date" class="control-label">Invoice Due Date </label>
+                                    <div>
+                                        <input class="form-control col-md-6" placeholder="dd/mm/yyyy"
+                                            angular-mydatepicker [ngModel]="model.invoice_due_date"
+                                            name="p_invoice_due_date" [options]="myDatePickerOptions"
+                                            #p_invoice_due_date="ngModel" #invoice_due_date="angular-mydatepicker"
+                                            autocomplete="off" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion invoice_due_date-->
+
+                            <!--#region invoice_name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="invoice_name" class="control-label">Description</label>
+                                    <input type="text" class="form-control" [ngModel]="model.invoice_name"
+                                        maxlength="250" name="p_invoice_name" readonly #invoice_name="ngModel">
+                                </div>
+                            </div>
+                            <!--#endregion invoice_name-->
+
+                            <!--#region client_name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="client_name" class="control-label">Client Name</label>
+                                    <input type="text" class="form-control" [ngModel]="model.client_name"
+                                        maxlength="250" name="p_client_name" disabled #client_name="ngModel">
+                                </div>
+                            </div>
+                            <!--#endregion client_name-->
+
+                            <!--#region phone no-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="area_phone_no && phone_no" class="control-label">
+                                        Client Phone No</label>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <input type="text"
+                                                class="form-control area-code input-mini aid-primary-phone1-lbl"
+                                                [ngModel]="model.client_area_phone_no" name="p_client_area_phone_no"
+                                                #client_area_phone_no="ngModel" maxlength="4"
+                                                pattern={{NumberOnlyPattern}} disabled>
+                                        </div>
+                                        -
+                                        <div class="col-md-7">
+                                            <input type="text" class="form-control" [ngModel]="model.client_phone_no"
+                                                name="p_client_phone_no" maxlength="15" #client_phone_no="ngModel"
+                                                pattern={{NumberOnlyPattern}} disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <small
+                                    *ngIf="(area_phone_no.errors?.required && area_phone_no.touched || phone_no.errors?.required && phone_no.touched) || (area_phone_no.errors?.required && employeeForm.submitted)"
+                                    class="text-danger">
+                                    Contact Person Phone No is required
+                                </small>
+                                <small
+                                    *ngIf="area_phone_no.errors?.pattern && area_phone_no.touched || phone_no.errors?.pattern && phone_no.touched"
+                                    class="text-danger">
+                                    Phone No is required and format should be <i>0-9</i>.
+                                </small> -->
+                            </div>
+                            <!--#endregion phone no-->
+
+                            <!--#region client_npwp-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="client_npwp" class="control-label">Client NPWP</label>
+                                    <input type="text" class="form-control" [ngModel]="model.client_npwp"
+                                        maxlength="250" name="p_client_npwp" disabled #client_npwp="ngModel">
+                                </div>
+                            </div>
+                            <!--#endregion client_npwp-->
+
+                            <!--#region currency_code-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="currency_code" class="control-label">Currency</label>
+                                    <input type="text" class="form-control" [ngModel]="model.currency_code"
+                                        maxlength="250" name="p_currency_code" disabled #currency_code="ngModel">
+                                </div>
+                            </div>
+                            <!--#endregion currency_code-->
+
+                            <!--#region total_billing_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="total_billing_amount" class="control-label">Total Rental Amount
+                                    </label>
+                                    <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                        [ngModel]="model.total_billing_amount | number : '1.2-2'" maxlength="24"
+                                        amount="total_billing_amount" name="p_total_billing_amount"
+                                        #total_billing_amount="ngModel" disabled>
+                                </div>
+                            </div>
+                            <!--#endregion total_billing_amount-->
+
+                            <!--#region total_discount_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="total_discount_amount" class="control-label">Total Discount Amount
+                                    </label>
+                                    <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                        [ngModel]="model.total_discount_amount | number : '1.2-2'" maxlength="24"
+                                        amount="total_discount_amount" name="p_total_discount_amount"
+                                        #total_discount_amount="ngModel" disabled>
+                                </div>
+                            </div>
+                            <!--#endregion total_discount_amount-->
+
+                            <!--#region total_ppn_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="total_ppn_amount" class="control-label">Total PPN Amount
+                                    </label>
+                                    <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                        [ngModel]="model.total_ppn_amount | number : '1.2-2'" maxlength="24"
+                                        amount="total_ppn_amount" name="p_total_ppn_amount" #total_ppn_amount="ngModel"
+                                        disabled>
+                                </div>
+                            </div>
+                            <!--#endregion total_ppn_amount-->
+
+                            <!--#region total_pph_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="total_pph_amount" class="control-label">Total PPH Amount
+                                    </label>
+                                    <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                        [ngModel]="model.total_pph_amount | number : '1.2-2'" maxlength="24"
+                                        amount="total_pph_amount" name="p_total_pph_amount" #total_pph_amount="ngModel"
+                                        disabled>
+                                </div>
+                            </div>
+                            <!--#endregion total_pph_amount-->
+
+                            <!--#region total_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="total_amount" class="control-label">Total Billing Amount
+                                    </label>
+                                    <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                        [ngModel]="model.total_amount | number : '1.2-2'" maxlength="24"
+                                        amount="total_amount" name="p_total_amount" #total_amount="ngModel" disabled>
+                                </div>
+                            </div>
+                            <!--#endregion total_amount-->
+                        </div>
+                        <!--#endregion row -->
+
+                        <span layout="row horizontal-divider">
+                            <hr flex />
+                        </span>
+                        <br>
+
+                        <!--#region row-->
+                        <div class="row" hidden>
+                            <!--#region receiver_name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="receiver_name" class="control-label"
+                                        [hidden]="this.model.delivery_status !== 'DELIVER'">Received By *</label>
+                                    <label for="receiver_name" class="control-label"
+                                        [hidden]="this.model.delivery_status === 'DELIVER'">Received By</label>
+                                    <input disabled type="text" class="form-control" [ngModel]="model.receiver_name"
+                                        [readonly]="this.status_header !== 'ON PROCESS'" maxlength="250"
+                                        name="p_receiver_name" #receiver_name="ngModel"
+                                        [required]="this.model.delivery_status === 'DELIVER'">
+                                </div>
+                                <small
+                                    *ngIf="(receiver_name.errors?.required && receiver_name.touched) || (receiver_name.errors?.required && invoicedeliverydetailForm.submitted)"
+                                    class="text-danger" [hidden]="this.model.delivery_status !== 'DELIVER'">
+                                    Received By is required
+                                </small>
+                            </div>
+                            <!--#endregion receiver_name-->
+
+                            <!--#region date-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="delivery_date" class="control-label">Delivery Date *</label>
+                                    <div>
+                                        <input disabled class="form-control col-md-6" placeholder="dd/mm/yyyy"
+                                            [ngStyle]="getStyles(isButton)" angular-mydatepicker
+                                            [ngModel]="model.delivery_date" name="p_delivery_date"
+                                            [readonly]="this.status_header !== 'ON PROCESS'"
+                                            [options]="myDatePickerOptions" #p_delivery_date="ngModel"
+                                            #delivery_date="angular-mydatepicker" autocomplete="off"
+                                            (click)="delivery_date.toggleCalendar()" required />
+                                        <small
+                                            *ngIf="(p_delivery_date.errors?.required && p_delivery_date.touched) || (p_delivery_date.errors?.required && invoicedeliverydetailForm.submitted)"
+                                            class="text-danger">
+                                            Delivery Date is required
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion date-->
+
+                            <!--#region delivery_status-->
+                            <!-- <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="delivery_status" class="control-label">Delivery Status</label>
+                                    <input type="text" class="form-control" [ngModel]="model.delivery_status"
+                                        maxlength="50" readonly name="p_delivery_status" #delivery_status="ngModel">
+                                </div>
+                            </div> -->
+                            <!--#endregion delivery_status-->
+                            <!--#region Status-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Delivery Status</label>
+                                    <select disabled class='form-control col-md-6' (change)="DeliveryName($event)"
+                                        [disabled]="this.status_header !== 'ON PROCESS'"
+                                        [ngModel]="model.delivery_status" name="p_delivery_status">
+                                        <option value='HOLD'>HOLD</option>
+                                        <option value='DELIVER'>DELIVER</option>
+                                        <option value='NOT DELIVER'>NOT DELIVER</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--#endregion Status-->
+
+                            <!--#region file_path  <i class="fa fa-check"></i>-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>File</label>
+                                    <div class="row" style="margin-left: 30px;">
+                                        <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                                            <div
+                                                [hidden]="this.tampHidden !== true || this.status_header !== 'ON PROCESS'">
+                                                <span class="btn btn-info btn-round btn-file ">
+                                                    <input type="file" (change)="onUpload($event, model.id)"
+                                                        [hidden]="this.status_header !== 'ON PROCESS'"
+                                                        id="fileControl" />
+                                                    <span>UPLOAD</span>
+                                                </span>
+                                                {{tempFile}}
+                                            </div>
+                                            <div [hidden]="this.tampHidden !== false">
+                                                <span>
+                                                    <a [hidden]="this.status_header !== 'ON PROCESS'"
+                                                        class="btn btn-danger btn-round btn-file custom-button-width"
+                                                        type="button"
+                                                        (click)="deleteImage(model.file_name, model.file_path)">
+                                                        <span><i class="fa fa-trash"></i></span></a>
+                                                    <a class="btn btn-primary btn-round btn-file custom-button-width"
+                                                        type="button"
+                                                        (click)="priviewFile(model.file_name, model.file_path)">
+                                                        <span><i class="fa fa-eye"></i></span></a>
+                                                </span>
+                                                <div> {{model.file_name}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion file_path-->
+
+                            <!--#region delivery_remark-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="delivery_remark" class="control-label">Delivery Remark *</label>
+                                    <textarea disabled type="text" class="form-control"
+                                        [ngModel]="model.delivery_remark"
+                                        [readonly]="this.status_header !== 'ON PROCESS'" maxlength="4000"
+                                        name="p_delivery_remark" #delivery_remark="ngModel" required></textarea>
+                                </div>
+                                <small
+                                    *ngIf="(delivery_remark.errors?.required && delivery_remark.touched) || (delivery_remark.errors?.required && invoicedeliverydetailForm.submitted)"
+                                    class="text-danger">
+                                    Delivery Remark is required
+                                </small>
+                            </div>
+                            <!--#endregion delivery_remark-->
+                        </div>
+                        <!--#endregion row -->
+                    </form>
+                    <!--#endregion form-->
+                </div>
+                <div class="card-footer ">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

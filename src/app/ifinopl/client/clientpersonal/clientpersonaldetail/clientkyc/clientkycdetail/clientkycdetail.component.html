@@ -1,0 +1,162 @@
+<router-outlet></router-outlet>
+
+<div id="hideMainPanelWiz" class="main-content margin-wizard-content" style="margin-top: 20px;">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body ">
+        <!--#region form-->
+        <form #clientkycdetailForm="ngForm"
+          (ngSubmit)="onFormSubmit(clientkycdetailForm.value, clientkycdetailForm.valid)">
+
+          <!--#region button submit dan back-->
+          <button [hidden]="this.page === 'plafondstatus' || this.page === 'applicationstatus'" type="save"
+            class="btn btn-info btn-round" data-role="R00015820001583C">Save</button>
+          <!--#endregion button submit dan back-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region p_client_code-->
+            <input type="text" [ngModel]="this.param" maxlength="50" name="p_client_code" hidden>
+            <!--#endregion p_client_code-->
+
+            <!--#region ao_remark-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Remark *</label>
+                <input
+                  [readonly]="plafond_status !== 'HOLD' || this.page === 'plafondstatus' || this.page === 'applicationstatus'"
+                  type="text" class="form-control" [ngModel]="model.ao_remark" maxlength="100" name="p_ao_remark"
+                  required #ao_remark="ngModel">
+                <small
+                  *ngIf="(ao_remark.errors?.required && ao_remark.touched) || (ao_remark.errors?.required && clientkycdetailForm.submitted)"
+                  class="text-danger">
+                  Remark is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion ao_remark-->
+
+            <!--#region ao_source_fund-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Source Data *</label>
+                <input
+                  [readonly]="plafond_status !== 'HOLD' || this.page === 'plafondstatus' || this.page === 'applicationstatus'"
+                  type="text" class="form-control" [ngModel]="model.ao_source_fund" maxlength="100"
+                  name="p_ao_source_fund" required #ao_source_fund="ngModel">
+                <small
+                  *ngIf="(ao_source_fund.errors?.required && ao_source_fund.touched) || (ao_source_fund.errors?.required && clientkycdetailForm.submitted)"
+                  class="text-danger">
+                  Source Data is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion ao_source_fund-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row" [hidden]="plafond_status === 'HOLD'">
+            <!--#region result_status-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Result Status *</label>
+                <input
+                  [disabled]="plafond_status === 'HOLD' || this.page === 'plafondstatus' || this.page === 'applicationstatus'"
+                  type="text" class="form-control" [ngModel]="model.result_status" maxlength="20" name="p_result_status"
+                  required #result_status="ngModel">
+                <small
+                  *ngIf="(result_status.errors?.required && result_status.touched) || (result_status.errors?.required && clientkycdetailForm.submitted)"
+                  class="text-danger">
+                  Result Status is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion result_status-->
+
+            <!--#region result_remark-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Result Remark *</label>
+                <input
+                  [disabled]="plafond_status === 'HOLD' || this.page === 'plafondstatus' || this.page === 'applicationstatus'"
+                  type="text" class="form-control" [ngModel]="model.result_remark" maxlength="4000"
+                  name="p_result_remark" required #result_remark="ngModel">
+                <small
+                  *ngIf="(result_remark.errors?.required && result_remark.touched) || (result_remark.errors?.required && clientkycdetailForm.submitted)"
+                  class="text-danger">
+                  Result Remark is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion result_remark-->
+
+            <!--#region kyc_officer_code-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Officer</label>
+                <input readonly type="text" class="form-control" [ngModel]="model.kyc_officer_name" maxlength="250"
+                  name="p_kyc_officer_name" #kyc_officer_name="ngModel">
+                <input hidden type="text" class="form-control" [ngModel]="model.kyc_officer_code" maxlength="50"
+                  name="p_kyc_officer_code" #kyc_officer_code="ngModel">
+              </div>
+            </div>
+            <!--#endregion kyc_officer_code-->
+          </div>
+          <!--#endregion row-->
+        </form>
+        <!--#endregion form-->
+      </div>
+      <div *ngIf="plafond_status !== 'HOLD'">
+        <!--#region list view-->
+        <span layout="row horizontal-divider">
+          <hr flex />
+        </span>
+        <div class="row">
+          <div class="col-md-12">
+            <div>
+              <h4 class="card-title">Client KYC Detail List</h4>
+            </div>
+            <div class="card-body">
+
+              <!--#region list view-->
+              <table id="datatableClientkyc" datatable [dtOptions]="dtOptions"
+                class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                <thead>
+                  <tr>
+                    <th style="display: none;"></th>
+                    <th class="disabled-sorting">No</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Remark</th>
+                    <th style="text-align: center;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of listclientkyc;let i=index ">
+                    <td class="if-no-edit-btn" style="display: none;"></td>
+                    <td class="if-no-edit-btn" style="text-align: center;">{{listclientkyc.numberIndex+i+1}}</td>
+                    <td style="width: 30%;">{{row.member_name}}</td>
+                    <td style="width: 20%;text-align: center;">{{row.member_type}}</td>
+                    <td style="width: 50%;">{{row.remarks}}</td>
+                    <td style="text-align: center;">
+                      <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit" (click)="btnEdit(row.id)"><i
+                          class="fa fa-edit"></i></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!--#endregion list view-->
+            </div>
+          </div>
+        </div>
+        <!--#endregion list view-->
+      </div>
+    </div>
+  </div>
+</div>

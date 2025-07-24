@@ -1,0 +1,179 @@
+<div class="main-content margin-wizard-content" style="margin-top: 20px;">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <!--#region form-->
+      <form #facilitydetailForm="ngForm" (ngSubmit)="onFormSubmit(facilitydetailForm.value, facilitydetailForm.valid)">
+
+        <!--#region button save dan back-->
+        <button [hidden]="plafond_status !== 'HOLD'" type="submit" class="btn btn-info btn-round"
+          data-role="R00022550062256C">Save</button>
+        <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+        <!--#endregion button save dan back-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region p_client_code-->
+          <input type="text" [ngModel]="this.param" maxlength="50" name="p_client_code" hidden>
+          <!--#endregion p_client_code-->
+
+          <!--#region p_id-->
+          <input hidden type="text" [ngModel]="this.paramss" name="p_id">
+          <!--#endregion p_id-->
+
+          <!--#region asset_type_code-->
+          <div class="col-md-4">
+            <label class="labelgsubcode">Type *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <span>
+                  <button [disabled]="plafond_status !== 'HOLD'"
+                    class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    (click)="btnLookupAsset()" data-target="#lookupModalAsset" data-toggle="modal" href="#">
+                    <i class="fa fa-search-plus"></i></button> {{model.asset_type_desc}}
+                  <input type="hidden" name="p_asset_type_code" [ngModel]="model.asset_type_code" required
+                    #asset_type_code="ngModel" />
+                </span>
+              </div>
+              <small
+                *ngIf="asset_type_code.errors?.required && asset_type_code.touched || (asset_type_code.errors?.required && facilitydetailForm.submitted)"
+                class="text-danger">
+                Type is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion asset_type_code-->
+
+          <!--#region asset_name-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="asset_name" class="control-label">Name *</label>
+              <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control"
+                [ngModel]="model.asset_name" maxlength="250" name="p_asset_name" required #asset_name="ngModel">
+              <small
+                *ngIf="(asset_name.errors?.required && asset_name.touched) || (asset_name.errors?.required && facilitydetailForm.submitted)"
+                class="text-danger">
+                Name is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion asset_name-->
+
+          <!--#region asset_value-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="asset_value" class="control-label">Value Amount *</label>
+              <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control col-md-6"
+                style="text-align: right;" maxlength="24" amount="asset_value"
+                [ngModel]="model.asset_value| number : '1.2-2'" name="p_asset_value" required #asset_value="ngModel">
+              <small
+                *ngIf="(asset_value.errors?.required && asset_value.touched) || (asset_value.errors?.required && facilitydetailForm.submitted)"
+                class="text-danger">
+                Value Amount is required
+              </small>
+              <small *ngIf="asset_value.errors?.pattern && asset_value.touched" class="text-danger">
+                Value Amount is required and format should be <i>0-9</i>
+              </small>
+            </div>
+          </div>
+          <!--#endregion asset_value-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region reff_no-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="reff_no" class="control-label">Document No *</label>
+              <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control" [ngModel]="model.reff_no"
+                maxlength="50" name="p_reff_no" required #reff_no="ngModel">
+              <small
+                *ngIf="(reff_no.errors?.required && reff_no.touched) || (reff_no.errors?.required && facilitydetailForm.submitted)"
+                class="text-danger">
+                Document No is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion reff_no-->
+
+          <!--#region location-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="location" class="control-label">Asset Location *</label>
+              <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control" [ngModel]="model.location"
+                maxlength="4000" name="p_location" required #location="ngModel">
+              <small
+                *ngIf="(location.errors?.required && location.touched) || (location.errors?.required && facilitydetailForm.submitted)"
+                class="text-danger">
+                Asset Location is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion location-->
+
+          <!--#region remarks-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="remarks" class="control-label">Remark *</label>
+              <textarea [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control"
+                [ngModel]="model.remarks" maxlength="4000" name="p_remarks" required #remarks="ngModel"></textarea>
+              <small
+                *ngIf="(remarks.errors?.required && remarks.touched) || (remarks.errors?.required && facilitydetailForm.submitted)"
+                class="text-danger">
+                Remark is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion remarks-->
+        </div>
+        <!--#endregion row-->
+      </form>
+      <!--#endregion form-->
+    </div>
+  </div>
+</div>
+
+<!--#region lookup Asset-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalAsset" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupAsset" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupasset;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupasset.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowAsset(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Asset-->

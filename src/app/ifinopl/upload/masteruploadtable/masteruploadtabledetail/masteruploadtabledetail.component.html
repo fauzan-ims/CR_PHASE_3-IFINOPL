@@ -1,0 +1,304 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <div class="card-header ">
+          <h5 class="card-title">Upload Info</h5>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #masteruploadtabledetailForm="ngForm"
+            (ngSubmit)="onFormSubmit(masteruploadtabledetailForm.value, masteruploadtabledetailForm.valid)">
+            <!--#region button submit dan back-->
+            <button type="submit" class="btn btn-info btn-round" data-role="R00002720000000C">Save</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button submit dan back-->
+
+            <!--#region row-->
+            <div class="row">
+              <input type="text" [ngModel]="model.code" maxlength="50" name="p_code" hidden>
+
+              <!--#region Description-->
+              <div class="col-md-4">
+                <div class="form-group" >
+                  <label for="description" class="control-label">Description *</label>
+                  <input type="text" class="form-control" [ngModel]="model.description" maxlength="250" name="p_description" required
+                    #description="ngModel" maxlength="250">
+                  <small *ngIf="(description.errors?.required && description.touched) || (description.errors?.required && masteruploadtabledetailForm.submitted)" class="text-danger">
+                    Description is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Description-->
+
+              <!--#region Table Name-->
+              <div class="col-md-4">
+                <div class="form-group" >
+                  <label for="tabel_name" class="control-label">Table *</label>
+                  <input id="tablename" type="text" class="form-control" [ngModel]="model.tabel_name"
+                    name="p_tabel_name" required #tabel_name="ngModel" maxlength="250">
+                  <small *ngIf="(tabel_name.errors?.required && tabel_name.touched) || (tabel_name.errors?.required && masteruploadtabledetailForm.submitted)" class="text-danger">
+                    Table is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Table Name-->
+
+              <!--#region Template Excel-->
+              <div class="col-md-4">
+                <div class="form-group" >
+                  <label for="template_name" class="control-label">Template Excel *</label>
+                  <input type="text" class="form-control" [ngModel]="model.template_name" maxlength="250" name="p_template_name"
+                    required #template_name="ngModel" maxlength="250">
+                  <small *ngIf="(template_name.errors?.required && template_name.touched) || (template_name.errors?.required && masteruploadtabledetailForm.submitted)" class="text-danger">
+                    Template Excel is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Template Excel-->
+
+            </div>
+            <div class="row">
+              <!--#region SP Upload-->
+              <div class="col-md-4">
+                <div class="form-group" >
+                  <label for="sp_upload_name" class="control-label"> SP Upload *</label>
+                  <input type="text" class="form-control" [ngModel]="model.sp_upload_name" maxlength="250" name="p_sp_upload_name"
+                    required #sp_upload_name="ngModel" maxlength="250">
+                  <small *ngIf="(sp_upload_name.errors?.required && sp_upload_name.touched) || (sp_upload_name.errors?.required && masteruploadtabledetailForm.submitted)" class="text-danger">
+                    SP Upload is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion SP Upload-->
+
+              <!--#region SP Getrows-->
+              <!-- <div class="col-md-4" hidden>
+                <div class="form-group" >
+                  <label for="sp_getrows_name" class="control-label"> SP Getrows *</label>
+                  <input type="text" class="form-control" [ngModel]="model.sp_getrows_name" maxlength="250" name="p_sp_getrows_name"
+                    required #sp_getrows_name="ngModel" maxlength="250">
+                  <small *ngIf="(sp_getrows_name.errors?.required && sp_getrows_name.touched) || (sp_getrows_name.errors?.required && masteruploadtabledetailForm.submitted)" class="text-danger">
+                    SP Getrows is required
+                  </small>
+                </div>
+              </div> -->
+              <!--#endregion SP Upload-->
+
+              <!--#region SP Validation-->
+              <!-- <div class="col-md-4" hidden>
+                <div class="form-group" >
+                  <label for="sp_validate_name" class="control-label"> SP Validation *</label>
+                  <input type="text" class="form-control" [ngModel]="model.sp_validate_name" maxlength="250" name="p_sp_validate_name"
+                    required #sp_validate_name="ngModel" maxlength="250">
+                  <small *ngIf="(sp_validate_name.errors?.required && sp_validate_name.touched) || (sp_validate_name.errors?.required && masteruploadtabledetailForm.submitted)" class="text-danger">
+                    SP Validation is required
+                  </small>
+                </div>
+              </div> -->
+              <!--#endregion SP Validation-->
+
+              <!--#region SP Post-->
+              <div class="col-md-4">
+                <div class="form-group" >
+                  <label for="sp_post_name" class="control-label"> SP Post *</label>
+                  <input type="text" class="form-control" [ngModel]="model.sp_post_name" maxlength="250" name="p_sp_post_name" required
+                    #sp_post_name="ngModel" maxlength="250">
+                  <small *ngIf="(sp_post_name.errors?.required && sp_post_name.touched) || (sp_post_name.errors?.required && masteruploadtabledetailForm.submitted)" class="text-danger">
+                    SP Post is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion SP Post-->
+
+              <!--#region SP Cancel-->
+              <div class="col-md-4">
+                <div class="form-group" >
+                  <label for="sp_cancel_name" class="control-label"> SP Cancel *</label>
+                  <input type="text" class="form-control" [ngModel]="model.sp_cancel_name" maxlength="250" name="p_sp_cancel_name"
+                    required #sp_cancel_name="ngModel" maxlength="250">
+                  <small *ngIf="(sp_cancel_name.errors?.required && sp_cancel_name.touched) || (sp_cancel_name.errors?.required && masteruploadtabledetailForm.submitted)" class="text-danger">
+                    SP Cancel is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion SP Cancel-->
+            </div>
+
+            <div class="row">
+              <!--#region active-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" [ngModel]="model.is_active" name="p_is_active">
+                      Active
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion active-->
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+        </div>
+        <div *ngIf="param != null">
+          <!--#region list view-->
+          <span layout="row horizontal-divider">
+            <hr flex />
+          </span>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card-header">
+                <h5 class="card-title">Detail List</h5>
+              </div>
+              <div class="card-body">
+                <div class="toolbar">
+                  <!--#region button add-->
+                  <button class="btn btn-info btn-round" type="button" (click)="btnLookupUploadTableColumn()"
+                    data-target="#lookupModalUploadColumn" data-toggle="modal" href="#" data-role="R00002720000000C">
+                    Add </button>
+                  <!-- <button type="button" class="btn btn-info btn-round" (click)="saveList()">
+                    Save</button> -->
+                  <button class="btn btn-danger btn-round" (click)="btnDeleteAll()" data-role="R00002720000273D">
+                    Delete
+                  </button>
+                  <!--#endregion button add, delete-->
+                </div>
+
+                <!--#region list view-->
+                <table id="datatables" datatable [dtOptions]="dtOptions"
+                  class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                  <thead>
+                    <tr>
+                      <th class="disabled-sorting">No</th>
+                      <th class="disabled-sorting">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" id="checkalltable"
+                              [(ngModel)]="selectedAllTable" (change)="selectAllTable();" />
+                            <span class="form-check-sign"></span>
+                          </label>
+                        </div>
+                      </th>
+                      <th style="display: none;"></th>
+                      <th>Column Name</th>
+                      <th>Data Type</th>
+                      <th>Order Key</th>
+                      <th class="text-align: center;">Action</th>
+                      <!-- <th>Param 1</th>
+                      <th>Param 2</th> -->
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of listuploadtabledetail; let i = index">
+                      <td style="text-align: center;">{{listuploadtabledetail.numberIndex+i+1}}</td>
+                      <td class="disabled-sorting">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                              (change)="checkIfAllTableSelected($event, row.code);" value="{{row.code}}" name="p_code">
+                            <span class="form-check-sign"></span>
+                          </label>
+                        </div>
+                      </td>
+                      <td style="display: none;"></td>
+                      <td style="text-align: left; width: 70%;">{{row.column_name}}</td>
+                      <td style="text-align: left; width: 15%;">{{row.data_type}}</td>
+                      <td style="text-align: right; width: 15%;">{{row.order_key}}</td>
+                      <td style="text-align: center;">
+                        <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit"
+                          (click)="btnEdit(row.code)"><i class="fa fa-edit"></i></a>
+                      </td>
+                      <!-- <td style="text-align: left; width: 25%;">
+                        <input type="text" class="form-control" name="p_param_generic_1" value="{{row.param_generic_1}}">
+                      </td>
+                      <td style="text-align: left;width: 25%;">
+                        <input type="text" class="form-control" name="p_param_generic_2" value="{{row.param_generic_2}}">
+                      </td> -->
+                    </tr>
+                  </tbody>
+                </table>
+                <!--#endregion list view-->
+              </div>
+            </div>
+          </div>
+          <!--#endregion list view-->
+          <!-- <div class="card-footer ">
+          </div> -->
+        </div>
+        <!-- <div class="card-footer ">
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region lookup Upload Validation-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalUploadColumn"
+  style="margin-top: -65px">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <!--#region button add-->
+            <button class="btn btn-info btn-round" (click)="btnSelectAllLookup()" role="P001" id="button">
+              add
+            </button>
+            <!--#endregion button add--->
+            <table id="datatableLookupUploadTableColumn" class="table table-striped table-bordered hover"
+              cellspacing="0" style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th class="disabled-sorting">No</th>
+                  <th class="disabled-sorting">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="checkallLookup"
+                          [(ngModel)]="selectedAllLookup" (change)="selectAllLookup();" />
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </th>
+                  <th>Column Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupuploadtablecolumn; let i = index">
+                  <td style="text-align: center;">{{lookupuploadtablecolumn.numberIndex+i+1}}</td>
+                  <td class="disabled-sorting">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="row.selectedLookup"
+                          (change)="checkIfAllLookupSelected($event, row.column_name);">
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </td>
+                  <td class="if-no-edit-btn" style="text-align: left; width: 100%;">{{ row.column_name }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Upload Validation-->

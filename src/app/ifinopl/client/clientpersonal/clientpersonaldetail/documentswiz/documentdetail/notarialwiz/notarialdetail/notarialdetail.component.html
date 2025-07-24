@@ -1,0 +1,218 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <!--#region form-->
+      <form #facilitydetailForm="ngForm" (ngSubmit)="onFormSubmit(facilitydetailForm.value, facilitydetailForm.valid)">
+
+        <!--#region button save dan back-->
+        <button [hidden]="this.plafondStatus" type="submit" class="btn btn-info btn-round"
+          data-role="R00022550192256C">Save</button>
+        <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+        <!--#endregion button save dan back-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region p_client_code-->
+          <input type="text" [ngModel]="this.param" maxlength="50" name="p_client_code" hidden>
+          <!--#endregion p_client_code-->
+
+          <!--#region p_code-->
+          <input hidden type="text" [ngModel]="this.params" name="p_code">
+          <!--#endregion p_code-->
+
+          <!--#region notarial_document_code-->
+          <div class="col-md-4">
+            <label for="p_notarial_document_code" class="control-label" class="labelgsubcode">Notarial Document
+              *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <span>
+                  <button [disabled]="this.plafondStatus"
+                    class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    (click)="btnLookupNotarialDocument()" data-target="#lookupModalNotarialDocument" data-toggle="modal"
+                    href="#">
+                    <i class="fa fa-search-plus"></i></button> {{model.notarial_document_desc}}
+                  <input type="hidden" name="p_notarial_document_code" [ngModel]="model.notarial_document_code" required
+                    #p_notarial_document_code="ngModel" />
+                </span>
+              </div>
+              <small
+                *ngIf="p_notarial_document_code.errors?.required && p_notarial_document_code.touched || (p_notarial_document_code.errors?.required && facilitydetailForm.submitted) "
+                class="text-danger">
+                Notarial Document is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion notarial_document_code-->
+
+          <!--#region document_no-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="document_no" class="control-label">Document No *</label>
+              <input [disabled]="this.plafondStatus" type="text" class="form-control" [ngModel]="model.document_no"
+                maxlength="500" name="p_document_no" required #document_no="ngModel">
+              <small
+                *ngIf="(document_no.errors?.required && document_no.touched) || (document_no.errors?.required && facilitydetailForm.submitted)"
+                class="text-danger">
+                Document No is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion document_no-->
+
+          <!--#region document_date-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="p_document_date" class="control-label">Document Date *</label>
+              <input [ngStyle]="getStyles(this.plafondStatus)" class="form-control col-md-6" placeholder="dd/mm/yyyy"
+                angular-mydatepicker [ngModel]="model.document_date" name="p_document_date"
+                [options]="myDatePickerOptions" (click)="document_date.toggleCalendar()" required
+                #p_document_date="ngModel" #document_date="angular-mydatepicker" autocomplete="off" required
+                [readonly]="this.plafondStatus" />
+              <small
+                *ngIf="(p_document_date.errors?.required && p_document_date.touched) || (p_document_date.errors?.required && facilitydetailForm.submitted)"
+                class="text-danger">
+                Document Date is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion document_date-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region notary_name-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="notary_name" class="control-label">Notary Name *</label>
+              <input [disabled]="this.plafondStatus" type="text" class="form-control" [ngModel]="model.notary_name"
+                maxlength="250" name="p_notary_name" required #notary_name="ngModel">
+              <small
+                *ngIf="(notary_name.errors?.required && notary_name.touched) || (notary_name.errors?.required && facilitydetailForm.submitted)"
+                class="text-danger">
+                Notary Name is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion notary_name-->
+
+          <!--#region skmenkumham_doc_no-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="skmenkumham_doc_no" class="control-label">SK. MENKUMHAM *</label>
+              <input [disabled]="this.plafondStatus" type="text" class="form-control"
+                [ngModel]="model.skmenkumham_doc_no" maxlength="50" name="p_skmenkumham_doc_no" required
+                #skmenkumham_doc_no="ngModel">
+              <small
+                *ngIf="(skmenkumham_doc_no.errors?.required && skmenkumham_doc_no.touched) || (skmenkumham_doc_no.errors?.required && facilitydetailForm.submitted)"
+                class="text-danger">
+                SK. MENKUMHAM is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion skmenkumham_doc_no-->
+
+          <!--#region suggest_by-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="suggest_by" class="control-label">Suggest By *</label>
+              <input [disabled]="this.plafondStatus" type="text" class="form-control" [ngModel]="model.suggest_by"
+                maxlength="250" name="p_suggest_by" required #suggest_by="ngModel">
+              <small
+                *ngIf="(suggest_by.errors?.required && suggest_by.touched) || (suggest_by.errors?.required && facilitydetailForm.submitted)"
+                class="text-danger">
+                Suggest By is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion suggest_by-->
+        </div>
+        <!--#endregion row-->
+
+        <div class="row">
+          <!--#region modal_dasar-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="modal_dasar" class="control-label">Modal Dasar *</label>
+              <input [disabled]="this.plafondStatus" type="text" class="form-control col-md-6"
+                style="text-align: right;" maxlength="24" amount="modal_dasar"
+                [ngModel]="model.modal_dasar | number : '1.2-2'" maxlength="24" amount="modal_dasar"
+                name="p_modal_dasar" required #modal_dasar="ngModel">
+              <small
+                *ngIf="(modal_dasar.errors?.required && modal_dasar.touched) || (modal_dasar.errors?.required && facilitydetailForm.submitted)"
+                class="text-danger">
+                Modal Dasar is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion modal_dasar-->
+
+          <!--#region modal_setor-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="modal_setor" class="control-label">Modal Setor *</label>
+              <input [disabled]="this.plafondStatus" type="text" class="form-control col-md-6"
+                style="text-align: right;" maxlength="24" amount="modal_setor"
+                [ngModel]="model.modal_setor | number : '1.2-2'" maxlength="24" amount="modal_setor"
+                name="p_modal_setor" required #modal_setor="ngModel">
+              <small
+                *ngIf="(modal_setor.errors?.required && modal_setor.touched) || (modal_setor.errors?.required && facilitydetailForm.submitted)"
+                class="text-danger">
+                Modal Setor is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion modal_setor-->
+        </div>
+      </form>
+      <!--#endregion form-->
+    </div>
+  </div>
+</div>
+
+<!--#region lookup NotarialDocument-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalNotarialDocument"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupNotarialDocument" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupnotarialdocument;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupnotarialdocument.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowNotarialDocument(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup NotarialDocument-->

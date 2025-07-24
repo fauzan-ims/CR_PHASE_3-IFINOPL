@@ -1,0 +1,641 @@
+<div class="main-content margin-wizard-content" style="margin-top: 20px;">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <!--#region form-->
+      <form #workdetailForm="ngForm" (ngSubmit)="onFormSubmit(workdetailForm.value, workdetailForm.valid)">
+
+        <!--#region button save dan back-->
+        <button [hidden]="this.plafondStatus" type="submit" class="btn btn-info btn-round"
+          data-role="R00015820001583C">Save</button>
+        <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+        <!--#endregion button save dan back-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region p_client_code-->
+          <input type="text" [ngModel]="this.param" maxlength="50" name="p_client_code" hidden>
+          <!--#endregion p_client_code-->
+
+          <!--#region p_id-->
+          <input hidden type="text" [ngModel]="this.paramss" name="p_id">
+          <!--#endregion p_id-->
+
+          <!--#region company_name-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="company_name" class="control-label">Company Name *</label>
+              <input [disabled]="this.plafondStatus" type="text" class="form-control" [ngModel]="model.company_name"
+                maxlength="250" name="p_company_name" required #company_name="ngModel">
+              <small
+                *ngIf="(company_name.errors?.required && company_name.touched) || (company_name.errors?.required && workdetailForm.submitted)"
+                class="text-danger">
+                Company Name is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion company_name-->
+
+          <!--#region company_business_line-->
+          <div class="col-md-4">
+            <label for="p_company_business_line" class="control-label" class="labelgsubcode">Business Line *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <span>
+                  <button [disabled]="this.plafondStatus"
+                    class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    (click)="btnLookupBusinessLine()" data-target="#lookupModalBusinessLine" data-toggle="modal"
+                    href="#">
+                    <i class="fa fa-search-plus"></i></button> {{model.business_line_desc}}
+                  <input type="hidden" name="p_company_business_line" [ngModel]="model.company_business_line" required
+                    #p_company_business_line="ngModel" />
+                </span>
+              </div>
+              <small
+                *ngIf="p_company_business_line.errors?.required && p_company_business_line.touched || (p_company_business_line.errors?.required && workdetailForm.submitted) "
+                class="text-danger">
+                Business Line is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion company_business_line-->
+
+          <!--#region company_sub_business_line-->
+          <div class="col-md-4">
+            <label for="p_company_sub_business_line" class="control-label" class="labelgsubcode">Sub Business Line
+              *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <span>
+                  <button [disabled]="this.plafondStatus"
+                    class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    (click)="btnLookupSubBusinessLine()" data-target="#lookupModalSubBusinessLine" data-toggle="modal"
+                    href="#">
+                    <i class="fa fa-search-plus"></i></button> {{model.sub_business_line_desc}}
+                  <input type="hidden" name="p_company_sub_business_line" [ngModel]="model.company_sub_business_line"
+                    required #p_company_sub_business_line="ngModel" />
+                </span>
+              </div>
+              <small
+                *ngIf="p_company_sub_business_line.errors?.required && p_company_sub_business_line.touched || (p_company_sub_business_line.errors?.required && workdetailForm.submitted) "
+                class="text-danger">
+                Sub Business Line is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion company_sub_business_line-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region work_type_code-->
+          <div class="col-md-4">
+            <label for="p_work_type_code" class="control-label" class="labelgsubcode">Work Type *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <span>
+                  <button [disabled]="isReadOnly || this.plafondStatus"
+                    class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    (click)="btnLookupWorkType()" data-target="#lookupModalWorkType" data-toggle="modal" href="#">
+                    <i class="fa fa-search-plus"></i></button> {{model.work_type_desc}}
+                  <input type="hidden" name="p_work_type_code" [ngModel]="model.work_type_code" required
+                    #p_work_type_code="ngModel" />
+                </span>
+              </div>
+              <small
+                *ngIf="p_work_type_code.errors?.required && p_work_type_code.touched || (p_work_type_code.errors?.required && workdetailForm.submitted) "
+                class="text-danger">
+                Work Type is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion work_type_code-->
+
+          <!--#region work_department_name-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="work_department_name" class="control-label">Department *</label>
+              <input [disabled]="this.plafondStatus" type="text" class="form-control"
+                [ngModel]="model.work_department_name" maxlength="250" name="p_work_department_name" required
+                #work_department_name="ngModel">
+              <small
+                *ngIf="(work_department_name.errors?.required && work_department_name.touched) || (work_department_name.errors?.required && workdetailForm.submitted)"
+                class="text-danger">
+                Department is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion work_department_name-->
+
+          <!--#region work_position-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="work_position" class="control-label">Work Position *</label>
+              <input [disabled]="this.plafondStatus" type="text" class="form-control" [ngModel]="model.work_position"
+                maxlength="250" name="p_work_position" required #work_position="ngModel">
+              <small
+                *ngIf="(work_position.errors?.required && work_position.touched) || (work_position.errors?.required && workdetailForm.submitted)"
+                class="text-danger">
+                Work Position is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion work_position-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region work_start_date-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="p_work_start_date" class="control-label">Start Date *</label>
+              <input [ngStyle]="getStyles(this.plafondStatus)" class="form-control col-md-6" placeholder="dd/mm/yyyy"
+                angular-mydatepicker [ngModel]="model.work_start_date" name="p_work_start_date"
+                [options]="myDatePickerOptions" (click)="work_start_date.toggleCalendar()" required
+                #p_work_start_date="ngModel" #work_start_date="angular-mydatepicker" autocomplete="off"
+                [readonly]="this.plafondStatus" />
+              <small
+                *ngIf="(p_work_start_date.errors?.required && p_work_start_date.touched) || (p_work_start_date.errors?.required && workdetailForm.submitted)"
+                class="text-danger">
+                Start Date is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion work_start_date-->
+
+          <!--#region check box is_latest-->
+          <div class="col-md-4">
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input [disabled]="this.plafondStatus" class="form-check-input" type="checkbox"
+                    [ngModel]="model.is_latest" name="p_is_latest" (change)="isLatest($event)">
+                  Latest
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_latest-->
+
+          <!--#region work_end_date-->
+          <div class="col-md-4" [hidden]="model.is_latest === true">
+            <div class="form-group">
+              <label for="p_work_end_date" class="control-label">End Date *</label>
+              <input [ngStyle]="getStyles(this.plafondStatus)" class="form-control col-md-6" placeholder="dd/mm/yyyy"
+                angular-mydatepicker [ngModel]="model.work_end_date" name="p_work_end_date"
+                [options]="myDatePickerOptions" (click)="work_end_date.toggleCalendar()" required
+                #p_work_end_date="ngModel" #work_end_date="angular-mydatepicker" autocomplete="off"
+                [disabled]="model.is_latest === true" [readonly]="this.plafondStatus" />
+              <small
+                *ngIf="(p_work_end_date.errors?.required && p_work_end_date.touched) || (p_work_end_date.errors?.required && workdetailForm.submitted)"
+                class="text-danger">
+                End Date is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion work_end_date-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region area_phone_no + phone_no-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="area_phone_no && phone_no" class="control-label">Phone No. </label>
+              <div class="row">
+                <div class="col-md-4">
+                  <input [disabled]="this.plafondStatus" type="text" class="form-control"
+                    [ngModel]="model.area_phone_no" name="p_area_phone_no" #area_phone_no="ngModel" maxlength="4"
+                    pattern={{NumberOnlyPattern}}>
+                </div>
+                -
+                <div class="col-md-7">
+                  <input [disabled]="this.plafondStatus" type="text" class="form-control" [ngModel]="model.phone_no"
+                    name="p_phone_no" maxlength="15" #phone_no="ngModel" pattern={{NumberOnlyPattern}}>
+                </div>
+              </div>
+            </div>
+            <small
+              *ngIf="area_phone_no.errors?.pattern && area_phone_no.touched || phone_no.errors?.pattern && phone_no.touched"
+              class="text-danger">
+              Phone No is required and format should be <i>0-9</i>.
+            </small>
+          </div>
+          <!--#endregion area_phone_no + phone_no-->
+
+          <!--#region area_fax_no + fax_no-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="area_fax_no && fax_no" class="control-label">Fax No. </label>
+              <div class="row">
+                <div class="col-md-4">
+                  <input [disabled]="this.plafondStatus" type="text" class="form-control" [ngModel]="model.area_fax_no"
+                    name="p_area_fax_no" maxlength="4" pattern={{NumberOnlyPattern}} #area_fax_no="ngModel">
+                </div>
+                -
+                <div class="col-md-7">
+                  <input [disabled]="this.plafondStatus" type="text" class="form-control" [ngModel]="model.fax_no"
+                    name="p_fax_no" maxlength="15" pattern={{NumberOnlyPattern}} #fax_no="ngModel">
+                </div>
+              </div>
+            </div>
+            <small
+              *ngIf="area_fax_no.errors?.pattern && area_fax_no.touched || fax_no.errors?.pattern && fax_no.touched"
+              class="text-danger">
+              Fax No is required and format should be <i>0-9</i>.
+            </small>
+          </div>
+          <!--#endregion fax no-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region lookup Province Code-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="labelmodule" (click)="resetProvince()" [ngStyle]="getStyles2(this.plafondStatus)"
+                title="CLEAR">Province</label>
+              <div class="col-md-12 buttons">
+                <span>
+                  <button [disabled]="this.plafondStatus"
+                    class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    (click)="btnLookupProvince()" data-toggle="modal" data-target="#lookupModalProvince" href="#"><i
+                      class="fa fa-search-plus"></i></button>
+                  {{model.province_name}}
+                  <input type="hidden" class="form-control" [ngModel]="model.province_code" name="p_province_code">
+                  <input type="hidden" class="form-control" [ngModel]="model.province_name" name="p_province_name">
+                </span>
+              </div>
+            </div>
+          </div>
+          <!--#endregion lookup Province Code-->
+
+          <!--#region lookup City code-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="labelmodule" (click)="resetCity()" [ngStyle]="getStyles2(this.plafondStatus)" title="CLEAR">City</label>
+              <div class="col-md-12 buttons">
+                <span>
+                  <button [disabled]="this.plafondStatus"
+                    class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    (click)="btnLookupCity()" data-toggle="modal" data-target="#lookupModalCity" href="#"><i
+                      class="fa fa-search-plus"></i></button>
+                  {{model.city_name}}
+                  <input type="hidden" class="form-control" [ngModel]="model.city_code" name="p_city_code">
+                  <input type="hidden" class="form-control" [ngModel]="model.city_name" name="p_city_name">
+                </span>
+              </div>
+            </div>
+          </div>
+          <!--#endregion lookup City Code-->
+
+          <!--#region zip code-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="labelmodule" (click)="resetZipCode()" [ngStyle]="getStyles2(this.plafondStatus)" title="CLEAR">Zip
+                Code</label>
+              <div class="col-md-12 buttons btn-lookup-margin">
+                <span>
+                  <button [disabled]="this.plafondStatus" class="btn btn-icon btn-outline-default btn-round btn-md"
+                    type="button" (click)="btnLookupZipCode()" data-toggle="modal" data-target="#lookupModalZipCode"
+                    href="#"><i class="fa fa-search-plus"></i></button>
+                  {{model.zip_code_code}}
+                  <input type="hidden" class="form-control" [ngModel]="model.zip_name" name="p_zip_name">
+                  <input type="hidden" class="form-control" [ngModel]="model.zip_code" name="p_zip_code">
+                  <input type="hidden" class="form-control" [ngModel]="model.zip_code_code" name="p_zip_code_code">
+                </span>
+              </div>
+            </div>
+          </div>
+          <!--#endregion zip code-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region sub district-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Sub District</label>
+              <input type="text" class="form-control" [ngModel]="model.sub_district" maxlength="250"
+                name="p_sub_district" readonly>
+            </div>
+          </div>
+          <!--#endregion sub district-->
+
+          <!--#region village-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Village</label>
+              <input type="text" class="form-control" [ngModel]="model.village" maxlength="250" name="p_village"
+                readonly>
+            </div>
+          </div>
+          <!--#endregion village-->
+
+          <!--#region rt/rw-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="rt && rw" class="control-label">RT/RW</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <input [disabled]="this.plafondStatus" type="text" class="form-control" [ngModel]="model.rt"
+                    name="p_rt" #rt="ngModel" pattern="{{NumberOnlyPattern}}">
+                </div>
+                -
+                <div class="col-md-4">
+                  <input [disabled]="this.plafondStatus" type="text" class="form-control" [ngModel]="model.rw"
+                    name="p_rw" #rw="ngModel" pattern="{{NumberOnlyPattern}}">
+                </div>
+              </div>
+            </div>
+            <small *ngIf="rt.errors?.pattern && rt.touched || rw.errors?.pattern && rw.touched" class="text-danger">
+              RT/RW No format should be <i>0-9</i>
+            </small>
+          </div>
+          <!--#endregion rt/rw-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region address-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Address</label>
+              <textarea [disabled]="this.plafondStatus" type="text" class="form-control" [ngModel]="model.address"
+                maxlength="4000" name="p_address"></textarea>
+            </div>
+          </div>
+          <!--#endregion address-->
+        </div>
+        <!--#endregion row-->
+      </form>
+      <!--#endregion form-->
+    </div>
+    <div class="card-footer ">
+    </div>
+  </div>
+</div>
+
+<!--#region lookup BusinessLine-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalBusinessLine"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupBusinessLine" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupbusinessline;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupbusinessline.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowBusinessLine(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup BusinessLine-->
+
+<!--#region lookup SubBusinessLine-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSubBusinessLine"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupSubBusinessLine" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupsubbusinessline;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupsubbusinessline.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowSubBusinessLine(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup SubBusinessLine-->
+
+<!--#region lookup province-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalProvince"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupProvince" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupprovince;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupprovince.numberIndex+i+1}}</td>
+                  <td style="text-align: center;width: 20%;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowLookupProvince(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup province-->
+
+<!--#region lookup city-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalCity" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupCity" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupcity;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupcity.numberIndex+i+1}}</td>
+                  <td style="text-align: center;width: 20%;">{{ row.code }}</td>
+                  <td style="width: 80%;"> {{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowLookupCity(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup city-->
+
+<!--#region lookup zip-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalZipCode"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupZipCode" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Sub District</th>
+                  <th>Village</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupzipcode;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupzipcode.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.postal_code }}</td>
+                  <td style="width: 40%;">{{ row.sub_district }}</td>
+                  <td style="width: 40%;">{{ row.village }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowLookupZipCode(row.code, row.postal_code, row.zip_code_name, row.sub_district,row.village)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup zip-->
+
+<!--#region lookup WorkType-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalWorkType"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupWorkType" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupworktype;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupworktype.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowWorkType(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup WorkType-->

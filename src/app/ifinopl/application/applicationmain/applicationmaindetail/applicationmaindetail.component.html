@@ -1,0 +1,1414 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header ">
+          <h4 class="card-title">Application Info</h4>
+
+          <h5 [hidden]="!this.isSimulation" style="color: red;float: right;"><b>Simulation</b></h5>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #applicationmaindetailForm="ngForm"
+            (ngSubmit)="onFormSubmit(applicationmaindetailForm.value, applicationmaindetailForm.valid)">
+            <div class="toolbar">
+              <!--#region button Save,Proceed,Cancel,Back-->
+              <button
+                [hidden]="this.model.application_status === 'CANCEL' || this.model.application_status === 'ON PROCESS'"
+                type="submit" class="btn btn-info btn-round" data-role="R00019900021991C">Save
+              </button>
+              <button
+                [hidden]="this.model.approval_code == null || this.param == null || this.model.application_status !== 'HOLD'"
+                type="button" class="btn btn-success btn-round custom-button-width"
+                (click)="btnViewApprovalForProceed()" data-toggle="modal" data-target="#lookupModalApproval" href="#"
+                data-role="R00019900001991O">Proceed to Last Level
+              </button>
+
+              <button [hidden]="this.param == null || this.model.application_status !== 'HOLD'" type="button"
+                class="btn btn-success btn-round" (click)="btnProceed(this.param)" data-role="R00019900001991O">Proceed
+              </button>
+
+              <!-- <button [hidden]="this.model.application_status !== 'APPROVE' || !this.isSimulation"
+                class="btn btn-success btn-round custom-button-width" type="button" data-target="#lookupClientMatching"
+                data-role="R00020690000031O" data-toggle="modal" href="#">
+                Proceed To Application </button> -->
+              <button [hidden]="this.param == null" type="button" class="btn btn-warning btn-round"
+                (click)="btnCancel(this.param)" data-role="R00019900001991R">Cancel
+              </button>
+              <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back
+              </button>
+              <button hidden id="applicationDetail" type="button" class="btn btn-danger btn-round"
+                (click)="callGetrow()">
+              </button>
+              <button type="button" (click)="btnPrintQuotation()" style='float: right;'
+                class="btn btn-info btn-round custom-button-width" data-role="R00020710012072P"
+                [hidden]="model.is_simulation! == '1' && model.level_status !== 'OFFERING LETTER' || this.param == null || model.application_status == 'HOLD'">Print
+                Quotation</button>
+            </div>
+            <!--#endregion button Save,Proceed,Cancel,Back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region application_no-->
+              <input type="text" [ngModel]="this.param" name="p_application_no" hidden>
+              <!--#endregion application_no-->
+
+              <!--#region amortTypeCode-->
+              <input id="amortTypeCode" type="text" [ngModel]="model.amort_type_code" name="p_amort_type_code" hidden>
+              <!--#endregion amortTypeCode-->
+
+              <!--#region application_external_no-->
+              <div class="col-md-4">
+                <div [hidden]="model.application_external_no != null" class="row"
+                  style="margin-bottom: -15px; padding-top: 30px;">
+                  <h1 class="col-md-4" style="font-size: 12px;">Application No</h1>
+                  <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                    Generate-</h1>
+                </div>
+                <div [hidden]="model.application_external_no == null" class="form-group">
+                  <label>Application No</label>
+                  <input type="text" class="form-control" [ngModel]="model.application_external_no"
+                    name="p_application_external_no" readonly>
+                </div>
+              </div>
+              <!--#endregion application_external_no-->
+
+              <!--#region application_status-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Application Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.application_status"
+                    name="p_application_status" readonly>
+                </div>
+              </div>
+              <!--#endregion application_status-->
+
+              <!--#region level_status-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Workflow Status</label>
+                  <input id="levelStatus" type="text" class="form-control" [ngModel]="model.level_status"
+                    name="p_level_status" readonly>
+                </div>
+              </div>
+              <!--#endregion level_status-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region lookup SysBranch code -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="labelmodule">Branch *</label>
+                  <div class="col-md-12">
+                    <button [disabled]="pageType != null || this.param != null"
+                      class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      (click)="btnLookupSysBranch()" data-toggle="modal" data-target="#lookupModalSysBranch" href="#"><i
+                        class="fa fa-search-plus"></i></button>
+                    {{model.branch_name}}
+                    <input type="text" [ngModel]="model.branch_name" name="p_branch_name" hidden required
+                      #branch_name="ngModel">
+                    <input type="text" [ngModel]="model.branch_code" name="p_branch_code" hidden required
+                      #branch_code="ngModel">
+                  </div>
+                  <small
+                    *ngIf="(branch_code.errors?.required && branch_code.touched) || (branch_code.errors?.required && applicationmaindetailForm.submitted)"
+                    class="text-danger">
+                    Branch is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup SysBranch code -->
+
+              <!--#region SysRegion-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Region</label>
+                  <input type="text" class="form-control" [ngModel]="model.branch_region_name"
+                    name="p_branch_region_name" readonly>
+                  <input type="text" [ngModel]="model.branch_region_code" name="p_branch_region_code" hidden>
+                </div>
+              </div>
+              <!--#endregion SysRegion-->
+
+              <!--#region Marketing-->
+              <div class="col-md-4">
+                <label class="labelmodule">Marketing *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="pageType != null"
+                      class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      (click)="btnLookupMarketing()" data-target="#lookupModalMarketing" data-toggle="modal" href="#">
+                      <i class="fa fa-search-plus"></i></button> {{model.marketing_name}}
+                    <input type="text" name="p_marketing_name" [ngModel]="model.marketing_name" hidden required
+                      #marketing_name="ngModel">
+                    <input type="text" name="p_marketing_code" [ngModel]="model.marketing_code" hidden required
+                      #marketing_code="ngModel">
+                  </div>
+                  <small
+                    *ngIf="(marketing_code.errors?.required && marketing_code.touched) || (marketing_code.errors?.required && applicationmaindetailForm.submitted)"
+                    class="text-danger">
+                    Marketing is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Marketing-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+
+              <!--#region application_date -->
+              <div class="col-md-4">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Application Date *</label>
+                      <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker
+                        [ngModel]="model.application_date" name="p_application_date" [options]="myDatePickerOptions"
+                        (click)="application_date.toggleCalendar()" required #p_application_date="ngModel"
+                        #application_date="angular-mydatepicker" autocomplete="off" />
+                      <small
+                        *ngIf="(p_application_date.errors?.required && p_application_date.touched) || (p_application_date.errors?.required && applicationmaindetailForm.submitted)"
+                        class="text-danger">
+                        Application Date is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Go Live Date</label>
+                      <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker
+                        [ngModel]="model.golive_date" name="p_golive_date" [options]="myDatePickerOptions"
+                        #p_golive_date="ngModel" #golive_date="angular-mydatepicker" autocomplete="off" readonly />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion application_date -->
+
+              <!--#region application_date-->
+              <!-- <div class="col-md-4">
+                <div class="form-group">
+                  <label>Application Date *</label>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.application_date" name="p_application_date" [options]="myDatePickerOptions"
+                    (click)="application_date.toggleCalendar()" required #p_application_date="ngModel"
+                    #application_date="angular-mydatepicker" autocomplete="off" />
+                  <small
+                    *ngIf="(p_application_date.errors?.required && p_application_date.touched) || (p_application_date.errors?.required && applicationmaindetailForm.submitted)"
+                    class="text-danger">
+                    Application Date is required
+                  </small>
+                </div>
+              </div> -->
+              <!--#endregion application_date-->
+
+              <!--#region Client -->
+              <div class="col-md-4" [hidden]="this.isSimulation">
+                <div class="form-group">
+                  <label>Client</label>
+                  <div class="row">
+                    <div class="col-md-8">
+                      <input type="text" class="form-control" [ngModel]="model.client_name" name="p_client_name"
+                        readonly>
+                    </div>
+                    <div class="col-md-4">
+                      <button style="margin-top: 0px;" type="button" class="btn btn-info btn-round"
+                        (click)="btnClientMain(model.client_id)">Client</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion Client -->
+
+              <!--#region Facility-->
+              <div class="col-md-4">
+                <label>Facility *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button
+                      [disabled]="pageType != null || model.package_code != null || model.plafond_group_code != null"
+                      class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      (click)="btnLookupFacility()" data-target="#lookupModalFacility" data-toggle="modal" href="#">
+                      <i class="fa fa-search-plus"></i></button>
+                    {{model.facility_desc}}
+                    <input type="text" name="p_facility_code" [ngModel]="model.facility_code" hidden required
+                      #facility_code="ngModel">
+                  </div>
+                  <small
+                    *ngIf="(facility_code.errors?.required && facility_code.touched) || (facility_code.errors?.required && applicationmaindetailForm.submitted)"
+                    class="text-danger">
+                    Facility is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Facility-->
+            </div>
+            <!--#endregion row-->
+
+            <!-- #region row  -->
+            <div class="row" [hidden]="!this.isSimulation">
+              <!--#region Client -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Client Name *</label>
+                  <input type="text" class="form-control" [ngModel]="model.client_name" name="p_client_name" required
+                    #client_name="ngModel">
+                </div>
+                <small
+                  *ngIf="(client_name.errors?.required && client_name.touched) || (client_name.errors?.required && applicationmaindetailForm.submitted)"
+                  class="text-danger">
+                  Client Name is required
+                </small>
+              </div>
+              <!--#endregion Client -->
+
+              <!--#region client_phone_area + client_phone_no-->
+              <div class="col-md-4" [hidden]="model.billing_to === 'CLIENT'">
+                <div class="form-group">
+                  <label class="control-label">Phone No *</label>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <input [disabled]="this.pageType != null || model.billing_to === 'CLIENT'" type="text"
+                        class="form-control" [ngModel]="model.client_phone_area" name="p_client_phone_area"
+                        #client_phone_area="ngModel" maxlength="4" pattern={{NumberOnlyPattern}} required
+                        #client_phone_area="ngModel">
+                    </div>
+                    -
+                    <div class="col-md-7">
+                      <input [disabled]="this.pageType != null || model.billing_to === 'CLIENT'" type="text"
+                        class="form-control" [ngModel]="model.client_phone_no" name="p_client_phone_no" maxlength="15"
+                        #client_phone_no="ngModel" pattern={{NumberOnlyPattern}} required #client_phone_no="ngModel">
+                    </div>
+                  </div>
+                </div>
+                <small
+                  *ngIf="(client_phone_area.errors?.required && client_phone_area.touched || client_phone_no.errors?.required && client_phone_no.touched) || (client_phone_area.errors?.required && applicationmaindetailForm.submitted)"
+                  class="text-danger">
+                  Phone No is required
+                </small>
+                <small
+                  *ngIf="client_phone_area.errors?.pattern && client_phone_area.touched || client_phone_no.errors?.pattern && client_phone_no.touched"
+                  class="text-danger">
+                  Phone No is required and format should be <i>0-9</i>.
+                </small>
+              </div>
+              <!--#endregion client_phone_area + client_phone_no-->
+
+              <!--#region client_address-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="package_description" class="control-label">Client Address *</label>
+                  <textarea [disabled]="pageType != null" type="text" class="form-control"
+                    [ngModel]="model.client_address" name="p_client_address" required #client_address="ngModel"
+                    maxlength="4000"></textarea>
+                </div>
+                <small
+                  *ngIf="(client_address.errors?.required && client_address.touched) || (client_address.errors?.required && applicationmaindetailForm.submitted)"
+                  class="text-danger">
+                  Client Address is required
+                </small>
+              </div>
+              <!--#endregion client_address-->
+
+              <!--#region client_email-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="client_email" class="control-label">Client Email *</label>
+                  <input type="email" class="form-control" [ngModel]="model.client_email" name="p_client_email"
+                    #client_email="ngModel" pattern={{EmailPattern}} required>
+                </div>
+                <small
+                  *ngIf="(client_email.errors?.required && client_email.touched) || (client_email.errors?.required && applicationmaindetailForm.submitted)"
+                  class="text-danger">
+                  Client Email is required
+                </small>
+                <small *ngIf="client_email.errors?.pattern && client_email.touched" class="text-danger">
+                  Client Email is required and format should be <i>john@doe.com</i>.
+                </small>
+              </div>
+              <!--#endregion client_email-->
+            </div>
+            <!-- #endregion row  -->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Currency-->
+              <div class="col-md-4">
+                <label class="labelmodule">Currency *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button
+                      [disabled]="pageType != null || model.package_code != null || model.plafond_group_code != null"
+                      class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      (click)="btnLookupCurrency()" data-target="#lookupModalCurrency" data-toggle="modal" href="#">
+                      <i class="fa fa-search-plus"></i></button> {{model.currency_code}}
+                    <input type="hidden" name="p_currency_code" [ngModel]="model.currency_code" required
+                      #currency_code="ngModel">
+                  </div>
+                  <small
+                    *ngIf="(currency_code.errors?.required && currency_code.touched) || (currency_code.errors?.required && applicationmaindetailForm.submitted)"
+                    class="text-danger">
+                    Currency is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Currency-->
+
+              <!--#region periode-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Tenor *</label>
+                  <input [readonly]="this.pageType != null  || model.count_asset > 0" type="text"
+                    class="form-control col-md-4" [ngModel]="model.periode" name="p_periode" required #periode="ngModel"
+                    maxlength="4" pattern="{{NumberOnlyPattern}}">
+                  <small
+                    *ngIf="(periode.errors?.required && periode.touched) || (periode.errors?.required && applicationmaindetailForm.submitted)"
+                    class="text-danger">
+                    Tenor is required
+                  </small>
+                  <small *ngIf="periode.errors?.pattern && periode.touched" class="text-danger">
+                    Tenor is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion periode-->
+
+              <!--#region credit_term-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Credit Term (TOP) *</label>
+                  <input [readonly]="this.pageType != null  || model.count_asset > 0" type="text"
+                    class="form-control col-md-4" [ngModel]="model.credit_term" name="p_credit_term" required
+                    #credit_term="ngModel" maxlength="4" pattern="{{NumberOnlyPattern}}">
+                  <small
+                    *ngIf="(credit_term.errors?.required && credit_term.touched) || (credit_term.errors?.required && applicationmaindetailForm.submitted)"
+                    class="text-danger">
+                    Credit Term is required
+                  </small>
+                  <small *ngIf="credit_term.errors?.pattern && credit_term.touched" class="text-danger">
+                    Credit Term is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion credit_term-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region billing_type-->
+              <div class="col-md-4">
+                <label class="labelgsubcode">Billing Type *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="this.pageType != null || model.count_asset > 0"
+                      class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      (click)="btnLookupBillingType()" data-target="#lookupModalBillingType" data-toggle="modal"
+                      href="#">
+                      <i class="fa fa-search-plus"></i></button> {{model.billing_type_desc}}
+                    <input required type="hidden" name="p_billing_type" [ngModel]="model.billing_type"
+                      #billing_type="ngModel" />
+                  </div>
+                  <small
+                    *ngIf="(billing_type.errors?.required && billing_type.touched) || (billing_type.errors?.required && applicationmaindetailForm.submitted)"
+                    class="text-danger">
+                    Billing Type is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion billing_type-->
+
+              <!--#region radio button first_payment_type-->
+              <div class="col-md-4">
+                <label>Payment Type</label>
+                <div class="form-group col-md-12">
+                  <div class="row">
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input [disabled]="this.pageType != null  || model.count_asset > 0" class="form-check-input"
+                          type="radio" name="p_first_payment_type" value="ADV"
+                          [(ngModel)]="model.first_payment_type">ADVANCE
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input [disabled]="this.pageType != null  || model.count_asset > 0" class="form-check-input"
+                          type="radio" name="p_first_payment_type" value="ARR"
+                          [(ngModel)]="model.first_payment_type">ARREAR
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion radio button first_payment_type-->
+
+              <!--#region is_purchase_requirement_after_lease-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox"
+                        [ngModel]="model.is_purchase_requirement_after_lease"
+                        name="p_is_purchase_requirement_after_lease"
+                        [disabled]="this.pageType != null  || model.count_asset > 0">
+                      Purchase Requirement After Lease
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion is_purchase_requirement_after_lease-->
+
+              <!--#region round_amount-->
+              <div class="col-md-4" hidden>
+                <div class="form-group">
+                  <label>Rounding</label>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <input readonly type="text" class="form-control" style="text-align: center;"
+                        [ngModel]="model.round_type" name="p_round_type" #round_type="ngModel">
+                    </div>
+                    -
+                    <div class="col-md-6">
+                      <input readonly type="text" class="form-control" style="text-align: right;"
+                        [ngModel]="model.round_amount | number : '1.2-2'" amount="round_amount" name="p_round_amount"
+                        #round_amount="ngModel">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion round_amount-->
+            </div>
+            <!--#endregion row-->
+
+            <!-- #region row -->
+            <div class="row">
+              <!--#region total_fee_amount-->
+              <div class="col-md-4" hidden>
+                <div class="form-group">
+                  <label>Total Fee Amount</label>
+                  <input type="text" class="form-control col-md-6" style="text-align: right;"
+                    [ngModel]="model.total_fee_amount | number : '1.2-2'" amount="total_fee_amount"
+                    name="p_total_fee_amount" readonly>
+                </div>
+              </div>
+              <!--#endregion total_fee_amount-->
+
+              <!--#region main_contract_no -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Main Contract</label>
+                  <div class="row">
+                    <div class="col-md-8">
+                      <input type="text" class="form-control" [ngModel]="model.main_contract_no"
+                        amout="main_contract_no" name="p_main_contract_no" readonly>
+                    </div>
+                    <div class="col-md-4" [hidden]="this.isSimulation">
+                      <input type="text" class="form-control" [ngModel]="model.client_no" name="p_client_no" hidden>
+                      <span>
+                        <button style="margin-top: 0px;" type="button" class="btn btn-info btn-round"
+                          data-toggle="modal" href="#" (click)="btnCheck(model.client_no)">Exposure</button>
+                        <button hidden id="btnViewExposureApplication" style="margin-top: 0px;" type="button"
+                          class="btn btn-info btn-round" data-toggle="modal" href="#"
+                          data-target="#lookupModalSelectView" (click)="btnView()">Exposure</button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion main_contract_no -->
+
+              <!--#region rental_amount-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Rental Amount</label>
+                  <input type="text" class="form-control col-md-6" style="text-align: right;"
+                    [ngModel]="model.rental_amount | number : '1.2-2'" amount="rental_amount" name="p_rental_amount"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion rental_amount-->
+
+              <!--#region application_remarks-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="package_description" class="control-label">Remark *</label>
+                  <textarea [disabled]="pageType != null" type="text" class="form-control"
+                    [ngModel]="model.application_remarks" name="p_application_remarks" required
+                    #application_remarks="ngModel" maxlength="4000"></textarea>
+                  <small
+                    *ngIf="(application_remarks.errors?.required && application_remarks.touched) || (application_remarks.errors?.required && applicationmaindetailForm.submitted)"
+                    class="text-danger">
+                    Remark is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion application_remarks-->
+            </div>
+            <!-- #endregion row -->
+
+            <!-- #region row  -->
+            <div class="row">
+              <!--#region radio button lease_option-->
+              <div class="col-md-4" hidden>
+                <label>Lease Option</label>
+                <div class="form-group" style="margin-left: 15px;">
+                  <div class="row">
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input [disabled]="this.pageType != null  || model.count_asset > 0" checked
+                          class="form-check-input col-md-6" type="radio" name="p_lease_option" value="FULL"
+                          [(ngModel)]="model.lease_option">FULL
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input [disabled]="this.pageType != null  || model.count_asset > 0"
+                          class="form-check-input col-md-6" type="radio" name="p_lease_option" value="NON"
+                          [(ngModel)]="model.lease_option">NON MAINTENANCE
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion radio button lease_option-->
+            </div>
+            <!-- #endregion row  -->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region agreement_sign_date-->
+              <!-- <div class="col-md-4">
+                <div class="form-group">
+                  <label>Agreement Sign Date</label>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.agreement_sign_date" name="p_agreement_sign_date" [options]="myDatePickerOptions"
+                    #p_agreement_sign_date="ngModel" #agreement_sign_date="angular-mydatepicker" autocomplete="off"
+                    readonly />
+                </div>
+              </div> -->
+              <!--#endregion agreement_sign_date-->
+
+              <!--#region golive_date-->
+              <!-- <div class="col-md-4">
+                <div class="form-group">
+                  <label>Go Live Date</label>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.golive_date" name="p_golive_date" [options]="myDatePickerOptions"
+                    #p_golive_date="ngModel" #golive_date="angular-mydatepicker" autocomplete="off" readonly />
+                </div>
+              </div> -->
+              <!--#endregion golive_date-->
+
+              <!--#region first_installment_date-->
+              <!-- <div class="col-md-4">
+                <div class="form-group">
+                  <label>First Installment Date</label>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.first_installment_date" name="p_first_installment_date"
+                    [options]="myDatePickerOptions" #p_first_installment_date="ngModel"
+                    #first_installment_date="angular-mydatepicker" autocomplete="off" readonly />
+                </div>
+              </div> -->
+              <!--#endregion first_installment_date-->
+
+              <!--#region is_blacklist_area-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" [ngModel]="model.is_blacklist_area"
+                        name="p_is_blacklist_area" disabled> Watchlist Area
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion is_blacklist_area-->
+
+              <!--#region is_blacklist_job-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" [ngModel]="model.is_blacklist_job"
+                        name="p_is_blacklist_job" disabled> Watchlist Job
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion is_blacklist_job-->
+
+              <!--#region return_count-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Return Count</label>
+                  <input type="text" class="form-control col-md-2" [ngModel]="model.return_count" name="p_return_count"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion return_count-->
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+        </div>
+
+        <!--#region wizard-->
+        <div class="wizard-custom-margin" [hidden]="model.applicationDate == null">
+          <!--#region wizard container -->
+          <div class="wizard-container">
+            <div class="card-wizard" style="opacity: 1 !important; min-height: 0px; margin-bottom: -40px;"
+              data-color="primary" id="wizardProfile">
+              <div class="text-center">
+                <div class="wizard-navigation">
+                  <ul>
+                    <li class="nav-item">
+                      <a class="nav-link" (click)="assetwiz()" href="#assetlist" data-toggle="tab" role="tab"
+                        aria-controls="asset" aria-selected="true">
+                        Asset
+                      </a>
+                    </li>
+                    <li class="nav-item" id="administrationwiz">
+                      <a class="nav-link" (click)="administrationwiz()" href="#administrationdetail" data-toggle="tab"
+                        role="tab" aria-controls="administration" aria-selected="true">
+                        Administration
+                      </a>
+                    </li>
+                    <li class="nav-item" id="surveywiz">
+                      <a class="nav-link" (click)="surveywiz()" href="#surveylist" data-toggle="tab" role="tab"
+                        aria-controls="survey" aria-selected="true">
+                        Survey
+                      </a>
+                    </li>
+                    <li class="nav-item" id="legalwiz">
+                      <a class="nav-link" (click)="legalwiz()" href="#legaldetail" data-toggle="tab" role="tab"
+                        aria-controls="legal" aria-selected="true">
+                        Legal
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" (click)="approvalwiz()" href="#approvaldetail" data-toggle="tab" role="tab"
+                        aria-controls="approval" aria-selected="true">
+                        Approval & Log
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion wizard container-->
+        </div>
+        <!--endregion wizard-->
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region lookupClientMatching-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupClientMatching"
+  style="margin-top: -65px">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="width: 1200px">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body ">
+            <!--#region form-->
+            <form #clientMatchingForm="ngForm"
+              (ngSubmit)="onFormSubmitClientMathcing(clientMatchingForm.value, clientMatchingForm.valid)">
+
+              <!--#region row-->
+              <div class="row">
+                <!--#region Client Type-->
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Client Type</label>
+                    <select class="form-control col-md-6" [disabled]="this.isReadOnly" [ngModel]="this.client_type"
+                      name="p_client_type" (change)="clientType($event)">
+                      <option value='CORPORATE'>CORPORATE</option>
+                      <option value='PERSONAL'>PERSONAL</option>
+                    </select>
+                  </div>
+                </div>
+                <!--#endregion Client Type-->
+              </div>
+              <!--#endregion row-->
+
+              <!--#region row-->
+              <div class="row">
+                <!--#region Document Type-->
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Document Type</label>
+                    <select class="form-control col-md-6" [disabled]="this.isReadOnly" [ngModel]="this.document_type"
+                      name="p_document_types" (change)="documentType($event)">
+                      <option [hidden]="clientMatchingForm.value.p_client_type !== 'CORPORATE'" value='NPWP'>NPWP
+                      </option>
+                      <option [hidden]="clientMatchingForm.value.p_client_type !== 'PERSONAL'" value='KTP'>KTP
+                      </option>
+                      <option [hidden]="clientMatchingForm.value.p_client_type !== 'PERSONAL'" value='KITAS'>
+                        KITAS</option>
+                    </select>
+                    <input type="text" [(ngModel)]="this.document_type" name="p_document_type" hidden>
+                  </div>
+                </div>
+                <!--#endregion Document Type-->
+
+                <!--#region document_no-->
+                <div class="col-md-4" [hidden]="this.document_type !== 'NPWP'">
+                  <div class="form-group">
+                    <label for="p_npwp_no" class="control-label">
+                      NPWP No *
+                    </label>
+                    <input id="npwp" type="text" class="form-control" [(ngModel)]="this.npwp_no" name="p_npwp_no"
+                      [disabled]="this.isReadOnly || this.document_type !== 'NPWP'" required #p_npwp_no="ngModel"
+                      pattern={{NpwpPattern}} (keydown)="onKeydownNpwp($event)" (paste)="onPasteNpwp($event)"
+                      (focus)="onFokusNpwp($event)" (blur)="onChangeNpwp($event)">
+                    <small
+                      *ngIf="( p_npwp_no.errors?.required && p_npwp_no.touched || (p_npwp_no.errors?.required && clientMatchingForm.submitted)) || ( p_npwp_no.errors?.required && clientMatchingForm.submitted)"
+                      class="text-danger">NPWP No is required
+                    </small>
+                    <small *ngIf="p_npwp_no.errors?.pattern && p_npwp_no.touched" class="text-danger">
+                      NPWP No is required and format should be <i>00.000.000.0-000.000</i>
+                    </small>
+                  </div>
+                </div>
+
+                <div class="col-md-4" [hidden]="this.document_type !== 'KTP'">
+                  <div class="form-group">
+                    <label for="p_ktp_no" class="control-label">
+                      KTP No *
+                    </label>
+                    <input id="ktp" type="text" class="form-control" [(ngModel)]="model.ktp_no" name="p_ktp_no"
+                      [disabled]="this.isReadOnly || this.document_type !== 'KTP'" required #p_ktp_no="ngModel">
+                    <small
+                      *ngIf="(p_ktp_no.errors?.required && p_ktp_no.touched || (p_ktp_no.errors?.required && clientMatchingForm.submitted)) || (p_ktp_no.errors?.required && clientMatchingForm.submitted)"
+                      class="text-danger">KTP No is required
+                    </small>
+                  </div>
+                </div>
+                <div class="col-md-4" [hidden]="this.document_type !== 'KITAS'">
+                  <div class="form-group">
+                    <label for="p_kitas_no" class="control-label">
+                      KITAS No *
+                    </label>
+                    <input type="text" class="form-control" [(ngModel)]="model.kitas_no" name="p_kitas_no"
+                      [disabled]="this.isReadOnly || this.document_type !== 'KITAS'" required #p_kitas_no="ngModel"
+                      maxlength="20">
+                    <small
+                      *ngIf="(p_kitas_no.errors?.required && p_kitas_no.touched || (p_kitas_no.errors?.required && clientMatchingForm.submitted)) || (p_kitas_no.errors?.required && clientMatchingForm.submitted)"
+                      class="text-danger">
+                      KITAS No is required
+                    </small>
+                  </div>
+                </div>
+                <!--#endregion document_no-->
+
+                <!--#region full_name-->
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="p_full_name" class="control-label">Full Name *</label>
+                    <input type="text" class="form-control" [(ngModel)]="this.full_name" name="p_full_name"
+                      [readonly]="this.isReadOnly" required #p_full_name="ngModel" minlength="3">
+                    <small
+                      *ngIf="(p_full_name.errors?.required && p_full_name.touched || (p_full_name.errors?.required && clientMatchingForm.submitted)) || (p_full_name.errors?.required && clientMatchingForm.submitted)"
+                      class="text-danger">
+                      Full Name is required
+                    </small>
+                    <small *ngIf="p_full_name.errors?.pattern && p_full_name.touched" class="text-danger">
+                      Full Name is required and format should be <i>A-z a-z</i>
+                    </small>
+                    <small *ngIf="p_full_name.errors?.minlength && p_full_name.touched" class="text-danger">
+                      Full Name length must be greater than 3 character
+                    </small>
+                  </div>
+                </div>
+                <!--#endregion full_name-->
+
+                <!--#region mother_maiden_name-->
+                <div class="col-md-4" [hidden]="this.client_type != 'PERSONAL'">
+                  <div class="form-group">
+                    <label for="p_mother_maiden_name" class="control-label">Mother Maiden Name *</label>
+                    <input type="text" class="form-control" [(ngModel)]="this.mother_maiden_name"
+                      name="p_mother_maiden_name" [disabled]="this.isReadOnly"
+                      [required]="this.client_type == 'PERSONAL'" #p_mother_maiden_name="ngModel" minlength="3">
+                    <small
+                      *ngIf="(p_mother_maiden_name.errors?.required && p_mother_maiden_name.touched || (p_mother_maiden_name.errors?.required && clientMatchingForm.submitted)) || (p_mother_maiden_name.errors?.required && clientMatchingForm.submitted)"
+                      class="text-danger">
+                      Mother Maiden Name is required
+                    </small>
+                    <small *ngIf="p_mother_maiden_name.errors?.pattern && p_mother_maiden_name.touched"
+                      class="text-danger">
+                      Mother Maiden Name is required format should be <i>A-z a-z</i>
+                    </small>
+                    <small *ngIf="p_mother_maiden_name.errors?.minlength && p_mother_maiden_name.touched"
+                      class="text-danger">
+                      Mother Maiden Name length must be greater than 3 character
+                    </small>
+                  </div>
+                </div>
+                <!--#endregion mother_maiden_name-->
+
+                <!--#region est_date-->
+                <div class="col-md-4" [hidden]="this.client_type != 'CORPORATE'">
+                  <div class="form-group">
+                    <label>Established Date *</label>
+                    <input [ngStyle]="getStyles(this.isReadOnly)" class="form-control col-md-6" placeholder="dd/mm/yyyy"
+                      angular-mydatepicker [ngModel]="model.est_date" name="p_est_date" [options]="myDatePickerOptions"
+                      (click)="est_date.toggleCalendar()" [required]="this.client_type == 'CORPORATE'"
+                      #p_est_date="ngModel" #est_date="angular-mydatepicker" autocomplete="off" />
+                    <small
+                      *ngIf="(p_est_date.errors?.required && p_est_date.touched) || (p_est_date.errors?.required && clientMatchingForm.submitted)"
+                      class="text-danger">
+                      Established Date is required
+                    </small>
+                  </div>
+                </div>
+                <!--#endregion est_date-->
+
+                <!--#region place_of_birth-->
+                <div class="col-md-4" [hidden]="this.client_type != 'PERSONAL'">
+                  <div class="form-group">
+                    <label for="p_place_of_birth" class="control-label">Place of Birth *</label>
+                    <input type="text" class="form-control" [(ngModel)]="this.place_of_birth" name="p_place_of_birth"
+                      [readonly]="this.isReadOnly" [required]="this.client_type == 'PERSONAL'"
+                      #p_place_of_birth="ngModel" minlength="3">
+                    <small
+                      *ngIf="(p_place_of_birth.errors?.required && p_place_of_birth.touched || (p_place_of_birth.errors?.required && clientMatchingForm.submitted)) || (p_place_of_birth.errors?.required && clientMatchingForm.submitted)"
+                      class="text-danger">
+                      Place of Birth is required
+                    </small>
+                    <small *ngIf="p_place_of_birth.errors?.pattern && p_place_of_birth.touched" class="text-danger">
+                      Place of Birth is required format should be <i>A-z a-z</i>
+                    </small>
+                    <small *ngIf="p_place_of_birth.errors?.minlength && p_place_of_birth.touched" class="text-danger">
+                      Place of Birth length must be greater than 3 character
+                    </small>
+                  </div>
+                </div>
+                <!--#endregion place_of_birth-->
+
+                <!--#region date_of_birth-->
+                <div class="col-md-4" [hidden]="this.client_type != 'PERSONAL'">
+                  <div class="form-group">
+                    <label for="p_date_of_birth" class="control-label">Date of Birth *</label>
+                    <input [ngStyle]="getStyles(isReadOnly)" class="form-control col-md-6" placeholder="dd/mm/yyyy"
+                      angular-mydatepicker [ngModel]="model.date_of_birth" [required]="this.client_type == 'PERSONAL'"
+                      name="p_date_of_birth" [options]="myDatePickerOptions" (click)="date_of_birth.toggleCalendar()"
+                      #p_date_of_birth="ngModel" #date_of_birth="angular-mydatepicker" autocomplete="off"
+                      [readonly]="this.isReadOnly" />
+                    <small
+                      *ngIf="(p_date_of_birth.errors?.required && p_date_of_birth.touched || (p_date_of_birth.errors?.required && clientMatchingForm.submitted)) || (p_date_of_birth.errors?.required && clientMatchingForm.submitted)"
+                      class="text-danger">
+                      Date of Birth is required
+                    </small>
+                  </div>
+                </div>
+                <!--#endregion date_of_birth-->
+              </div>
+              <!--#endregion row-->
+
+              <!--#region row-->
+              <div class="toolbar">
+                <button type="button" type="submit" class="btn btn-success btn-round" data-role="R00015820001583O"
+                  [hidden]="this.isReadOnly">View</button>
+                <button type="button" class="btn btn-warning btn-round" data-role="R00015820001583D"
+                  (click)="btnReset()">Reset</button>
+              </div>
+              <!--#endregion row-->
+            </form>
+            <!--#endregion form-->
+          </div>
+          <div *ngIf="this.isReadOnly === true">
+            <!--#region list view -->
+            <span layout="row horizontal-divider">
+              <hr flex />
+            </span>
+            <div class="col-md-12">
+              <div class="card-body">
+                <div class="toolbar">
+                </div>
+                <!--#region list view-->
+                <table id="datatableClientMatchingList" datatable [dtOptions]="dtOptions"
+                  class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                  <thead>
+                    <tr>
+                      <th style="display: none;"></th>
+                      <th class="disabled-sorting">No</th>
+                      <th>Client No</th>
+                      <th>Full Name</th>
+                      <th>ID No</th>
+                      <th>
+                        <a [hidden]="this.client_type !== 'PERSONAL'">Mother Maiden Name</a>
+                        <a [hidden]="this.client_type !== 'CORPORATE'">Corporate Status</a>
+                      </th>
+                      <th>
+                        <a [hidden]="this.client_type !== 'PERSONAL'">Place of Birth</a>
+                        <a [hidden]="this.client_type !== 'CORPORATE'">Established Date</a>
+                      </th>
+                      <th [hidden]="this.client_type !== 'PERSONAL'">Date of Birth</th>
+                      <th>Watchlist Status</th>
+                      <th style="text-align: center;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of listclient;let i=index ">
+                      <td style="display: none;"></td>
+                      <td style="text-align: center;">{{listclient.numberIndex+i+1}}</td>
+                      <td style="width: 10%;"
+                        [ngStyle]="{'backgroundColor': row.check_status === 'WARNING' && row.isActive === 'Yes' ? '#ffff99' : row.check_status == 'NEGATIVE' && row.isActive === 'Yes' ? '#ff8080' : 'none'}">
+                        {{row.client_no}} {{row.isActive === 'Yes'}}</td>
+                      <td style="width: 30%;"
+                        [ngStyle]="{'backgroundColor': row.check_status === 'WARNING' && row.isActive === 'Yes' ? '#ffff99' : row.check_status == 'NEGATIVE' && row.isActive === 'Yes' ? '#ff8080' : 'none'}">
+                        {{row.full_name}}</td>
+                      <td style="width: 10%;"
+                        [ngStyle]="{'backgroundColor': row.check_status === 'WARNING' && row.isActive === 'Yes' ? '#ffff99' : row.check_status == 'NEGATIVE' && row.isActive === 'Yes' ? '#ff8080' : 'none'}">
+                        {{row.id_no}}</td>
+                      <td style="width: 15%;"
+                        [ngStyle]="{'backgroundColor': row.check_status === 'WARNING' && row.isActive === 'Yes' ? '#ffff99' : row.check_status == 'NEGATIVE' && row.isActive === 'Yes' ? '#ff8080' : 'none'}">
+                        <a [hidden]="this.client_type !== 'PERSONAL'">{{row.mother_maiden_name}}</a>
+                        <a [hidden]="this.client_type !== 'CORPORATE'">{{row.corporate_status_desc}}</a>
+                      </td>
+                      <td style="width: 15%;text-align: center;"
+                        [ngStyle]="{'backgroundColor': row.check_status === 'WARNING' && row.isActive === 'Yes' ? '#ffff99' : row.check_status == 'NEGATIVE' && row.isActive === 'Yes' ? '#ff8080' : 'none'}">
+                        <a [hidden]="this.client_type !== 'PERSONAL'">{{row.place_of_birth}}</a>
+                        <a [hidden]="this.client_type !== 'CORPORATE'">{{row.est_date}}</a>
+                      </td>
+                      <td style="width: 10%;text-align: center;" [hidden]="this.client_type !== 'PERSONAL'"
+                        [ngStyle]="{'backgroundColor': row.check_status === 'WARNING' && row.isActive === 'Yes' ? '#ffff99' : row.check_status == 'NEGATIVE' && row.isActive === 'Yes' ? '#ff8080' : 'none'}">
+                        {{row.date_of_birth}}</td>
+                      <td style="width: 10%;text-align: center;"
+                        [ngStyle]="{'backgroundColor': row.check_status === 'WARNING' && row.isActive === 'Yes' ? '#ffff99' : row.check_status == 'NEGATIVE' && row.isActive === 'Yes' ? '#ff8080' : 'none'}">
+                        {{row.check_status}}</td>
+                      <td class="text-center"
+                        [ngStyle]="{'backgroundColor': row.check_status === 'WARNING' && row.isActive === 'Yes' ? '#ffff99' : row.check_status == 'NEGATIVE' && row.isActive === 'Yes' ? '#ff8080' : 'none'}">
+                        <button class="btn btn-outline-default btn-round" (click)="btnSelectClient()">Select</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!--#endregion list view-->
+              </div>
+            </div>
+            <!--#endregion list view-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookupClientMatching-->
+
+<!--#region lookup SelectView-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSelectView"
+  style="margin-left: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="width: 1200px; margin-left: -150px;">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="toolbar" style="margin-left: 30px;">
+          <!-- #region row -->
+          <div class="row">
+            <!--#region amount_finance_amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label style="font-size: 1.2em;">Total Principal Amount : {{this.amountFinanceAmount | number :
+                  '1.2-2'}}</label>
+              </div>
+            </div>
+            <!--#endregion amount_finance_amount-->
+
+            <!--#region os_installment_amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label style="font-size: 1.2em;">Total OS Principal Amount : {{this.osInstallmentAmount | number :
+                  '1.2-2'}}</label>
+              </div>
+            </div>
+            <!--#endregion os_installment_amount-->
+          </div>
+          <!-- #endregion row -->
+
+          <!-- #region row -->
+          <div class="row">
+            <!--#region installment_amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label style="font-size: 1.2em;">Total Installment Amount : {{this.installmentAmount | number :
+                  '1.2-2'}}</label>
+              </div>
+            </div>
+            <!--#endregion installment_amount-->
+
+            <!--#region ovd_installment_amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label style="font-size: 1.2em;">Total OVD Installment Amount : {{this.ovdInstallmentAmount | number
+                  :
+                  '1.2-2'}}</label>
+              </div>
+            </div>
+            <!--#endregion ovd_installment_amount-->
+          </div>
+          <!-- #endregion row -->
+        </div>
+        <div class="col-md-12">
+          <div class="card-body col-md-12" style="width: 100%">
+            <table id="datatableLookupSelectView" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Agreement No / Application No</th>
+                  <th>Date</th>
+                  <th>OVD / Max OVD Days</th>
+                  <th>Package</th>
+                  <th>Tenor / OS Tenor</th>
+                  <th>Principal Amount</th>
+                  <th>OVD Installment Amount</th>
+                  <th>Installment Amount / OS Principal Amount</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupSelectView;let i=index">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupSelectView.numberIndex+i+1}}</td>
+                  <td style="width: 25%;" class="if-no-edit-btn">{{row.agreement_no}} <br> {{row.group_name}}</td>
+                  <td style="text-align: center;width: 10%;">{{row.agreement_date}}</td>
+                  <td style="text-align: right;width: 5%;">{{row.ovd_days}} <br> {{row.max_ovd_days}}</td>
+                  <td style="text-align: left;width: 10%;">{{row.facility_name}}</td>
+                  <td style="text-align: right;width: 5%;">{{row.tenor}} <br> {{row.os_tenor}}</td>
+                  <td style="text-align: right;width: 10%;">{{row.amount_finance_amount | number : '1.2-2'}}</td>
+                  <td style="text-align: right;width: 10%;">{{row.ovd_installment_amount | number : '1.2-2'}}</td>
+                  <td style="text-align: right;width: 10%;">{{row.installment_amount | number : '1.2-2'}} <br>
+                    {{row.os_installment_amount | number : '1.2-2'}}</td>
+                  <td style="text-align: left;width: 15%;">{{row.description}} </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup lookup SelectView-->
+
+<!--#region modal lookup SysBranch-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSysBranch"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupSysBranch" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Name</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupsysbranch;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupsysbranch.numberIndex+i+1}}</td>
+                  <td style="width:20%; text-align: center;">{{ row.code }}</td>
+                  <td style="width:80%;">{{ row.name }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowSysBranch(row.code, row.name, row.region_code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup SysBranch-->
+
+<!--#region modal lookup Marketing-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalMarketing"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupMarketing" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Name</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupmarketing;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupmarketing.numberIndex+i+1}}</td>
+                  <td style="width:20%; text-align: center;">{{ row.code }}</td>
+                  <td style="width:80%;">{{ row.name }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowMarketing(row.code, row.name)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup Marketing-->
+
+<!--#region lookup Facility-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalFacility"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupFacility" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupfacility;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupfacility.numberIndex+i+1}}</td>
+                  <td style="width:20%; text-align: center;">{{ row.code }}</td>
+                  <td style="width:80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowFacility(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Facility -->
+
+<!--#region lookup Currency-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalCurrency"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupCurrency" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupcurrency;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupcurrency.numberIndex+i+1}}</td>
+                  <td style="width:20%; text-align: center;">{{ row.code }}</td>
+                  <td style="width:80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowCurrency(row.code)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Currency-->
+
+<!--#region lookup BillingType-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalBillingType"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupBillingType" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupbillingtype;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupbillingtype.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowBillingType(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup BillingType-->
+
+<!--#region lookup Approval-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalApproval"
+  style="margin-top: -65px">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinnerLookup">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <!--#region form-->
+            <form #approvalForm="ngForm" (ngSubmit)="onFormSubmitApproval(approvalForm.value, approvalForm.valid)">
+              <div class="toolbar">
+                <!--#region btnProceedtoLastLevelApproval-->
+                <button type="submit" class="btn btn-success btn-round" data-role="R00019900001991O"> Proceed
+                </button>
+                <!-- <button class="btn btn-success btn-round custom-button-width" type="button"
+                  (click)="btnProceedtoLastLevelApproval(this.param)" data-role="R00019900001991O">
+                  Proceed To Last Level
+                </button>
+                <button [hidden]="this.param == null || this.model.application_status !== 'HOLD'" type="button"
+                  class="btn btn-success btn-round custom-button-width" (click)="btnProceed(this.param)"
+                  data-role="R00019900001991O">Proceed
+                  Normal
+                </button> -->
+                <!--#endregion btnProceedtoLastLevelApproval-->
+              </div>
+              <div class="row">
+                <!--#region last_remark-->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="package_description" class="control-label">Remark From Approval</label>
+                    <textarea readonly type="text" class="form-control" [ngModel]="this.modelApproval.last_remark"
+                      name="p_last_remark" required #last_remark="ngModel" maxlength="4000"></textarea>
+                  </div>
+                </div>
+                <!--#endregion last_remark-->
+
+                <!--#region approval_comment-->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="package_description" class="control-label">Comment *</label>
+                    <textarea type="text" class="form-control" [ngModel]="this.modelApproval.approval_comment"
+                      name="p_approval_comment" required #approval_comment="ngModel" maxlength="4000"></textarea>
+                    <small
+                      *ngIf="(approval_comment.errors?.required && approval_comment.touched) || (approval_comment.errors?.required && approvalForm.submitted)"
+                      class="text-danger">
+                      Comment is required
+                    </small>
+                  </div>
+                </div>
+                <!--#endregion approval_comment-->
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Approval-->

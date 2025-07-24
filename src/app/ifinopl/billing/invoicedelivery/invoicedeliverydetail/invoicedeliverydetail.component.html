@@ -1,0 +1,678 @@
+<div class="main-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner region -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card ">
+                <!--#region watermark-->
+                <div class="watermark" hidden>
+                    <h6>{{this.companyName}}</h6>
+                    <h6>{{this.userName}}</h6>
+                    <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+                </div>
+                <!--#endregion watermark-->
+
+                <div class="card-header ">
+                    <div class="col-md-6 row">
+                        <h5 class="card-title">Delivery Info</h5>
+                    </div>
+                </div>
+                <div class="card-body ">
+                    <!--#region form-->
+                    <form #deliveryForm="ngForm" (ngSubmit)="onFormSubmit(deliveryForm.value, deliveryForm.valid)">
+
+                        <!--#region row-->
+                        <div class="row">
+                            <div class="col-md-8">
+                                <!--#region button submit dan back-->
+                                <button [hidden]="model.status !== 'HOLD'" type="submit" class="btn btn-info btn-round"
+                                    data-role="R00020740002075C">Save</button>
+
+                                <button [hidden]="model.code == null || model.status !== 'HOLD'" type="button"
+                                    data-role="R00020740002075O" class="btn btn-success btn-round"
+                                    (click)="btnProceed(model.code)">Proceed</button>
+
+                                <button [hidden]="model.code == null || model.status !== 'ON PROCESS'" type="button"
+                                    data-role="R00020740022075O" class="btn btn-success btn-round"
+                                    (click)="btnDone(model.code)">Done</button>
+
+                                <button [hidden]="model.code == null || model.status !== 'ON PROCESS'" type="button"
+                                    data-role="R00020740022075R" class="btn btn-warning btn-round"
+                                    (click)="btnReturn(model.code)">Return</button>
+
+                                <button [hidden]="model.code == null || model.status !== 'HOLD'" type="button"
+                                    data-role="R00020740002075R" class="btn btn-warning btn-round"
+                                    (click)="btnCancel(model.code)">Cancel</button>
+
+                                <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+                                <!--#endregion button submit dan back -->
+                            </div>
+                        </div>
+                        <!--#region row-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region code-->
+                            <div class="col-md-4">
+                                <div [hidden]="model.code != null" class="row"
+                                    style="margin-bottom: -15px; padding-top: 30px;">
+                                    <h1 class="col-md-4" style="font-size: 12px;">Code </h1>
+                                    <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                                        Generate-</h1>
+                                </div>
+                                <div [hidden]="model.code == null" class="form-group">
+                                    <label>Code *</label>
+                                    <input type="text" class="form-control" [ngModel]="model.code" maxlength="50"
+                                        name="p_code" [readonly]="isReadOnly">
+                                </div>
+                            </div>
+                            <!--#endregion code-->
+
+                            <!--#region lookup SysBranch code -->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="labelmodule">Branch *</label>
+                                    <div class="col-md-12">
+                                        <button [disabled]="this.param != null"
+                                            class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                                            type="button" (click)="btnLookupSysBranch()" data-toggle="modal"
+                                            data-target="#lookupModalSysBranch" href="#"><i
+                                                class="fa fa-search-plus"></i></button>
+                                        {{model.branch_name}}
+                                        <input type="text" [ngModel]="model.branch_name" name="p_branch_name" hidden
+                                            #branch_name="ngModel">
+                                        <input type="text" [ngModel]="model.branch_code" name="p_branch_code" hidden
+                                            required #branch_code="ngModel">
+                                    </div>
+                                    <small
+                                        *ngIf="(branch_code.errors?.required && branch_code.touched) || (branch_code.errors?.required && deliveryForm.submitted)"
+                                        class="text-danger">
+                                        Branch is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion lookup SysBranch code -->
+
+                            <!--#region status-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="status" class="control-label">Status </label>
+                                    <input type="text" class="form-control" [ngModel]="model.status" maxlength="10"
+                                        name="p_status" required #status="ngModel" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion status-->
+
+                            <!--#region date-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="date" class="control-label">Date *</label>
+                                    <div>
+                                        <input [ngStyle]="getStyles(model.status !== 'HOLD')"
+                                            class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                                            [ngModel]="model.date" name="p_date" [options]="myDatePickerOptions"
+                                            required #p_date="ngModel" #date="angular-mydatepicker" autocomplete="off"
+                                            [readonly]="model.status !== 'HOLD'" (click)="date.toggleCalendar()" />
+                                        <small
+                                            *ngIf="(p_date.errors?.required && p_date.touched) || (p_date.errors?.required && deliveryForm.submitted)"
+                                            class="text-danger">
+                                            Date is required
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion date-->
+
+                            <!--#region radio button method-->
+                            <div class="col-md-4">
+                                <label>Delivery Type * </label>
+                                <div class="form-group col-md-12">
+                                    <div class="row">
+                                        <div class="form-check-radio form-check-inline">
+                                            <label class="form-check-label">
+                                                <input [disabled]="model.status !== 'HOLD'" class="form-check-input"
+                                                    type="radio" name="p_method" value="INTERNAL"
+                                                    [(ngModel)]="model.method">Internal
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check-radio form-check-inline">
+                                            <label class="form-check-label">
+                                                <input [disabled]="model.status !== 'HOLD'" class="form-check-input"
+                                                    type="radio" name="p_method" value="EXTERNAL"
+                                                    [(ngModel)]="model.method">External
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check-radio form-check-inline">
+                                            <label class="form-check-label">
+                                                <input [disabled]="model.status !== 'HOLD'" class="form-check-input"
+                                                    type="radio" name="p_method" value="EMAIL"
+                                                    [(ngModel)]="model.method">E-mail
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion radio button method-->
+
+                            <!--#region external_pic_name-->
+                            <div class="col-md-4" [hidden]="model.method !== 'EXTERNAL'">
+                                <div class="form-group">
+                                    <label for="external_pic_name" class="control-label">External PIC Name *</label>
+                                    <input type="text" [readonly]="model.status !== 'HOLD'" class="form-control"
+                                        [ngModel]="model.external_pic_name" maxlength="250" name="p_external_pic_name"
+                                        [required]="model.method !== 'INTERNAL'" #external_pic_name="ngModel"
+                                        [disabled]="model.method !== 'EXTERNAL'">
+                                    <small
+                                        *ngIf="(external_pic_name.errors?.required && external_pic_name.touched) || (external_pic_name.errors?.required && deliveryForm.submitted)"
+                                        class="text-danger">
+                                        External PIC Name is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion external_pic_name-->
+
+                            <!--#region lookup employee-->
+                            <div class="col-md-4" [hidden]="model.method !== 'INTERNAL'">
+                                <div class="form-group">
+                                    <label class="labelmodule">Employee *</label>
+                                    <div class="col-md-12">
+                                        <button [disabled]="model.method !== 'INTERNAL' || model.status !== 'HOLD'"
+                                            class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                                            type="button" (click)="btnLookupEmployee()" data-toggle="modal"
+                                            data-target="#lookupModalEmployee" href="#"><i
+                                                class="fa fa-search-plus"></i></button>
+                                        {{model.employee_name}}
+                                        <input type="text" [ngModel]="model.employee_code" name="p_employee_code" hidden
+                                            #employee_code="ngModel" [required]="model.method === 'INTERNAL'">
+                                        <input type="text" [ngModel]="model.employee_name" name="p_employee_name" hidden
+                                            #employee_name="ngModel">
+                                    </div>
+                                    <small
+                                        *ngIf="employee_code.errors?.required && employee_code.touched || (employee_code.errors?.required && deliveryForm.submitted)"
+                                        class="text-danger">
+                                        Employee is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion lookup employee-->
+
+                            <!--#region email-->
+                            <div class="col-md-4" [hidden]="model.method !== 'EMAIL'">
+                                <div class="form-group">
+                                    <label for="email" class="control-label">Email *</label>
+                                    <div class="col-md-12">
+                                        <input type="email" [disabled]="model.method !== 'EMAIL'"
+                                            class="form-control area-code input-mini aid-primary-phone1-lbl"
+                                            [ngModel]="model.email" name="p_email" [required]="model.method === 'EMAIL'"
+                                            #email="ngModel" pattern={{EmailPattern}}
+                                            [readonly]="model.status !== 'HOLD'">
+                                    </div>
+                                </div>
+                                <small
+                                    *ngIf="(email.errors?.required && email.touched) || (email.errors?.required && deliveryForm.submitted)"
+                                    class="text-danger">
+                                    Email is required
+                                </small>
+                                <small *ngIf="email.errors?.pattern && email.touched" class="text-danger">
+                                    Email is required and format should be <i>john@doe.com</i>.
+                                </small>
+                            </div>
+                            <!--#endregion email-->
+
+                            <!--#region client_name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="client_name" class="control-label">Client Name</label>
+                                    <input type="text" class="form-control" [ngModel]="model.client_name"
+                                        name="p_client_name" #client_name="ngModel" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion client_name-->
+
+                            <!--#region client_address-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="client_address" class="control-label">Delivery Address</label>
+                                    <textarea type="text" class="form-control" [ngModel]="model.client_address"
+                                        name="p_client_address" #client_address="ngModel" readonly>
+                                        </textarea>
+                                </div>
+                            </div>
+                            <!--#endregion client_address-->
+
+                            <!--#region billing_to_name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="billing_to_name" class="control-label">Billing To Name</label>
+                                    <input type="text" class="form-control" [ngModel]="model.billing_to_name"
+                                        name="p_billing_to_name" #billing_to_name="ngModel" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion billing_to_name-->
+
+
+                            <!--#region client_phone_no-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="area_phone_no && phone_no" class="control-label">
+                                        Client Phone No</label>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <input type="text"
+                                                class="form-control area-code input-mini aid-primary-phone1-lbl"
+                                                [ngModel]="model.client_area_phone_no" name="p_client_area_phone_no"
+                                                #client_area_phone_no="ngModel" maxlength="4"
+                                                pattern={{NumberOnlyPattern}} disabled>
+                                        </div>
+                                        -
+                                        <div class="col-md-7">
+                                            <input type="text" class="form-control" [ngModel]="model.client_phone_no"
+                                                name="p_client_phone_no" maxlength="15" #client_phone_no="ngModel"
+                                                pattern={{NumberOnlyPattern}} disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion client_phone_no-->
+
+
+                            <!--#region client_npwp-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="client_npwp" class="control-label">Client Npwp</label>
+                                    <input type="text" class="form-control" [ngModel]="model.client_npwp"
+                                        name="p_client_npwp" #client_npwp="ngModel" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion client_npwp-->
+
+
+                            <!--#region client_email-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="client_email" class="control-label">Client Email</label>
+                                    <input type="text" class="form-control" [ngModel]="model.client_email"
+                                        name="p_client_email" #client_email="ngModel" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion client_email-->
+
+                            <!--#region delivery_result-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Result</label>
+                                    <select class="form-control col-md-6" [disabled]="model.status !== 'HOLD'"
+                                        [ngModel]="model.delivery_result" name="p_delivery_result"
+                                        (change)="changeResult($event)">
+                                        <option value='Accepted'>Accepted</option>
+                                        <option value='Failed'>Failed</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--#endregion delivery_result-->
+
+                            <!--#region delivery_received_date-->
+                            <div class="col-md-4" [hidden]="model.delivery_result !== 'Accepted'">
+                                <div class="form-group">
+                                    <label for="p_delivery_received_date" class="control-label">Received Date *</label>
+                                    <input [ngStyle]="getStyles(model.status !== 'HOLD')" class="form-control col-md-6"
+                                        placeholder="dd/mm/yyyy" angular-mydatepicker
+                                        [ngModel]="model.delivery_received_date" name="p_delivery_received_date"
+                                        [options]="myDatePickerOptions"
+                                        (click)="delivery_received_date.toggleCalendar()"
+                                        [required]="model.delivery_result === 'Accepted'"
+                                        #p_delivery_received_date="ngModel"
+                                        #delivery_received_date="angular-mydatepicker" autocomplete="off"
+                                        [readonly]="model.status !== 'HOLD'" />
+                                    <small
+                                        *ngIf="(p_delivery_received_date.errors?.required && p_delivery_received_date.touched) || (p_delivery_received_date.errors?.required && deliveryForm.submitted)"
+                                        class="text-danger">
+                                        Received Date is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion delivery_received_date-->
+
+                            <!--#region delivery_received_by-->
+                            <div class="col-md-4" [hidden]="model.delivery_result !== 'Accepted'">
+                                <div class="form-group">
+                                    <label for="delivery_received_by" class="control-label">Received By *</label>
+                                    <input type="text" class="form-control" [ngModel]="model.delivery_received_by"
+                                        maxlength="250" name="p_delivery_received_by"
+                                        [required]="model.delivery_result === 'Accepted'"
+                                        #delivery_received_by="ngModel" [readonly]="model.status !== 'HOLD'">
+                                    <small
+                                        *ngIf="(delivery_received_by.errors?.required && delivery_received_by.touched) || (delivery_received_by.errors?.required && deliveryForm.submitted)"
+                                        class="text-danger">
+                                        Received By is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion delivery_received_by-->
+
+                            <!--#region delivery_doc_reff_no-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="delivery_doc_reff_no" class="control-label">
+                                        <span [hidden]="model.delivery_result === 'Accepted'">Resi No</span>
+                                        <span [hidden]="model.delivery_result !== 'Accepted'">Resi No *</span>
+                                    </label>
+                                    <input type="text" class="form-control" [ngModel]="model.delivery_doc_reff_no"
+                                        maxlength="50" name="p_delivery_doc_reff_no"
+                                        [required]="model.delivery_result === 'Accepted'"
+                                        #delivery_doc_reff_no="ngModel" [readonly]="model.status !== 'HOLD'">
+                                    <small
+                                        *ngIf="(delivery_doc_reff_no.errors?.required && delivery_doc_reff_no.touched) || (delivery_doc_reff_no.errors?.required && deliveryForm.submitted)"
+                                        class="text-danger">
+                                        Resi No is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion delivery_doc_reff_no-->
+
+                            <!--#region delivery_reject_date-->
+                            <div class="col-md-4" [hidden]="model.delivery_result === 'Accepted'">
+                                <div class="form-group">
+                                    <label for="p_delivery_reject_date" class="control-label">Reject Date *</label>
+                                    <input [ngStyle]="getStyles(model.status !== 'HOLD')" class="form-control col-md-6"
+                                        placeholder="dd/mm/yyyy" angular-mydatepicker
+                                        [ngModel]="model.delivery_reject_date" name="p_delivery_reject_date"
+                                        [options]="myDatePickerOptions" (click)="delivery_reject_date.toggleCalendar()"
+                                        [required]="model.delivery_result !== 'Accepted'"
+                                        #p_delivery_reject_date="ngModel" #delivery_reject_date="angular-mydatepicker"
+                                        autocomplete="off" [readonly]="model.status !== 'HOLD'" />
+                                    <small
+                                        *ngIf="(p_delivery_reject_date.errors?.required && p_delivery_reject_date.touched) || (p_delivery_reject_date.errors?.required && deliveryForm.submitted)"
+                                        class="text-danger">
+                                        Reject Date is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion delivery_reject_date-->
+
+                            <!--#region delivery_reason-->
+                            <div class="col-md-4" [hidden]="model.delivery_result === 'Accepted'">
+                                <label class="labelgsubcode">Reason *</label>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <button [disabled]="model.status !== 'HOLD'"
+                                            class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                                            type="button" (click)="btnLookupReason()" data-target="#lookupModalReason"
+                                            data-toggle="modal" href="#">
+                                            <i class="fa fa-search-plus"></i></button> {{model.delivery_reason_desc}}
+                                        <input id="DeliveryReasonCode" type="text" hidden name="p_delivery_reason_code"
+                                            [ngModel]="model.delivery_reason_code"
+                                            [required]="model.delivery_result !== 'Accepted'"
+                                            #delivery_reason="ngModel" />
+                                    </div>
+                                    <small
+                                        *ngIf="(delivery_reason.errors?.required && delivery_reason.touched) || (delivery_reason.errors?.required && deliveryForm.submitted)"
+                                        class="text-danger">
+                                        Reason is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion delivery_reason-->
+
+                            <!--#region remarks-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="remark" class="control-label">Remark</label>
+                                    <textarea type="text" class="form-control" [ngModel]="model.remark" maxlength="4000"
+                                        name="p_remark" #remark="ngModel"
+                                        [readonly]="model.status !== 'HOLD'"></textarea>
+                                </div>
+                            </div>
+                            <!--#endregion remarks-->
+                        </div>
+                        <!--#endregion row-->
+                    </form>
+                    <!--#endregion form-->
+                </div>
+
+                <div *ngIf="param != null">
+                    <!--#region list view-->
+                    <span layout="row horizontal-divider">
+                        <hr flex />
+                    </span>
+                    <div class="row">
+                        <div class="col-md-12 buttons btn-lookup-margin">
+                            <div class="card-header">
+                                <h5 class="card-title">Invoice List</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="toolbar">
+                                    <!--#region button add-->
+                                    <!-- <button class="btn btn-info btn-round" (click)="btnPost()"
+                                        data-role="R00020740002075C" >
+                                        Post
+                                    </button> -->
+                                    <!-- <button class="btn btn-info btn-round custom-button-width" (click)="btnDownload()"
+                                        data-role="R00020740022076P" [hidden]="model.status !== 'ON PROCESS'">
+                                        Download Template
+                                    </button>
+                                    <span class="btn btn-info btn-round btn-file custom-button-width"
+                                        [hidden]="model.status !== 'ON PROCESS'">
+                                        <input id="fileControl" type="file" accept=".pdf, .xls, .xlsx"
+                                            (change)="onUploadReader($event)" data-role="R00020740022077C">
+                                        <span>Upload Excel</span>
+                                    </span> -->
+                                    <button class="btn btn-info btn-round custom-button-width" (click)="btnDownload()"
+                                        data-role="R00020740022076P" hidden>
+                                        Download Template
+                                    </button>
+                                    <span class="btn btn-info btn-round btn-file custom-button-width" hidden>
+                                        <input id="fileControl" type="file" accept=".pdf, .xls, .xlsx"
+                                            (change)="onUploadReader($event)" data-role="R00020740022077C">
+                                        <span>Upload Excel</span>
+                                    </span>
+                                    <button [hidden]="model.status !== 'HOLD'" class="btn btn-danger btn-round"
+                                        (click)="btnDeleteAll()" data-role="R00020740002075D">
+                                        Delete
+                                    </button>
+                                    <!--#endregion button add-->
+                                </div>
+
+                                <!--#region list view-->
+                                <table id="datatabledelivery" datatable [dtOptions]="dtOptions"
+                                    class="table table-striped table-bordered row-border hover" cellspacing="0"
+                                    width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th class="disabled-sorting">No</th>
+                                            <th class="disabled-sorting" [hidden]="model.status !== 'HOLD'">
+                                                <div class="form-check">
+                                                    <label class="form-check-label">
+                                                        <input class="form-check-input" type="checkbox" id="checkall"
+                                                            [(ngModel)]="selectedAll" (change)="selectAllTable();" />
+                                                        <span class="form-check-sign"></span>
+                                                    </label>
+                                                </div>
+                                            </th>
+                                            <th>Invoice No</th>
+                                            <th>Date</th>
+                                            <th>Due Date</th>
+                                            <th>Description</th>
+                                            <th>Client Name</th>
+                                            <th>Address</th>
+                                            <th>Phone</th>
+                                            <th>Billing Amount</th>
+                                            <th style="text-align: center;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let row of invoicedeliverydetail, let i=index">
+                                            <td style="text-align: center;">{{invoicedeliverydetail.numberIndex+i+1}}
+                                            </td>
+                                            <td class="disabled-sorting" [hidden]="model.status !== 'HOLD'">
+                                                <div class="form-check">
+                                                    <label class="form-check-label">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            [(ngModel)]="row.selected"
+                                                            (change)="checkIfAllTableSelected($event, row.id);">
+                                                        <span class="form-check-sign"></span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td style="width: 10%;text-align: center;">{{row.invoice_external_no}}</td>
+                                            <td style="width: 10%;text-align: center;">{{row.invoice_date}}</td>
+                                            <td style="width: 10%;text-align: center;">{{row.invoice_due_date}}</td>
+                                            <td style="width: 20%;text-align: left;">{{row.invoice_name}}</td>
+                                            <td style="width: 15%;text-align: left;">{{row.client_name}}</td>
+                                            <td style="width: 15%;text-align: left;">{{row.client_address}}</td>
+                                            <td style="width: 10%;text-align: left;">{{row.client_area_phone_no}} <br>
+                                                {{row.client_phone_no}}</td>
+                                            <td style="width: 10%;text-align: right;">{{row.total_amount |
+                                                number : '1.2-2'}}</td>
+                                            <td style="text-align: center;">
+                                                <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit"
+                                                    (click)="btnEdit(row.id)"><i class="fa fa-edit"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!--#endregion list view-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--#region modal lookup SysBranch-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSysBranch"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupSysBranch" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupsysbranch;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td class="if-no-edit-btn" style="text-align: center;">
+                                        {{lookupsysbranch.numberIndex+i+1}}</td>
+                                    <td style="width:20%; text-align: center;">{{ row.code }}</td>
+                                    <td style="width:80%;">{{ row.name }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowSysBranch(row.code, row.name, row.region_code, row.description)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion modal lookup SysBranch-->
+
+<!--#region modal lookup Employee-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalEmployee"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupEmployee" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>NIK</th>
+                                    <th>Name</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupemployee;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td class="if-no-edit-btn" style="text-align: center;">
+                                        {{lookupemployee.numberIndex+i+1}}</td>
+                                    <td style="width:20%; text-align: center;">{{ row.nik }}</td>
+                                    <td style="width:80%;">{{ row.name }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowEmployee(row.code, row.name)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion modal lookup Employee-->
+
+<!--#region modal lookup Reason-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalReason"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupReason" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Description</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupreason;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td class="if-no-edit-btn" style="text-align: center;">
+                                        {{lookupreason.numberIndex+i+1}}</td>
+                                    <td style="width: 100%;">{{ row.description }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowReason(row.code, row.description)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion modal lookup Reason-->

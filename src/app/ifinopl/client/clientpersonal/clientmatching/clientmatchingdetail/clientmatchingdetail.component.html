@@ -1,0 +1,388 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <div class="card-header ">
+          <h4 class="card-title">Client Matching</h4>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #clientMatchingForm="ngForm"
+            (ngSubmit)="onFormSubmit(clientMatchingForm.value, clientMatchingForm.valid)">
+
+            <!--#region button add-->
+            <div class="toolbar">
+              <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            </div>
+            <!--#endregion button add-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Client Type-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Client Type</label>
+                  <select [disabled]="this.param === true || this.prospectId !== null" class="form-control col-md-6"
+                    [ngModel]="this.client_type" name="p_client_type" (change)="clientType($event)">
+                    <option value='CORPORATE'>CORPORATE</option>
+                    <option value='PERSONAL'>PERSONAL</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion Client Type-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Document Type-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Document Type</label>
+                  <select [disabled]="this.param || this.prospectId !== null" class="form-control col-md-6"
+                    [ngModel]="this.document_type" name="p_document_types" (change)="documentType($event)">
+                    <option [hidden]="clientMatchingForm.value.p_client_type !== 'CORPORATE'" value='NPWP'>NPWP
+                    </option>
+                    <option [hidden]="clientMatchingForm.value.p_client_type !== 'PERSONAL'" value='KTP'>KTP
+                    </option>
+                    <option [hidden]="clientMatchingForm.value.p_client_type !== 'PERSONAL'" value='KITAS'>
+                      KITAS</option>
+                  </select>
+                  <input type="text" [(ngModel)]="this.document_type" name="p_document_type" hidden>
+                </div>
+              </div>
+              <!--#endregion Document Type-->
+
+              <!--#region document_no-->
+              <div class="col-md-4" [hidden]="this.document_type !== 'NPWP'">
+                <div class="form-group">
+                  <label for="p_npwp_no" class="control-label">
+                    NPWP No *
+                  </label>
+                  <input id="npwp" type="text" class="form-control" [(ngModel)]="this.npwp_no" name="p_npwp_no"
+                    [disabled]="this.param || this.document_type !== 'NPWP'" required #p_npwp_no="ngModel"
+                    pattern={{NpwpPattern}} (keydown)="onKeydownNpwp($event)" (paste)="onPasteNpwp($event)"
+                    (focus)="onFokusNpwp($event)" (blur)="onChangeNpwp($event)">
+                  <small
+                    *ngIf="( p_npwp_no.errors?.required && p_npwp_no.touched || (p_npwp_no.errors?.required && clientMatchingForm.submitted)) || ( p_npwp_no.errors?.required && clientMatchingForm.submitted)"
+                    class="text-danger">NPWP No is required
+                  </small>
+                  <small *ngIf="p_npwp_no.errors?.pattern && p_npwp_no.touched" class="text-danger">
+                    NPWP No is required and format should be <i>00.000.000.0-000.000</i>
+                  </small>
+                </div>
+              </div>
+
+              <div class="col-md-4" [hidden]="this.document_type !== 'KTP'">
+                <div class="form-group">
+                  <label for="p_ktp_no" class="control-label">
+                    KTP No *
+                  </label>
+                  <input id="ktp" type="text" class="form-control" [(ngModel)]="this.ktp_no" name="p_ktp_no"
+                    [disabled]="this.param || this.document_type !== 'KTP'" required #p_ktp_no="ngModel">
+                  <small
+                    *ngIf="(p_ktp_no.errors?.required && p_ktp_no.touched || (p_ktp_no.errors?.required && clientMatchingForm.submitted)) || (p_ktp_no.errors?.required && clientMatchingForm.submitted)"
+                    class="text-danger">KTP No is required
+                  </small>
+                </div>
+              </div>
+              <div class="col-md-4" [hidden]="this.document_type !== 'KITAS'">
+                <div class="form-group">
+                  <label for="p_kitas_no" class="control-label">
+                    KITAS No *
+                  </label>
+                  <input type="text" class="form-control" [(ngModel)]="this.kitas_no" name="p_kitas_no"
+                    [disabled]="this.param || this.document_type !== 'KITAS'" required #p_kitas_no="ngModel"
+                    maxlength="20">
+                  <small
+                    *ngIf="(p_kitas_no.errors?.required && p_kitas_no.touched || (p_kitas_no.errors?.required && clientMatchingForm.submitted)) || (p_kitas_no.errors?.required && clientMatchingForm.submitted)"
+                    class="text-danger">
+                    KITAS No is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion document_no-->
+
+              <!--#region full_name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="p_full_name" class="control-label">Full Name *</label>
+                  <input type="text" class="form-control" [(ngModel)]="this.full_name" name="p_full_name"
+                    [disabled]="this.param === true" required #p_full_name="ngModel" pattern="{{TextonlyPattern}}"
+                    minlength="3">
+                  <small
+                    *ngIf="(p_full_name.errors?.required && p_full_name.touched || (p_full_name.errors?.required && clientMatchingForm.submitted)) || (p_full_name.errors?.required && clientMatchingForm.submitted)"
+                    class="text-danger">
+                    Full Name is required
+                  </small>
+                  <small *ngIf="p_full_name.errors?.pattern && p_full_name.touched" class="text-danger">
+                    Full Name is required and format should be <i>A-z a-z</i>
+                  </small>
+                  <small *ngIf="p_full_name.errors?.minlength && p_full_name.touched" class="text-danger">
+                    Full Name length must be greater than 3 character
+                  </small>
+                </div>
+              </div>
+              <!--#endregion full_name-->
+
+              <!--#region mother_maiden_name-->
+              <div class="col-md-4" [hidden]="this.client_type != 'PERSONAL'">
+                <div class="form-group">
+                  <label for="p_mother_maiden_name" class="control-label">Mother Maiden Name *</label>
+                  <input type="text" class="form-control" [(ngModel)]="this.mother_maiden_name"
+                    name="p_mother_maiden_name" [disabled]="this.param === true|| this.client_type != 'PERSONAL'"
+                    required #p_mother_maiden_name="ngModel" pattern="{{TextonlyPattern}}" minlength="3">
+                  <small
+                    *ngIf="(p_mother_maiden_name.errors?.required && p_mother_maiden_name.touched || (p_mother_maiden_name.errors?.required && clientMatchingForm.submitted)) || (p_mother_maiden_name.errors?.required && clientMatchingForm.submitted)"
+                    class="text-danger">
+                    Mother Maiden Name is required
+                  </small>
+                  <small *ngIf="p_mother_maiden_name.errors?.pattern && p_mother_maiden_name.touched"
+                    class="text-danger">
+                    Mother Maiden Name is required format should be <i>A-z a-z</i>
+                  </small>
+                  <small *ngIf="p_mother_maiden_name.errors?.minlength && p_mother_maiden_name.touched"
+                    class="text-danger">
+                    Mother Maiden Name length must be greater than 3 character
+                  </small>
+                </div>
+              </div>
+              <!--#endregion mother_maiden_name-->
+
+              <!--#region est_date-->
+              <div class="col-md-4" [hidden]="this.client_type != 'CORPORATE'">
+                <div class="form-group">
+                  <label for="p_est_date" class="control-label">Established Date *</label>
+                  <input [ngStyle]="getStyles(this.param)" class="form-control col-md-6" placeholder="dd/mm/yyyy"
+                    angular-mydatepicker [ngModel]="model.est_date" required name="p_est_date"
+                    [options]="myDatePickerOptions" (click)="est_date.toggleCalendar()" #p_est_date="ngModel"
+                    #est_date="angular-mydatepicker" autocomplete="off" [readonly]="this.param"
+                    [disabled]="this.client_type != 'CORPORATE'" />
+                  <small
+                    *ngIf="(p_est_date.errors?.required && p_est_date.touched || (p_est_date.errors?.required && clientMatchingForm.submitted)) || (p_est_date.errors?.required && clientMatchingForm.submitted)"
+                    class="text-danger">
+                    Established Dateis required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion est_date-->
+
+              <!--#region place_of_birth-->
+              <div class="col-md-4" [hidden]="this.client_type != 'PERSONAL'">
+                <div class="form-group">
+                  <label for="p_place_of_birth" class="control-label">Place of Birth *</label>
+                  <input type="text" class="form-control" [(ngModel)]="this.place_of_birth" name="p_place_of_birth"
+                    [disabled]="this.param === true || this.client_type != 'PERSONAL'" required
+                    #p_place_of_birth="ngModel" minlength="3">
+                  <small
+                    *ngIf="(p_place_of_birth.errors?.required && p_place_of_birth.touched || (p_place_of_birth.errors?.required && clientMatchingForm.submitted)) || (p_place_of_birth.errors?.required && clientMatchingForm.submitted)"
+                    class="text-danger">
+                    Place of Birth is required
+                  </small>
+                  <small *ngIf="p_place_of_birth.errors?.pattern && p_place_of_birth.touched" class="text-danger">
+                    Place of Birth is required format should be <i>A-z a-z</i>
+                  </small>
+                  <small *ngIf="p_place_of_birth.errors?.minlength && p_place_of_birth.touched" class="text-danger">
+                    Place of Birth length must be greater than 3 character
+                  </small>
+                </div>
+              </div>
+              <!--#endregion place_of_birth-->
+
+              <!--#region date_of_birth-->
+              <div class="col-md-4" [hidden]="this.client_type != 'PERSONAL'">
+                <div class="form-group">
+                  <label for="p_date_of_birth" class="control-label">Date of Birth *</label>
+                  <input [ngStyle]="getStyles(param)" class="form-control col-md-6" placeholder="dd/mm/yyyy"
+                    angular-mydatepicker [ngModel]="model.date_of_birth" required name="p_date_of_birth"
+                    [options]="myDatePickerOptions" (click)="date_of_birth.toggleCalendar()" #p_date_of_birth="ngModel"
+                    #date_of_birth="angular-mydatepicker" autocomplete="off" [readonly]="this.param"
+                    [disabled]="this.client_type != 'PERSONAL'" />
+                  <small
+                    *ngIf="(p_date_of_birth.errors?.required && p_date_of_birth.touched || (p_date_of_birth.errors?.required && clientMatchingForm.submitted)) || (p_date_of_birth.errors?.required && clientMatchingForm.submitted)"
+                    class="text-danger">
+                    Date of Birth is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion date_of_birth-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="toolbar">
+              <button type="button" type="submit" class="btn btn-success btn-round" data-role="R00015820001583O"
+                [hidden]="this.param">View</button>
+              <button type="button" class="btn btn-warning btn-round" data-role="R00015820001583D"
+                (click)="btnReset()">Reset</button>
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+        </div>
+        <div *ngIf="this.param === true">
+          <!--#region list view -->
+          <span layout="row horizontal-divider">
+            <hr flex />
+          </span>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card-header">
+                <h4 class="card-title">Client List</h4>
+              </div>
+              <div class="card-body">
+                <div class="toolbar">
+
+                  <!--#region row-->
+                  <div class="row">
+                    <!--#region button add-->
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <button class="btn btn-info btn-round" type="button" data-role="R00015820001583C"
+                          (click)="btnAdd()">
+                          New Client
+                        </button>
+                      </div>
+                    </div>
+                    <!--#endregion button add-->
+
+                    <!--#region lookup SysBranch code -->
+                    <div class="col-md-10">
+                      <div class="form-group">
+                        <label class="labelmodule">Branch *</label>
+                        <div class="col-md-12">
+                          <button style="margin-top: 0px;"
+                            class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                            (click)="btnLookupSysBranch()" data-toggle="modal" data-target="#lookupModalSysBranch"
+                            href="#"><i class="fa fa-search-plus"></i></button>
+                          {{branch_name}}
+                        </div>
+                      </div>
+                    </div>
+                    <!--#endregion lookup SysBranch code -->
+                  </div>
+                  <!--#endregion row-->
+                </div>
+                <!--#region list view-->
+                <table id="datatableClientMatchingList" datatable [dtOptions]="dtOptions"
+                  class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                  <thead>
+                    <tr>
+                      <th style="display: none;"></th>
+                      <th class="disabled-sorting">No</th>
+                      <th>Client No</th>
+                      <th>Full Name</th>
+                      <th>ID No</th>
+                      <th>
+                        <a [hidden]="this.client_type !== 'PERSONAL'">Mother Maiden Name</a>
+                        <a [hidden]="this.client_type !== 'CORPORATE'">Corporate Status</a>
+                      </th>
+                      <th>
+                        <a [hidden]="this.client_type !== 'PERSONAL'">Place of Birth</a>
+                        <a [hidden]="this.client_type !== 'CORPORATE'">Established Date</a>
+                      </th>
+                      <th [hidden]="this.client_type !== 'PERSONAL'">Date of Birth</th>
+                      <th>Watchlist Status</th>
+                      <th style="text-align: center;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of listclient;let i=index ">
+                      <td style="display: none;"></td>
+                      <td style="text-align: center;"
+                        [ngStyle]="{'backgroundColor': row.check_status === 'WARNING' ? '#ffff99' : row.check_status == 'NEGATIVE' ? '#ff8080' : 'none'}">
+                        {{listclient.numberIndex+i+1}}</td>
+                      <td style="width: 10%;"
+                        [ngStyle]="{'backgroundColor': row.check_status === 'WARNING' ? '#ffff99' : row.check_status == 'NEGATIVE' ? '#ff8080' : 'none'}">
+                        {{row.client_no}}</td>
+                      <td style="width: 30%;"
+                        [ngStyle]="{'backgroundColor': row.check_status === 'WARNING' ? '#ffff99' : row.check_status == 'NEGATIVE' ? '#ff8080' : 'none'}">
+                        {{row.full_name}}</td>
+                      <td style="width: 10%;"
+                        [ngStyle]="{'backgroundColor': row.check_status === 'WARNING' ? '#ffff99' : row.check_status == 'NEGATIVE' ? '#ff8080' : 'none'}">
+                        {{row.id_no}}</td>
+                      <td style="width: 15%;"
+                        [ngStyle]="{'backgroundColor': row.check_status === 'WARNING' ? '#ffff99' : row.check_status == 'NEGATIVE' ? '#ff8080' : 'none'}">
+                        <a [hidden]="this.client_type !== 'PERSONAL'">{{row.mother_maiden_name}}</a>
+                        <a [hidden]="this.client_type !== 'CORPORATE'">{{row.corporate_status_desc}}</a>
+                      </td>
+                      <td style="width: 15%;text-align: center;"
+                        [ngStyle]="{'backgroundColor': row.check_status === 'WARNING' ? '#ffff99' : row.check_status == 'NEGATIVE' ? '#ff8080' : 'none'}">
+                        <a [hidden]="this.client_type !== 'PERSONAL'">{{row.place_of_birth}}</a>
+                        <a [hidden]="this.client_type !== 'CORPORATE'">{{row.est_date}}</a>
+                      </td>
+                      <td style="width: 10%;text-align: center;" [hidden]="this.client_type !== 'PERSONAL'"
+                        [ngStyle]="{'backgroundColor': row.check_status === 'WARNING' ? '#ffff99' : row.check_status == 'NEGATIVE' ? '#ff8080' : 'none'}">
+                        {{row.date_of_birth}}</td>
+                      <td style="width: 10%;text-align: center;"
+                        [ngStyle]="{'backgroundColor': row.check_status === 'WARNING' ? '#ffff99' : row.check_status == 'NEGATIVE' ? '#ff8080' : 'none'}">
+                        {{row.check_status}}</td>
+                      <td style="text-align: center;"
+                        [ngStyle]="{'backgroundColor': row.check_status === 'WARNING' ? '#ffff99' : row.check_status == 'NEGATIVE' ? '#ff8080' : 'none'}">
+                        <button class="btn btn-info btn-print-round" type="button"
+                          (click)="btnEdit(row.client_code, row.client_no)"
+                          [hidden]="row.client_code === 'EXTERNAL' || row.check_status == 'NEGATIVE'">
+                          USE EXISTING
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!--#endregion list view-->
+              </div>
+            </div>
+          </div>
+          <!--#endregion list view-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region modal lookup SysBranch code-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSysBranch"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupSysBranch" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Name</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupsysbranch;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupsysbranch.numberIndex+i+1}}</td>
+                  <td style="width:20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width:80%;">{{ row.name }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowSysBranch(row.code, row.name)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup SysBranch code-->

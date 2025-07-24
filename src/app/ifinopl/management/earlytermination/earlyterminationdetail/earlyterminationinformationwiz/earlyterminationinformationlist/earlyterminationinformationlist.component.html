@@ -1,0 +1,32 @@
+<router-outlet></router-outlet>
+
+<div id="hideMainPanelWiz" class="main-content margin-wizard-content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="toolbar">
+      </div>
+
+      <!--#earlyterminationinformation list view-->
+      <table id="datatableInformation" datatable [dtOptions]="dtOptions"
+        class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <td style="display: none;"></td>
+            <th class="disabled-sorting">No</th>
+            <th>Transaction</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of listearlyterminationinformation;let i=index">
+            <th style="display: none;"></th>
+            <td style="text-align: center;">{{listearlyterminationinformation.numberIndex+i+1}}</td>
+            <td style="width: 70%;">{{row.transaction_name}}</td>
+            <td style="width: 30%;text-align: right;">{{row.transaction_amount| number : '1.2-2'}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <!--#earlyterminationinformation list view-->
+    </div>
+  </div>
+</div>

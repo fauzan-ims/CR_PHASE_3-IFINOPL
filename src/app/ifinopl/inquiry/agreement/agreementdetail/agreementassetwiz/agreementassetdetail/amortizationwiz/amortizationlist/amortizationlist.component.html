@@ -1,0 +1,76 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body">
+        <div class="toolbar">
+          <!--#region list view-->
+          <table id="datatableApplicationAmortization" datatable [dtOptions]="dtOptions"
+            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th style="display: none;"></th>
+                <th class="disabled-sorting">No</th>
+                <th class="disabled-sorting">Billing No</th>
+                <th class="disabled-sorting">Due Date</th>
+                <th class="disabled-sorting">Billing Date</th>
+                <th class="disabled-sorting">Billing Amount</th>
+                <th class="disabled-sorting">Invoice No</th>
+                <th class="disabled-sorting">Billing Status</th>
+                <th class="disabled-sorting">Invoice Due Date</th>
+                <th class="disabled-sorting">Overdue Day/ Amount</th>
+                <th class="disabled-sorting">Paid Transaction/ Value Date</th>
+                <th class="disabled-sorting">Voucher No</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of listamortization;let i=index ">
+                <td
+                  [ngStyle]="{'backgroundColor': row.is_due_date === 'red' ? '#ff8080' : row.is_due_date === 'yellow' ? '#ffff99'  : 'none'}"
+                  class="if-no-edit-btn" style="display: none;"></td>
+                <td
+                  [ngStyle]="{'backgroundColor': row.is_due_date === 'red' ? '#ff8080' : row.is_due_date === 'yellow' ? '#ffff99'  : 'none'}"
+                  class="if-no-edit-btn" style="text-align: center;">{{listamortization.numberIndex+i+1}}</td>
+                <td
+                  [ngStyle]="{'backgroundColor': row.is_due_date === 'red' ? '#ff8080' : row.is_due_date === 'yellow' ? '#ffff99'  : 'none'}"
+                  style="width: 5%;text-align: center;">{{row.billing_no}}</td>
+                <td
+                  [ngStyle]="{'backgroundColor': row.is_due_date === 'red' ? '#ff8080' : row.is_due_date === 'yellow' ? '#ffff99'  : 'none'}"
+                  style="width: 10%;text-align: center;">{{row.due_date}}</td>
+                <td
+                  [ngStyle]="{'backgroundColor': row.is_due_date === 'red' ? '#ff8080' : row.is_due_date === 'yellow' ? '#ffff99'  : 'none'}"
+                  style="width: 10%;text-align: center;">{{row.billing_date}}</td>
+                <td
+                  [ngStyle]="{'backgroundColor': row.is_due_date === 'red' ? '#ff8080' : row.is_due_date === 'yellow' ? '#ffff99'  : 'none'}"
+                  style="width: 10%;text-align: right;">{{row.billing_amount | number : '1.2-2'}}</td>
+                <td
+                  [ngStyle]="{'backgroundColor': row.is_due_date === 'red' ? '#ff8080' : row.is_due_date === 'yellow' ? '#ffff99'  : 'none'}"
+                  style="width: 15%;text-align: center;">{{row.invoice_external_no}}</td>
+                <td
+                  [ngStyle]="{'backgroundColor': row.is_due_date === 'red' ? '#ff8080' : row.is_due_date === 'yellow' ? '#ffff99'  : 'none'}"
+                  style="width: 10%;">{{row.status}}</td>
+                <td
+                  [ngStyle]="{'backgroundColor': row.is_due_date === 'red' ? '#ff8080' : row.is_due_date === 'yellow' ? '#ffff99'  : 'none'}"
+                  style="width: 10%;text-align: center;">{{row.invoice_due_date}}</td>
+                <td
+                  [ngStyle]="{'backgroundColor': row.is_due_date === 'red' ? '#ff8080' : row.is_due_date === 'yellow' ? '#ffff99'  : 'none'}"
+                  style="width: 10%;text-align: right;">{{row.obligation_day}} <br> {{row.obligation_amount | number :
+                  '1.2-2'}}</td>
+                <td
+                  [ngStyle]="{'backgroundColor': row.is_due_date === 'red' ? '#ff8080' : row.is_due_date === 'yellow' ? '#ffff99'  : 'none'}"
+                  style="width: 10%;">{{row.paid_trx_date}} <br> {{row.paid_date}}</td>
+                <td
+                  [ngStyle]="{'backgroundColor': row.is_due_date === 'red' ? '#ff8080' : row.is_due_date === 'yellow' ? '#ffff99'  : 'none'}"
+                  style="width: 10%;text-align: center;">{{row.voucher_no}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <!--#endregion list view-->
+        </div>
+      </div>
+    </div>
+  </div>

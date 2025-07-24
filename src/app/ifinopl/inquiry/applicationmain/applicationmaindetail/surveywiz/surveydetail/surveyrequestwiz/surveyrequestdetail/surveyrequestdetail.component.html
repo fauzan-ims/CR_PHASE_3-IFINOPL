@@ -1,0 +1,1207 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <!--#region form-->
+      <form #surveyrequestdetailForm="ngForm"
+        (ngSubmit)="onFormSubmit(surveyrequestdetailForm.value, surveyrequestdetailForm.valid)">
+
+        <div class="card-header">
+          <h4>Profile Customer</h4>
+        </div>
+
+        <div class="card-body">
+          <!-- #region row  -->
+          <div class="row">
+
+            <input type="text" class="form-control" [ngModel]="model.code" name="p_code" hidden>
+            <input type="text" class="form-control" [ngModel]="this.param" name="p_application_no" hidden>
+
+            <!--#region nama-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Nama</label>
+                <input type="text" class="form-control" [ngModel]="model.nama" name="p_nama" readonly>
+              </div>
+            </div>
+            <!--#endregion nama-->
+
+            <!--#region radio button application_type-->
+            <div class="col-md-4">
+              <label>Application Type</label>
+              <div class="form-group" style="margin-left: 15px;">
+                <div class="row">
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input col-md-6" type="radio" name="p_application_type" value="RO"
+                        [(ngModel)]="model.application_type" disabled>RO
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input col-md-6" type="radio" name="p_application_type" value="NEW"
+                        [(ngModel)]="model.application_type" disabled>NEW
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--#endregion radio button application_type-->
+
+            <!--#region group_name-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Group Name</label>
+                <input type="text" class="form-control" [ngModel]="model.group_name" name="p_group_name" readonly>
+              </div>
+            </div>
+            <!--#endregion group_name-->
+          </div>
+          <!-- #endregion row  -->
+
+          <!-- #region row  -->
+          <div class="row">
+            <!--#region alamat_kantor-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Alamat Kantor</label>
+                <textarea type="text" class="form-control" [ngModel]="model.alamat_kantor" maxlength="4000"
+                  name="p_alamat_kantor" readonly></textarea>
+              </div>
+            </div>
+            <!--#endregion alamat_kantor-->
+
+            <!--#region alamat_kantor_kota-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Kota</label>
+                <input type="text" class="form-control" [ngModel]="model.alamat_kantor_kota" name="p_alamat_kantor_kota"
+                  readonly>
+              </div>
+            </div>
+            <!--#endregion alamat_kantor_kota-->
+
+            <!--#region alamat_kantor_provinsi-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Provinsi</label>
+                <input type="text" class="form-control" [ngModel]="model.alamat_kantor_provinsi"
+                  name="p_alamat_kantor_provinsi" readonly>
+              </div>
+            </div>
+            <!--#endregion alamat_kantor_provinsi-->
+          </div>
+          <!-- #endregion row  -->
+
+          <!-- #region row  -->
+          <div class="row">
+            <!--#region alamat_usaha-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Alamat Usaha</label>
+                <textarea type="text" class="form-control" [ngModel]="model.alamat_usaha" maxlength="4000"
+                  name="p_alamat_usaha" readonly></textarea>
+              </div>
+            </div>
+            <!--#endregion alamat_usaha-->
+
+            <!--#region alamat_usaha_kota-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Kota</label>
+                <input type="text" class="form-control" [ngModel]="model.alamat_usaha_kota" name="p_alamat_usaha_kota"
+                  readonly>
+              </div>
+            </div>
+            <!--#endregion alamat_usaha_kota-->
+
+            <!--#region alamat_usaha_provinsi-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Provinsi</label>
+                <input type="text" class="form-control" [ngModel]="model.alamat_usaha_provinsi"
+                  name="p_alamat_usaha_provinsi" readonly>
+              </div>
+            </div>
+            <!--#endregion alamat_usaha_provinsi-->
+          </div>
+          <!-- #endregion row  -->
+
+          <!-- #region row  -->
+          <div class="row">
+            <!--#region alamat_sejak_usaha-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_alamat_sejak_usaha" class="control-label">Usaha Sejak</label>
+                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                  [ngModel]="model.alamat_sejak_usaha" name="p_alamat_sejak_usaha" [options]="myDatePickerOptions"
+                  (click)="alamat_sejak_usaha.toggleCalendar()" #p_alamat_sejak_usaha="ngModel"
+                  #alamat_sejak_usaha="angular-mydatepicker" autocomplete="off" readonly />
+              </div>
+            </div>
+            <!--#endregion alamat_sejak_usaha-->
+          </div>
+          <!-- #endregion row  -->
+        </div>
+
+        <span layout="row horizontal-divider">
+          <hr flex />
+        </span>
+
+        <div class="card-header">
+          <h4>Rencana Pengadaan Dalam 1 Tahun</h4>
+        </div>
+
+        <div class="card-body">
+          <div class="toolbar">
+            <label style="text-align: right">
+              <h5>Total Rp : {{model.total_amount | number : '1.2-2'}}</h5>
+            </label>
+          </div>
+
+          <!--#region list view-->
+          <table id="datatableRencanaPengadaan" datatable [dtOptions]="dtOptionsPlan"
+            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th class="disabled-sorting">No</th>
+                <th class="disabled-sorting"></th>
+                <th>Description</th>
+                <th>NI (Rp)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of listrencanapengadaan;let i=index ">
+                <td class="if-no-edit-btn" style="text-align: center;">
+                  {{listrencanapengadaan.numberIndex+i+1}}</td>
+                <td class="disabled-sorting"></td>
+                <td style="width: 70%;">
+                  <div class="form-group">
+                    <input type="text" class="form-control" value="{{row.id}}" name="p_id_plan" hidden>
+                    <textarea type="text" class="form-control" id="description{{i}}" type="text"
+                      value="{{row.description}}" (change)="changePlan()" name="p_description" readonly> </textarea>
+                  </div>
+                </td>
+                <td style="width: 30%;">
+                  <div class="form-group">
+                    <input class="form-control" (change)="changePlan()" id="ni_amount{{i}}" type="text"
+                      value="{{row.ni_amount | number : '1.2-2'}}" style="text-align: right" name="p_ni_amount"
+                      ni_amount="ni_amount" readonly>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--#endregion list view-->
+
+          <!-- #region row  -->
+          <div class="row">
+            <!--#region komoditi-->
+            <div class="col-md-4" hidden>
+              <div class="form-group">
+                <label>Komoditi</label>
+                <textarea type="text" class="form-control" [ngModel]="model.komoditi" maxlength="4000" readonly
+                  name="p_komoditi"></textarea>
+              </div>
+            </div>
+            <!--#endregion komoditi-->
+
+            <!--#region tujuan_pengadaan_unit-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Tujuan Pengadaan Unit</label>
+                <textarea type="text" class="form-control" [ngModel]="model.tujuan_pengadaan_unit" maxlength="4000"
+                  readonly name="p_tujuan_pengadaan_unit"></textarea>
+              </div>
+            </div>
+            <!--#endregion tujuan_pengadaan_unit-->
+          </div>
+          <!-- #endregion row  -->
+        </div>
+
+        <span layout="row horizontal-divider">
+          <hr flex />
+        </span>
+
+        <div class="card-header">
+          <h4>Top Customer Lessee</h4>
+        </div>
+
+        <div class="card-body">
+          <!--#region list view-->
+          <table id="datatableTopCustomerLease" datatable [dtOptions]="dtOptionsCustomer"
+            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th class="disabled-sorting">No</th>
+                <th class="disabled-sorting"></th>
+                <th>Nama</th>
+                <th>Business</th>
+                <th>Business Location</th>
+                <th>Unit/ Omzet</th>
+                <th>Additional Info</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of listtopcustomerlease;let i=index ">
+                <td class="if-no-edit-btn" style="text-align: center;">
+                  {{listtopcustomerlease.numberIndex+i+1}}</td>
+                <td class="disabled-sorting"></td>
+                <td style="width: 20%;">
+                  <div class="form-group">
+                    <input type="text" class="form-control" value="{{row.id}}" name="p_id_customer" hidden>
+                    <input type="text" class="form-control" id="name{{i}}" value="{{row.name}}" style="text-align: left"
+                      readonly name="p_name_customer" (change)="changeCustomer()">
+                  </div>
+                </td>
+                <td style="width: 20%;">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="business{{i}}" value="{{row.business}}" readonly
+                      style="text-align: left" name="p_business_customer" (change)="changeCustomer()">
+                  </div>
+                </td>
+                <td style="width: 20%;">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="business_location{{i}}" (change)="changeCustomer()"
+                      readonly value="{{row.business_location}}" style="text-align: left"
+                      name="p_business_location_customer">
+                  </div>
+                </td>
+                <td style="width: 20%;">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="unit{{i}}" value="{{row.unit| number : '1.2-2'}}"
+                      style="text-align: right" name="p_unit" readonly (change)="changeCustomer()">
+                  </div>
+                </td>
+                <td style="width: 20%;">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="additional_info{{i}}" (change)="changeCustomer()"
+                      readonly value="{{row.additional_info}}" name="p_additional_info_customer">
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--#endregion list view-->
+        </div>
+
+        <span layout="row horizontal-divider">
+          <hr flex />
+        </span>
+
+        <div class="card-header">
+          <h4>Other Lessee</h4>
+        </div>
+
+        <div class="card-body">
+          <!--#region list view-->
+          <table id="datatableOtherLease" datatable [dtOptions]="dtOptionsOther"
+            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th class="disabled-sorting">No</th>
+                <th class="disabled-sorting"></th>
+                <th>Rental Company</th>
+                <th>Jumlah Unit</th>
+                <th>Jenis Kendaraan</th>
+                <th>O/S Periode (Bulan)</th>
+                <th>Nilai Pinjaman</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of listotherlease;let i=index ">
+                <td class="if-no-edit-btn" style="text-align: center;">
+                  {{listotherlease.numberIndex+i+1}}</td>
+                <td class="disabled-sorting"></td>
+                <td style="width: 20%;">
+                  <div class="form-group">
+                    <input type="text" class="form-control" value="{{row.id}}" name="p_id_other" hidden>
+                    <input type="text" class="form-control" id="rental_company{{i}}" type="text" readonly
+                      value="{{row.rental_company}}" style="text-align: left" name="p_rental_company"
+                      (change)="otherListChange()">
+                  </div>
+                </td>
+                <td style="width: 20%;">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="unit{{i}}" type="text" value="{{row.unit}}" readonly
+                      style="text-align: left" name="p_unit_other" (change)="otherListChange()">
+                  </div>
+                </td>
+                <td style="width: 20%;">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="jenis_kendaraan{{i}}" type="text" readonly
+                      (change)="otherListChange()" value="{{row.jenis_kendaraan}}" style="text-align: left"
+                      name="p_jenis_kendaraan">
+                  </div>
+                </td>
+                <td style="width: 20%;">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="os_periode{{i}}" type="text" value="{{row.os_periode}}"
+                      readonly style="text-align: left" name="p_os_periode" (change)="otherListChange()">
+                  </div>
+                </td>
+                <td style="width: 20%;">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="nilai_pinjaman{{i}}" type="text"
+                      value="{{row.nilai_pinjaman | number : '1.2-2'}}" style="text-align: right"
+                      name="p_nilai_pinjaman" (change)="otherListChange()" amount="nilai_pinjaman" readonly>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--#endregion list view-->
+        </div>
+
+        <span layout="row horizontal-divider">
+          <hr flex />
+        </span>
+
+        <div class="card-header">
+          <h4>Financial Data</h4>
+        </div>
+
+        <div class="card-body">
+          <!-- #region row  -->
+          <div class="row">
+            <!--#region as_of_date-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_as_of_date" class="control-label">As Of Date</label>
+                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                  [ngModel]="model.as_of_date" name="p_as_of_date" [options]="myDatePickerOptions"
+                  #p_as_of_date="ngModel" #as_of_date="angular-mydatepicker" autocomplete="off" readonly />
+              </div>
+            </div>
+            <!--#endregion as_of_date-->
+
+            <!--#region monthly_sales-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Monthly Sales/ Revenue</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.monthly_sales | number : '1.2-2'" amount="monthly_sales" name="p_monthly_sales"
+                  #monthly_sales="ngModel" readonly>
+              </div>
+            </div>
+            <!--#endregion monthly_sales-->
+
+            <!--#region total_monthly_expense-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Total Monthly Expense</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;" readonly
+                  [ngModel]="model.total_monthly_expense | number : '1.2-2'" amount="total_monthly_expense"
+                  name="p_total_monthly_expense" #total_monthly_expense="ngModel">
+              </div>
+            </div>
+            <!--#endregion total_monthly_expense-->
+          </div>
+          <!-- #endregion row  -->
+
+          <!-- #region row  -->
+          <div class="row">
+            <!--#region total_monthly_installment-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Total Monthly Installment DSF</label>
+                <input readonly type="text" class="form-control col-md-6" style="text-align: right;" readonly
+                  [ngModel]="model.total_monthly_installment | number : '1.2-2'" amount="total_monthly_installment"
+                  name="p_total_monthly_installment" #total_monthly_installment="ngModel">
+              </div>
+            </div>
+            <!--#endregion total_monthly_installment-->
+
+            <!--#region total_monthly_installment_other-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Total Monthly Installment Other</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;" readonly
+                  [ngModel]="model.total_monthly_installment_other | number : '1.2-2'"
+                  amount="total_monthly_installment_other" name="p_total_monthly_installment_other"
+                  #total_monthly_installment_other="ngModel">
+              </div>
+            </div>
+            <!--#endregion total_monthly_installment_other-->
+
+            <!--#region net_income-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Net Income Amount</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;" readonly
+                  [ngModel]="model.net_income | number : '1.2-2'" amount="net_income" name="p_net_income"
+                  #net_income="ngModel">
+              </div>
+            </div>
+            <!--#endregion net_income-->
+          </div>
+          <!-- #endregion row  -->
+        </div>
+
+        <span layout="row horizontal-divider">
+          <hr flex />
+        </span>
+
+        <div class="card-header">
+          <h4>Rekening</h4>
+        </div>
+
+        <div class="card-body">
+          <div class="row">
+            <!--#region rekening-->
+            <div class="col-md-6">
+              <div class="form-group">
+                <input type="text" class="form-control" [ngModel]="model.rekening" name="p_rekening" readonly>
+              </div>
+            </div>
+            <!--#endregion rekening-->
+          </div>
+          <div class="toolbar">
+            <label style="text-align: right">
+              <h5>Average Rp : {{model.average | number : '1.2-2'}}</h5>
+            </label>
+          </div>
+
+          <!--#region list view-->
+          <table id="datatableBankDetail" datatable [dtOptions]="dtOptionsBankDetail"
+            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th class="disabled-sorting">No</th>
+                <th class="disabled-sorting"></th>
+                <th>Company</th>
+                <th>Month</th>
+                <th>Year</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of listbankdetail;let i=index ">
+                <td class="if-no-edit-btn" style="text-align: center;">
+                  {{listbankdetail.numberIndex+i+1}}</td>
+                <td class="disabled-sorting"></td>
+                <td style="width: 50%;">
+                  <div class="form-group">
+                    <input type="text" class="form-control" value="{{row.id}}" name="p_id_bank_detail" hidden>
+                    <input type="text" class="form-control" id="company{{i}}" type="text" value="{{row.company}}"
+                      style="text-align: left" name="p_company" (change)="bankDetail()" readonly>
+                  </div>
+                </td>
+                <td style="width: 20%;">
+                  <div class="form-group">
+                    <input class="form-control" (change)="bankDetail()" id="mutation_month{{i}}" type="text"
+                      value="{{row.mutation_month}}" style="text-align: right" name="p_mutation_month"
+                      mutation_month="mutation_month" maxlength="20" readonly>
+                  </div>
+                </td>
+                <td style="width: 5%;">
+                  <div class="form-group">
+                    <input class="form-control" (change)="bankDetail()" id="mutation_year{{i}}" type="text"
+                      value="{{row.mutation_year}}" style="text-align: right" name="p_mutation_year"
+                      mutation_year="mutation_year" maxlength="4" readonly>
+                  </div>
+                </td>
+                <td style="width: 25%;">
+                  <div class="form-group">
+                    <input class="form-control" (change)="bankDetail()" id="monthly_amount{{i}}" type="text"
+                      value="{{row.monthly_amount | number : '1.2-2'}}" style="text-align: right" readonly
+                      name="p_monthly_amount" monthly_amount="monthly_amount">
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--#endregion list view-->
+
+          <!-- #region row  -->
+          <div class="row">
+            <!--#region average-->
+            <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>Average</label>
+                <input type="text" class="form-control" [ngModel]="model.average" name="p_average">
+              </div>
+            </div> -->
+            <!--#endregion average-->
+          </div>
+          <!-- #endregion row  -->
+        </div>
+
+        <span layout="row horizontal-divider">
+          <hr flex />
+        </span>
+
+        <div class="card-header">
+          <h4>Business/ Office Infomation</h4>
+        </div>
+
+        <div class="card-body">
+          <!-- #region row  -->
+          <div class="row">
+            <!--#region overall_assessment-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Overal Assessment</label>
+                <select class="form-control col-md-6" [ngModel]="model.overall_assessment" name="p_overall_assessment"
+                  disabled>
+                  <option value='VERY BAD'>VERY BAD</option>
+                  <option value='BAD'>BAD</option>
+                  <option value='STANDARD'>STANDARD</option>
+                  <option value='GOOD'>GOOD</option>
+                  <option value='VERY GOOD'>VERY GOOD</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion overall_assessment-->
+
+            <!--#region notes-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Notes</label>
+                <textarea type="text" class="form-control" [ngModel]="model.notes" maxlength="4000" readonly
+                  name="p_notes"></textarea>
+              </div>
+            </div>
+            <!--#endregion notes-->
+
+            <!--#region economic_sector_evaluation-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Economic Sector Evolution</label>
+                <select class="form-control col-md-6" [ngModel]="model.economic_sector_evaluation" disabled
+                  name="p_economic_sector_evaluation">
+                  <option value='VERY LOW RISK'>VERY LOW RISK</option>
+                  <option value='LOW RISK'>LOW RISK</option>
+                  <option value='MODERATE RISK'>MODERATE RISK</option>
+                  <option value='HIGH RISK'>HIGH RISK</option>
+                  <option value='VERY HIGH RISK'>VERY HIGH RISK</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion economic_sector_evaluation-->
+          </div>
+          <!-- #endregion row  -->
+
+          <!-- #region row  -->
+          <div class="row">
+            <!--#region pemberi_kerja-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Pemberi Kerja</label>
+                <textarea type="text" class="form-control" [ngModel]="model.pemberi_kerja" maxlength="4000" readonly
+                  name="p_pemberi_kerja"></textarea>
+              </div>
+            </div>
+            <!--#endregion pemberi_kerja-->
+
+            <!--#region kelas_pemberi_kerja-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Kelas Pemberi kerja</label>
+                <select class="form-control col-md-6" [ngModel]="model.kelas_pemberi_kerja" name="p_kelas_pemberi_kerja"
+                  disabled>
+                  <option value='LOCAL'>LOCAL/ DAERAH</option>
+                  <option value='NATIONAL'>NATIONAL</option>
+                  <option value='INTERNATIONAL'>INTERNATIONAL</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion kelas_pemberi_kerja-->
+
+            <!--#region management_style-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Management Style</label>
+                <select class="form-control col-md-6" [ngModel]="model.management_style" name="p_management_style"
+                  disabled>
+                  <option value='SELF EMPLOYEE'>SELF EMPLOYEE</option>
+                  <option value='CONVENSIONAL'>CONVENSIONAL/ TRADITIONAL</option>
+                  <option value='PROFESSIONAL'>PROFESSIONAL</option>
+                  <option value='HOLDING'>HOLDING COMPANY</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion management_style-->
+          </div>
+          <!-- #endregion row  -->
+
+          <!-- #region row  -->
+          <div class="row">
+            <!--#region lokasi_area_kerja-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Lokasi/ Area Kerja</label>
+                <textarea type="text" class="form-control" [ngModel]="model.lokasi_area_kerja" maxlength="4000" readonly
+                  name="p_lokasi_area_kerja"></textarea>
+              </div>
+            </div>
+            <!--#endregion lokasi_area_kerja-->
+
+            <!--#region no_of_client-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>No Of Client</label>
+                <select class="form-control col-md-6" [ngModel]="model.no_of_client" name="p_no_of_client" disabled>
+                  <option value='1'>1 MAIN CLIENT</option>
+                  <option value='2-3'>2-3 CLIENT</option>
+                  <option value='MORE THAN 3'>3 CLIENT / RETAIL</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion no_of_client-->
+
+            <!--#region no_of_employee-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>No Of Employee</label>
+                <select class="form-control col-md-6" [ngModel]="model.no_of_employee" name="p_no_of_employee" disabled>
+                  <option value='<25'>&lt;25</option>
+                  <option value='25-100'>25-100</option>
+                  <option value='MORE THAN 100'>100</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion no_of_employee-->
+          </div>
+          <!-- #endregion row  -->
+
+          <!-- #region row  -->
+          <div class="row">
+            <!--#region credit_line_of_bank-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Credit Line Of Bank</label>
+                <select class="form-control col-md-6" [ngModel]="model.credit_line_of_bank" name="p_credit_line_of_bank"
+                  disabled>
+                  <option value='NO'>NO</option>
+                  <option value='<2M'> &lt;2M </option>
+                  <option value='2-5M'>2-5M</option>
+                  <option value='>5M'>5M</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion credit_line_of_bank-->
+
+            <!--#region business_expansion-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Business Expansion</label>
+                <select class="form-control col-md-6" [ngModel]="model.business_expansion" name="p_business_expansion"
+                  disabled>
+                  <option value='EXPANSION'>EXPANSION</option>
+                  <option value='NO EXPANSION'>NO EXPANSION</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion business_expansion-->
+          </div>
+          <!-- #endregion row  -->
+        </div>
+
+        <span layout="row horizontal-divider">
+          <hr flex />
+        </span>
+
+        <div class="card-header">
+          <h4>MO Summary</h4>
+        </div>
+
+        <div class="card-body">
+          <!-- #region row  -->
+          <div class="row">
+            <!--#region mo_summary-->
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>Strength Point & Recomendation</label>
+                <textarea type="text" class="form-control" [ngModel]="model.mo_summary" maxlength="4000" readonly
+                  name="p_mo_summary"></textarea>
+              </div>
+            </div>
+            <!--#endregion mo_summary-->
+          </div>
+          <!-- #endregion row  -->
+        </div>
+
+        <span layout="row horizontal-divider">
+          <hr flex />
+        </span>
+
+        <div class="card-header">
+          <h4>Project Lessee</h4>
+        </div>
+
+        <div class="card-body">
+          <!--#region list view-->
+          <table id="datatableProject" datatable [dtOptions]="dtOptionsProject"
+            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th class="disabled-sorting">No</th>
+                <th class="disabled-sorting"></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of listproject;let i=index ">
+                <td class="if-no-edit-btn" style="text-align: center;">
+                  {{listproject.numberIndex+i+1}}</td>
+                <td class="disabled-sorting"></td>
+                <td style="width: 100%;">
+                  <!-- #region row  -->
+                  <div class="row">
+                    <!-- #region project_name  -->
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label>Project Name</label>
+                        <input type="text" class="form-control" value="{{row.id}}" name="p_id_project" hidden>
+                        <input type="text" class="form-control" id="project_name{{i}}" type="text" readonly
+                          value="{{row.project_name}}" style="text-align: left" name="p_project_name"
+                          (change)="projectLessee()">
+                      </div>
+                    </div>
+                    <!-- #endregion project_name  -->
+                  </div>
+                  <!-- #endregion row  -->
+
+                  <!-- #region row  -->
+                  <div class="row">
+                    <!-- #region project_owner  -->
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label>Pemilik Tambang/ Kebun/ Project/ Produsen</label>
+                        <input type="text" class="form-control" id="project_owner{{i}}" type="text" readonly
+                          value="{{row.project_owner}}" style="text-align: left" name="p_project_owner"
+                          (change)="projectLessee()">
+                      </div>
+                    </div>
+                    <!-- #endregion project_owner  -->
+                  </div>
+                  <!-- #region row  -->
+
+                  <!-- #endregion row  -->
+                  <div class="row">
+                    <!-- #endregion  -->
+                    <div class="col-md-4">
+                      <div class="form-group">
+                      </div>
+                    </div>
+                    <!-- #endregion  -->
+
+                    <!-- #endregion main_kontraktor  -->
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label>Main Kontraktor</label>
+                        <input type="text" class="form-control" id="main_kontraktor{{i}}" type="text" readonly
+                          value="{{row.main_kontraktor}}" style="text-align: left" name="p_main_kontraktor"
+                          (change)="projectLessee()">
+                      </div>
+                    </div>
+                    <!-- #endregion main_kontraktor  -->
+
+                    <!-- #endregion main_kompetitor  -->
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label>Kompetitor</label>
+                        <input type="text" class="form-control" id="main_kompetitor{{i}}" type="text" readonly
+                          value="{{row.main_kompetitor}}" style="text-align: left" name="p_main_kompetitor"
+                          (change)="projectLessee()">
+                      </div>
+                    </div>
+                    <!-- #endregion main_kompetitor  -->
+                  </div>
+                  <!-- #endregion row  -->
+
+                  <!-- #endregion row  -->
+                  <div class="row">
+                    <!-- #endregion  -->
+                    <div class="col-md-4">
+                      <div class="form-group">
+                      </div>
+                    </div>
+                    <!-- #endregion  -->
+
+                    <!-- #endregion sub_kontraktor  -->
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label>Sub Kontraktor</label>
+                        <input type="text" class="form-control" id="sub_kontraktor{{i}}" type="text" readonly
+                          value="{{row.sub_kontraktor}}" style="text-align: left" name="p_sub_kontraktor"
+                          (change)="projectLessee()">
+                      </div>
+                    </div>
+                    <!-- #endregion sub_kontraktor  -->
+
+                    <!-- #endregion sub_kompetitor  -->
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label>Kompetitor</label>
+                        <input type="text" class="form-control" id="sub_kompetitor{{i}}" type="text" readonly
+                          value="{{row.sub_kompetitor}}" style="text-align: left" name="p_sub_kompetitor"
+                          (change)="projectLessee()">
+                      </div>
+                    </div>
+                    <!-- #endregion sub_kompetitor  -->
+                  </div>
+                  <!-- #endregion row  -->
+
+                  <!-- #endregion row  -->
+                  <div class="row">
+                    <!-- #endregion  -->
+                    <div class="col-md-4">
+                      <div class="form-group">
+                      </div>
+                    </div>
+                    <!-- #endregion  -->
+
+                    <!-- #endregion sub_sub_kontraktor  -->
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label>Sub Sub Kontraktor</label>
+                        <input type="text" class="form-control" id="sub_sub_kontraktor{{i}}" type="text" readonly
+                          value="{{row.sub_sub_kontraktor}}" style="text-align: left" name="p_sub_sub_kontraktor"
+                          (change)="projectLessee()">
+                      </div>
+                    </div>
+                    <!-- #endregion sub_sub_kontraktor  -->
+
+                    <!-- #endregion sub_sub_kompetitor  -->
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label>Kompetitor</label>
+                        <input type="text" class="form-control" id="sub_sub_kompetitor{{i}}" type="text" readonly
+                          value="{{row.sub_sub_kompetitor}}" style="text-align: left" name="p_sub_sub_kompetitor"
+                          (change)="projectLessee()">
+                      </div>
+                    </div>
+                    <!-- #endregion sub_sub_kompetitor  -->
+                  </div>
+                  <!-- #endregion row  -->
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--#endregion list view-->
+        </div>
+
+        <span layout="row horizontal-divider">
+          <hr flex />
+        </span>
+
+        <div class="card-header" hidden>
+          <h4>Credit Review Analyst</h4>
+        </div>
+
+        <div class="card-body" hidden>
+          <!-- #region row -->
+          <div class="row">
+            <!--#region capacity-->
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Capacity</label>
+                <textarea type="text" class="form-control" [ngModel]="model.capacity" maxlength="4000" readonly
+                  name="p_capacity"></textarea>
+              </div>
+            </div>
+            <!--#endregion capacity-->
+
+            <!--#region character-->
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Character</label>
+                <textarea type="text" class="form-control" [ngModel]="model.character" maxlength="4000" readonly
+                  name="p_character"></textarea>
+              </div>
+            </div>
+            <!--#endregion character-->
+          </div>
+          <!-- #endregion row -->
+
+          <!-- #region row -->
+          <div class="row">
+            <!--#region weakness-->
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Weakness</label>
+                <textarea type="text" class="form-control" [ngModel]="model.weakness" maxlength="4000" readonly
+                  name="p_weakness"></textarea>
+              </div>
+            </div>
+            <!--#endregion weakness-->
+
+            <!--#region strength-->
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Strength</label>
+                <textarea type="text" class="form-control" [ngModel]="model.strength" maxlength="4000" readonly
+                  name="p_strength"></textarea>
+              </div>
+            </div>
+            <!--#endregion strength-->
+          </div>
+          <!-- #endregion row -->
+        </div>
+
+        <span layout="row horizontal-divider" hidden>
+          <hr flex />
+        </span>
+
+        <div class="card-header">
+          <h4>Survey</h4>
+        </div>
+
+        <div class="card-body">
+          <!-- #region row  -->
+          <div class="row">
+            <!--#region date_of_visit-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_date_of_visit" class="control-label">Date Of Visit</label>
+                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                  [ngModel]="model.date_of_visit" name="p_date_of_visit" [options]="myDatePickerOptions"
+                  #p_date_of_visit="ngModel" #date_of_visit="angular-mydatepicker" autocomplete="off" readonly/>
+              </div>
+            </div>
+            <!--#endregion date_of_visit-->
+
+            <!--#region time-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Time</label>
+                <input type="text" class="form-control" [ngModel]="model.time" name="p_time" readonly>
+              </div>
+            </div>
+            <!--#endregion time-->
+
+            <!--#region radio button survey_method-->
+            <div class="col-md-4">
+              <label>Application Type</label>
+              <div class="form-group" style="margin-left: 15px;">
+                <div class="row">
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input col-md-6" type="radio" name="p_survey_method" value="PHONE"
+                        disabled [(ngModel)]="model.survey_method">On The Phone
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input col-md-6" type="radio" name="p_survey_method" value="VISIT"
+                        disabled [(ngModel)]="model.survey_method">Site Visit
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--#endregion radio button survey_method-->
+          </div>
+          <!-- #endregion row  -->
+          <!-- #region row  -->
+          <div class="row">
+            <!--#region venue_1-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Venue 1</label>
+                <textarea type="text" class="form-control" [ngModel]="model.venue_1" maxlength="4000" readonly
+                  name="p_venue_1"></textarea>
+              </div>
+            </div>
+            <!--#endregion venue_1-->
+
+            <!--#region venue_2-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Venue 2</label>
+                <textarea type="text" class="form-control" [ngModel]="model.venue_2" maxlength="4000" readonly
+                  name="p_venue_2"></textarea>
+              </div>
+            </div>
+            <!--#endregion venue_2-->
+
+            <!--#region project-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Project</label>
+                <select class="form-control col-md-6" [ngModel]="model.project" name="p_project" disabled>
+                  <option value='NON PROJECT'>NON PROJECT</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion project-->
+          </div>
+          <!-- #endregion row  -->
+        </div>
+
+        <span layout="row horizontal-divider">
+          <hr flex />
+        </span>
+
+        <div class="card-header">
+          <h4>Trade Checking</h4>
+        </div>
+
+        <div class="card-body">
+          <!-- #region row  -->
+          <div class="row">
+            <!--#region category-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Category</label>
+                <select class="form-control col-md-6" [ngModel]="model.category" name="p_category" disabled>
+                  <option value='RO'>RO (No Need)</option>
+                  <option value='NEIGHBOR'>NEIGHBOR</option>
+                  <option value='BUSINESS PARTNER'>BUSINESS PARTNER</option>
+                  <option value='OFFICIAL'>OFFICIAL</option>
+                  <option value='E-TRADING'>E-TRADING CHECKING</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion category-->
+
+            <!--#region trade_checking_date-->
+            <div class="col-md-4" [hidden]="model.category === 'RO'">
+              <div class="form-group">
+                <label for="p_trade_checking_date" class="control-label">Date</label>
+                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                  [ngModel]="model.trade_checking_date" name="p_trade_checking_date" [options]="myDatePickerOptions"
+                   #p_trade_checking_date="ngModel" #trade_checking_date="angular-mydatepicker"
+                  autocomplete="off" readonly/>
+              </div>
+            </div>
+            <!--#endregion trade_checking_date-->
+
+            <!--#region interview_name-->
+            <div class="col-md-4" [hidden]="model.category === 'RO'">
+              <div class="form-group">
+                <label>Interview Name</label>
+                <input type="text" class="form-control" [ngModel]="model.interview_name" name="p_interview_name"
+                  readonly>
+              </div>
+            </div>
+            <!--#endregion interview_name-->
+          </div>
+          <!-- #endregion row  -->
+
+          <!-- #region row  -->
+          <div class="row" [hidden]="model.category === 'RO'">
+            <!--#region area_phone_number + phone_number-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label">Phone Number
+                  *</label>
+                <div class="row">
+                  <div class="col-md-4">
+                    <input [disabled]="this.pageType != null || model.billing_to === 'CLIENT'" type="text" readonly
+                      class="form-control" [ngModel]="model.area_phone_number" name="p_area_phone_number"
+                      #area_phone_number="ngModel" maxlength="4" pattern={{NumberOnlyPattern}}>
+                  </div>
+                  -
+                  <div class="col-md-7">
+                    <input [disabled]="this.pageType != null || model.billing_to === 'CLIENT'" type="text" readonly
+                      class="form-control" [ngModel]="model.phone_number" name="p_phone_number" maxlength="15"
+                      #phone_number="ngModel" pattern={{NumberOnlyPattern}}>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--#endregion area_phone_number + phone_number-->
+
+            <!--#region trade_checking_result-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>result</label>
+                <select class="form-control col-md-6" [ngModel]="model.trade_checking_result" disabled
+                  name="p_trade_checking_result">
+                  <option value='VERY BAD'>VERY BAD</option>
+                  <option value='BAD'>BAD</option>
+                  <option value='STANDARD'>STANDARD</option>
+                  <option value='GOOD'>GOOD</option>
+                  <option value='VERY GOOD'>VERY GOOD</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion trade_checking_result-->
+
+            <!--#region trade_checking_notes-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Notes</label>
+                <textarea type="text" class="form-control" [ngModel]="model.trade_checking_notes" maxlength="4000"
+                  readonly name="p_trade_checking_notes"></textarea>
+              </div>
+            </div>
+            <!--#endregion trade_checking_notes-->
+          </div>
+          <!-- #endregion row  -->
+        </div>
+
+        <span layout="row horizontal-divider">
+          <hr flex />
+        </span>
+
+        <div class="card-header">
+          <h4>Foto and Document</h4>
+        </div>
+
+        <div class="card-body">
+          <!--#region list view-->
+          <table id="datatableDocument" datatable [dtOptions]="dtOptionsDoc"
+            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th class="disabled-sorting">No</th>
+                <th class="disabled-sorting"></th>
+                <th>Location</th>
+                <th>Remark</th>
+                <th>File</th>
+                <th style="text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of listdoc;let i=index ">
+                <td class="if-no-edit-btn" style="text-align: center;">{{listdoc.numberIndex+i+1}}</td>
+                <td class="disabled-sorting"></td>
+                <td style="width: 30%;">
+                  <div class="form-group">
+                    <input type="text" class="form-control" value="{{row.id}}" name="p_id_doc" hidden>
+                    <input type="int" class="form-control" id="location{{i}}" type="text" value="{{row.location}}"
+                      style="text-align: left" name="p_location" (change)="documenChange()" readonly>
+                  </div>
+                </td>
+                <td style="width: 40%;">
+                  <div class="form-group">
+                    <textarea type="int" class="form-control" id="remark{{i}}" type="text" value="{{row.remark}}"
+                      name="p_remark" (change)="documenChange()" readonly> </textarea>
+                  </div>
+                </td>
+                <td style="width: 30%;">
+                  <input [hidden]="row.file_name != ''" type="file" (change)="onUpload($event, row.id)" readonly />
+                  <a>{{row.file_name}}</a>
+                </td>
+                <td style="text-align: center;">
+                  <span>
+                    <a [hidden]="row.file_name === ''" (click)="previewFile(row.file_name, row.paths)"
+                      style="cursor: pointer;">
+                      Preview</a> <br>
+                    <a [hidden]="row.file_name === ''" (click)="deleteImage(row.id, row.file_name, row.paths)"
+                      style="cursor: pointer;">
+                      Remove</a>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--#endregion list view-->
+        </div>
+      </form>
+      <!--#endregion form-->
+    </div>
+  </div>
+</div>

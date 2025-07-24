@@ -1,0 +1,129 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body ">
+        <!--#region row-->
+        <div class="row">
+          <!--#region Category-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Category</label>
+              <input readonly type="text" class="form-control" [ngModel]="model.he_category_desc"
+                name="p_he_category_desc">
+            </div>
+          </div>
+          <!--#endregion Category-->
+
+          <!--#region he_subcategory_code-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Sub Category</label>
+              <input readonly type="text" class="form-control" [ngModel]="model.he_subcategory_desc"
+                name="p_he_subcategory_desc">
+            </div>
+          </div>
+          <!--#endregion he_subcategory_code-->
+
+          <!--#region Merk-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Merk</label>
+              <input readonly type="text" class="form-control" [ngModel]="model.he_merk_desc" name="p_he_merk_desc">
+            </div>
+          </div>
+          <!--#endregion Merk-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region Model-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Model</label>
+              <input readonly type="text" class="form-control" [ngModel]="model.he_model_desc" name="p_he_model_desc">
+            </div>
+          </div>
+          <!--#endregion Model-->
+
+          <!--#region Type-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Type</label>
+              <input readonly type="text" class="form-control" [ngModel]="model.he_type_desc" name="p_he_type_desc">
+            </div>
+          </div>
+          <!--#endregion Type-->
+
+          <!--#region Unit-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Unit</label>
+              <input readonly type="text" class="form-control" [ngModel]="model.he_unit_desc" name="p_he_unit_desc">
+            </div>
+          </div>
+          <!--#endregion Unit-->
+        </div>
+        <!--#endregion row-->
+        <!--#region row-->
+        <div class="row">
+          <!--#region colour-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Colour</label>
+              <input type="text" class="form-control" [ngModel]="model.colour" name="p_colour" readonly>
+            </div>
+          </div>
+          <!--#endregion colour-->
+
+          <!--#region Dimension-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Dimension</label>
+              <input type="text" class="form-control" [ngModel]="model.dimension" name="p_dimension" readonly>
+            </div>
+          </div>
+          <!--#endregion Dimension-->
+
+          <!--#region unit_source-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Unit Source</label>
+              <input type="text" class="form-control col-md-4" [ngModel]="model.unit_source" name="p_unit_source"
+                readonly #unit_source="ngModel" readonly>
+            </div>
+          </div>
+          <!--#endregion unit_source-->
+
+          <!--#region asset_condition -->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Asset Condition</label>
+              <input type="text" class="form-control col-md-4" [ngModel]="model.asset_condition"
+                name="p_asset_condition" readonly>
+            </div>
+          </div>
+          <!--#endregion asset_condition -->
+        </div>
+        <!--#endregion row-->
+        <!--#region row-->
+        <div class="row">
+          <!--#region remarks-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Remark</label>
+              <textarea readonly type="text" class="form-control" [ngModel]="model.remarks" name="p_remarks"></textarea>
+            </div>
+          </div>
+          <!--#endregion remarks-->
+        </div>
+        <!--#endregion row-->
+      </div>
+    </div>
+  </div>
+</div>

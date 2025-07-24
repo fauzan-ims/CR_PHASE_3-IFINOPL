@@ -1,0 +1,71 @@
+<router-outlet></router-outlet>
+
+<div id="hideMainPanelWiz" class="main-content margin-wizard-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body">
+        <div class="toolbar">
+          <!--#region button submit dan back-->
+          <button [hidden]="model.change_status !== 'HOLD'" type="button" class="btn btn-info btn-round"
+            (click)="btnSaveList()" data-role="R00007180004719C">
+            Save
+          </button>
+          <button id="EtDetail" type="button" class="btn btn-danger btn-round" (click)="this.callGetrow()"
+            hidden></button>
+          <!--#endregion button submit dan back-->
+        </div>
+
+        <!--#earlyterminationtransaction list view-->
+        <table id="datatableTransactionChangeDueDate" datatable [dtOptions]="dtOptions"
+          class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th style="display: none;"></th>
+              <th class="disabled-sorting">No</th>
+              <th>Transaction</th>
+              <th>Transaction Amount</th>
+              <th>Discount (%)</th>
+              <th>Discount Amount</th>
+              <th>Total Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of listchangeduedatetransaction; let i=index">
+              <td style="display: none;"><input type="hidden" value="{{row.id}}" name="p_id"></td>
+              <td style="text-align: center;">{{listchangeduedatetransaction.numberIndex+i+1}}</td>
+              <td style="width: 40%;">{{row.transaction_name}}</td>
+              <td style="width: 15%;text-align: right;">
+                <input [disabled]="model.change_status !== 'HOLD' || row.is_amount_editable === '0'"
+                  id="transaction_amount{{i}}" (blur)="onBlur($event,i,'amount1')" (focus)="onFocus($event,i,'amount1')"
+                  class="text-right" type="text" value="{{row.transaction_amount | number : '1.2-2'}}"
+                  amount="transaction_amount" name="p_transaction_amount">
+              </td>
+              <td style="width: 15%;text-align: right;">
+                <input [disabled]="model.change_status !== 'HOLD' || row.is_discount_editable === '0'"
+                  id="disc_pct{{i}}" (blur)="onBlur($event,i,'rate')" maxlength="10" (focus)="onFocus($event,i,'rate')"
+                  class="text-right" type="text" value="{{row.disc_pct | number : '1.6-6'}}" rate="disc_pct"
+                  name="p_disc_pct">
+              </td>
+              <td style="width: 15%;text-align: right;">
+                <input [disabled]="model.change_status !== 'HOLD' || row.is_discount_editable === '0'"
+                  id="disc_amount{{i}}" (blur)="onBlur($event,i,'amount2')" (focus)="onFocus($event,i,'amount2')"
+                  class="text-right" type="text" value="{{row.disc_amount | number : '1.2-2'}}" amount="disc_amount"
+                  name="p_disc_amount">
+              </td>
+              <td style="width: 15%;text-align: right;">
+                <input id="total_amount{{i}}" class="text-right" type="text"
+                  value="{{row.total_amount | number : '1.2-2'}}" amount="total_amount" name="p_total_amount" disabled>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!--#endregion list view-->
+      </div>
+    </div>
+  </div>
+</div>

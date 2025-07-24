@@ -1,0 +1,48 @@
+<div class="main-content">
+  <!--#region wizard container-->
+  <div class="card">
+    <div class="nav-tabs-navigation">
+      <ul id="tabs1" class="nav nav-pills nav-justified" role="tablist">
+        <li id="tabapplicationApprovalLog" class="nav-item">
+          <a class="nav-link" (click)="logwiz()" href="#loglist" data-toggle="tab" role="tab" aria-controls="log"
+            aria-selected="true">
+            Log
+          </a>
+        </li>
+        <!-- <li id="tabapplicationApprovalRecommendation" class="nav-item">
+          <a class="nav-link" (click)="recomendationwiz()" href="#recomendationlist" data-toggle="tab" role="tab"
+            aria-controls="recomendation" aria-selected="true">
+            Recommendation
+          </a>
+        </li> -->
+        <li id="tabapplicationApprovalApproval Comment" class="nav-item">
+          <a class="nav-link" (click)="approvalcommentwiz()" href="#approvalcommentlist" data-toggle="tab" role="tab"
+            aria-controls="approvalcomment" aria-selected="true">
+            Approval Schedule
+          </a>
+        </li>
+        <li id="tabapplicationApprovalDeviation" class="nav-item">
+          <a class="nav-link" (click)="deviationwiz()" href="#deviationlist" data-toggle="tab" role="tab"
+            aria-controls="deviation" aria-selected="true">
+            Deviation
+          </a>
+        </li>
+        <li id="tabapplicationApprovalRules" class="nav-item">
+          <a class="nav-link" (click)="rulesresultwiz()" href="#rulesresultlist" data-toggle="tab" role="tab"
+            aria-controls="rulesresult" aria-selected="true">
+            Rules
+          </a>
+        </li>
+        <!-- <li id="tabapplicationApprovalDynamicScreens" class="nav-item">
+          <a class="nav-link" (click)="dynamicscreen()" href="#dynamicscreen" data-toggle="tab" role="tab"
+            aria-controls="dynamicscreen" aria-selected="true">
+            {{model.description}}
+          </a>
+        </li> -->
+      </ul>
+    </div>
+  </div>
+
+  <router-outlet></router-outlet>
+  <!--#endregion wizard container-->
+</div>

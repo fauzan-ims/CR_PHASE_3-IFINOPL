@@ -1,0 +1,628 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body ">
+        <!--#region form-->
+        <form #guarantordetailForm="ngForm"
+          (ngSubmit)="onFormSubmit(guarantordetailForm.value, guarantordetailForm.valid)">
+
+          <!--#region button save dan back-->
+          <button [hidden]="pageType !=null" type="submit" class="btn btn-info btn-round" data-role="R00019900291991C"
+            hidden>Save</button>
+          <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+          <!--#endregion button save dan back-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region guarantor_client_type-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Type</label>
+                <select [disabled]="pageType !=null || this.params != null" class=" form-control col-md-6"
+                  [(ngModel)]="model.guarantor_client_type" name="p_guarantor_client_type"
+                  (change)="clientType($event)">
+                  <option value='PERSONAL'>PERSONAL</option>
+                  <option value='CORPORATE'>CORPORATE</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion guarantor_client_type-->
+
+            <!--#region Existing Client -->
+            <div class="col-md-4" hidden>
+              <div class="form-group">
+                <label [hidden]="this.params == null" data-toggle="tooltip" class="labelmodule">Existing
+                  Client</label>
+                <label [hidden]="this.params != null" (click)="resetClientExisting()" style="cursor: pointer;"
+                  title="CLEAR" class="labelmodule">Existing Client</label>
+                <div class="col-md-12">
+                  <button [disabled]="this.params != null" class="btn btn-icon btn-outline-default btn-round btn-md"
+                    type="button" (click)="btnLookupExistingClient()" data-toggle="modal"
+                    data-target="#lookupModalExistingClient" href="#"><i class="fa fa-search-plus"></i></button>
+                  {{model.existing_client_name}}
+                  <input type="hidden" class="form-control" [ngModel]="model.relation_client_code"
+                    name="p_relation_client_code">
+                </div>
+              </div>
+            </div>
+            <!--#endregion Existing Client-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region p -->
+            <input type="hidden" [ngModel]="this.param" name="p_guarantor_client_code">
+            <!--#endregion p_guarantor_client_code-->
+
+            <!--#region p_application_no-->
+            <input type="text" class="form-control" [ngModel]="this.param" name="p_application_no" hidden>
+            <!--#endregion p_application_no-->
+
+            <!--#region p_id-->
+            <input type="text" [ngModel]="this.params" name="p_id" hidden>
+            <!--#endregion p_id-->
+
+            <!--#region id no-->
+            <div class="col-md-4" [hidden]="model.guarantor_client_type !== 'PERSONAL'">
+              <div class="form-group">
+                <label>ID No * </label>
+                <input type="text" class="form-control"
+                  [disabled]="pageType !=null || model.guarantor_client_type !== 'PERSONAL'" [ngModel]="model.id_no"
+                  name="p_id_no" required #p_id_no="ngModel" maxlength="16">
+                <small
+                  *ngIf="(p_id_no.errors?.required && p_id_no.touched) || (p_id_no.errors?.required && guarantordetailForm.submitted)"
+                  class="text-danger">
+                  ID No is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion id no-->
+
+            <!--#region full_name-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="full_name" class="control-label">Full Name * </label>
+                <input type="text" class="form-control" [ngModel]="model.full_name" name="p_full_name" required
+                  #full_name="ngModel" pattern={{textonly}} [disabled]="pageType !=null">
+              </div>
+              <small
+                *ngIf="(full_name.errors?.required && full_name.touched) || (full_name.errors?.required && guarantordetailForm.submitted)"
+                class="text-danger">
+                Full Name is required
+              </small>
+              <small *ngIf="full_name.errors?.pattern && full_name.touched" class="text-danger">
+                Full Name is required and format should be <i>(A-z or a-z)</i>.
+              </small>
+            </div>
+            <!--#endregion full_name-->
+
+            <!--#region mother_maiden_name-->
+            <div class="col-md-4" [hidden]="model.guarantor_client_type !== 'PERSONAL'">
+              <div class="form-group">
+                <label for="mother_maiden_name" class="control-label">Mother Maiden Name</label>
+                <input type="text" class="form-control" [ngModel]="model.mother_maiden_name" name="p_mother_maiden_name"
+                  #mother_maiden_name="ngModel" pattern="{{textonly}}"
+                  [disabled]="pageType !=null || model.guarantor_client_type !== 'PERSONAL'">
+                <small *ngIf="mother_maiden_name.mother_maiden_name?.pattern && mother_maiden_name.touched"
+                  class="text-danger">
+                  Mother Maiden Name format should be <i>(A-z or a-z)</i>.
+                </small>
+              </div>
+            </div>
+            <!--#endregion mother_maiden_name-->
+
+            <!--#region place_of_birth-->
+            <div class="col-md-4" [hidden]="model.guarantor_client_type !== 'PERSONAL'">
+              <div class="form-group">
+                <label for="place_of_birth" class="control-label">Place of Birth *</label>
+                <input type="text" class="form-control" [ngModel]="model.place_of_birth" name="p_place_of_birth"
+                  required #place_of_birth="ngModel"
+                  [disabled]="pageType !=null || model.guarantor_client_type !== 'PERSONAL'">
+                <small
+                  *ngIf="(place_of_birth.errors?.required && place_of_birth.touched) || (place_of_birth.errors?.required && guarantordetailForm.submitted)"
+                  class="text-danger">
+                  Place of Birth is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion place_of_birth-->
+
+            <!--#region date_of_birth-->
+            <div class="col-md-4" [hidden]="model.guarantor_client_type !== 'PERSONAL'">
+              <div class="form-group">
+                <label for="p_date_of_birth" class="control-label">Date of Birth *</label>
+                <input [ngStyle]="getStyles(pageType !=null)" class="form-control col-md-6" placeholder="dd/mm/yyyy"
+                  angular-mydatepicker [ngModel]="model.date_of_birth" name="p_date_of_birth"
+                  [options]="myDatePickerOptions" (click)="date_of_birth.toggleCalendar()" required
+                  #p_date_of_birth="ngModel" #date_of_birth="angular-mydatepicker" autocomplete="off"
+                  [disabled]="pageType !=null || model.guarantor_client_type !== 'PERSONAL'">
+                <small
+                  *ngIf="(p_date_of_birth.errors?.required && p_date_of_birth.touched) || (p_date_of_birth.errors?.required && guarantordetailForm.submitted)"
+                  class="text-danger">
+                  Date of Birth is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion date_of_birth-->
+
+            <!--#region tax file no-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Tax File No *</label>
+                <input id="npwpNo" type="text" class="form-control" [disabled]="pageType !=null"
+                  [ngModel]="model.npwp_no" name="p_npwp_no" #npwp_no="ngModel" required pattern={{NpwpPattern}}
+                  (keydown)="onKeydownNpwp($event)" (paste)="onPasteNpwp($event)" (focus)="onFokusNpwp($event)"
+                  (blur)="onChangeNpwp($event)">
+                <small
+                  *ngIf="(npwp_no.errors?.required && npwp_no.touched) || (npwp_no.errors?.required && guarantordetailForm.submitted)"
+                  class="text-danger">
+                  Tax File No is required
+                </small>
+                <small *ngIf="npwp_no.errors?.pattern && npwp_no.touched" class="text-danger">
+                  Tax File No is required and format should be <i>00.000.000.0-000.000</i>
+                </small>
+              </div>
+            </div>
+            <!--#endregion tax file no-->
+
+            <!--#region relationship-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="relationship" class="control-label">Relationship * </label>
+                <input type="text" class="form-control" [ngModel]="model.relationship" name="p_relationship" required
+                  #relationship="ngModel" pattern={{textonly}} [disabled]="pageType !=null">
+              </div>
+              <small
+                *ngIf="(relationship.errors?.required && relationship.touched) || (relationship.errors?.required && guarantordetailForm.submitted)"
+                class="text-danger">
+                Relationship is required
+              </small>
+              <small *ngIf="relationship.errors?.pattern && relationship.touched" class="text-danger">
+                Relationship is required and format should be <i>(A-z or a-z)</i>.
+              </small>
+            </div>
+            <!--#endregion relationship-->
+
+            <!--#region guaranted_pct-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="guaranted_pct" class="control-label">Guaranted (%) * </label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.guaranted_pct | number : '1.6-6'" rate="guaranted_pct" name="p_guaranted_pct"
+                  required #guaranted_pct="ngModel" [disabled]="pageType !=null">
+                <small
+                  *ngIf="(guaranted_pct.errors?.required && guaranted_pct.touched) || (guaranted_pct.errors?.required && guarantordetailForm.submitted)"
+                  class="text-danger">
+                  Guaranted (%) is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion guaranted_pct-->
+
+            <!--#region area_mobile_no + mobile_no-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="area_mobile_no && mobile_no" class="control-label">Phone No.</label>
+                <div class="row">
+                  <div class="col-md-4">
+                    <input type="text" class="form-control" [ngModel]="model.area_mobile_no" name="p_area_mobile_no"
+                      #area_mobile_no="ngModel" maxlength="4" pattern={{NumberOnlyPattern}}
+                      [disabled]="pageType !=null">
+                  </div>
+                  -
+                  <div class="col-md-7">
+                    <input type="text" class="form-control" [ngModel]="model.mobile_no" name="p_mobile_no"
+                      maxlength="15" #mobile_no="ngModel" pattern={{NumberOnlyPattern}} [disabled]="pageType !=null">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--#endregion area_mobile_no + mobile_no-->
+
+            <!--#region gender_code-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>
+                  <span [hidden]="model.guarantor_client_type !== 'PERSONAL'">Gender</span>
+                  <span [hidden]="model.guarantor_client_type === 'PERSONAL'">Type</span>
+                </label>
+                <select [disabled]="pageType !=null || model.relation_client_code != null" class="form-control col-md-6"
+                  [(ngModel)]="model.gender_code" name="p_gender_code">
+                  <option [hidden]="model.guarantor_client_type !== 'PERSONAL'" value='M'>Male</option>
+                  <option [hidden]="model.guarantor_client_type !== 'PERSONAL'" value='F'>Female</option>
+                  <option [hidden]="model.guarantor_client_type === 'PERSONAL'" value='B'>Corporate</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion gender_code-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region lookup Province Code-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="labelmodule" (click)="resetProvince()" style="cursor: pointer;"
+                  title="CLEAR">Province</label>
+                <div class="col-md-12 buttons">
+                  <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    [disabled]="pageType !=null || model.relation_client_code != null" (click)="btnLookupProvince()"
+                    data-toggle="modal" data-target="#lookupModalProvince" href="#"><i
+                      class="fa fa-search-plus"></i></button>
+                  {{model.province_name}}
+                  <input type="hidden" class="form-control" [ngModel]="model.province_code" name="p_province_code"
+                    #province_code="ngModel">
+                  <input type="hidden" class="form-control" [ngModel]="model.province_name" name="p_province_name"
+                    #province_name="ngModel">
+                </div>
+              </div>
+            </div>
+            <!--#endregion lookup Province Code-->
+
+            <!--#region lookup City code-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="labelmodule" (click)="resetCity()" style="cursor: pointer;" title="CLEAR">City</label>
+                <div class="col-md-12 buttons">
+                  <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    [disabled]="pageType !=null || model.relation_client_code != null" (click)="btnLookupCity()"
+                    data-toggle="modal" data-target="#lookupModalCity" href="#"><i
+                      class="fa fa-search-plus"></i></button>
+                  {{model.city_name}}
+                  <input type="hidden" class="form-control" [ngModel]="model.city_code" name="p_city_code"
+                    #city_code="ngModel">
+                  <input type="hidden" class="form-control" [ngModel]="model.city_name" name="p_city_name"
+                    #city_name="ngModel">
+                </div>
+              </div>
+            </div>
+            <!--#endregion lookup City Code-->
+
+            <!--#region zip code-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="labelmodule" (click)="resetZipCode()" style="cursor: pointer;" title="CLEAR">Zip
+                  Code</label>
+                <div class="col-md-12 buttons btn-lookup-margin">
+                  <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                    [disabled]="pageType !=null || model.relation_client_code != null" (click)="btnLookupZipCode()"
+                    data-toggle="modal" data-target="#lookupModalZipCode" href="#"><i
+                      class="fa fa-search-plus"></i></button>
+                  {{model.zip_code_code}}
+                  <input type="hidden" class="form-control" [ngModel]="model.zip_name" name="p_zip_name"
+                    #zip_name="ngModel">
+                  <input type="hidden" class="form-control" [ngModel]="model.zip_code" name="p_zip_code"
+                    #zip_code="ngModel">
+                  <input type="hidden" class="form-control" [ngModel]="model.zip_code_code" name="p_zip_code_code"
+                    #zip_code="ngModel">
+                </div>
+              </div>
+            </div>
+            <!--#endregion zip code-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region sub district-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="sub_district" class="control-label">Sub District</label>
+                <input type="text" class="form-control" [ngModel]="model.sub_district" name="p_sub_district"
+                  #sub_district="ngModel" readonly>
+              </div>
+            </div>
+            <!--#endregion sub district-->
+
+            <!--#region village-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="village" class="control-label">Village</label>
+                <input type="text" class="form-control" [ngModel]="model.village" name="p_village" #village="ngModel"
+                  readonly>
+              </div>
+            </div>
+            <!--#endregion village-->
+
+            <!--#region rt/rw-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="rt && rw" class="control-label">RT/RW</label>
+                <div class="row">
+                  <div class="col-md-4">
+                    <input type="text" class="form-control" [ngModel]="model.rt" name="p_rt" #rt="ngModel"
+                      pattern="{{NumberOnlyPattern}}" [disabled]="pageType !=null">
+                  </div>
+                  -
+                  <div class="col-md-4">
+                    <input type="text" class="form-control" [ngModel]="model.rw" name="p_rw" #rw="ngModel"
+                      pattern="{{NumberOnlyPattern}}" [disabled]="pageType !=null">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--#endregion rt/rw-->
+
+            <!--#region address-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="address" class="control-label">Address *</label>
+                <textarea [disabled]="pageType !=null" type="text" class="form-control" [ngModel]="model.address"
+                  maxlength="250" required #address="ngModel" name="p_address"></textarea>
+                <small
+                  *ngIf="(address.errors?.required && address.touched) || (address.errors?.required && guarantordetailForm.submitted)"
+                  class="text-danger">
+                  Address is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion address-->
+
+            <!--#region remarks-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="remarks" class="control-label">Remark *</label>
+                <textarea [disabled]="pageType !=null" type="text" class="form-control" [ngModel]="model.remarks"
+                  maxlength="4000" required #remarks="ngModel" name="p_remarks"></textarea>
+                <small
+                  *ngIf="(remarks.errors?.required && remarks.touched) || (remarks.errors?.required && guarantordetailForm.submitted)"
+                  class="text-danger">
+                  Remark is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion remarks-->
+          </div>
+          <!--#endregion row-->
+        </form>
+        <!--#endregion form-->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region lookup Position-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalPosition"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupPosition" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupposition;let i=index ">
+                  <td style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupposition.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowPosition(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Position-->
+
+<!--#region lookup province-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalProvince"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupProvince" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupprovince;let i=index ">
+                  <th style="display: none;"></th>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupprovince.numberIndex+i+1}}</td>
+                  <td style="width:20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width:80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowLookupProvince(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup province-->
+
+<!--#region lookup city-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalCity" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupCity" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupcity;let i=index ">
+                  <th style="display: none;"></th>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupcity.numberIndex+i+1}}</td>
+                  <td style="width:20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width:80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowLookupCity(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup city-->
+
+<!--#region lookup zip-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalZipCode"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12 buttons btn-lookup-margin">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupZipCode" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Sub District</th>
+                  <th>Village</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupzipcode;let i=index ">
+                  <td style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupzipcode.numberIndex+i+1}}</td>
+                  <td style="text-align: center; width: 20%;">{{ row.postal_code }}</td>
+                  <td style="width: 40%;">{{ row.sub_district }}</td>
+                  <td style="width: 40%;">{{ row.village }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowLookupZipCode(row.code, row.postal_code, row.zip_code_name, row.sub_district,row.village)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup zip-->
+
+<!--#region lookup Existing Client-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalExistingClient"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+
+            <table id="datatableLookupExistingClient" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Client No</th>
+                  <th>Name</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupexistingclient;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupexistingclient.numberIndex+i+1}}</td>
+                  <td style="width: 20%;" class="text-center">{{ row.client_no }}</td>
+                  <td style="width: 80%;">{{ row.client_name}}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round" (click)="btnSelectRowExistingClient(
+                      row.code 
+                      ,row.client_name
+                      ,row.full_name			  
+                      ,row.gender_code			  
+                      ,row.gender_desc		  
+                      ,row.mother_maiden_name	  
+                      ,row.place_of_birth		  
+                      ,row.date_of_birth		  
+                      ,row.province_code		  
+                      ,row.province_name		  
+                      ,row.city_code			  
+                      ,row.city_name			  
+                      ,row.zip_code			  
+                      ,row.zip_code_code		  
+                      ,row.zip_name			  
+                      ,row.sub_district		  
+                      ,row.village				  
+                      ,row.address				  
+                      ,row.rt					  
+                      ,row.rw					  
+                      ,row.area_mobile_no		  
+                      ,row.mobile_no			  
+                      ,row.id_no				  
+                      ,row.npwp_no				  
+                      )">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Existing Client-->

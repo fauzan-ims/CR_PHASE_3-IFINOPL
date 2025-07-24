@@ -1,0 +1,253 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header ">
+          <h4 class="card-title">Facility Info</h4>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #facilitydetailForm="ngForm"
+            (ngSubmit)="onFormSubmit(facilitydetailForm.value, facilitydetailForm.valid)">
+
+            <!--#region button save dan back-->
+            <button type="submit" class="btn btn-info btn-round" data-role="R00016850021686C">Save</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button save dan back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Code-->
+              <input type="text" [ngModel]="model.code" name="p_code" hidden>
+              <!--#endregion code-->
+
+              <!--#region description-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="description" class="control-label">Description *</label>
+                  <textarea type="text" class="form-control" [ngModel]="model.description" maxlength="4000"
+                    name="p_description" required #description="ngModel"></textarea>
+                  <small
+                    *ngIf="(description.errors?.required && description.touched) || (description.errors?.required && facilitydetailForm.submitted)"
+                    class="text-danger">
+                    Description is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion description-->
+
+              <!--#region deskcoll_min-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="deskcoll_min" class="control-label">Max Not Due *</label>
+                  <input type="text" style="text-align:right" class="form-control col-md-3" [ngModel]="model.deskcoll_min"
+                    name="p_deskcoll_min" required #deskcoll_min="ngModel" maxlength="4" pattern="{{NumberOnlyPattern}}">
+                  <small
+                    *ngIf="(deskcoll_min.errors?.required && deskcoll_min.touched) || (deskcoll_min.errors?.required && facilitydetailForm.submitted)"
+                    class="text-danger">
+                    Max Not Due is required
+                  </small>
+                  <small *ngIf="deskcoll_min.errors?.pattern && deskcoll_min.touched" class="text-danger">
+                    Max Not Due is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion deskcoll_min-->
+
+              <!--#region deskcoll_max-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="deskcoll_max" class="control-label">Max Past Due *</label>
+                  <input type="text" style="text-align:right" class="form-control col-md-3" [ngModel]="model.deskcoll_max"
+                    name="p_deskcoll_max" required #deskcoll_max="ngModel" maxlength="4" pattern="{{NumberOnlyPattern}}">
+                  <small
+                    *ngIf="(deskcoll_max.errors?.required && deskcoll_max.touched) || (deskcoll_max.errors?.required && facilitydetailForm.submitted)"
+                    class="text-danger">
+                    Max Past Due is required
+                  </small>
+                  <small *ngIf="deskcoll_max.errors?.pattern && deskcoll_max.touched" class="text-danger">
+                    Max Past Due is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion deskcoll_max-->
+
+              <!--#region sp1_days-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="sp1_days" class="control-label">Overdue Days SP 1 *</label>
+                  <input type="text" style="text-align:right" class="form-control col-md-3" [ngModel]="model.sp1_days"
+                    name="p_sp1_days" required #sp1_days="ngModel" maxlength="4" pattern="{{NumberOnlyPattern}}">
+                  <small
+                    *ngIf="(sp1_days.errors?.required && sp1_days.touched) || (sp1_days.errors?.required && facilitydetailForm.submitted)"
+                    class="text-danger">
+                    Overdue Days SP 1 is required
+                  </small>
+                  <small *ngIf="sp1_days.errors?.pattern && sp1_days.touched" class="text-danger">
+                    Overdue Days SP 1 is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion sp1_days-->
+
+              <!--#region sp2_days-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="sp2_days" class="control-label">Overdue Days SP 2 *</label>
+                  <input type="text" style="text-align:right" class="form-control col-md-3" [ngModel]="model.sp2_days"
+                    name="p_sp2_days" required #sp2_days="ngModel" maxlength="4" pattern="{{NumberOnlyPattern}}">
+                  <small
+                    *ngIf="(sp2_days.errors?.required && sp2_days.touched) || (sp2_days.errors?.required && facilitydetailForm.submitted)"
+                    class="text-danger">
+                    Overdue Days SP 2 is required
+                  </small>
+                  <small *ngIf="sp2_days.errors?.pattern && sp2_days.touched" class="text-danger">
+                    Overdue Days SP 2 is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion sp2_days-->
+
+              <!--#region somasi_days-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="somasi_days" class="control-label">Overdue Days Somasi *</label>
+                  <input type="text" style="text-align:right" class="form-control col-md-3"
+                    [ngModel]="model.somasi_days" name="p_somasi_days" required #somasi_days="ngModel" maxlength="4"
+                    pattern="{{NumberOnlyPattern}}">
+                  <small
+                    *ngIf="(somasi_days.errors?.required && somasi_days.touched) || (somasi_days.errors?.required && facilitydetailForm.submitted)"
+                    class="text-danger">
+                    Overdue Days Somasi is required
+                  </small>
+                  <small *ngIf="somasi_days.errors?.pattern && somasi_days.touched" class="text-danger">
+                    Overdue Days Somasi is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion somasi_days-->
+
+              <!--#region aging_days1-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="aging_days1" class="control-label">Overdue Days Aging 1 *</label>
+                  <input type="text" style="text-align:right" class="form-control col-md-3"
+                    [ngModel]="model.aging_days1" name="p_aging_days1" required #aging_days1="ngModel" maxlength="4"
+                    pattern="{{NumberOnlyPattern}}">
+                  <small
+                    *ngIf="(aging_days1.errors?.required && aging_days1.touched) || (aging_days1.errors?.required && facilitydetailForm.submitted)"
+                    class="text-danger">
+                    Overdue Days Aging 1 is required
+                  </small>
+                  <small *ngIf="aging_days1.errors?.pattern && aging_days1.touched" class="text-danger">
+                    Overdue Days Aging 1 is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion aging_days1-->
+
+              <!--#region aging_days2-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="aging_days2" class="control-label">Overdue Days Aging 2 *</label>
+                  <input type="text" style="text-align:right" class="form-control col-md-3"
+                    [ngModel]="model.aging_days2" name="p_aging_days2" required #aging_days2="ngModel" maxlength="4"
+                    pattern="{{NumberOnlyPattern}}">
+                  <small
+                    *ngIf="(aging_days2.errors?.required && aging_days2.touched) || (aging_days2.errors?.required && facilitydetailForm.submitted)"
+                    class="text-danger">
+                    Overdue Days Aging 2 is required
+                  </small>
+                  <small *ngIf="aging_days2.errors?.pattern && aging_days2.touched" class="text-danger">
+                    Overdue Days Aging 2 is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion aging_days2-->
+
+              <!--#region aging_days3-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="aging_days3" class="control-label">Overdue Days Aging 3 *</label>
+                  <input type="text" style="text-align:right" class="form-control col-md-3"
+                    [ngModel]="model.aging_days3" name="p_aging_days3" required #aging_days3="ngModel" maxlength="4"
+                    pattern="{{NumberOnlyPattern}}">
+                  <small
+                    *ngIf="(aging_days3.errors?.required && aging_days3.touched) || (aging_days3.errors?.required && facilitydetailForm.submitted)"
+                    class="text-danger">
+                    Overdue Days Aging 3 is required
+                  </small>
+                  <small *ngIf="aging_days3.errors?.pattern && aging_days3.touched" class="text-danger">
+                    Overdue Days Aging 3 is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion aging_days3-->
+
+              <!--#region aging_days4-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="aging_days4" class="control-label">Overdue Days Aging 4 *</label>
+                  <input type="text" style="text-align:right" class="form-control col-md-3"
+                    [ngModel]="model.aging_days4" name="p_aging_days4" required #aging_days4="ngModel" maxlength="4"
+                    pattern="{{NumberOnlyPattern}}">
+                  <small
+                    *ngIf="(aging_days4.errors?.required && aging_days4.touched) || (aging_days4.errors?.required && facilitydetailForm.submitted)"
+                    class="text-danger">
+                    Overdue Days Aging 4 is required
+                  </small>
+                  <small *ngIf="aging_days4.errors?.pattern && aging_days4.touched" class="text-danger">
+                    Overdue Days Aging 4 is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion sp2_days-->
+
+              <!--#region facility_type-->
+              <div class="col-md-4" hidden>
+                <div class="form-group">
+                  <label>Type</label>
+                  <select class="form-control col-md-8" [ngModel]="model.facility_type" name="p_facility_type">
+                    <option value='OL'>Operating Lease</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion rounding facility_type-->
+
+              <!--#region is_active-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" [ngModel]="model.is_active" name="p_is_active">
+                      Active
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion is_active-->
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+        </div>
+        <div class="card-footer ">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

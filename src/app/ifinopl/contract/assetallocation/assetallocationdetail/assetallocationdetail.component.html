@@ -1,0 +1,537 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header ">
+          <h4 class="card-title">Application Asset Allocation Info</h4>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #applicationmaindetailForm="ngForm"
+            (ngSubmit)="onFormSubmit(applicationmaindetailForm.value, applicationmaindetailForm.valid)">
+
+            <!--#region button post, Back-->
+            <button [hidden]="model.count_deliver_asset === 0" type="button"
+              class="btn btn-warning btn-round custom-button-width" data-target="#lookupRemark"
+              data-role="R00020600002062R" data-toggle="modal" href="#" (click)="btnReturn()">Back To Application
+              Entry</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button post, Back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region application_no-->
+              <input type="text" [ngModel]="this.param" name="p_application_no" hidden>
+              <!--#endregion application_no-->
+
+              <!--#region lookup application_external_no -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Application No</label>
+                  <input type="text" class="form-control" [ngModel]="model.application_external_no"
+                    name="p_application_external_no" readonly>
+                </div>
+              </div>
+              <!--#endregion lookup application_external_no -->
+
+              <!--#region lookup SysBranch code -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Branch</label>
+                  <input type="text" class="form-control" [ngModel]="model.branch_name" name="p_branch_name" readonly>
+                </div>
+              </div>
+              <!--#endregion lookup SysBranch code -->
+
+              <!--#region application_date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="p_application_date" class="control-label">Application Date</label>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.application_date" name="p_application_date" [options]="myDatePickerOptions"
+                    required #p_application_date="ngModel" #application_date="angular-mydatepicker" autocomplete="off"
+                    readonly />
+                </div>
+              </div>
+              <!--#endregion application_date-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region lookup Client -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Client</label>
+                  <input type="text" class="form-control" [ngModel]="model.client_name" name="p_client_name" readonly>
+                </div>
+              </div>
+              <!--#endregion lookup Client -->
+
+              <!--#region lookup facility -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Facility</label>
+                  <input type="text" class="form-control" [ngModel]="model.facility_desc" name="p_facility_desc"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion lookup facility -->
+
+              <!--#region application_status-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Application Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.application_status"
+                    name="p_application_status" readonly>
+                </div>
+              </div>
+              <!--#endregion application_status-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region marketing-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Marketing</label>
+                  <input type="text" class="form-control" [ngModel]="model.marketing_name" name="p_marketing_name"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion marketing-->
+
+              <!--#region application_remarks-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="package_description" class="control-label">Remark</label>
+                  <textarea type="text" class="form-control" [ngModel]="model.application_remarks"
+                    name="p_application_remarks" required #application_remarks="ngModel" maxlength="4000"
+                    readonly></textarea>
+                </div>
+              </div>
+              <!--#endregion application_remarks-->
+
+              <!--#region Currency-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Currency</label>
+                  <input type="text" class="form-control" [ngModel]="model.currency_code" name="p_currency_code"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion Currency-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+
+              <!--#region rental_amount-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Rental Amount</label>
+                  <input type="text" class="form-control col-md-6" style="text-align: right;"
+                    [ngModel]="model.rental_amount | number : '1.2-2'" amount="rental_amount" name="p_rental_amount"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion rental_amount-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row" hidden>
+              <!--#region is_blacklist_area-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input disabled class="form-check-input" type="checkbox" [ngModel]="model.is_blacklist_area"
+                        name="p_is_blacklist_area"> Watchlist Area
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion is_blacklist_area-->
+
+              <!--#region is_blacklist_job-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input disabled class="form-check-input" type="checkbox" [ngModel]="model.is_blacklist_job"
+                        name="p_is_blacklist_job"> Watchlist Job
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion is_blacklist_job-->
+
+              <!--#region return_count-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Return Count</label>
+                  <input type="text" class="form-control col-md-2" [ngModel]="model.return_count" name="p_return_count"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion return_count-->
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+
+          <!--#region list view-->
+          <div class="row">
+            <span layout="row horizontal-divider">
+              <hr flex />
+            </span>
+            <div class="col-md-12">
+              <div class="card-header">
+                <h4 class="card-title">Asset Allocation List</h4>
+              </div>
+              <div class="card-body">
+                <button type="button" class="btn btn-success btn-round" (click)="btnProceed()"
+                  data-role="R00020600002061O" [hidden]="model.count_deliver_asset === 0">Post
+                </button>
+                <button type="button" class="btn btn-info btn-round" (click)="saveList()" data-role="R00019900241991C"
+                  hidden>
+                  Save</button>
+                <button type="button" style='float: right;' class="btn btn-info btn-print-round custom-button-width"
+                  data-role="R00020670012068P" (click)="btnPrint()" hidden>
+                  Print Delivery Request
+                </button>
+
+                <!--#region list view-->
+                <table id="datatableApplicationAsset" datatable [dtOptions]="dtOptions"
+                  class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                  <thead>
+                    <tr>
+                      <th class="disabled-sorting">No </th>
+                      <th class="disabled-sorting">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" id="checkall" [(ngModel)]="selectedAll"
+                              (change)="selectAllTable();" />
+                            <span class="form-check-sign"></span>
+                          </label>
+                        </div>
+                      </th>
+                      <th>Asset No</th>
+                      <th>Fixed Asset</th>
+                      <!-- <th>Plat No/ Chasis/ Engine</th> -->
+                      <th>Fixed Asset GTS</th>
+                      <!-- <th>Plat No/ Chasis/ Engine GTS</th> -->
+                      <th>Deliver To</th>
+                      <th>Specification</th>
+                      <th>BBN Name/Location/Address</th>
+                      <th>Estimate PO Date</th>
+                      <th>Aging Day</th>
+                      <th>Request Bast Date</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of listapplicationasset;let i=index ">
+                      <td class="if-no-edit-btn" style="text-align: center;">{{listapplicationasset.numberIndex+i+1}}
+                        <input type="text" hidden name="p_asset_no" [ngModel]="row.asset_no">
+                      </td>
+                      <td class="disabled-sorting">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                              (change)="checkIfAllTableSelected($event, row.asset_no);">
+                            <span class="form-check-sign"></span>
+                          </label>
+                        </div>
+                      </td>
+                      <td style="width: 10%;">{{row.asset_no}} <br> {{row.asset_name}} <b
+                          style="color:#ff7b00">{{row.request_gts}}</b>
+                      </td>
+                      <!-- <td style="width: 15%;">
+                        <button [hidden]="row.purchase_status !== 'NONE' || row.fa_code !== null"
+                          class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                          (click)="btnLookupFixAsset(row.asset_no, row.asset_type_code, row.unit_code, row.merk_code, row.model_code, 'fixedAsset')"
+                          data-target="#lookupModalFixAsset" data-toggle="modal" href="#"><i
+                            class="fa fa-search-plus"></i></button>
+                        <span [hidden]="row.fa_code === null"> {{row.fa_code}}
+                          <br> {{row.fa_name}}
+                          <br> Plat No : {{row.fa_reff_no_01}}
+                          <br> Chasis No : {{row.fa_reff_no_02}}
+                          <br> Engine No : {{row.fa_reff_no_03}}
+                        </span>
+                      </td> -->
+                      <td style="text-align: left; width: 15%;">
+                        <div class="form-group">
+                          <div class="col-md-12 buttons">
+                            <span
+                              [hidden]="(row.is_request_gts === '1' && row.replacement_fa_code === null) || row.purchase_status === 'NONE' || (row.purchase_status !== 'NONE' && row.fa_code !== null)">
+                              <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                                (click)="btnLookupAssetProc(row.application_no, row.asset_no)"
+                                data-target="#lookupModalAssetProcurement" data-toggle="modal" href="#">
+                                <i class="fa fa-search-plus"></i>
+                              </button>
+                            </span>
+
+                            <button
+                              [hidden]="row.purchase_status !== 'NONE' || (row.purchase_status !== 'NONE' && row.fa_code !== null)"
+                              class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                              (click)="btnLookupFixAsset(row.asset_no, row.asset_type_code, row.unit_code, row.merk_code, row.model_code, 'fixedAsset')"
+                              data-target="#lookupModalFixAsset" data-toggle="modal" href="#"><i
+                                class="fa fa-search-plus"></i></button>
+                            <span [hidden]="row.fa_code === null"> {{row.fa_code}}
+                              <br> {{row.fa_name}}
+                              <br> Plat No : {{row.fa_reff_no_01}}
+                              <br> Chasis No : {{row.fa_reff_no_02}}
+                              <br> Engine No : {{row.fa_reff_no_03}}
+                            </span>
+
+                          </div>
+                        </div>
+                      </td>
+
+                      <!-- <td style="width: 10%;">{{row.fa_reff_no_01}} <br> {{row.fa_reff_no_02}} <br>
+                        {{row.fa_reff_no_03}}</td> -->
+                      <td style="width: 15%;">
+                        <button
+                          [hidden]="row.is_request_gts !== '1' || row.purchase_gts_status !== 'NONE' || row.replacement_fa_code !== null"
+                          class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                          (click)="btnLookupFixAsset(row.asset_no, row.asset_type_code, row.unit_code, row.merk_code, row.model_code, 'fixedAssetGts')"
+                          data-target="#lookupModalFixAsset" data-toggle="modal" href="#"><i
+                            class="fa fa-search-plus"></i></button>
+                        <span [hidden]="row.replacement_fa_code === null">{{row.replacement_fa_code}}
+                          <br> {{row.replacement_fa_name}}
+                          <br> Plat No : {{row.replacement_fa_reff_no_01}}
+                          <br> Chasis No : {{row.replacement_fa_reff_no_02}}
+                          <br> Engine No : {{row.replacement_fa_reff_no_03}}
+                        </span>
+                      </td>
+                      <td style="width: 10%;">{{row.deliver_to_name}} <br> {{row.deliver_phone_no}} <br>
+                        {{row.deliver_to_address}}
+                      </td>
+                      <td style="width: 10%;">
+                        Year : {{row.asset_year}}
+                        <br> Condition : {{row.asset_condition}}
+                        <br> Colour : {{row.colour}}
+                        <span [hidden]="row.transmisi === ''"><br> Transmition : {{row.transmisi}}</span>
+                      </td>
+                      <!-- <td style="width: 10%;">{{row.replacement_fa_reff_no_01}} <br> {{row.replacement_fa_reff_no_02}}
+                        <br> {{row.replacement_fa_reff_no_03}}
+                      </td> -->
+                      <td style="width: 10%;text-align: left;">{{row.client_bbn_name}} <br>
+                        {{row.bbn_location_description}} <br> {{row.client_bbn_address}}</td>
+                      <td style="width: 10%;text-align: center;">{{row.estimate_po_date}}</td>
+                      <td style="width: 5%;text-align: center;">{{row.aging_day}}</td>
+                      <td style="width: 10%;text-align: center;">{{row.request_delivery_date}}</td>
+                      <td style="width: 10%;text-align: center;">
+                        <button
+                          [hidden]="(row.is_request_gts !== '0') || (row.purchase_status !== 'NONE' || row.fa_code !== null)"
+                          class="btn btn-info btn-print-round" type="button" (click)="btnPurchaseRequest(row.asset_no)">
+                          Purchase
+                        </button>
+                        <button
+                          [hidden]="row.is_request_gts !== '1' || row.purchase_gts_status !== 'NONE' || row.replacement_fa_code !== null"
+                          class="btn btn-info btn-print-round" type="button"
+                          (click)="btnPurchaseRequestGts(row.asset_no)">
+                          Purchase GTS
+                        </button>
+                        <button
+                          [hidden]="row.replacement_fa_code === null && row.purchase_gts_status === 'NONE' || row.purchase_gts_status !== 'NONE'"
+                          class="btn btn-info btn-print-round" type="button"
+                          (click)="btnClearFixedAsset(row.asset_no, row.replacement_fa_code, 'fixedAssetGts')">
+                          Clear Purchase GTS
+                        </button>
+                        <button
+                          [hidden]="(row.fa_code !== null && row.purchase_status !== 'NONE') || (row.fa_code === null && row.purchase_status === 'NONE') || (row.fa_code === null && row.purchase_status !== 'NONE')"
+                          class="btn btn-info btn-print-round" type="button"
+                          (click)="btnClearFixedAsset(row.asset_no, row.fa_code, 'fixedAsset')">
+                          Clear
+                        </button>
+                        <button
+                          [hidden]="row.asset_condition === 'USED' || row.fa_code === null || (row.purchase_status !== 'REALIZATION' && row.replacement_fa_code === null)"
+                          class="btn btn-info btn-print-round" type="button"
+                          (click)="btnClearFixedAssetproc(row.asset_no, row.fa_code, 'Procurement')">
+                          Clear Asset GRN
+                        </button>
+                        <span
+                          [hidden]="row.is_request_gts === '1' || (row.is_request_gts === '0' && row.purchase_status === 'NONE')">{{row.purchase_status}}
+                          <br> {{row.agreement_external_no}}</span>
+                        <span
+                          [hidden]="row.is_request_gts === '0' || (row.is_request_gts === '1' && row.purchase_gts_status === 'NONE')">GTS
+                          - {{row.purchase_gts_status}} <br> {{row.agreement_external_no}}</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!--#endregion list view-->
+              </div>
+            </div>
+          </div>
+          <!--#endregion list view-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region lookup FixAsset-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalFixAsset"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupFixAsset" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th>Plat No</th>
+                  <th>Asset Condition</th>
+                  <th>Client</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupfixasset;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupfixasset.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;" title="{{row.adjustment_remark}}">{{ row.code }}</td>
+                  <td style="width: 40%;">{{ row.item_name }}</td>
+                  <td style="width: 15%;">{{ row.plat_no }}</td>
+                  <td style="width: 10%;">{{ row.asset_condition }} <br> {{ row.asset_year }} <br> {{ row.asset_colour
+                    }}</td>
+                  <!-- <td style="width: 15%;">{{ row.re_rent_status }} <br> {{ row.client_name }}</td> -->
+                  <td style="width: 15%;">{{ row.client_name }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowFixAsset(row.code, row.item_name, row.plat_no, row.chassis_no, row.engine_no)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup FixAsset-->
+
+<!--#region lookup remark-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupRemark" style="margin-top: -65px">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner1">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" (click)="btnLookupClose()" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <!--#region form-->
+            <form #AssetAllocationReturnForm="ngForm"
+              (ngSubmit)="onFormSubmitAssetAllocationReturn(AssetAllocationReturnForm.value, AssetAllocationReturnForm.valid)">
+              <!--#region button cancel-->
+              <button type="submit" class="btn btn-info btn-round">Save</button>
+
+              <input type="text" [ngModel]="this.param" name="p_application_no" hidden>
+
+              <!--#region approval_remark-->
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="name" class="control-label">Cancel Remark *</label>
+                  <textarea id="cancelremark" type="text" class="form-control" [(ngModel)]="model.approval_remark"
+                    name="p_approval_remark" required #approval_remark="ngModel"></textarea>
+                  <small
+                    *ngIf="(approval_remark.errors?.required && approval_remark.touched) || (approval_remark.errors?.required && AssetAllocationReturnForm.submitted)"
+                    class="text-danger">
+                    Remark is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion approval_remark-->
+            </form>
+            <!--#endregion form-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup remark-->
+
+<!--#region lookup Asset Proc-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalAssetProcurement"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupAssetProc" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th class="disabled-sorting">No</th>
+                  <th style="display: none;"></th>
+                  <th>Asset</th>
+                  <th>Plat No</th>
+                  <th>Engine No</th>
+                  <th>Chasiss No</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupassetproc;let i=index ">
+                  <td style="text-align: center;">{{lookupassetproc.numberIndex+i+1}}</td>
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="width: 45%;">{{ row.asset_code }} <br> {{ row.item_name }}</td>
+                  <td style="width: 15%;">{{ row.plat_no}}</td>
+                  <td style="width: 15%;">{{ row.engine_no}}</td>
+                  <td style="width: 15%;">{{ row.chasis_no}}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectAssetProc(row.asset_code, row.item_name, row.plat_no, row.engine_no, row.chasis_no, row.id)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Asset Proc -->

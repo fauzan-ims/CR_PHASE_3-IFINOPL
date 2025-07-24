@@ -1,0 +1,98 @@
+<div class="main-content mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body">
+        <!--#region list view-->
+        <table id="datatableExpenseList" datatable [dtOptions]="dtOptions"
+          class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th style="display: none;"></th>
+              <th class="disabled-sorting">No</th>
+              <th>Expense</th>
+              <th>Expense Amount</th>
+              <th>Remark</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of listexpense; let i = index">
+              <td class="if-no-edit-btn" style="display: none;"></td>
+              <td class="if-no-edit-btn" style="text-align: center;">{{listexpense.numberIndex+i+1}}</td>
+              <td style="width: 20%;">{{row.expense_type_desc}}</td>
+              <td style="width: 15%;text-align: right;">
+                <input type="hidden" value="{{row.id}}" name="p_id">
+                <input id="expense_amount{{i}}" (blur)="onBlur($event,i,'amount')" (focus)="onFocus($event,i,'amount')"
+                  class="text-right" type="text" value="{{row.expense_amount | number : '1.2-2'}}"
+                  amount="expense_amount" name="p_expense_amount" disabled>
+              </td>
+              <td style="width: 65%;">
+                <textarea style="width: 100%;" type="text" value="{{row.remarks}}" name="p_remarks" disabled></textarea>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!--#endregion list view-->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region lookup SysGeneralSubcode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSysGeneralSubcode"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <!--#region button add-->
+          <button class="btn btn-info btn-round" (click)="btnSelectAllLookup()" role="P001" id="button">
+            Add
+          </button>
+          <!--#endregion button add--->
+          <div class="card-body col-md-12">
+            <table id="datatablelookupSysGeneralSubcode" class="table table-striped table-bordered hover"
+              cellspacing="0" style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th class="disabled-sorting">No</th>
+                  <th class="disabled-sorting">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="checkallLookup"
+                          [(ngModel)]="selectedAllLookup" (change)="selectAllLookup();" />
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </th>
+                  <th>Code</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupsysgeneralsubcode;let i=index ">
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupsysgeneralsubcode.numberIndex+i+1}}
+                  </td>
+                  <td class="disabled-sorting checkbox-fix-padding  if-no-edit-btn">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="row.selectedLookup"
+                          (change)="checkIfAllLookupSelected($event, row.code);">
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup SysGeneralSubcode-->

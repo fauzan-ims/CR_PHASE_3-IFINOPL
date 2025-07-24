@@ -1,0 +1,176 @@
+<router-outlet></router-outlet>
+
+<div id="hideMainPanelWiz" class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body">
+        <div class="toolbar">
+          <!--#region button add, delete-->
+          <button class="btn btn-info btn-round" type="button" (click)="btnLookupService()"
+            data-target="#lookupModalService" data-role="R00024040000006C" data-toggle="modal" href="#">
+            Add </button>
+          <button class="btn btn-danger btn-round" type="button" (click)="btnDeleteAll()" data-role="R00024040000007D">
+            Delete
+          </button>
+          <!--#endregion button add, delete-->
+        </div>
+
+        <!--#region list view-->
+        <table id="datatableMaintenanceGroupService" datatable [dtOptions]="dtOptions"
+          class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th class="disabled-sorting">No</th>
+              <th class="disabled-sorting">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" id="checkall" [(ngModel)]="selectedAll"
+                      (change)="selectAllTable();" />
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </th>
+              <th hidden>id</th>
+              <th>Group</th>
+              <th>Service</th>
+              <th>Unit QTY</th>
+              <th>Unit Cost</th>
+              <th>Labor Cost</th>
+              <th>Replacement Cycle</th>
+              <th>Replacement Type</th>
+              <th>Total Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of listmaintenancegroup;let i=index ">
+              <td class="if-no-edit-btn" style="text-align: center;">{{listmaintenancegroup.numberIndex+i+1}}</td>
+              <td class="disabled-sorting">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                      (change)="checkIfAllTableSelected();" />
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </td>
+              <td hidden>{{row.id}}</td>
+              <td style="width: 15%;">{{row.group_description}}</td>
+              <td style="width: 15%;">{{row.service_description}}</td>
+              <td style="width: 5%;text-align: right;">
+                <div class="form-group">
+                  <input type="text" class="form-control" value="{{row.unit_qty}}" rate="unit_qty" name="p_unit_qty"
+                    id="unit_qty{{i}}"
+                    (change)="changeUnitQty($event, row.id, row.unit_cost, row.labor_cost, row.replacement_cycle)" />
+                </div>
+              </td>
+              <td style="width: 15%;text-align: right;">
+                <div class="form-group">
+                  <input type="text" class="form-control" style="text-align: right;"
+                    value="{{row.unit_cost | number : '1.2-2'}}" rate="unit_cost" name="p_unit_cost" id="unit_cost{{i}}"
+                    (change)="changeUnitCost($event, row.id, row.unit_qty, row.labor_cost, row.replacement_cycle)" />
+                </div>
+              </td>
+              <td style="width: 15%;text-align: right;">
+                <div class="form-group">
+                  <input type="text" class="form-control" style="text-align: right;"
+                    value="{{row.labor_cost | number : '1.2-2'}}" rate="labor_cost" name="p_labor_cost"
+                    id="labor_cost{{i}}"
+                    (change)="changeLaborCost($event, row.id, row.unit_qty, row.unit_cost, row.replacement_cycle)" />
+                </div>
+              </td>
+              <td style="width: 10%;text-align: right;">
+                <div class="form-group">
+                  <input type="text" class="form-control" style="text-align: right;" value="{{row.replacement_cycle}}"
+                    rate="replacement_cycle" name="p_replacement_cycle" id="replacement_cycle{{i}}"
+                    (change)="changeReplacementCycle($event, row.id)" />
+                </div>
+              </td>
+              <td style="width: 10%;text-align: center;" class="if-no-edit-btn">
+                <div class="form-group">
+                  <select class='form-control' value="{{row.replacement_type}}" name="p_replacement_type"
+                    (change)="chageReplacementType($event, row.id)">
+                    <option value=''></option>
+                    <option value='MONTH'>MONTH</option>
+                    <option value='MILES'>KM</option>
+                  </select>
+                </div>
+              </td>
+              <td style="width: 15%;text-align: right;">{{row.total_cost | number : '1.2-2'}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <!--#endregion list view-->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region lookupModalService-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalService"
+  style="margin-top: -65px">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <!--#region button add-->
+            <button class="btn btn-info btn-round" (click)="btnSelectAllLookup()" data-role="R00024040000004C"
+              id="button">
+              add
+            </button>
+            <!--#endregion button add--->
+            <table id="datatableLookupService" class="table table-striped table-bordered row-border hover"
+              cellspacing="0" style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th class="disabled-sorting">No</th>
+                  <th class="disabled-sorting">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="checkallLookup"
+                          [(ngModel)]="selectedAllLookup" (change)="selectAllLookup();" />
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </th>
+                  <th>Group</th>
+                  <th>Service</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupservice; let i=index">
+                  <td style="text-align: center;" class="if-no-edit-btn">{{lookupservice.numberIndex+i+1}}</td>
+                  <td class="disabled-sorting">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="row.selectedLookup"
+                          (change)="checkIfAllLookupSelected();" />
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </td>
+                  <td style="width: 50%;">{{ row.description }}</td>
+                  <td style="width: 50%;">{{ row.description_service }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookupModalService-->

@@ -1,0 +1,317 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header ">
+          <h4 class="card-title">Agreement Info</h4>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #rescheduledetailForm="ngForm"
+            (ngSubmit)="onFormSubmit(rescheduledetailForm.value, rescheduledetailForm.valid)">
+            <!--#region button back-->
+            <button type="submit" class="btn btn-info btn-round" data-role="R00020830002084C">Save</button>
+            <button type="button" class="btn btn-success btn-round" data-role="R00020830002084O">Proceed</button>
+            <button class="btn btn-warning btn-round" data-role="R00020830002084R">Cancel</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <button type="button" style='float: right;' class="btn btn-info btn-print-round custom-button-width"
+              data-role="R00020830002084P">
+              Print Memo
+            </button>
+            <!--#endregion button back-->
+
+            <!--#region row-->
+            <div class="row">
+              <input hidden type="text" class="form-control" [ngModel]="this.param" name="p_agreement_no" readonly>
+
+              <!--#region agreement_external_no -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Agreement No</label>
+                  <input type="text" class="form-control" [ngModel]="model.agreement_external_no"
+                    name="p_agreement_external_no" readonly>
+                </div>
+              </div>
+              <!--#endregion agreement_external_no -->
+
+              <!--#region agreement_date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Agreement Date</label>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.agreement_date" name="p_agreement_date" [options]="myDatePickerOptions" required
+                    #p_agreement_date="ngModel" #agreement_date="angular-mydatepicker" autocomplete="off" readonly />
+                </div>
+              </div>
+              <!--#endregion agreement_date-->
+
+              <!--#region agreement_status -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Agreement Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.agreement_status" name="p_agreement_status"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion agreement_status -->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region client_name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Client</label>
+                  <input type="text" class="form-control" [ngModel]="model.client_name" name="p_client_name" readonly>
+                </div>
+              </div>
+              <!--#endregion client_name-->
+
+              <!--#region branch_name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Branch</label>
+                  <input type="text" class="form-control" [ngModel]="model.branch_name" name="p_branch_name" readonly>
+                </div>
+              </div>
+              <!--#endregion branch_name-->
+
+              <!--#region agreement_sub_status -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Agreement Sub Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.agreement_sub_status"
+                    name="p_agreement_sub_status" readonly>
+                </div>
+              </div>
+              <!--#endregion agreement_sub_status -->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region currency_code -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Currency</label>
+                  <input type="text" class="form-control" [ngModel]="model.currency_code" name="p_currency_code"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion currency_code -->
+
+              <!--#region termination_date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Termination Date</label>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.termination_date" name="p_termination_date" [options]="myDatePickerOptions"
+                    required #p_termination_date="ngModel" #termination_date="angular-mydatepicker" autocomplete="off"
+                    readonly />
+                </div>
+              </div>
+              <!--#endregion termination_date-->
+
+              <!--#region termination_status -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Termination Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.termination_status"
+                    name="p_termination_status" readonly>
+                </div>
+              </div>
+              <!--#endregion termination_status -->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region facility_name -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Facility</label>
+                  <input type="text" class="form-control" [ngModel]="model.facility_name" name="p_facility_name"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion facility_name -->
+
+              <!--#region collection_status -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Collection Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.collection_status" name="p_collection_status"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion collection_status -->
+
+              <!--#region application_no -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Application No</label>
+                  <input type="text" class="form-control" [ngModel]="model.application_no" name="p_application_no"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion application_no -->
+
+              <!--#region periode-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Tenor *</label>
+                  <input [disabled]="this.pageType != null" [readonly]="model.count_asset > 0" type="text"
+                    class="form-control col-md-4" [ngModel]="model.periode" name="p_periode" required #periode="ngModel"
+                    maxlength="4" pattern="{{NumberOnlyPattern}}">
+                  <small
+                    *ngIf="(periode.errors?.required && periode.touched) || (periode.errors?.required && rescheduledetailForm.submitted)"
+                    class="text-danger">
+                    Tenor is required
+                  </small>
+                  <small *ngIf="periode.errors?.pattern && periode.touched" class="text-danger">
+                    Tenor is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion periode-->
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+
+          <span layout="row horizontal-divider">
+            <hr flex />
+          </span>
+          <!--#region list view-->
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card-header">
+                <h4 class="card-title">Asset List</h4>
+              </div>
+              <!--#region list view-->
+              <table id="datatableAgreementAssetList" datatable [dtOptions]="dtOptions"
+                class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                <thead>
+                  <tr>
+                    <th style="display: none;"></th>
+                    <th class="disabled-sorting">No</th>
+                    <th>Asset No</th>
+                    <th>Year</th>
+                    <th>Lease Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of listagreementassetlist;let i=index ">
+                    <td class="if-no-edit-btn" style="display: none;"></td>
+                    <td class="if-no-edit-btn" style="text-align: center;">{{listagreementassetlist.numberIndex+i+1}}
+                    </td>
+                    <td style="width: 70%;">{{row.asset_no}} <br> {{row.asset_name}}</td>
+                    <td style="width: 10%;text-align: center;">{{row.asset_year}}</td>
+                    <td style="width: 20%;text-align: right;">{{row.lease_round_amount | number : '1.2-2'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <!--#endregion list view-->
+            </div>
+          </div>
+          <!--#endregion list view-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--#region lookup Asset-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalAsset" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupAsset" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupasset;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupasset.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowAsset(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Asset -->
+
+<!--#region lookup employee-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalEmployee"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableEmployee" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupemployee;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupemployee.numberIndex+i+1}}</td>
+                  <td style="text-align: center; width: 20%;">{{ row.code }}</td>
+                  <td style="text-align: left; width: 80%;">{{ row.name }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup employee-->

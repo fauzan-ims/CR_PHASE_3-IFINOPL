@@ -1,0 +1,135 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body ">
+        <!--#region form-->
+        <form #surveydetailForm="ngForm" (ngSubmit)="onFormSubmit(surveydetailForm.value, surveydetailForm.valid)">
+
+          <!--#region button save dan back-->
+          <button [hidden]="this.pageType != null" type="submit" class="btn btn-info btn-round"
+            data-role="R00019900361991C">Save</button>
+          <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+          <button id="applicationFinancialAnalysis" type="button" class="btn btn-danger btn-round"
+            (click)="callGetrow()" hidden></button>
+          <!--#endregion button save dan back-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region p_application_no-->
+            <input type="text" class="form-control" [ngModel]="this.param" maxlength="50" name="p_application_no"
+              hidden>
+            <!--#endregion p_application_no-->
+
+            <!--#region Code-->
+            <input type="text" class="form-control" [ngModel]="model.code" maxlength="50" name="p_code" hidden>
+            <!--#endregion code-->
+
+            <!--#region periode_year/periode_month-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="periode_year" class="control-label">Month - Year *</label>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <!-- <label>Document Status</label> -->
+                      <select class="form-control" [ngModel]="model.periode_month" name="p_periode_month">
+                        <option value='01'>January</option>
+                        <option value='02'>February</option>
+                        <option value='03'>March</option>
+                        <option value='04'>April</option>
+                        <option value='05'>May</option>
+                        <option value='06'>June</option>
+                        <option value='07'>July</option>
+                        <option value='08'>August</option>
+                        <option value='09'>September</option>
+                        <option value='10'>October</option>
+                        <option value='11'>November</option>
+                        <option value='12'>December</option>
+                      </select>
+                    </div>
+                  </div>
+                  -
+                  <div class="col-md-7">
+                    <input type="text" class="form-control col-md-6" [ngModel]="model.periode_year"
+                      name="p_periode_year" required #periode_year="ngModel" maxlength="4" minlength="4"
+                      pattern="{{NumberOnlyPattern}}">
+                  </div>
+                </div>
+                <small
+                  *ngIf="(periode_year.errors?.required && periode_year.touched) || (periode_year.errors?.required && surveydetailForm.submitted)"
+                  class="text-danger">
+                  Year is required
+                </small>
+                <small *ngIf="periode_year.errors?.pattern && periode_year.touched" class="text-danger">
+                  Year is required and format should be <i>0-9</i>
+                </small>
+              </div>
+            </div>
+            <!--#endregion periode_year/periode_month-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region income_amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Total Income</label>
+                <input type="text" class="form-control" [ngModel]="model.income_amount | number : '1.2-2'"
+                  style="text-align: right;" name="p_income_amount" readonly>
+              </div>
+            </div>
+            <!--#endregion income_amount-->
+
+            <!--#region expense_amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Total Expense</label>
+                <input type="text" class="form-control" [ngModel]="model.expense_amount | number : '1.2-2'"
+                  style="text-align: right;" name="p_expense_amount" readonly>
+              </div>
+            </div>
+            <!--#endregion expense_amount-->
+
+            <!--#region differential-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Differential</label>
+                <input type="text" class="form-control" [ngModel]="model.differential | number : '1.2-2'"
+                  style="text-align: right;" name="p_differential" readonly>
+              </div>
+            </div>
+            <!--#endregion differential-->
+          </div>
+          <!--#endregion row-->
+        </form>
+        <!--#endregion form-->
+      </div>
+      <!--#region wizard container-->
+      <div class="nav-tabs-navigation" [hidden]="params == null">
+        <ul id="tabs1" class="nav nav-pills nav-justified" role="tablist">
+          <li id="tabapplicationFinancialIncome" class="nav-item">
+            <a class="nav-link" (click)="incomewiz()" href="#incomelist" data-toggle="tab" role="tab"
+              aria-controls="income" aria-selected="true">
+              Income
+            </a>
+          </li>
+          <li id="tabapplicationFinancialExpense" class="nav-item">
+            <a class="nav-link" (click)="expensewiz()" href="#expenselist" data-toggle="tab" role="tab"
+              aria-controls="expense" aria-selected="true">
+              Expense
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <router-outlet></router-outlet>
+      <!--#endregion wizard container-->
+    </div>
+  </div>
+</div>

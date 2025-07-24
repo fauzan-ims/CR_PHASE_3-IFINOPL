@@ -1,0 +1,55 @@
+<router-outlet></router-outlet>
+
+
+<div id="hideMainPanel" class="main-content">
+  <div class="row">
+    <div class="col-md-12 col-sm-12">
+      <div class="card">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+        <div class="card-header">
+          <h4 class="card-title">Negative Area Inquiry</h4>
+        </div>
+        <div class="card-body">
+
+          <!-- #region List view -->
+          <table id="datatableBlacklistAreaList" datatable [dtOptions]="dtOptions"
+            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th style="display: none;"></th>
+                <th class="disabled-sorting">No</th>
+                <th>Province Name</th>
+                <th>City Name</th>
+                <th>Source</th>
+                <th>In Negative</th>
+                <th hidden></th> 
+                <th style="text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of listarea;let i=index ">
+                <td class="if-no-edit-btn" style="display: none;"></td>
+                <td class="if-no-edit-btn" style="text-align: center;">{{listarea.numberIndex+i+1}}</td>
+                <td style="width: 15%;text-align: center;">{{row.province_name}}</td>
+                <td style="width: 50%;">{{row.city_name}}</td>
+                <td style="width: 20%;">{{row.source}}</td>
+                <td style="width: 15%;text-align: center;">{{row.is_active}}</td>
+                <td hidden></td> 
+                <td style="text-align: center;">
+                  <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit" (click)="btnEdit(row.code)"><i
+                      class="fa fa-edit"></i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--#endregion List view-->
+        </div>
+      </div>
+    </div>
+  </div>

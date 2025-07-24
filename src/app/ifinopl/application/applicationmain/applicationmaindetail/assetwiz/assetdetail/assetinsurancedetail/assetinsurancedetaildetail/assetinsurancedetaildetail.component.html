@@ -1,0 +1,793 @@
+<div class="main-content">
+    <!--spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!--endspinner region -->
+    <div class="row">
+        <div class="col-md-12">
+            <!--#region watermark-->
+            <div class="watermark" hidden>
+                <h6>{{this.companyName}}</h6>
+                <h6>{{this.userName}}</h6>
+                <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+            </div>
+            <!--#endregion watermark-->
+
+            <div class="card-header ">
+                <h4 class="card-title">Insurance Amount</h4>
+            </div>
+            <div class="card-body ">
+                <!--#region form-->
+                <form #assetinsurancedetaildetailForm="ngForm"
+                    (ngSubmit)="onFormSubmit(assetinsurancedetaildetailForm.value, assetinsurancedetaildetailForm.valid)">
+
+                    <!--#region button submit dan back-->
+                    <button type="submit" class="btn btn-info btn-round" data-role="R00019905414142C">Save</button>
+                    <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+                    <!--#endregion button submit dan back-->
+
+                    <!--#region row-->
+                    <div class="row">
+                        <input type="text" class="form-control" [ngModel]="this.assetNo" name="p_asset_no" hidden>
+                        <input type="text" class="form-control" [ngModel]="model.id" name="p_id" hidden>
+                        <!--#region Lookup Main Coverage-->
+                        <div class="col-md-4">
+                            <label for="code" class="control-label labelgsubcode">Main Coverage *</label>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                                        (click)="btnLookupMainCoverage()" data-toggle="modal"
+                                        data-target="#lookupModalMainCoverage" href="#"><i
+                                            class="fa fa-search-plus"></i></button>
+                                    {{model.main_coverage_description}}
+                                    <input type="hidden" class="form-control" [ngModel]="model.main_coverage_code"
+                                        name="p_main_coverage_code" #main_coverage_code="ngModel" required>
+                                    <input type="hidden" class="form-control"
+                                        [ngModel]="model.main_coverage_description" name="p_main_coverage_description"
+                                        #main_coverage_description="ngModel">
+                                </div>
+                            </div>
+                            <small
+                                *ngIf="main_coverage_code.errors?.required && main_coverage_code.touched || (main_coverage_code.errors?.required && assetinsurancedetaildetailForm.submitted)"
+                                class="text-danger">
+                                Main Coverage is required
+                            </small>
+                        </div>
+                        <!--#endregion Lookup Main Coverage-->
+
+                        <!--#region Lookup Region-->
+                        <div class="col-md-4">
+                            <label for="code" class="control-label labelgsubcode">Region *</label>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                                        (click)="btnLookupRegion()" data-toggle="modal" data-target="#lookupModalRegion"
+                                        href="#"><i class="fa fa-search-plus"></i></button>
+                                    {{model.region_description}}
+                                    <input type="hidden" class="form-control" [ngModel]="model.region_code"
+                                        name="p_region_code" #region_code="ngModel" required>
+                                    <input type="hidden" class="form-control" [ngModel]="model.region_description"
+                                        name="p_region_description" #region_description="ngModel">
+                                </div>
+                            </div>
+                            <small
+                                *ngIf="region_code.errors?.required && region_code.touched || (region_code.errors?.required && assetinsurancedetaildetailForm.submitted)"
+                                class="text-danger">
+                                Region is required
+                            </small>
+                        </div>
+                        <!--#endregion Lookup Region-->
+
+                        <!--#region main_coverage_premium_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Main Coverage Premium Amount</label>
+                                <input type="text" class="form-control col-md-8" style="text-align: right;"
+                                    [ngModel]="model.main_coverage_premium_amount | number : '1.2-2'"
+                                    amount="main_coverage_premium_amount" name="p_main_coverage_premium_amount"
+                                    #main_coverage_premium_amount="ngModel" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion main_coverage_premium_amount-->
+                    </div>
+                    <!--#endregion row-->
+
+                    <!-- #region row  -->
+                    <div class="row">
+                        <!--#region is_use_tpl-->
+                        <div class="col-md-4">
+                            <div class="form-check mt-3" style="margin-left: -35px;">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" [ngModel]="model.is_use_tpl"
+                                            name="p_is_use_tpl" (change)="useTpl($event)">
+                                        Use TPL
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion is_use_tpl-->
+
+                        <!--#region Lookup TPL Coverage-->
+                        <div class="col-md-4">
+                            <label for="code" class="control-label labelgsubcode" [hidden]="model.is_use_tpl">TPL
+                                Coverage</label>
+                            <label for="code" class="control-label labelgsubcode" [hidden]="!model.is_use_tpl">TPL
+                                Coverage
+                                *</label>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                                        (click)="btnLookupTPLCoverage()" data-toggle="modal"
+                                        [disabled]="!model.is_use_tpl" data-target="#lookupModalTPLCoverage" href="#"><i
+                                            class="fa fa-search-plus"></i></button>
+                                    {{model.tpl_coverage_description}}
+                                    <input type="hidden" class="form-control" [ngModel]="model.tpl_coverage_code"
+                                        name="p_tpl_coverage_code" #tpl_coverage_code="ngModel"
+                                        [required]="model.is_use_tpl">
+                                    <input type="hidden" class="form-control" [ngModel]="model.tpl_coverage_description"
+                                        name="p_tpl_coverage_description" #tpl_coverage_description="ngModel">
+                                </div>
+                            </div>
+                            <small
+                                *ngIf="tpl_coverage_code.errors?.required && tpl_coverage_code.touched || (tpl_coverage_code.errors?.required && assetinsurancedetaildetailForm.submitted)"
+                                class="text-danger">
+                                TPL Coverage is required
+                            </small>
+                        </div>
+                        <!--#endregion Lookup TPL Coverage-->
+
+                        <!--#region tpl_premium_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>TPL Premium Amount</label>
+                                <input type="text" class="form-control col-md-8" style="text-align: right;"
+                                    [ngModel]="model.tpl_premium_amount | number : '1.2-2'" amount="tpl_premium_amount"
+                                    name="p_tpl_premium_amount" #tpl_premium_amount="ngModel" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion tpl_premium_amount-->
+                    </div>
+                    <!-- #endregion row  -->
+
+                    <!-- #region row  -->
+                    <div class="row">
+                        <!--#region is_use_pll-->
+                        <div class="col-md-4">
+                            <div class="form-check mt-3" style="margin-left: -35px;">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" [ngModel]="model.is_use_pll"
+                                            name="p_is_use_pll" (change)="usePLL($event)">
+                                        Use PLL
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion is_use_pll-->
+
+                        <!--#region Lookup PLL Coverage-->
+                        <div class="col-md-4">
+                            <label for="code" class="control-label labelgsubcode" [hidden]="model.is_use_pll">PLL
+                                Coverage</label>
+                            <label for="code" class="control-label labelgsubcode" [hidden]="!model.is_use_pll">PLL
+                                Coverage *</label>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                                        (click)="btnLookupPLLCoverage()" data-toggle="modal"
+                                        [disabled]="!model.is_use_pll" data-target="#lookupModalPLLCoverage" href="#"><i
+                                            class="fa fa-search-plus"></i></button>
+                                    {{model.pll_coverage_description}}
+                                    <input type="hidden" class="form-control" [ngModel]="model.pll_coverage_code"
+                                        name="p_pll_coverage_code" #pll_coverage_code="ngModel"
+                                        [required]="model.is_use_pll">
+                                    <input type="hidden" class="form-control" [ngModel]="model.pll_coverage_description"
+                                        name="p_pll_coverage_description" #pll_coverage_description="ngModel"
+                                        [required]="model.is_use_pll">
+                                </div>
+                            </div>
+                            <small
+                                *ngIf="pll_coverage_description.errors?.required && pll_coverage_description.touched || (pll_coverage_description.errors?.required && assetinsurancedetaildetailForm.submitted)"
+                                class="text-danger">
+                                PLL Coverage is required
+                            </small>
+                        </div>
+                        <!--#endregion Lookup PLL Coverage-->
+
+                        <!--#region pll_premium_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>PLL Premium Amount</label>
+                                <input type="text" class="form-control col-md-8" style="text-align: right;"
+                                    [ngModel]="model.pll_premium_amount | number : '1.2-2'" amount="pll_premium_amount"
+                                    name="p_pll_premium_amount" #pll_premium_amount="ngModel" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion pll_premium_amount-->
+                    </div>
+                    <!-- #endregion row  -->
+
+                    <!-- #region row  -->
+                    <div class="row">
+                        <!--#region is_use_pa_passenger-->
+                        <div class="col-md-4">
+                            <div class="form-check mt-3" style="margin-left: -35px;">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox"
+                                            (change)="usePaPassenger($event)" [ngModel]="model.is_use_pa_passenger"
+                                            name="p_is_use_pa_passenger">
+                                        Use PA. Passenger
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion is_use_pa_passenger-->
+
+                        <!--#region pa_passenger_amount + pa_passenger_seat-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">PA. Passeger Amount + Seat</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" style="text-align: right;"
+                                            [ngModel]="model.pa_passenger_amount | number : '1.2-2'"
+                                            amount="pa_passenger_amount" name="p_pa_passenger_amount"
+                                            #pa_passenger_amount="ngModel" [readonly]="!model.is_use_pa_passenger">
+                                    </div>
+                                    +
+                                    <div class="col-md-2">
+                                        <input type="text" class="form-control" [ngModel]="model.pa_passenger_seat"
+                                            name="p_pa_passenger_seat" maxlength="4" #pa_passenger_seat="ngModel"
+                                            [readonly]="!model.is_use_pa_passenger">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion pa_passenger_amount + pa_passenger_seat-->
+
+                        <!--#region pa_passenger_premium_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>PA. Passenger Premium Amount</label>
+                                <input type="text" class="form-control col-md-8" style="text-align: right;"
+                                    [ngModel]="model.pa_passenger_premium_amount | number : '1.2-2'"
+                                    amount="pa_passenger_premium_amount" name="p_pa_passenger_premium_amount"
+                                    #pa_passenger_premium_amount="ngModel" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion pa_passenger_premium_amount-->
+                    </div>
+                    <!-- #endregion row  -->
+
+                    <!-- #region row  -->
+                    <div class="row">
+                        <!--#region is_use_pa_driver-->
+                        <div class="col-md-4">
+                            <div class="form-check mt-3" style="margin-left: -35px;">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" (change)="usePaDriver($event)"
+                                            [ngModel]="model.is_use_pa_driver" name="p_is_use_pa_driver">
+                                        Use PA. Driver
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion is_use_pa_driver-->
+
+                        <!--#region pa_driver_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>PA. Driver Amount</label>
+                                <input type="text" class="form-control col-md-8" style="text-align: right;"
+                                    [ngModel]="model.pa_driver_amount | number : '1.2-2'" amount="pa_driver_amount"
+                                    name="p_pa_driver_amount" #pa_driver_amount="ngModel"
+                                    [readonly]="!model.is_use_pa_driver">
+                            </div>
+                        </div>
+                        <!--#endregion pa_driver_amount-->
+
+                        <!--#region pa_driver_premium_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>PA. Driver Premium Amount</label>
+                                <input type="text" class="form-control col-md-8" style="text-align: right;"
+                                    [ngModel]="model.pa_driver_premium_amount | number : '1.2-2'"
+                                    amount="pa_driver_premium_amount" name="p_pa_driver_premium_amount"
+                                    #pa_driver_premium_amount="ngModel" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion pa_driver_premium_amount-->
+                    </div>
+                    <!-- #endregion row  -->
+
+                    <!-- #region row  -->
+                    <div class="row">
+                        <!--#region is_use_srcc-->
+                        <div class="col-md-4">
+                            <div class="form-check mt-3" style="margin-left: -35px;">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" [ngModel]="model.is_use_srcc"
+                                            name="p_is_use_srcc">
+                                        Use SRCC
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion is_use_srcc-->
+
+                        <!--#region -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                            </div>
+                        </div>
+                        <!--#endregion -->
+
+                        <!--#region srcc_premium_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>SRCC Premium Amount</label>
+                                <input type="text" class="form-control col-md-8" style="text-align: right;"
+                                    [ngModel]="model.srcc_premium_amount | number : '1.2-2'"
+                                    amount="srcc_premium_amount" name="p_srcc_premium_amount"
+                                    #srcc_premium_amount="ngModel" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion srcc_premium_amount-->
+                    </div>
+                    <!-- #endregion row  -->
+
+                    <!-- #region row  -->
+                    <div class="row">
+                        <!--#region is_use_ts-->
+                        <div class="col-md-4">
+                            <div class="form-check mt-3" style="margin-left: -35px;">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" [ngModel]="model.is_use_ts"
+                                            name="p_is_use_ts">
+                                        Use TS
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion is_use_ts-->
+
+                        <!--#region -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                            </div>
+                        </div>
+                        <!--#endregion -->
+
+                        <!--#region ts_premium_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>TS Premium Amount</label>
+                                <input type="text" class="form-control col-md-8" style="text-align: right;"
+                                    [ngModel]="model.ts_premium_amount | number : '1.2-2'" amount="ts_premium_amount"
+                                    name="p_ts_premium_amount" #ts_premium_amount="ngModel" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion ts_premium_amount-->
+                    </div>
+                    <!-- #endregion row  -->
+
+                    <!-- #region row  -->
+                    <div class="row">
+                        <!--#region is_use_flood-->
+                        <div class="col-md-4">
+                            <div class="form-check mt-3" style="margin-left: -35px;">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" [ngModel]="model.is_use_flood"
+                                            name="p_is_use_flood">
+                                        Use Flood & Windstorm
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion is_use_flood-->
+
+                        <!--#region -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                            </div>
+                        </div>
+                        <!--#endregion -->
+
+                        <!--#region flood_premium_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Flood & Windstorm Premium Amount</label>
+                                <input type="text" class="form-control col-md-8" style="text-align: right;"
+                                    [ngModel]="model.flood_premium_amount | number : '1.2-2'"
+                                    amount="flood_premium_amount" name="p_flood_premium_amount"
+                                    #flood_premium_amount="ngModel" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion flood_premium_amount-->
+                    </div>
+                    <!-- #endregion row  -->
+
+                    <!-- #region row  -->
+                    <div class="row">
+                        <!--#region is_use_earthquake-->
+                        <div class="col-md-4">
+                            <div class="form-check mt-3" style="margin-left: -35px;">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox"
+                                            [ngModel]="model.is_use_earthquake" name="p_is_use_earthquake">
+                                        Use Earthquake
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion is_use_earthquake-->
+
+                        <!--#region -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                            </div>
+                        </div>
+                        <!--#endregion -->
+
+                        <!--#region earthquake_premium_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Earthquake Premium Amount</label>
+                                <input type="text" class="form-control col-md-8" style="text-align: right;"
+                                    [ngModel]="model.earthquake_premium_amount | number : '1.2-2'"
+                                    amount="earthquake_premium_amount" name="p_earthquake_premium_amount"
+                                    #earthquake_premium_amount="ngModel" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion earthquake_premium_amount-->
+                    </div>
+                    <!-- #endregion row  -->
+
+                    <!-- #region row  -->
+                    <div class="row">
+                        <!--#region is_commercial_use-->
+                        <div class="col-md-4">
+                            <div class="form-check mt-3" style="margin-left: -35px;">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox"
+                                            [ngModel]="model.is_commercial_use" name="p_is_commercial_use">
+                                        Commercial Use
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion is_commercial_use-->
+
+                        <!--#region -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                            </div>
+                        </div>
+                        <!--#endregion -->
+
+                        <!--#region commercial_premium_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Commercial Premium Amount</label>
+                                <input type="text" class="form-control col-md-8" style="text-align: right;"
+                                    [ngModel]="model.commercial_premium_amount | number : '1.2-2'"
+                                    amount="commercial_premium_amount" name="p_commercial_premium_amount"
+                                    #commercial_premium_amount="ngModel" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion commercial_premium_amount-->
+                    </div>
+                    <!-- #endregion row  -->
+
+                    <!-- #region row  -->
+                    <div class="row">
+                        <!--#region is_authorize_workshop-->
+                        <div class="col-md-4">
+                            <div class="form-check mt-3" style="margin-left: -35px;">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox"
+                                            [ngModel]="model.is_authorize_workshop" name="p_is_authorize_workshop">
+                                        Authorize Workshop
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion is_authorize_workshop-->
+
+                        <!--#region -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                            </div>
+                        </div>
+                        <!--#endregion -->
+
+                        <!--#region authorize_workshop_premium_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Authorize Workshop Premium Amount</label>
+                                <input type="text" class="form-control col-md-8" style="text-align: right;"
+                                    [ngModel]="model.authorize_workshop_premium_amount | number : '1.2-2'"
+                                    amount="authorize_workshop_premium_amount"
+                                    name="p_authorize_workshop_premium_amount"
+                                    #authorize_workshop_premium_amount="ngModel" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion authorize_workshop_premium_amount-->
+                    </div>
+                    <!-- #endregion row  -->
+
+                    <!-- #region row  -->
+                    <div class="row">
+                        <!--#region is_tbod-->
+                        <div class="col-md-4">
+                            <div class="form-check mt-3" style="margin-left: -35px;">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" [ngModel]="model.is_tbod"
+                                            name="p_is_tbod">
+                                        Theft by Own Driver
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion is_tbod-->
+
+                        <!--#region -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                            </div>
+                        </div>
+                        <!--#endregion -->
+
+                        <!--#region tbod_premium_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Theft by Own Driver Premium Amount</label>
+                                <input type="text" class="form-control col-md-8" style="text-align: right;"
+                                    [ngModel]="model.tbod_premium_amount | number : '1.2-2'"
+                                    amount="tbod_premium_amount" name="p_tbod_premium_amount"
+                                    #tbod_premium_amount="ngModel" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion tbod_premium_amount-->
+                    </div>
+                    <!-- #endregion row  -->
+
+                    <!-- #region row  -->
+                    <div class="row">
+                        <!--#region -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                            </div>
+                        </div>
+                        <!--#endregion -->
+
+                        <!--#region -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                            </div>
+                        </div>
+                        <!--#endregion -->
+
+                        <!--#region total_premium_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Total Premium Amount</label>
+                                <input type="text" class="form-control col-md-8" style="text-align: right;"
+                                    [ngModel]="model.total_premium_amount | number : '1.2-2'"
+                                    amount="total_premium_amount" name="p_total_premium_amount"
+                                    #total_premium_amount="ngModel" readonly>
+                            </div>
+                        </div>
+                        <!--#endregion total_premium_amount-->
+                    </div>
+                    <!-- #endregion row  -->
+                </form>
+                <!--#endregion form-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--#region lookup main coverage-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalMainCoverage"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12" style="width: 100%">
+                        <table id="datatableLookupMainCoverage" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupMainCoverage;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td class="if-no-edit-btn" style="text-align: center;">
+                                        {{lookupMainCoverage.numberIndex+i+1}}</td>
+                                    <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                                    <td style="width: 80%;">{{ row.description }}</td>
+                                    <td class="text-right">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowMainCoverage(row.code, row.description)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup main coverage-->
+
+<!--#region lookup region-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalRegion"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12" style="width: 100%">
+                        <table id="datatableLookupRegion" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupRegion;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td class="if-no-edit-btn" style="text-align: center;">
+                                        {{lookupRegion.numberIndex+i+1}}</td>
+                                    <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                                    <td style="width: 80%;">{{ row.description }}</td>
+                                    <td class="text-right">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowRegion(row.code, row.description)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup region-->
+
+<!--#region lookup tpl coverage-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalTPLCoverage"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12" style="width: 100%">
+                        <table id="datatableLookupTPLCoverage" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th>Coverage Amount</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupTPLCoverage;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td class="if-no-edit-btn" style="text-align: center;">
+                                        {{lookupTPLCoverage.numberIndex+i+1}}</td>
+                                    <td style="width: 20%;text-align: center;">{{ row.coverage_code }}</td>
+                                    <td style="width: 60%;">{{ row.coverage_description }}</td>
+                                    <td style="width: 20%; text-align: right;">{{ row.coverage_amount | number : '1.2-2'
+                                        }}</td>
+                                    <td class="text-right">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowTPLCoverage(row.coverage_code, row.coverage_description)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup tpl coverage-->
+
+<!--#region lookup pll coverage-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalPLLCoverage"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12" style="width: 100%">
+                        <table id="datatableLookupPLLCoverage" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th>Coverage Amount</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupPLLCoverage;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td class="if-no-edit-btn" style="text-align: center;">
+                                        {{lookupPLLCoverage.numberIndex+i+1}}</td>
+                                    <td style="width: 20%;text-align: center;">{{ row.coverage_code }}</td>
+                                    <td style="width: 60%;">{{ row.coverage_description }}</td>
+                                    <td style="width: 20%; text-align: right;">{{ row.coverage_amount | number : '1.2-2'
+                                        }}</td>
+                                    <td class="text-right">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowPLLCoverage(row.coverage_code, row.coverage_description)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup pll coverage-->

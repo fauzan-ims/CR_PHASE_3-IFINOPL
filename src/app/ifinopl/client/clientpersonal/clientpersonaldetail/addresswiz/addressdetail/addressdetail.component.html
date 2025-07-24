@@ -1,0 +1,505 @@
+<div class="main-content margin-wizard-content" style="margin-top: 20px;">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <!--#region form-->
+      <form #addressdetailForm="ngForm" (ngSubmit)="onFormSubmit(addressdetailForm.value, addressdetailForm.valid)">
+
+        <!--#region button submit dan back-->
+        <button [hidden]="plafond_status !== 'HOLD'" type="submit" class="btn btn-info btn-round"
+          data-role="R00022550022256C">Save</button>
+        <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+        <!--#endregion button submit dan back-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region p_client_code-->
+          <input type="text" [ngModel]="this.param" maxlength="50" name="p_client_code" hidden>
+          <!--#endregion p_client_code-->
+
+          <!--#region p_code-->
+          <input hidden type="text" [ngModel]="this.paramss" name="p_code">
+          <!--#endregion p_code-->
+
+          <!--#region lookup Province Code-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="province_code" class="control-label" class="labelmodule">Province *</label>
+              <div class="col-md-12 buttons">
+                <button [disabled]="plafond_status !== 'HOLD'"
+                  class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                  (click)="btnLookupProvince()" data-toggle="modal" data-target="#lookupModalProvince" href="#"><i
+                    class="fa fa-search-plus"></i></button>
+                {{model.province_name}}
+                <input type="hidden" class="form-control" [ngModel]="model.province_code" name="p_province_code"
+                  required #province_code="ngModel">
+                <input type="hidden" class="form-control" [ngModel]="model.province_name" name="p_province_name"
+                  required #province_name="ngModel">
+              </div>
+              <small
+                *ngIf="province_code.errors?.required && province_code.touched || (province_code.errors?.required && addressdetailForm.submitted) "
+                class="text-danger">
+                Province is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion lookup Province Code-->
+
+          <!--#region lookup City code-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="p_city_code" class="control-label" class="labelmodule">City *</label>
+              <div class="col-md-12 buttons">
+                <button [disabled]="plafond_status !== 'HOLD'"
+                  class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                  (click)="btnLookupCity()" data-toggle="modal" data-target="#lookupModalCity" href="#"><i
+                    class="fa fa-search-plus"></i></button>
+                {{model.city_name}}
+                <input type="hidden" class="form-control" [ngModel]="model.city_code" name="p_city_code" required
+                  #p_city_code="ngModel">
+                <input type="hidden" class="form-control" [ngModel]="model.city_name" name="p_city_name" required
+                  #p_city_name="ngModel">
+              </div>
+              <small
+                *ngIf="p_city_code.errors?.required && p_city_code.touched || (p_city_code.errors?.required && addressdetailForm.submitted) "
+                class="text-danger">
+                City is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion lookup City Code-->
+
+          <!--#region zip code-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="p_zip_code" class="control-label" class="labelmodule">Zip Code *</label>
+              <div class="col-md-12 buttons btn-lookup-margin">
+                <button [disabled]="plafond_status !== 'HOLD'" class="btn btn-icon btn-outline-default btn-round btn-md"
+                  type="button" (click)="btnLookupZipCode()" data-toggle="modal" data-target="#lookupModalZipCode"
+                  href="#"><i class="fa fa-search-plus"></i></button>
+                {{model.zip_code_code}}
+                <input type="hidden" class="form-control" [ngModel]="model.zip_name" name="p_zip_name" required
+                  #zip_name="ngModel">
+                <input type="hidden" class="form-control" [ngModel]="model.zip_code" name="p_zip_code" required
+                  #p_zip_code="ngModel">
+                <input type="hidden" class="form-control" [ngModel]="model.zip_code_code" name="p_zip_code_code"
+                  required #zip_code_code="ngModel">
+              </div>
+              <small
+                *ngIf="p_zip_code.errors?.required && p_zip_code.touched || (p_zip_code.errors?.required && addressdetailForm.submitted)"
+                class="text-danger">
+                Zip Code is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion zip code-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region sub district-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Sub District</label>
+              <input type="text" class="form-control" [ngModel]="model.sub_district" maxlength="250"
+                name="p_sub_district" readonly>
+            </div>
+          </div>
+          <!--#endregion sub district-->
+
+          <!--#region village-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Village</label>
+              <input type="text" class="form-control" [ngModel]="model.village" maxlength="250" name="p_village"
+                readonly>
+            </div>
+          </div>
+          <!--#endregion village-->
+
+          <!--#region rt/rw-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="rt && rw" class="control-label">RT/RW *</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control" [ngModel]="model.rt"
+                    name="p_rt" required #rt="ngModel" pattern="{{NumberOnlyPattern}}">
+                </div>
+                -
+                <div class="col-md-4">
+                  <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control" [ngModel]="model.rw"
+                    name="p_rw" required #rw="ngModel" pattern="{{NumberOnlyPattern}}">
+                </div>
+              </div>
+            </div>
+
+            <small
+              *ngIf="(rt.errors?.required && rt.touched || rw.errors?.required && rw.touched) || (rt.errors?.required && addressdetailForm.submitted) || (rw.errors?.required && addressdetailForm.submitted)"
+              class="text-danger">
+              RT/RW No is required
+            </small>
+            <small *ngIf="rt.errors?.pattern && rt.touched || rw.errors?.pattern && rw.touched" class="text-danger">
+              RT/RW No is required and format should be <i>0-9</i>
+            </small>
+          </div>
+          <!--#endregion rt/rw-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region address-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="address" class="control-label">Address *</label>
+              <textarea [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control"
+                [ngModel]="model.address" maxlength="4000" name="p_address" required #address="ngModel"></textarea>
+              <small
+                *ngIf="(address.errors?.required && address.touched) || (address.errors?.required && addressdetailForm.submitted)"
+                class="text-danger">
+                Address is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion address-->
+
+          <!--#region area_phone_no + phone_no-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="area_phone_no && phone_no" class="control-label">Phone No.
+                *</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control"
+                    [ngModel]="model.area_phone_no" name="p_area_phone_no" required #area_phone_no="ngModel"
+                    maxlength="4" pattern={{NumberOnlyPattern}}>
+                </div>
+                -
+                <div class="col-md-7">
+                  <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control"
+                    [ngModel]="model.phone_no" name="p_phone_no" maxlength="15" required #phone_no="ngModel"
+                    pattern={{NumberOnlyPattern}}>
+                </div>
+              </div>
+            </div>
+            <small
+              *ngIf="(area_phone_no.errors?.required && area_phone_no.touched || phone_no.errors?.required && phone_no.touched) || (area_phone_no.errors?.required && addressdetailForm.submitted)"
+              class="text-danger">
+              Phone No is required
+            </small>
+            <small
+              *ngIf="area_phone_no.errors?.pattern && area_phone_no.touched || phone_no.errors?.pattern && phone_no.touched"
+              class="text-danger">
+              Phone No is required and format should be <i>0-9</i>.
+            </small>
+          </div>
+          <!--#endregion area_phone_no + phone_no-->
+
+          <!--#region lenght_of_stay-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="lenght_of_stay" class="control-label">Length of Stay (Year)</label>
+              <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control col-md-2"
+                [ngModel]="model.lenght_of_stay" name="p_lenght_of_stay" #lenght_of_stay="ngModel"
+                pattern="{{NumberOnlyPattern}}" maxlength="2">
+              <small *ngIf="lenght_of_stay.errors?.pattern && lenght_of_stay.touched" class="text-danger">
+                Length of Stay (Year) is required and format should be <i>0-9</i>
+              </small>
+            </div>
+          </div>
+          <!--#endregion lenght_of_stay-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region range_in_km-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="range_in_km" class="control-label">Nearest Branch (KM) *</label>
+              <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control col-md-2"
+                [ngModel]="model.range_in_km" name="p_range_in_km" required #range_in_km="ngModel"
+                pattern="{{NumberOnlyPattern}}" maxlength="3">
+              <small
+                *ngIf="(range_in_km.errors?.required && range_in_km.touched) || (range_in_km.errors?.required && addressdetailForm.submitted)"
+                class="text-danger">
+                Nearest Branch (KM) is required
+              </small>
+              <small *ngIf="range_in_km.errors?.pattern && range_in_km.touched" class="text-danger">
+                Nearest Branch (KM) is required and format should be <i>0-9</i>
+              </small>
+            </div>
+          </div>
+          <!--#endregion range_in_km-->
+
+          <!--#region Lookup Ownership-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="labelgsubcode">Ownership *</label>
+              <div class="col-md-12">
+                <span>
+                  <button [disabled]="plafond_status !== 'HOLD'"
+                    class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                    (click)="btnLookupOwnership()" data-toggle="modal" data-target="#lookupModalOwnership" href="#"><i
+                      class="fa fa-search-plus"></i></button>
+                  {{model.ownership_desc}}
+                  <input type="hidden" class="form-control" [ngModel]="model.ownership_code" name="p_ownership" required
+                    #ownership_code="ngModel">
+                </span>
+              </div>
+              <small
+                *ngIf="ownership_code.errors?.required && ownership_code.touched || (ownership_code.errors?.required && addressdetailForm.submitted)"
+                class="text-danger">
+                Ownership is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion Lookup Ownership-->
+
+          <!--#region check box is_legal-->
+          <div class="col-md-4">
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input [disabled]="plafond_status !== 'HOLD'" class="form-check-input" type="checkbox"
+                    [ngModel]="model.is_legal" name="p_is_legal">
+                  Legal
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_legal-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region check box is_collection-->
+          <div class="col-md-4">
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input [disabled]="plafond_status !== 'HOLD'" class="form-check-input" type="checkbox"
+                    [ngModel]="model.is_collection" name="p_is_collection">
+                  Collection
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_collection-->
+
+          <!--#region check box is_mailing-->
+          <div class="col-md-4">
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input [disabled]="plafond_status !== 'HOLD'" class="form-check-input" type="checkbox"
+                    [ngModel]="model.is_mailing" name="p_is_mailing">
+                  Mailing
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_mailing-->
+
+          <!--#region check box is_residence-->
+          <div class="col-md-4">
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input [disabled]="plafond_status !== 'HOLD'" class="form-check-input" type="checkbox"
+                    [ngModel]="model.is_residence" name="p_is_residence">
+                  Residence
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_residence-->
+        </div>
+        <!--#endregion row-->
+      </form>
+      <!--#endregion form-->
+    </div>
+  </div>
+</div>
+
+<!--#region lookup province-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalProvince"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupProvince" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupprovince;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupprovince.numberIndex+i+1}}</td>
+                  <td style="width:20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width:80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowLookupProvince(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup province-->
+
+<!--#region lookup city-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalCity" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupCity" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupcity;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupcity.numberIndex+i+1}}</td>
+                  <td style="width:20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width:80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowLookupCity(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup city-->
+
+<!--#region lookup zip-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalZipCode"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12 buttons btn-lookup-margin">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupZipCode" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Sub District</th>
+                  <th>Village</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupzipcode;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupzipcode.numberIndex+i+1}}</td>
+                  <td style="text-align: center; width: 20%;">{{ row.postal_code }}</td>
+                  <td style="width: 40%;">{{ row.sub_district }}</td>
+                  <td style="width: 40%;">{{ row.village }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowLookupZipCode(row.code, row.postal_code, row.zip_code_name, row.sub_district,row.village)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup zip-->
+
+<!--#region lookup Ownership-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalOwnership"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12" style="width: 100%">
+            <table id="datatableLookupOwnership" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupOwnership;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupOwnership.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowOwnership(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Ownership-->

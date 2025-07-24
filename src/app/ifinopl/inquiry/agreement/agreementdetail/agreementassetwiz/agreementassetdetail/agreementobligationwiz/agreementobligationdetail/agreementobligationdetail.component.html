@@ -1,0 +1,40 @@
+<div class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-body">
+                <!--#region button back-->
+                <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+                <!--#endregion button back-->
+
+                <!--#region list view-->
+                <table id="datatableAgreementObligationDetail" datatable [dtOptions]="dtOptions"
+                    class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="disabled-sorting">No</th>
+                            <th style="display: none;"></th>
+                            <th>Payment Source No</th>
+                            <th>Payment Source Type</th>
+                            <th>Payment Date</th>
+                            <th>Value Date</th>
+                            <th>Payment Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let row of listagreementdetail ;let i=index ">
+                            <td class="if-no-edit-btn" style="text-align: center;">{{listagreementdetail.numberIndex+i+1}}
+                            </td>
+                            <td class="if-no-edit-btn" style="display: none;"></td>
+                            <td style="width: 20%;text-align: left;">{{row.payment_source_no}}</td>
+                            <td style="width: 20%;text-align: left;">{{row.payment_source_type}}</td>
+                            <td style="width: 20%;text-align: center;">{{row.payment_date}}</td>
+                            <td style="width: 20%;text-align: center;">{{row.value_date}}</td>
+                            <td style="width: 20%;text-align: right;">{{row.payment_amount | number : '1.2-2'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--#endregion list view-->
+            </div>
+        </div>
+    </div>
+</div>

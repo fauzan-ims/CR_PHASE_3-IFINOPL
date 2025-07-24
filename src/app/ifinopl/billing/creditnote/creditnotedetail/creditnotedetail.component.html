@@ -1,0 +1,554 @@
+<div class="main-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner region -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card ">
+                <!--#region watermark-->
+                <div class="watermark" hidden>
+                    <h6>{{this.companyName}}</h6>
+                    <h6>{{this.userName}}</h6>
+                    <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+                </div>
+                <!--#endregion watermark-->
+
+                <div class="card-header ">
+                    <div class="col-md-6 row">
+                        <h5 class="card-title">Credit Note Info</h5>
+                    </div>
+                </div>
+                <div class="card-body ">
+                    <!--#region form-->
+                    <form #creditNoteForm="ngForm"
+                        (ngSubmit)="onFormSubmit(creditNoteForm.value, creditNoteForm.valid)">
+
+                        <!--#region row-->
+                        <div class="toolbar">
+                            <!--#region button submit dan back-->
+                            <button [hidden]="isButton" type="submit" class="btn btn-info btn-round"
+                                data-role="R00020780022079C">Save</button>
+
+                            <button [hidden]="model.code == null || model.status !== 'HOLD'" type="button"
+                                data-role="R00020780012079O" class="btn btn-success btn-round"
+                                (click)="btnProceed(model.code)">Proceed</button>
+
+                            <button [hidden]="model.code == null || model.status !== 'ON PROCESS'" type="button"
+                                data-role="R00020780022079O" class="btn btn-success btn-round"
+                                (click)="btnApprove(model.code)">Post</button>
+
+                            <button [hidden]="model.code == null || model.status !== 'ON PROCESS'" type="button"
+                                data-role="R00020780022080R" class="btn btn-warning btn-round"
+                                (click)="btnReturn(model.code)">Return</button>
+
+                            <button [hidden]="model.code == null || model.status !== 'HOLD'" type="button"
+                                data-role="R00020780012079R" class="btn btn-warning btn-round"
+                                (click)="btnCancel(model.code)">Cancel</button>
+
+                            <button type="button" style='float: right;'
+                                class="btn btn-info btn-print-round btn-round custom-button-width"
+                                (click)="btnPrint()" data-role="R00020780022081P"
+                                [hidden]="this.creditnotecode == null || model.status !== 'POST'">Print
+                                Credit Note</button>
+
+                            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+                            <!--#endregion button submit dan back -->
+                        </div>
+                        <!--#region row-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region code-->
+                            <div class="col-md-4">
+                                <div [hidden]="model.code != null" class="row"
+                                    style="margin-bottom: -15px; padding-top: 30px;">
+                                    <h1 class="col-md-4" style="font-size: 12px;">Code </h1>
+                                    <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                                        Generate-</h1>
+                                </div>
+                                <div [hidden]="model.code == null" class="form-group">
+                                    <label>Code *</label>
+                                    <input type="text" class="form-control" [ngModel]="model.code" maxlength="50"
+                                        name="p_code" [readonly]="isReadOnly">
+                                </div>
+                            </div>
+                            <!--#endregion code-->
+
+                            <!--#region lookup SysBranch code -->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="labelmodule">Branch *</label>
+                                    <div class="col-md-12">
+                                        <button
+                                            class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                                            type="button" (click)="btnLookupSysBranch()" data-toggle="modal"
+                                            data-target="#lookupModalSysBranch" href="#"
+                                            [disabled]="model.code != null"><i class="fa fa-search-plus"></i></button>
+                                        {{model.branch_name}}
+                                        <input type="text" [ngModel]="model.branch_name" name="p_branch_name" hidden
+                                            #branch_name="ngModel">
+                                        <input type="text" [ngModel]="model.branch_code" name="p_branch_code" hidden
+                                            required #branch_code="ngModel">
+                                    </div>
+                                    <small
+                                        *ngIf="(branch_code.errors?.required && branch_code.touched) || (branch_code.errors?.required && creditNoteForm.submitted)"
+                                        class="text-danger">
+                                        Branch is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion lookup SysBranch code -->
+
+                            <!--#region status-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="status" class="control-label">Status </label>
+                                    <input type="text" class="form-control" [ngModel]="model.status" maxlength="10"
+                                        name="p_status" required #status="ngModel" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion status-->
+
+                            <!--#region date-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="date" class="control-label">Date *</label>
+                                    <div>
+                                        <input [ngStyle]="getStyles(isButton)" class="form-control col-md-6"
+                                            placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.date"
+                                            name="p_date" [options]="myDatePickerOptions" required #p_date="ngModel"
+                                            #date="angular-mydatepicker" autocomplete="off" [readonly]="isButton"
+                                            (click)="date.toggleCalendar()" />
+                                        <small
+                                            *ngIf="(p_date.errors?.required && p_date.touched) || (p_date.errors?.required && creditNoteForm.submitted)"
+                                            class="text-danger">
+                                            Date is required
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion date-->
+
+                            <!--#region remarks-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="remark" class="control-label">Remark *</label>
+                                    <textarea type="text" class="form-control" [ngModel]="model.remark" maxlength="4000"
+                                        name="p_remark" required #remark="ngModel" [readonly]="isButton"></textarea>
+                                    <small
+                                        *ngIf="(remark.errors?.required && remark.touched) || (remark.errors?.required && creditNoteForm.submitted)"
+                                        class="text-danger">
+                                        Remark is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion remarks-->
+                        </div>
+                        <!--#endregion row-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region lookup Invoice code -->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="labelmodule">Invoice *</label>
+                                    <div class="col-md-12">
+                                        <button
+                                            class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                                            type="button" (click)="btnLookupInvoice()" data-toggle="modal"
+                                            data-target="#lookupModalInvoice" href="#"
+                                            [disabled]="model.status !== 'HOLD'"><i
+                                                class="fa fa-search-plus"></i></button>
+                                        {{model.invoice_external_no}}
+                                        <input hidden type="text" class="form-control" [ngModel]="model.invoice_no"
+                                            maxlength="50" required name="p_invoice_no" #invoice_no="ngModel" readonly>
+                                    </div>
+                                    <small
+                                        *ngIf="(invoice_no.errors?.required && invoice_no.touched) || (invoice_no.errors?.required && creditNoteForm.submitted)"
+                                        class="text-danger">
+                                        Invoice No is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion lookup Invoice code -->
+
+                            <!--#region invoice_no-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="invoice_no" class="control-label">Invoice No</label>
+                                    <input type="text" class="form-control" [ngModel]="model.invoice_external_no"
+                                        name="p_invoice_external_no" #invoice_external_no="ngModel" readonly>
+                                    <input type="text" class="form-control" [ngModel]="model.invoice_no"
+                                        name="p_invoice_no" #invoice_no="ngModel" hidden>
+                                </div>
+
+                            </div>
+                            <!--#endregion invoice_no-->
+
+                            <!--#region invoice_name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="invoice_name" class="control-label">Description</label>
+                                    <textarea type="text" class="form-control" [ngModel]="model.invoice_name" readonly
+                                        name="p_invoice_name" #invoice_name="ngModel"></textarea>
+                                </div>
+                            </div>
+                            <!--#endregion invoice_name-->
+
+                            <!--#region currency_code-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="currency_code" class="control-label">Currency </label>
+                                    <input type="text" class="form-control col-md-6" [ngModel]="model.currency_code"
+                                        readonly name="p_currency_code" #currency_code="ngModel">
+                                </div>
+                            </div>
+                            <!--#endregion currency_code-->
+
+                            <!--#region billing_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="billing_amount" class="control-label">Rental Amount
+                                    </label>
+                                    <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                        [ngModel]="model.billing_amount | number : '1.2-2'" readonly
+                                        amount="billing_amount" name="p_billing_amount" #billing_amount="ngModel">
+
+                                </div>
+                            </div>
+                            <!--#endregion billing_amount-->
+
+                            <!--#region discount_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="discount_amount" class="control-label">Discount Amount
+                                    </label>
+                                    <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                        [ngModel]="model.discount_amount | number : '1.2-2'" readonly
+                                        amount="discount_amount" name="p_discount_amount" #discount_amount="ngModel">
+                                </div>
+                            </div>
+                            <!--#endregion discount_amount-->
+                        </div>
+                        <!--#endregion row-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region ppn_pct-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="ppn_pct" class="control-label">PPN PCT
+                                    </label>
+                                    <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                        [ngModel]="model.ppn_pct | number : '1.2-2'" amount="ppn_pct" readonly
+                                        name="p_ppn_pct" #ppn_pct="ngModel">
+                                </div>
+                            </div>
+                            <!--#endregion ppn_pct-->
+
+                            <!--#region ppn_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="ppn_amount" class="control-label">PPN Amount
+                                    </label>
+                                    <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                        [ngModel]="model.ppn_amount | number : '1.2-2'" readonly amount="ppn_amount"
+                                        name="p_ppn_amount" #ppn_amount="ngModel">
+                                </div>
+                            </div>
+                            <!--#endregion ppn_amount-->
+
+                            <!--#region total_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="total_amount" class="control-label">Billing Amount
+                                    </label>
+                                    <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                        [ngModel]="model.total_amount | number : '1.2-2'" readonly amount="total_amount"
+                                        name="p_total_amount" #total_amount="ngModel">
+                                </div>
+                            </div>
+                            <!--#endregion total_amount-->
+                        </div>
+                        <!--#endregion row-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region pph_pct-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="pph_pct" class="control-label">PPH PCT
+                                    </label>
+                                    <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                        [ngModel]="model.pph_pct | number : '1.2-2'" amount="pph_pct" readonly
+                                        name="p_pph_pct" #pph_pct="ngModel">
+                                </div>
+                            </div>
+                            <!--#endregion pph_pct-->
+
+                            <!--#region pph_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="pph_amount" class="control-label">PPH Amount
+                                    </label>
+                                    <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                        [ngModel]="model.pph_amount | number : '1.2-2'" amount="pph_amount"
+                                        name="p_pph_amount" #pph_amount="ngModel" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion pph_amount-->
+                        </div>
+
+                        <!--#endregion-->
+
+                        <span layout="row horizontal-divider">
+                            <hr flex />
+                        </span>
+                        <br>
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region credit_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="credit_amount" class="control-label">Total Credit Amount
+                                    </label>
+                                    <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                        [ngModel]="model.credit_amount | number : '1.2-2'" amount="credit_amount"
+                                        name="p_credit_amount" #credit_amount="ngModel" readonly>
+
+                                </div>
+                            </div>
+                            <!--#endregion credit_amount-->
+
+                            <!--#region new_faktur_no-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="new_faktur_no" class="control-label">New Faktur No </label>
+                                    <input type="text" class="form-control" [ngModel]="model.new_faktur_no"
+                                        #new_faktur_no="ngModel" name="p_new_faktur_no" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion new_faktur_no-->
+                        </div>
+                        <!--#endregion row-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region new_ppn_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="new_ppn_amount" class="control-label">New PPN Amount
+                                    </label>
+                                    <input type="text" class="form-control col-md-6" style="text-align: right;" readonly
+                                        [ngModel]="model.new_ppn_amount | number : '1.2-2'" amount="new_ppn_amount"
+                                        name="p_new_ppn_amount" #new_ppn_amount="ngModel">
+                                </div>
+                            </div>
+                            <!--#endregion new_ppn_amount-->
+
+                            <!--#region new_pph_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="new_pph_amount" class="control-label">New PPH Amount
+                                    </label>
+                                    <input type="text" class="form-control col-md-6" style="text-align: right;" readonly
+                                        [ngModel]="model.new_pph_amount | number : '1.2-2'" amount="new_pph_amount"
+                                        name="p_new_pph_amount" #new_pph_amount="ngModel">
+                                </div>
+                            </div>
+                            <!--#endregion new_pph_amount-->
+
+                            <!--#region new_total_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="new_total_amount" class="control-label">New Billing Amount
+                                    </label>
+                                    <input type="text" class="form-control col-md-6" style="text-align: right;" readonly
+                                        [ngModel]="model.new_total_amount | number : '1.2-2'" amount="new_total_amount"
+                                        name="p_new_total_amount" #new_total_amount="ngModel">
+                                </div>
+                            </div>
+                            <!--#endregion new_total_amount-->
+                        </div>
+                        <!--#endregion row-->
+                    </form>
+                    <!--#endregion form-->
+
+                    <!--#region list view-->
+                    <div *ngIf="creditnotecode != null" class="row">
+                        <div class="col-md-12">
+                            <div class="card-header">
+                                <h4 class="card-title">Detail List</h4>
+                                <button class="btn btn-info btn-round" (click)="btnSaveList()"
+                                    data-role="R00020710022073C" [hidden]="model.invoice_status !== 'NEW'">
+                                    Save
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <!--#region list view-->
+                                <table id="datatableCreditNoteDetail" datatable [dtOptions]="dtOptions"
+                                    class="table table-striped table-bordered row-border hover" cellspacing="0"
+                                    width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th class="disabled-sorting">No</th>
+                                            <th style="display: none;"></th>
+                                            <th>Agreement No</th>
+                                            <th>Asset No</th>
+                                            <th>Description</th>
+                                            <th>Quantity</th>
+                                            <th>Rental Amount / PPN Amount / PPH Amount</th>
+                                            <th>Total Amount</th>
+                                            <th>Credit Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let row of listinvoicedetail;let i=index ">
+                                            <td class="if-no-edit-btn" style="display: none;"></td>
+                                            <td class="if-no-edit-btn" style="text-align: center;">
+                                                {{listinvoicedetail.numberIndex+i+1}}
+                                                <input type="hidden" value="{{row.id}}" name="p_id">
+                                            </td>
+                                            <td style="display: none;"></td>
+                                            <td style="width: 15%;">{{row.agreement_external_no}}
+                                                <br> {{row.client_name}}
+                                            </td>
+                                            <td style="width: 15%;">{{row.asset_no}} <br>
+                                                {{row.fa_name}}</td>
+                                            <td style="width: 20%;">{{row.description}}
+                                            </td>
+                                            <td style="width: 5%;text-align: center;">{{row.quantity}}</td>
+                                            <td style="width: 15%;text-align: right;">{{row.billing_amount | number
+                                                : '1.2-2'}} <br> {{row.ppn_amount | number
+                                                : '1.2-2'}} <br> {{row.pph_amount | number
+                                                : '1.2-2'}} </td>
+                                            <td style="width: 15%;text-align: right;">{{row.total_amount | number :
+                                                '1.2-2'}}</td>
+                                            <td style="width: 15%;text-align: right;">
+                                                <input id="adjustment_amount{{i}}"
+                                                    (blur)="onBlur($event,i,'adjustment_amount')"
+                                                    (focus)="onFocus($event,i,'adjustment_amount')" class="col-md-12"
+                                                    style="text-align: right;" type="text"
+                                                    value="{{row.adjustment_amount | number : '1.2-2'}}"
+                                                    amount="adjustment_amount" name="p_adjustment_amount"
+                                                    (change)="changeAdjusmentAmount($event, row.id)"
+                                                    [disabled]="model.status !== 'HOLD'">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!--#endregion list view-->
+                            </div>
+                        </div>
+                    </div>
+                    <!--#endregion list view-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--#region modal lookup SysBranch-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSysBranch"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupSysBranch" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupsysbranch;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td class="if-no-edit-btn" style="text-align: center;">
+                                        {{lookupsysbranch.numberIndex+i+1}}</td>
+                                    <td style="width:20%; text-align: center;">{{ row.code }}</td>
+                                    <td style="width:80%;">{{ row.name }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowSysBranch(row.code, row.name, row.region_code, row.description)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion modal lookup SysBranch-->
+
+<!--#region modal lookup Invoice-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalInvoice"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupInvoice" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Client Name</th>
+
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupinvoice;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td class="if-no-edit-btn" style="text-align: center;">
+                                        {{lookupinvoice.numberIndex+i+1}}</td>
+                                    <td style="width:20%; text-align: center;">{{ row.invoice_external_no }}</td>
+                                    <td style="width:40%;">{{ row.invoice_name }}</td>
+                                    <td style="width:30%;">{{ row.client_name }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-default btn-round" (click)="btnSelectRowInvoice(
+                                                row.invoice_no
+                                                ,row.invoice_external_no
+                                                ,row.invoice_name
+                                                ,row.currency_code
+                                                ,row.total_billing_amount
+                                                ,row.ppn_pct
+                                                ,row.pph_pct
+                                                ,row.total_ppn_amount
+                                                ,row.total_pph_amount
+                                                ,row.total_discount_amount
+                                                ,row.total_amount
+                                                )">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion modal lookup Invoice-->

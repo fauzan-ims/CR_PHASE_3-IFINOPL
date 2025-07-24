@@ -1,0 +1,195 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header ">
+          <h4 class="card-title">Purchase Request Info (Interface)</h4>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #applicationmaindetailForm="ngForm"
+            (ngSubmit)="onFormSubmit(applicationmaindetailForm.value, applicationmaindetailForm.valid)">
+
+            <!--#region button back-->
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region lookup code -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>code</label>
+                  <input type="text" class="form-control" [ngModel]="model.code" name="p_code" readonly>
+                </div>
+              </div>
+              <!--#endregion lookup code -->
+
+              <!--#region lookup SysBranch code -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Branch</label>
+                  <input type="text" class="form-control" [ngModel]="model.branch_name" name="p_branch_name" readonly>
+                </div>
+              </div>
+              <!--#endregion lookup SysBranch code -->
+
+              <!--#region request_date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="p_request_date" class="control-label">Request Date</label>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.request_date" name="p_request_date" [options]="myDatePickerOptions" required
+                    #p_request_date="ngModel" #request_date="angular-mydatepicker" autocomplete="off" readonly />
+                </div>
+              </div>
+              <!--#endregion request_date-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region category -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Category</label>
+                  <input type="text" class="form-control" [ngModel]="model.fa_category_name" name="p_fa_category_name"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion category -->
+
+              <!--#region request_status -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Request Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.request_status" name="p_request_status"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion request_status -->
+
+              <!--#region description-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Description</label>
+                  <input type="text" class="form-control" [ngModel]="model.description" name="p_description" readonly>
+                </div>
+              </div>
+              <!--#endregion description-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Merk-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Merk</label>
+                  <input type="text" class="form-control" [ngModel]="model.fa_merk_name" name="p_fa_merk_name" readonly>
+                </div>
+              </div>
+              <!--#endregion Merk-->
+
+              <!--#region Model-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Model</label>
+                  <input type="text" class="form-control" [ngModel]="model.fa_model_name" name="p_fa_model_name"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion Model-->
+
+              <!--#region Type-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Type</label>
+                  <input type="text" class="form-control" [ngModel]="model.fa_type_name" name="p_fa_type_name" readonly>
+                </div>
+              </div>
+              <!--#endregion Type-->
+            </div>
+            <!--#endregion row-->
+
+            <span layout="row horizontal-divider">
+              <hr flex />
+            </span>
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Fa Code-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Fa Code</label>
+                  <input type="text" class="form-control" [ngModel]="model.result_fa_code" name="p_result_fa_code"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion Fa Code-->
+
+              <!--#region Fa name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Fa Name</label>
+                  <input type="text" class="form-control" [ngModel]="model.result_fa_name" name="p_result_fa_name"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion Fa name-->
+
+              <!--#region result_date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="p_result_date" class="control-label">Result Date</label>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.result_date" name="p_result_date" [options]="myDatePickerOptions" required
+                    #p_result_date="ngModel" #result_date="angular-mydatepicker" autocomplete="off" readonly />
+                </div>
+              </div>
+              <!--#endregion result_date-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region job_status-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Job Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.job_status" name="p_job_status" readonly>
+                </div>
+              </div>
+              <!--#endregion job_status-->
+
+              <!--#region failed_remarks-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Failed Remarks</label>
+                  <input type="text" class="form-control" [ngModel]="model.failed_remarks" name="p_failed_remarks"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion failed_remarks-->
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

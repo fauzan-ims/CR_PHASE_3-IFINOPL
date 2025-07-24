@@ -1,0 +1,402 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header ">
+          <h4 class="card-title">Detail Info</h4>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #additionalinvoicedetailForm="ngForm"
+            (ngSubmit)="onFormSubmit(additionalinvoicedetailForm.value, additionalinvoicedetailForm.valid)">
+            <!--#region button submit, button back-->
+            <button type="submit" [hidden]="this.invoicestatus !== 'HOLD'" class="btn btn-info btn-round"
+              data-role="R00020700042071C">Save</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button submit, button back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region additional_invoice_code-->
+              <input hidden type="text" [ngModel]="this.param" name="p_additional_invoice_code">
+              <input type="text" name="p_id" [ngModel]="this.params" #id="ngModel" hidden>
+              <!--#endregion additional_invoice_code-->
+
+              <!--#region description-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="description" class="control-label">Description *</label>
+                  <textarea [readonly]="this.invoicestatus !== 'HOLD' || this.invoicetype !=='OTHRS' && this.invoicetype !=='IVBRJS' && this.invoicetype !=='DBNOTES' && this.invoicetype !== 'OVRCHRGS'" 
+                    type="text" class="form-control"
+                    [ngModel]="model.description" name="p_description" required #description="ngModel"
+                    maxlength="4000"></textarea>
+                  <small
+                    *ngIf="description.errors?.required && description.touched || (description.errors?.required && additionalinvoicedetailForm.submitted) "
+                    class="text-danger">
+                    Description is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion description-->
+
+              <!--#region Agreement -->
+              <div class="col-md-4">
+                <label class="control-label" (click)="btnClearAgreement()" style="cursor: pointer;"
+                  title="Clear">Agreement No *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="this.invoicestatus !== 'HOLD' || this.invoicetype !=='OTHRS' && this.invoicetype !=='IVBRJS' && this.invoicetype !=='DBNOTES' && this.invoicetype !== 'OVRCHRGS'" 
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupAgreement()" data-target="#lookupModalAgreement" data-toggle="modal" href="#">
+                      <i class="fa fa-search-plus"></i></button> {{model.agreement_external_no}}
+                    <input type="hidden" name="p_agreement_no" [ngModel]="model.agreement_no" required
+                      #agreement_no="ngModel">
+                  </div>
+                  <small
+                    *ngIf="agreement_no.errors?.required && agreement_no.touched || (agreement_no.errors?.required && additionalinvoicedetailForm.submitted)"
+                    class="text-danger">
+                    Agreement No is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Agrement name-->
+              <!--#region Client Name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="client_name" class="control-label">Client Name</label>
+                  <input type="text" readonly class="form-control" [ngModel]="model.client_name" name="p_client_name">
+                </div>
+              </div>
+              <!--#endregion Client Name-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Asset -->
+              <div class="col-md-4">
+                <label>Asset No *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="this.invoicestatus !== 'HOLD' || this.invoicetype !=='OTHRS' && this.invoicetype !=='IVBRJS' && this.invoicetype !=='DBNOTES' && this.invoicetype !== 'OVRCHRGS'" 
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button" (click)="btnLookupAsset()"
+                      data-target="#lookupModalAsset" data-toggle="modal" href="#">
+                      <i class="fa fa-search-plus"></i></button> {{model.asset_no}}
+                    <input type="hidden" name="p_asset_no" [ngModel]="model.asset_no" required #asset_no="ngModel">
+                  </div>
+                  <small
+                    *ngIf="asset_no.errors?.required && asset_no.touched || (asset_no.errors?.required && additionalinvoicedetailForm.submitted)"
+                    class="text-danger">
+                    Asset No is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Asset-->
+              <!--#region Asset Name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="asset_name" class="control-label">Asset Name</label>
+                  <input type="text" [readonly]="this.invoicestatus !== 'HOLD' || this.invoicetype !=='OTHRS' && this.invoicetype !=='IVBRJS' && this.invoicetype !=='DBNOTES' && this.invoicetype !== 'OVRCHRGS'" 
+                  class="form-control" [ngModel]="model.asset_name" name="p_asset_name">
+                </div>
+              </div>
+              <!--#endregion Asset Name-->
+
+              <!--#region billing no-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="billing_no" class="control-label">Billing No *</label>
+                  <input [readonly]="this.invoicestatus !== 'HOLD' || this.invoicetype !=='OTHRS' && this.invoicetype !=='IVBRJS' && this.invoicetype !=='DBNOTES' && this.invoicetype !== 'OVRCHRGS'" 
+                    type="text" class="form-control col-md-2"
+                    [ngModel]="model.billing_no" name="p_billing_no" required #billing_no="ngModel"
+                    pattern="{{NumberOnlyPattern}}">
+                  <small
+                    *ngIf="billing_no.errors?.required && billing_no.touched || (billing_no.errors?.required && additionalinvoicedetailForm.submitted) "
+                    class="text-danger">
+                    Billing No is required
+                  </small>
+                  <small *ngIf="billing_no.errors?.pattern && billing_no.touched" class="text-danger">
+                    Billing No is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion billing no-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region quantity-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="quantity" class="control-label">Quantity *</label>
+                  <input [readonly]="this.invoicestatus !== 'HOLD' || this.invoicetype !=='OTHRS' && this.invoicetype !=='IVBRJS' && this.invoicetype !=='DBNOTES' && this.invoicetype !== 'OVRCHRGS'" 
+                    type="text" class="form-control col-md-2"
+                    [ngModel]="model.quantity" name="p_quantity" required #quantity="ngModel"
+                    (change)="Quantity($event)" pattern="{{NumberOnlyPattern}}">
+                  <small
+                    *ngIf="quantity.errors?.required && quantity.touched || (quantity.errors?.required && additionalinvoicedetailForm.submitted) "
+                    class="text-danger">
+                    Quantity is required
+                  </small>
+                  <small *ngIf="quantity.errors?.pattern && quantity.touched" class="text-danger">
+                    Quantity is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion quantity-->
+
+              <!--#region billing amount-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Price * </label>
+                  <input [readonly]="this.invoicestatus !== 'HOLD' || this.invoicetype !=='OTHRS' && this.invoicetype !=='IVBRJS' && this.invoicetype !=='DBNOTES' && this.invoicetype !== 'OVRCHRGS'" 
+                    type="text" class="form-control col-md-6"
+                    style="text-align: right;" [ngModel]="model.billing_amount | number : '1.2-2'"
+                    amount="billing_amount" maxlength="24" name="p_billing_amount" #billing_amount="ngModel"
+                    (change)="PriceAmount($event)" (blur)="onBlur($event,1,'priceamount')"
+                    (focus)="onFocus($event,1,'priceamount')" required>
+                  <small
+                    *ngIf="(billing_amount.errors?.required && billing_amount.touched) || (billing_amount.errors?.required && additionalinvoicedetailForm.submitted)"
+                    class="text-danger">
+                    Price is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion billing amount-->
+
+              <!--#region discount amount-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Discount Amount * </label>
+                  <input [readonly]="this.invoicestatus !== 'HOLD' || this.invoicetype !=='OTHRS' && this.invoicetype !=='IVBRJS' && this.invoicetype !=='DBNOTES' && this.invoicetype !== 'OVRCHRGS'" 
+                    type="text" class="form-control col-md-6"
+                    style="text-align: right;" [ngModel]="model.discount_amount | number : '1.2-2'"
+                    amount="discount_amount" maxlength="24" name="p_discount_amount" #discount_amount="ngModel"
+                    (change)="DiscountAmount($event)" (blur)="onBlur($event,1,'discountamount')"
+                    (focus)="onFocus($event,1,'discountamount')" required>
+                  <small
+                    *ngIf="(discount_amount.errors?.required && discount_amount.touched) || (discount_amount.errors?.required && additionalinvoicedetailForm.submitted)"
+                    class="text-danger">
+                    Discount Amount is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion discount amount-->
+            </div>
+            <!--#endregion row -->
+
+            <!--#region row -->
+            <div class="row">
+              <!--#region Tax Scheme -->
+              <div class="col-md-4">
+                <label class="labelmodule" (click)="resetTaxScheme()" style="cursor: pointer;"
+                title="CLEAR">Tax Scheme</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="this.invoicestatus !== 'HOLD'"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupTaxScheme()" data-target="#lookupModalTaxScheme" data-toggle="modal" href="#">
+                      <i class="fa fa-search-plus"></i></button> {{model.tax_scheme_name}}
+                    <input type="hidden" name="p_tax_scheme_code" [ngModel]="model.tax_scheme_code"
+                      #tax_scheme_code="ngModel">
+                    <input type="hidden" name="p_tax_scheme_name" [ngModel]="model.tax_scheme_name"
+                      #tax_scheme_name="ngModel">
+                  </div>
+                </div>
+              </div>
+              <!--#endregion Tax Scheme-->
+
+              <!--#region ppn amount-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>PPN Amount</label>
+                  <input type="text" class="form-control col-md-6" style="text-align: right;"
+                    [ngModel]="model.ppn_amount | number : '1.2-2'" amount="ppn_amount" name="p_ppn_amount"
+                    (blur)="onBlur($event,1,'ppnamount')" (focus)="onFocus($event,1,'ppnamount')" readonly>
+                  <input type="hidden" name="p_ppn_pct" [ngModel]="model.ppn_pct" #ppn_pct="ngModel">
+                </div>
+              </div>
+              <!--#endregion ppn amount-->
+
+              <!--#region pph amount-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>PPH Amount</label>
+                  <input type="text" class="form-control col-md-6" style="text-align: right;"
+                    [ngModel]="model.pph_amount | number : '1.2-2'" amount="pph_amount" name="p_pph_amount"
+                    (blur)="onBlur($event,1,'pphamount')" (focus)="onFocus($event,1,'pphamount')" readonly>
+                  <input type="hidden" name="p_pph_pct" [ngModel]="model.pph_pct" #pph_pct="ngModel">
+                </div>
+              </div>
+              <!--#endregion pph amount-->
+            </div>
+            <!--#endregion row -->
+
+            <!--#region row -->
+            <div class="row">
+              <!--#region total amount-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Billing Amount</label>
+                  <input type="text" class="form-control col-md-6" style="text-align: right;"
+                    [ngModel]="model.total_amount | number : '1.2-2'" amount="total_amount" #pph_pct="ngModel"
+                    name="p_total_amount" (focus)="onFocus($event,1,'totalamount')" readonly>
+                </div>
+              </div>
+              <!--#endregion total amount-->
+            </div>
+            <!--#endregion row -->
+          </form>
+          <!--#endregion form-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region lookup Agreement-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalAgreement"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupAgreement" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Agreement No</th>
+                  <th>Client Name</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupagreement;let i=index ">
+                  <td style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">
+                    {{lookupagreement.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{row.agreement_external_no}}</td>
+                  <td style="width: 80%;text-align: left;">{{row.client_name}}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowAgreement(row.agreement_no, row.client_name, row.client_no, row.agreement_external_no)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Agreement-->
+
+<!--#region lookup Asset-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalAsset" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupAsset" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Asset No</th>
+                  <th>Asset Name</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupasset;let i=index ">
+                  <td style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">
+                    {{lookupasset.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{row.asset_no}}</td>
+                  <td style="width: 80%;text-align: left;">{{row.asset_name}}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowAsset(row.asset_no, row.asset_name)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Asset-->
+
+<!--#region lookup Tax Scheme-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalTaxScheme"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupTaxScheme" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Name</th>
+                  <th>PPN PCT</th>
+                  <th>PPH PCT</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookuptaxscheme;let i=index ">
+                  <td style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">
+                    {{lookuptaxscheme.numberIndex+i+1}}</td>
+                  <td style="width: 60%;text-align: left;">{{row.name}}</td>
+                  <td style="width: 20%;text-align: right;">{{row.ppn_pct}}</td>
+                  <td style="width: 20%;text-align: right;">{{row.pph_pct}}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowTaxScheme(row.code, row.name, row.ppn_pct, row.pph_pct)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Tax Scheme-->

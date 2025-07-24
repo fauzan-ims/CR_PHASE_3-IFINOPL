@@ -1,0 +1,1796 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body ">
+        <!--#region form-->
+
+        <!--#region button save dan back-->
+        <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+        <!--#endregion button save dan back-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region p_application_no-->
+          <input type="text" class="form-control" [ngModel]="this.param" name="p_application_no" hidden>
+          <!--#endregion p_application_no-->
+
+          <!--#region asset_no-->
+          <div class="col-md-4">
+            <div [hidden]="model.asset_no != null" class="row" style="margin-bottom: -15px; padding-top: 30px;">
+              <h1 class="col-md-4" style="font-size: 12px;">Asset No</h1>
+              <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                Generate-</h1>
+            </div>
+            <div [hidden]="model.asset_no == null" class="form-group">
+              <label>Asset No</label>
+              <input type="text" class="form-control" [ngModel]="model.asset_no" name="p_asset_no" readonly>
+            </div>
+          </div>
+          <!--#endregion asset_no-->
+
+          <!--#region asset_type_code-->
+          <div class="col-md-4">
+            <label class="labelgsubcode">Asset Type *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                  type="button" (click)="btnLookupAssetType()" data-target="#lookupModalAssetType" data-toggle="modal"
+                  href="#">
+                  <i class="fa fa-search-plus"></i></button> {{model.asset_type_desc}}
+                <input id="applicationAssetTypeCode" type="text" hidden name="p_asset_type_code"
+                  [ngModel]="model.asset_type_code" required #asset_type_code="ngModel" />
+              </div>
+            </div>
+          </div>
+          <!--#endregion asset_type_code-->
+
+          <!--#region transmisi-->
+          <div class="col-md-4" [hidden]="model.asset_type_code !== 'VHCL'">
+            <div class="form-group">
+              <label>Transmisi</label>
+              <select disabled class="form-control col-md-6" [ngModel]="model.transmisi" name="p_transmisi">
+                <option value='AT'>AT</option>
+                <option value='MT'>MT</option>
+              </select>
+            </div>
+          </div>
+          <!--#endregion transmisi-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region asset_year-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="asset_year" class="control-label">Asset Year *</label>
+              <input disabled type="text" class="form-control col-md-4" [ngModel]="model.asset_year" name="p_asset_year"
+                #asset_year="ngModel" maxlength="4" pattern="{{NumberOnlyPattern}}">
+            </div>
+          </div>
+          <!--#endregion asset_year-->
+
+          <!--#region asset_condition-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Condition</label>
+              <select class="form-control col-md-6" disabled [ngModel]="model.asset_condition" name="p_asset_condition">
+                <option value='NEW'>NEW</option>
+                <option value='USED'>USED</option>
+              </select>
+            </div>
+          </div>
+          <!--#endregion asset_condition-->
+          <!-- </div> -->
+
+          <!--#region row [hidden]="this.params == null"-->
+          <!-- <div class="row" > -->
+          <!--#region category_code-->
+          <div class="col-md-4" hidden>
+            <label>Category *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                  type="button" (click)="btnLookupCategory()" data-target="#lookupModalCategory" data-toggle="modal"
+                  href="#">
+                  <i class="fa fa-search-plus"></i></button> {{model.category_desc}}
+                <input type="hidden" name="p_category_code" [ngModel]="model.category_code" #category_code="ngModel">
+              </div>
+            </div>
+          </div>
+          <!--#endregion category_code-->
+
+          <!--#region subcategory_code-->
+          <div class="col-md-4" hidden>
+            <label>Sub Category *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                  type="button" (click)="btnLookupSubCategory()" data-target="#lookupModalSubCategory"
+                  data-toggle="modal" href="#">
+                  <i class="fa fa-search-plus"></i></button> {{model.subcategory_desc}}
+                <input type="hidden" name="p_subcategory_code" [ngModel]="model.subcategory_code"
+                  #subcategory_code="ngModel">
+              </div>
+            </div>
+          </div>
+          <!--#endregion subcategory_code-->
+
+          <!--#region merk_code-->
+          <div class="col-md-4" hidden>
+            <label>Merk *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                  type="button" (click)="btnLookupMerk()" data-target="#lookupModalMerk" data-toggle="modal" href="#">
+                  <i class="fa fa-search-plus"></i></button> {{model.merk_desc}}
+                <input type="hidden" name="p_merk_code" [ngModel]="model.merk_code" #merk_code="ngModel">
+              </div>
+            </div>
+          </div>
+          <!--#endregion merk_code-->
+
+          <!--#region model_code-->
+          <div class="col-md-4" hidden>
+            <label>Model *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                  type="button" (click)="btnLookupModel()" data-target="#lookupModalModel" data-toggle="modal" href="#">
+                  <i class="fa fa-search-plus"></i></button> {{model.model_desc}}
+                <input type="hidden" name="p_model_code" [ngModel]="model.model_code" #model_code="ngModel">
+              </div>
+            </div>
+          </div>
+          <!--#endregion model_code-->
+
+          <!--#region type_code [hidden]="model.asset_type_code === 'ELEC'" -->
+          <div class="col-md-4" hidden>
+            <label>Type *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                  type="button" (click)="btnLookupType()" data-target="#lookupModalType" data-toggle="modal" href="#">
+                  <i class="fa fa-search-plus"></i></button> {{model.type_desc}}
+                <input disabled type="hidden" name="p_type_code" [ngModel]="model.type_code" #type_code="ngModel">
+              </div>
+            </div>
+          </div>
+          <!--#endregion type_code-->
+
+          <!--#region unit_code-->
+          <div class="col-md-4">
+            <label>Unit *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                  type="button" (click)="btnLookupUnit()" data-target="#lookupModalUnit" data-toggle="modal" href="#">
+                  <i class="fa fa-search-plus"></i></button> {{model.unit_desc}}
+                <input type="hidden" name="p_unit_code" [ngModel]="model.unit_code" #unit_code="ngModel">
+              </div>
+            </div>
+          </div>
+          <!--#endregion unit_code-->
+
+          <!--#region fa_code-->
+          <div class="col-md-4" [hidden]="model.unit_source !== 'Stock'">
+            <label>FA No *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                  type="button" (click)="btnLookupFixAsset()" data-target="#lookupModalFixAsset" data-toggle="modal"
+                  href="#">
+                  <i class="fa fa-search-plus"></i></button> {{model.fa_code}} - {{model.fa_name}} - {{model.plat_no}}
+                <input type="hidden" name="p_fa_code" [ngModel]="model.fa_code" #fa_code="ngModel">
+                <input type="hidden" name="p_fa_name" [ngModel]="model.fa_name" #fa_name="ngModel">
+              </div>
+            </div>
+          </div>
+          <!--#endregion fa_code-->
+
+          <!--#region initial_price_amount-->
+          <div class="col-md-4" [hidden]="model.unit_source !== 'Stock'">
+            <div class="form-group">
+              <label>Initial Purchase Price</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.initial_price_amount | number : '1.2-2'" amount="initial_price_amount"
+                name="p_initial_price_amount" #initial_price_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion initial_price_amount-->
+
+          <!--#region colour-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="colour" class="control-label">Colour *</label>
+              <input disabled type="text" class="form-control" [ngModel]="model.colour" maxlength="250" name="p_colour"
+                #colour="ngModel">
+            </div>
+          </div>
+          <!--#endregion colour-->
+
+          <!--#region check box is_otr-->
+          <div class="col-md-4" [hidden]="model.asset_type_code !== 'VHCL'">
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" [ngModel]="model.is_otr" name="p_is_otr" disabled>
+                  ON THE ROAD
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_otr-->
+
+          <!--#region bbn_location_code-->
+          <div class="col-md-4" [hidden]="this.model.asset_type_code !== 'VHCL'">
+            <label [hidden]="!this.isOTR">BBN Location*</label>
+            <label [hidden]="this.isOTR">BBN Location</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                  type="button" (click)="btnLookupBBN()" data-target="#lookupModalBBN" data-toggle="modal" href="#">
+                  <i class="fa fa-search-plus"></i></button> {{model.bbn_location_description}}
+                <input type="hidden" name="p_bbn_location_code" [ngModel]="model.bbn_location_code"
+                  #bbn_location_code="ngModel">
+                <input type="hidden" name="p_bbn_location_description" [ngModel]="model.bbn_location_description"
+                  #bbn_location_description="ngModel">
+              </div>
+            </div>
+          </div>
+          <!--#endregion bbn_location_code-->
+
+          <!--#region radio button plat_colour-->
+          <div class="col-md-4" [hidden]="this.model.asset_type_code !== 'VHCL'">
+            <label>Plat Colour</label>
+            <div class="form-group" style="margin-left: 15px;">
+              <div class="row">
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input disabled class="form-check-input col-md-6" type="radio" name="p_plat_colour" value="KUNING"
+                      [(ngModel)]="model.plat_colour">KUNING
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input disabled class="form-check-input col-md-6" type="radio" name="p_plat_colour" value="HITAM"
+                      [(ngModel)]="model.plat_colour">HITAM
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion radio button plat_colour-->
+
+          <!--#region check box is_bbn_client-->
+          <div class="col-md-4" [hidden]="model.asset_type_code !== 'VHCL'">
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" [ngModel]="model.is_bbn_client" name="p_is_bbn_client"
+                    disabled>
+                  BBN Client
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_bbn_client-->
+
+          <!--#region client_bbn_name-->
+          <div class="col-md-4" [hidden]="!this.isBBNClient">
+            <div class="form-group">
+              <label for="client_bbn_name" class="control-label">Client BBN Name *</label>
+              <input type="text" class="form-control" [ngModel]="model.client_bbn_name" readonly maxlength="250"
+                name="p_client_bbn_name" #client_bbn_name="ngModel">
+            </div>
+          </div>
+          <!--#endregion colour-->
+
+          <!--#region client_bbn_address-->
+          <div class="col-md-4" [hidden]="!this.isBBNClient">
+            <div class="form-group">
+              <label for="package_description" class="control-label">Client BBN Address *</label>
+              <textarea type="text" readonly class="form-control" [ngModel]="model.client_bbn_address"
+                name="p_client_bbn_address" #client_bbn_address="ngModel" maxlength="4000"></textarea>
+            </div>
+          </div>
+          <!--#endregion client_bbn_address-->
+
+          <!--#region radio button cop-->
+          <!-- <div class="col-md-4" [hidden]="this.model.asset_type_code !== 'VHCL'">
+              <label>COP/ NON COP</label>
+              <div class="form-group" style="margin-left: 15px;">
+                <div class="row">
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input disabled class="form-check-input col-md-6" type="radio" name="p_cop" value="COP"
+                        [(ngModel)]="model.cop">COP
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input disabled class="form-check-input col-md-6" type="radio" name="p_cop" value="NON COP"
+                        [(ngModel)]="model.cop">NON COP
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+          <!--#endregion radio button cop-->
+
+          <!--#region radio button usage-->
+          <div class="col-md-4" [hidden]="this.model.asset_type_code !== 'VHCL'">
+            <label>Usage</label>
+            <div class="form-group" style="margin-left: 15px;">
+              <div class="row">
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input disabled class="form-check-input col-md-6" type="radio" name="p_usage" value="CITY"
+                      [(ngModel)]="model.usage">CITY USE
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input disabled class="form-check-input col-md-6" type="radio" name="p_usage" value="SITE"
+                      [(ngModel)]="model.usage">SITE
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion radio button usage-->
+
+          <!--#region start_miles-->
+          <div class="col-md-4" [hidden]="this.model.asset_type_code !== 'VHCL'">
+            <div class="form-group">
+              <label for="start_miles" class="control-label">Start KM *</label>
+              <input disabled type="text" class="form-control col-md-4" [ngModel]="model.start_miles"
+                name="p_start_miles" required #start_miles="ngModel" pattern="{{NumberOnlyPattern}}">
+            </div>
+          </div>
+          <!--#endregion start_miles-->
+
+          <!--#region monthly_miles-->
+          <div class="col-md-4" [hidden]="this.model.asset_type_code !== 'VHCL'">
+            <div class="form-group">
+              <label for="monthly_miles" class="control-label">Monthly KM *</label>
+              <input disabled type="text" class="form-control col-md-4" [ngModel]="model.monthly_miles"
+                name="p_monthly_miles" required #monthly_miles="ngModel" pattern="{{NumberOnlyPattern}}">
+            </div>
+          </div>
+          <!--#endregion monthly_miles-->
+
+          <!--#region email-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label for="email" class="control-label">Email *</label>
+              <input type="email" class="form-control" [ngModel]="model.email" name="p_email" #email="ngModel"
+                pattern={{EmailPattern}} readonly>
+            </div>
+          </div>
+          <!--#endregion email-->
+
+          <!--#region check box is_auto_email-->
+          <div class="col-md-4" hidden>
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" [ngModel]="model.is_auto_email"
+                    name="p_is_auto_email">
+                  Email Billing Notification
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_auto_email-->
+
+          <!--#region remarks-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Remark</label>
+              <textarea disabled type="text" class="form-control" [ngModel]="model.remarks" maxlength="4000"
+                name="p_remarks"></textarea>
+            </div>
+          </div>
+          <!--#endregion remarks-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="model.is_simulation === '1'">
+          <!--#region radio button billing_to-->
+          <div class="col-md-4" hidden>
+            <label>Billing To</label>
+            <div class="form-group" style="margin-left: 15px;">
+              <div class="row">
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input disabled class="form-check-input col-md-6" type="radio" name="p_billing_to" value="CLIENT"
+                      [(ngModel)]="model.billing_to" (change)="billingTo($event)">CLIENT
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input disabled class="form-check-input col-md-6" type="radio" name="p_billing_to" value="OTHER"
+                      [(ngModel)]="model.billing_to" (change)="billingTo($event)">OTHER
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion radio button billing_to-->
+
+          <!--#region billing_to_name-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label for="billing_to_name" class="control-label">Billing To Name *</label>
+              <input [disabled]="this.pageType != null || model.billing_to === 'CLIENT'" type="text"
+                class="form-control" [ngModel]="model.billing_to_name" maxlength="250" name="p_billing_to_name"
+                #billing_to_name="ngModel">
+            </div>
+          </div>
+          <!--#endregion billing_to_name-->
+
+          <!--#region billing_to_area_no + billing_to_phone_no-->
+          <div class="col-md-4" [hidden]="model.billing_to === 'CLIENT'">
+            <div class="form-group">
+              <label class="control-label">Billing To Phone No.
+                *</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <input disabled type="text" class="form-control" [ngModel]="model.billing_to_area_no"
+                    name="p_billing_to_area_no" required #billing_to_area_no="ngModel" maxlength="4"
+                    pattern={{NumberOnlyPattern}}>
+                </div>
+                -
+                <div class="col-md-7">
+                  <input disabled type="text" class="form-control" [ngModel]="model.billing_to_phone_no"
+                    name="p_billing_to_phone_no" maxlength="15" required #billing_to_phone_no="ngModel"
+                    pattern={{NumberOnlyPattern}}>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion billing_to_area_no + billing_to_phone_no-->
+
+          <!--#region billing_to_address-->
+          <div class="col-md-4" [hidden]="model.billing_to === 'CLIENT'">
+            <div class="form-group">
+              <label for="package_description" class="control-label">Billing To Address *</label>
+              <textarea [disabled]="pageType != null || model.billing_to === 'CLIENT'" type="text" class="form-control"
+                [ngModel]="model.billing_to_address" name="p_billing_to_address" #billing_to_address="ngModel"
+                maxlength="4000"></textarea>
+            </div>
+          </div>
+          <!--#endregion billing_to_address-->
+        </div>
+        <!-- #endregion row  -->
+
+        <!-- #region row  -->
+        <div class="row" [hidden]="model.is_simulation === '1'">
+          <!--#region npwp_name-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label for="npwp_name" class="control-label">NPWP Name *</label>
+              <input disabled type="text" class="form-control" [ngModel]="model.npwp_name" maxlength="250"
+                name="p_npwp_name" #npwp_name="ngModel">
+            </div>
+          </div>
+          <!--#endregion npwp_name-->
+
+          <!--#region document_no-->
+          <div class="col-md-2" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label>
+                NPWP No *
+              </label>
+              <input id="npwp" type="text" class="form-control" [(ngModel)]="this.model.billing_to_npwp"
+                name="p_billing_to_npwp" disabled #p_billing_to_npwp="ngModel" (keydown)="onKeydownNpwp($event)"
+                (paste)="onPasteNpwp($event)" (focus)="onFokusNpwp($event)" (blur)="onChangeNpwp($event)">
+            </div>
+          </div>
+          <!--#endregion document_no-->
+
+          <!--#region NITKU-->
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="client_nitku" class="control-label">NITKU</label>
+              <input type="text" class="form-control" [ngModel]="model.client_nitku" name="p_client_nitku"
+                #client_nitku="ngModel" readonly>
+            </div>
+          </div>
+          <!--#endregion NITKU-->
+
+          <!--#region npwp_address-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label for="package_description" class="control-label">NPWP Address *</label>
+              <textarea [disabled]="pageType != null || model.billing_to === 'CLIENT'" type="text" class="form-control"
+                [ngModel]="model.npwp_address" name="p_npwp_address" #npwp_address="ngModel"
+                maxlength="4000"></textarea>
+            </div>
+          </div>
+          <!--#endregion npwp_address-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="model.is_simulation === '1'">
+          <!--#region radio button deliver_to-->
+          <div class="col-md-4" hidden>
+            <label>Deliver To</label>
+            <div class="form-group" style="margin-left: 15px;">
+              <div class="row">
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input [disabled]="this.pageType != null" class="form-check-input col-md-6" type="radio"
+                      name="p_deliver_to" value="CLIENT" [(ngModel)]="model.deliver_to"
+                      (change)="deliverTo($event)">CLIENT
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input [disabled]="this.pageType != null" class="form-check-input col-md-6" type="radio"
+                      name="p_deliver_to" value="OTHER" [(ngModel)]="model.deliver_to"
+                      (change)="deliverTo($event)">OTHER
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion radio button deliver_to-->
+
+          <!--#region deliver_to_name-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label for="deliver_to_name" class="control-label">Deliver To Name *</label>
+              <input [disabled]="this.pageType != null || model.deliver_to === 'CLIENT'" type="text"
+                class="form-control" [ngModel]="model.deliver_to_name" maxlength="250" name="p_deliver_to_name"
+                #deliver_to_name="ngModel">
+            </div>
+          </div>
+          <!--#endregion deliver_to_name-->
+
+          <!--#region deliver_to_area_no + deliver_to_phone_no-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label class="control-label">Deliver To Phone No.
+                *</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <input disabled type="text" class="form-control" [ngModel]="model.deliver_to_area_no"
+                    name="p_deliver_to_area_no" required #deliver_to_area_no="ngModel" maxlength="4"
+                    pattern={{NumberOnlyPattern}}>
+                </div>
+                -
+                <div class="col-md-7">
+                  <input disabled type="text" class="form-control" [ngModel]="model.deliver_to_phone_no"
+                    name="p_deliver_to_phone_no" maxlength="15" required #deliver_to_phone_no="ngModel"
+                    pattern={{NumberOnlyPattern}}>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion deliver_to_area_no + deliver_to_phone_no-->
+
+          <!--#region deliver_to_address-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label for="package_description" class="control-label">Deliver To Address *</label>
+              <textarea disabled type="text" class="form-control" [ngModel]="model.deliver_to_address"
+                name="p_deliver_to_address" #deliver_to_address="ngModel" maxlength="4000"></textarea>
+            </div>
+          </div>
+          <!--#endregion deliver_to_address-->
+        </div>
+        <!--#endregion row-->
+
+        <!-- #region row -->
+        <div class="row" [hidden]="model.is_simulation === '1'">
+          <!--#region pickup_name-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label for="pickup_name" class="control-label">Pickup Name *</label>
+              <input [disabled]="this.pageType != null || model.billing_to === 'CLIENT'" type="text"
+                class="form-control" [ngModel]="model.pickup_name" maxlength="250" name="p_pickup_name"
+                #pickup_name="ngModel">
+            </div>
+          </div>
+          <!--#endregion pickup_name-->
+
+          <!--#region pickup_phone_area_no + pickup_phone_no-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label class="control-label">Pickup Phone No.
+                *</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <input disabled type="text" class="form-control" [ngModel]="model.pickup_phone_area_no"
+                    name="p_pickup_phone_area_no" #pickup_phone_area_no="ngModel" maxlength="4"
+                    pattern={{NumberOnlyPattern}}>
+                </div>
+                -
+                <div class="col-md-7">
+                  <input disabled type="text" class="form-control" [ngModel]="model.pickup_phone_no"
+                    name="p_pickup_phone_no" maxlength="15" required #pickup_phone_no="ngModel"
+                    pattern={{NumberOnlyPattern}}>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion pickup_phone_area_no + pickup_phone_no-->
+
+          <!--#region pickup_address-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label for="package_description" class="control-label">Pickup Address *</label>
+              <textarea disabled type="text" class="form-control" [ngModel]="model.pickup_address"
+                name="p_pickup_address" required #pickup_address="ngModel" maxlength="4000"></textarea>
+            </div>
+          </div>
+          <!--#endregion pickup_address-->
+        </div>
+        <!-- #endregion row -->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region unit_source-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Unit Source</label>
+              <select class="form-control col-md-6" disabled [ngModel]="model.unit_source" name="p_unit_source">
+                <option value='Purchase'>Purchase</option>
+                <option value='Stock'>Stock</option>
+              </select>
+            </div>
+          </div>
+          <!--#endregion unit_source-->
+
+          <!--#region start_due_date-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Start Due Date</label>
+              <select class="form-control col-md-6" disabled [ngModel]="model.start_due_date" name="p_start_due_date">
+                <option value='BAST'>BAST</option>
+                <option value='BAST Date + 1'>BAST Date + 1</option>
+              </select>
+            </div>
+          </div>
+          <!--#endregion start_due_date-->
+
+          <!--#region radio button prorate-->
+          <div class="col-md-4">
+            <label>Prorate *</label>
+            <div class="form-group" style="margin-left: 15px;">
+              <div class="row">
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input disabled class="form-check-input col-md-6" type="radio" name="p_prorate" value="Yes"
+                      [(ngModel)]="model.prorate">Yes
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input disabled class="form-check-input col-md-6" type="radio" name="p_prorate" value="No"
+                      [(ngModel)]="model.prorate">No
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion radio button prorate-->
+        </div>
+        <!-- #endregion row  -->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region billing_mode-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Billing Mode</label>
+              <select class="form-control col-md-6" disabled [ngModel]="model.billing_mode" name="p_billing_mode"
+                (change)="billingMode($event)">
+                <option value='NORMAL'>NORMAL</option>
+                <option value='BY DATE'>DATE</option>
+                <option value='BEFORE DUE'>BEFORE DUE</option>
+                <option value='END MONTH'>END MONTH</option>
+              </select>
+            </div>
+          </div>
+          <!--#endregion billing_mode-->
+
+          <!--#region billing_to_faktur_type-->
+          <div class="col-md-4">
+            <label class="labelgsubcode">Faktur Transaction Code *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                  type="button" (click)="btnLookupFakturType()" data-target="#lookupModalFakturType" data-toggle="modal"
+                  href="#">
+                  <i class="fa fa-search-plus"></i></button> <b>{{model.billing_to_faktur_type}}</b>
+                <input type="text" hidden name="p_billing_to_faktur_type" [ngModel]="model.billing_to_faktur_type"
+                  #billing_to_faktur_type="ngModel" />
+              </div>
+            </div>
+          </div>
+          <!--#endregion billing_to_faktur_type-->
+
+          <!--#region billing_mode_date-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="billing_mode_date" class="control-label">Date *</label>
+              <input disabled type="text" class="form-control col-md-4" [ngModel]="model.billing_mode_date"
+                name="p_billing_mode_date" #billing_mode_date="ngModel" maxlength="4" pattern="{{NumberOnlyPattern}}">
+            </div>
+          </div>
+          <!--#endregion billing_mode_date-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region otr_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>OTR Amount</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.otr_amount | number : '1.2-2'" amount="otr_amount" name="p_otr_amount" required
+                #otr_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion otr_amount-->
+
+          <!--#region market_value -->
+          <div class="col-md-4">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Unit Amount exc VAT</label>
+                  <input readonly class="form-control" style="text-align: right;"
+                    [ngModel]="model.market_value | number : '1.2-2'" amount="market_value" name="p_market_value"
+                    required #market_value="ngModel">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Discount Amount *</label>
+                  <input readonly class="form-control" style="text-align: right;"
+                    [ngModel]="model.discount_amount | number : '1.2-2'" amount="discount_amount"
+                    name="p_discount_amount" #discount_amount="ngModel">
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion market_value -->
+
+          <!--#region check box is_purchase_requirement_after_lease-->
+          <div class="col-md-4" hidden>
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input disabled class="form-check-input" type="checkbox"
+                    [ngModel]="model.is_purchase_requirement_after_lease" name="p_is_purchase_requirement_after_lease">
+                  Purchase Requirement After Lease
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_purchase_requirement_after_lease-->
+
+          <!--#region request_delivery_date-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="p_request_delivery_date" class="control-label">Estimete Delivery Date *</label>
+              <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                [ngModel]="model.request_delivery_date" name="p_request_delivery_date" [options]="myDatePickerOptions"
+                #p_request_delivery_date="ngModel" #request_delivery_date="angular-mydatepicker" autocomplete="off"
+                readonly />
+            </div>
+          </div>
+          <!--#endregion request_delivery_date-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="this.params == null">
+          <!--#region karoseri_amount -->
+          <div class="col-md-4">
+            <div class="row">
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label>Karoseri Amount exc VAT</label>
+                  <input readonly class="form-control" style="text-align: right;"
+                    [ngModel]="model.karoseri_amount | number : '1.2-2'" amount="karoseri_amount"
+                    name="p_karoseri_amount" #karoseri_amount="ngModel" readonly>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label>Discount Amount *</label>
+                  <input readonly class="form-control" style="text-align: right;"
+                    [ngModel]="model.discount_karoseri_amount | number : '1.2-2'" amount="discount_karoseri_amount"
+                    name="p_discount_karoseri_amount" #discount_karoseri_amount="ngModel">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <br>
+                <div class="form-group">
+                  <button style="margin-top: 0px;" type="button"
+                    class="btn btn-warning btn-round fa fa-edit custom-button-width"
+                    (click)="btnKaroseriAccessories('KAROSERI')"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion karoseri_amount -->
+
+          <!--#region accessories_amount -->
+          <div class="col-md-4" [hidden]="this.params == null">
+            <div class="row">
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label>Accessories Amount exc VAT</label>
+                  <input readonly class="form-control" style="text-align: right;"
+                    [ngModel]="model.accessories_amount | number : '1.2-2'" amount="accessories_amount"
+                    name="p_accessories_amount" #accessories_amount="ngModel" readonly>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label>Discount Amount *</label>
+                  <input readonly class="form-control" style="text-align: right;"
+                    [ngModel]="model.discount_accessories_amount | number : '1.2-2'"
+                    amount="discount_accessories_amount" name="p_discount_accessories_amount"
+                    #discount_accessories_amount="ngModel">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <br>
+                <div class="form-group">
+                  <button style="margin-top: 0px;" type="button" [hidden]="this.params == null"
+                    class="btn btn-warning btn-round fa fa-edit custom-button-width"
+                    (click)="btnKaroseriAccessories('ACCESSORIES')"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion accessories_amount -->
+
+          <!--#region mobilization_amount-->
+          <div class="col-md-4">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Mobilization Amount * </label>
+                  <input readonly class="form-control" style="text-align: right;"
+                    [ngModel]="model.mobilization_amount | number : '1.2-2'" amount="mobilization_amount"
+                    name="p_mobilization_amount" #mobilization_amount="ngModel">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label [hidden]="model.mobilization_amount <= 0">City *</label>
+                  <label [hidden]="model.mobilization_amount > 0" style="cursor: pointer;" title="CLEAR">City</label>
+                  <div class="form-group">
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      data-toggle="modal" href="#" disabled>
+                      <i class="fa fa-search-plus"></i></button> {{model.mobilization_city_description}} -
+                    {{model.mobilization_province_description}}
+                    <input type="hidden" name="p_mobilization_province_code"
+                      [ngModel]="model.mobilization_province_code" #mobilization_province_code="ngModel">
+                    <input type="hidden" name="p_mobilization_province_description"
+                      [ngModel]="model.mobilization_province_description" #mobilization_province_description="ngModel">
+                    <input type="hidden" name="p_mobilization_city_code" [ngModel]="model.mobilization_city_code"
+                      #mobilization_city_code="ngModel">
+                    <input type="hidden" name="p_mobilization_city_description"
+                      [ngModel]="model.mobilization_city_description" #mobilization_city_description="ngModel">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion mobilization_amount-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region asset_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Asset Amount</label>
+              <input disabled type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.asset_amount | number : '1.2-2'" amount="asset_amount" name="p_asset_amount" required
+                #asset_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion asset_amount-->
+
+          <!--#region asset_interest_rate + asset_interest_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="control-label">Interest Rate % *</label>
+              <div class="row">
+                <div class="col-md-5">
+                  <input disabled type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.asset_interest_rate | number : '1.6-6'" rate="asset_interest_rate"
+                    name="p_asset_interest_rate" #asset_interest_rate="ngModel" maxlength="10">
+                </div>
+                <div class="col-md-5">
+                  <input disabled type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.asset_interest_amount | number : '1.2-2'" amount="asset_interest_amount"
+                    name="p_asset_interest_amount" maxlength="24" #asset_interest_amount="ngModel">
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion asset_interest_rate + asset_interest_amount-->
+
+          <!--#region asset_rv_pct + asset_rv_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="control-label">Residual Value *</label>
+              <div class="row">
+                <div class="col-md-5">
+                  <input disabled type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.asset_rv_pct | number : '1.6-6'" rate="asset_rv_pct" name="p_asset_rv_pct" required
+                    #asset_rv_pct="ngModel" maxlength="10">
+                </div>
+                <div class="col-md-5">
+                  <input disabled type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.asset_rv_amount | number : '1.2-2'" amount="asset_rv_amount"
+                    name="p_asset_rv_amount" maxlength="24" required #asset_rv_amount="ngModel">
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion asset_rv_pct + asset_rv_amount-->
+        </div>
+        <!--#endregion row-->
+
+        <!-- #region row  -->
+        <div class="row">
+          <!--#region pmt_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>PMT Amount</label>
+              <input type="text" class="form-control col-md-6" style="text-align: right;" readonly
+                [ngModel]="model.pmt_amount | number : '1.2-2'" amount="pmt_amount" name="p_pmt_amount">
+            </div>
+          </div>
+          <!--#endregion pmt_amount-->
+
+          <!--#region borrowing_interest_rate + borrowing_interest_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="control-label">Borrowing Rate % *</label>
+              <div class="row">
+                <div class="col-md-5">
+                  <input readonly type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.borrowing_interest_rate | number : '1.6-6'" rate="borrowing_interest_rate"
+                    name="p_borrowing_interest_rate" required #borrowing_interest_rate="ngModel" maxlength="10">
+                </div>
+                <div class="col-md-5">
+                  <input type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.borrowing_interest_amount | number : '1.2-2'" amount="borrowing_interest_amount"
+                    name="p_borrowing_interest_amount" maxlength="24" #borrowing_interest_amount="ngModel" readonly>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion borrowing_interest_rate + borrowing_interest_amount-->
+
+          <!--#region check box is_use_registration-->
+          <div class="col-md-4">
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" [ngModel]="model.is_use_registration"
+                    name="p_is_use_registration" disabled>
+                  Use Registration
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_use_registration-->
+
+          <!--#region check box is_use_replacement-->
+          <div class="col-md-4">
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" [ngModel]="model.is_use_replacement"
+                    name="p_is_use_replacement" disabled>
+                  Use Replacement
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_use_replacement-->
+
+          <!--#region check box is_use_maintenance-->
+          <div class="col-md-4">
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" [ngModel]="model.is_use_maintenance"
+                    name="p_is_use_maintenance" disabled>
+                  Use Maintenance
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_use_maintenance-->
+
+          <!--#region check box is_use_insurance-->
+          <div class="col-md-4">
+            <div class="form-check mt-3" style="margin-left: -20px;">
+              <div class="form-check">
+                <div class="row">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" [ngModel]="model.is_use_insurance"
+                      name="p_is_use_insurance" disabled>
+                    Use Insurance
+                    <span class="form-check-sign"></span>
+                  </label>
+                  <div class="col-md-4">
+                    <button style="margin-top: 0px;" type="button"
+                      [hidden]="model.is_use_insurance == false  || this.params == null"
+                      class="btn btn-warning btn-round fa fa-edit custom-button-width"
+                      (click)="btnInsurance()"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_use_insurance-->
+
+          <!--#region check box is_use_gps-->
+          <div class="col-md-4" [hidden]="this.params == null">
+            <div class="form-check mt-3" style="margin-left: -20px;">
+              <div class="form-check">
+                <div class="row">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" [ngModel]="model.is_use_gps" name="p_is_use_gps"
+                      disabled>
+                    Use GPS
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_use_gps-->
+
+          <!--#region gps_installation_amount-->
+          <div class="col-md-4" [hidden]="model.is_use_gps == false  || this.params == null">
+            <div class="form-group">
+              <label>GPS Installation Amount</label>
+              <input [disabled]="model.is_use_gps == false" type="text" class="form-control col-md-6"
+                style="text-align: right;" [ngModel]="model.gps_installation_amount | number : '1.2-2'"
+                amount="gps_installation_amount" name="p_gps_installation_amount" #gps_installation_amount="ngModel"
+                readonly>
+            </div>
+          </div>
+          <!--#endregion gps_installation_amount-->
+
+          <!--#region gps_monthly_amount-->
+          <div class="col-md-4" [hidden]="model.is_use_gps == false  || this.params == null">
+            <div class="form-group">
+              <label>GPS Monthly Amount</label>
+              <input [disabled]="model.is_use_gps == false" type="text" class="form-control col-md-6"
+                style="text-align: right;" [ngModel]="model.gps_monthly_amount | number : '1.2-2'"
+                amount="gps_monthly_amount" name="p_gps_monthly_amount" #gps_monthly_amount="ngModel" readonly>
+            </div>
+          </div>
+          <!--#endregion gps_monthly_amount-->
+        </div>
+        <!-- #endregion row  -->
+
+        <span layout="row horizontal-divider">
+          <hr flex />
+        </span>
+
+        <br>
+        <!--#region list view-->
+        <div *ngIf="params != null">
+          <div class="row">
+            <div class="col-md-12">
+              <!-- <button hidden type="button" class="btn btn-info btn-print-round custom-button-width"
+                  (click)="btnRequestBudgetApproval()" data-role="R00019905414122C">
+                  Request Budget
+                </button> -->
+              <!-- <b [hidden]="this.statusBudgetApproval != 'HOLD'" style="color: red;">BUDGET ON PROCESS</b>s
+                <b [hidden]="this.statusBudgetApproval != 'POST'" style="color: red;">BUDGET APPROVE</b>
+                <b [hidden]="this.statusBudgetApproval != 'CANCEL'" style="color: red;">BUDGET CANCEL</b> -->
+
+              <!-- <input disabled type="text" value="CANCEL"> -->
+
+              <button hidden class="btn btn-info btn-print-round custom-button-width" type="button"
+                (click)="btnLookupBudget()" data-target="#lookupModalBudget" data-toggle="modal" href="#"
+                data-role="R00019905414122C">
+                Add Budget
+              </button>
+              <button hidden type="button" class="btn btn-danger btn-round" (click)="btnDeleteAll()"
+                data-role="R00019905414123D">
+                Delete
+              </button>
+              <!--#region list view-->
+              <table id="datatableBudgetList" datatable [dtOptions]="dtOptions"
+                class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                <thead>
+                  <tr>
+                    <th class="disabled-sorting">No</th>
+                    <th style="display: none;"></th>
+                    <th>Budget Cost</th>
+                    <th>Initial Budget Amount</th>
+                    <th>Budget Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of listBudgetList; let i = index">
+                    <td [ngStyle]="{'backgroundColor': row.budget_adjustment_amount < 0 ? '#ff8080'  : 'none'}"
+                      class="if-no-edit-btn" style="text-align: center;">{{listBudgetList.numberIndex+i+1}}</td>
+                    <td [ngStyle]="{'backgroundColor': row.budget_adjustment_amount < 0 ? '#ff8080'  : 'none'}"
+                      class="if-no-edit-btn" style="display: none;"></td>
+                    <td [ngStyle]="{'backgroundColor': row.budget_adjustment_amount < 0 ? '#ff8080'  : 'none'}"
+                      style="width: 40%;">
+                      <input value="{{row.cost_code}}" name="p_cost_code" hidden>
+                      <input value="{{row.id}}" name="p_id_budget" hidden>
+                      {{row.description}}
+                    </td>
+                    <td [ngStyle]="{'backgroundColor': row.budget_adjustment_amount < 0 ? '#ff8080'  : 'none'}"
+                      style="width: 30%;text-align: right;">{{row.cost_amount_yearly | number : '1.2-2'}}</td>
+                    <td [ngStyle]="{'backgroundColor': row.budget_adjustment_amount < 0 ? '#ff8080'  : 'none'}"
+                      style="width: 30%;text-align: right;">
+                      <input class="col-md-12" style="text-align: right;" type="text"
+                        value="{{row.budget_amount | number : '1.2-2'}}" amount="budget_amount" name="p_budget_amount"
+                        (change)="costAmountYearly()" disabled>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!--#endregion list view-->
+            </div>
+          </div>
+        </div>
+        <!--#endregion list view-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="params == null">
+          <!--#region monthly_total_budget-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Total Budget</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.monthly_total_budget | number : '1.2-2'" amount="monthly_total_budget"
+                name="p_monthly_total_budget" #monthly_total_budget="ngModel">
+            </div>
+          </div>
+          <!--#endregion monthly_total_budget-->
+
+          <!--#region additional_charge_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Margin Of TOP</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.additional_charge_amount | number : '1.2-2'" amount="additional_charge_amount"
+                name="p_additional_charge_amount">
+            </div>
+          </div>
+          <!--#endregion additional_charge_amount-->
+
+          <!--#region basic_lease_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Basic Lease</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.basic_lease_amount | number : '1.2-2'" amount="basic_lease_amount"
+                name="p_basic_lease_amount">
+            </div>
+          </div>
+          <!--#endregion basic_lease_amount-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="params == null">
+          <!--#region round_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Rounding</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <input readonly type="text" class="form-control" style="text-align: center;"
+                    [ngModel]="model.round_type" name="p_round_type" #round_type="ngModel">
+                </div>
+                -
+                <div class="col-md-6">
+                  <input readonly type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.round_amount | number : '1.2-2'" amount="round_amount" name="p_round_amount"
+                    #round_amount="ngModel">
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion round_amount-->
+
+          <!--#region monthly_rental_rounded_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Monthly Rental Rounded Amount</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.monthly_rental_rounded_amount | number : '1.2-2'"
+                amount="monthly_rental_rounded_amount" name="p_monthly_rental_rounded_amount"
+                #monthly_rental_rounded_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion monthly_rental_rounded_amount-->
+
+          <!--#region lease_rounded_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Rental Rounded Amount</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.lease_rounded_amount | number : '1.2-2'" amount="lease_rounded_amount"
+                name="p_lease_rounded_amount" #lease_rounded_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion lease_rounded_amount-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="params == null">
+          <!--#region insurance_commission_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Insurance Commission Amount</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.insurance_commission_amount | number : '1.2-2'" amount="insurance_commission_amount"
+                name="p_insurance_commission_amount" #insurance_commission_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion insurance_commission_amount-->
+
+          <!--#region spaf_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>SPAF Amount</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.spaf_amount | number : '1.2-2'" amount="spaf_amount" name="p_spaf_amount"
+                #spaf_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion spaf_amount-->
+
+          <!--#region subvention_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Subvention Amount * </label>
+              <input [disabled]="this.pageType != null || this.params == null" type="text" class="form-control col-md-6"
+                style="text-align: right;" [ngModel]="model.subvention_amount | number : '1.2-2'"
+                amount="subvention_amount" name="p_subvention_amount" required #subvention_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion subvention_amount-->
+        </div>
+        <!--#endregion row-->
+
+        <!-- #region row  -->
+        <div class="row" [hidden]="params == null">
+          <!--#region average_asset_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Average Asset Amount</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.average_asset_amount | number : '1.2-2'" amount="average_asset_amount"
+                name="p_average_asset_amount" #average_asset_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion average_asset_amount-->
+
+          <!--#region yearly_profit_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Yearly Profit Amount</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.yearly_profit_amount | number : '1.2-2'" amount="yearly_profit_amount"
+                name="p_yearly_profit_amount" #yearly_profit_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion yearly_profit_amount-->
+
+          <!--#region roa_pct-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>ROA (%)</label>
+              <input readonly type="text" class="form-control col-md-4" style="text-align: right;"
+                [ngModel]="model.roa_pct | number : '1.6-6'" amount="roa_pct" name="p_roa_pct" #roa_pct="ngModel">
+            </div>
+          </div>
+          <!--#endregion roa_pct-->
+        </div>
+        <!--#endregion row-->
+      </div>
+      <!--#region wizard container-->
+      <div class="nav-tabs-navigation" [hidden]="params == null">
+        <ul id="tabs1" class="nav nav-pills nav-justified" role="tablist">
+          <li id="tabapplicationAmortDisbAmortization" class="nav-item">
+            <a class="nav-link" (click)="amortizationwiz()" href="#amortizationlist" data-toggle="tab" role="tab"
+              aria-controls="amortization" aria-selected="true">
+              Amortization
+            </a>
+          </li>
+        </ul>
+      </div>
+      <router-outlet></router-outlet>
+      <!--#endregion wizard container-->
+    </div>
+  </div>
+</div>
+
+<!--#region lookup Category-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalCategory"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupCategory" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupcategory;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupcategory.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowCategory(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Category -->
+
+<!--#region lookup SubCategory-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSubCategory"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupSubCategory" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupsubcategory;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupsubcategory.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowSubCategory(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup SubCategory-->
+
+<!--#region lookup Merk-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalMerk" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupMerk" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupmerk;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupmerk.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowMerk(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Merk-->
+
+<!--#region lookup Model-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalModel" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupModel" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupmodel;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupmodel.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowModel(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Model-->
+
+<!--#region lookup Type-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalType" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupType" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookuptype;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookuptype.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowType(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Type-->
+
+<!--#region lookup Unit-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalUnit" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupUnit" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupunit;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupunit.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowUnit(row.code, row.description, row.category_code, row.category_desc, row.subcategory_code, row.subcategory_desc, row.merk_code, row.merk_desc, row.model_code, row.model_desc, row.type_code, row.type_desc)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Unit-->
+
+<!--#region lookup FixAsset-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalFixAsset"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupFixAsset" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupfixasset;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupfixasset.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.item_name }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowFixAsset(row.code, row.item_name)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup FixAsset-->
+
+<!--#region modal lookup AssetType-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalAssetType"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupAssetType" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupassettype;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupassettype.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowAssetType(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup AssetType-->
+
+<!--#region modal lookup FakturType-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalFakturType"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupFakturType" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupfakturtype;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupfakturtype.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowFakturType(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup FakturType-->
+
+<!--#region lookup Budget-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalBudget"
+  style="margin-top: -65px">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <!--#region button add-->
+            <button class="btn btn-info btn-round" (click)="btnSelectAllLookup()" role="P001" id="button">
+              add
+            </button>
+            <!--#endregion button add--->
+            <table id="datatableLookupBudget" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th class="disabled-sorting">No</th>
+                  <th class="disabled-sorting">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="checkallLookup"
+                          [(ngModel)]="selectedAllLookup" (change)="selectAllLookup();" />
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupBudget;let i=index ">
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupBudget.numberIndex+i+1}}</td>
+                  <td class="disabled-sorting checkbox-fix-padding if-no-edit-btn">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="row.selectedLookup"
+                          (change)="checkIfAllLookupSelected($event, row.code);">
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Budget-->

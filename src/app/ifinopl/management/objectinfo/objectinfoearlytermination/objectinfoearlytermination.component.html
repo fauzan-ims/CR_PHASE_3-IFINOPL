@@ -1,0 +1,206 @@
+<div class="main-content" style="overflow-y:scroll; overflow-x:hidden; height:100%;">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner region -->
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="card-header ">
+                <h4 class="card-title">Early Termination Info</h4>
+            </div>
+            <div class="card-body" name="header" id="headerId">
+                <!--#region row-->
+                <div class="row">
+                    <!--#region code-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Termination No</label>
+                            <input type="text" class="form-control" [ngModel]="model.code" maxlength="50" name="p_code"
+                                readonly>
+                        </div>
+                    </div>
+                    <!--#endregion code-->
+
+                    <!--#region branch name-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Branch Name</label>
+                            <input type="text" class="form-control" [ngModel]="model.branch_name" maxlength="50"
+                                name="p_branch_name" readonly>
+                        </div>
+                    </div>
+                    <!--#endregion branch name-->
+
+                    <!--#region Status-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="et_status" class="control-label">Status</label>
+                            <input type="text" class="form-control" [ngModel]="model.et_status" maxlength="10"
+                                name="p_et_status" readonly>
+                        </div>
+                    </div>
+                    <!--#endregion Status-->
+                </div>
+                <!--#endregion row-->
+
+                <!--#region row-->
+                <div class="row">
+                    <!--#region Agreement-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="agreement_external_no" class="control-label">Agreement</label>
+                            <input type="text" class="form-control" [ngModel]="model.agreement_external_no" maxlength="10"
+                                name="p_agreement_external_no" readonly>
+                        </div>
+                    </div>
+                    <!--#endregion Agreement-->
+
+                    <!--#region Client Name-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Client Name</label>
+                            <input readonly type="text" class="form-control" [ngModel]="model.client_name"
+                                name="p_client_name">
+                        </div>
+                    </div>
+                    <!--#endregion Client Name-->
+
+                    <!--#region et_amount-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                [ngModel]="model.et_amount | number : '1.2-2'" amount="p_et_amount" name="p_et_amount"
+                                readonly>
+                        </div>
+                    </div>
+                    <!--#endregion et_amount-->
+                </div>
+                <!--#endregion row-->
+
+                <!--#region row-->
+                <div class="row">
+                    <!--#region Date-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                                [ngModel]="model.et_date" name="p_et_date" [options]="myDatePickerOptions"
+                                #et_date="angular-mydatepicker" autocomplete="off" readonly />
+                        </div>
+                    </div>
+                    <!--#endregion Date-->
+
+                    <!--#region Exp Date-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Expired Date</label>
+                            <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                                [ngModel]="model.et_exp_date" name="p_et_exp_date" [options]="myDatePickerOptions"
+                                #et_exp_date="angular-mydatepicker" autocomplete="off" readonly />
+                        </div>
+                    </div>
+                    <!--#endregion Exp Date-->
+
+                    <!--#region Remarks-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="et_remarks" class="control-label">Remark</label>
+                            <textarea type="text" class="form-control" [ngModel]="model.et_remarks" maxlength="4000"
+                                name="p_et_remarks" readonly #et_remarks="ngModel"></textarea>
+                        </div>
+                    </div>
+                    <!--#endregion Remarks-->
+                </div>
+                <!--#endregion row-->
+            </div>
+
+            <span layout="row horizontal-divider">
+                <hr flex />
+            </span>
+
+            <!-- #region asset list -->
+            <div class="card-header ">
+                <h4 class="card-title">Asset List</h4>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <!--#publicserviceaddres list view-->
+                        <table id="datatabledetail" datatable [dtOptions]="dtOptionsAsset"
+                            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Name </th>
+                                    <th>Outstanding Rental Amount</th>
+                                    <th>Terminate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of listearlyterminationdetail;let i=index ">
+                                    <td style="display: none;"></td>
+                                    <td style="text-align: center;">{{listearlyterminationdetail.numberIndex+i+1}}</td>
+                                    <td class="if-no-edit-btn" style="width: 60%;">{{row.asset_name}}</td>
+                                    <td style="width: 30%;text-align: right;">{{row.os_rental_amount | number :'1.2-2'}}</td>
+                                    <td style="width: 10%;text-align: center;">{{row.terminate}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!--#endpublicserviceaddres list view-->
+                    </div>
+                </div>
+            </div>
+            <!-- #endregion asset list -->
+
+            <span layout="row horizontal-divider">
+                <hr flex />
+            </span>
+
+            <div class="card-header">
+                <h4 class="card-title">Transaction List</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <!--#earlyterminationtransaction list view-->
+                        <table id="datatableTransaction" datatable [dtOptions]="dtOptionsTransaction"
+                            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Transaction</th>
+                                    <th>Transaction Amount</th>
+                                    <th>Discount (%)</th>
+                                    <th>Discount Amount</th>
+                                    <th>Total Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of listearlyterminationtransaction; let i=index">
+                                    <td style="display: none;"><input type="hidden" value="{{row.id}}" name="p_id">
+                                    </td>
+                                    <td style="text-align: center;">
+                                        {{listearlyterminationtransaction.numberIndex+i+1}}</td>
+                                    <td style="width: 20%;">{{row.transaction_name}}</td>
+                                    <td style="width: 20%; text-align: right;">{{row.transaction_amount | number :'1.2-2'}}</td>
+                                    <td style="width: 20%; text-align: right;">{{row.disc_pct}}</td>
+                                    <td style="width: 20%; text-align: right;">{{row.disc_amount | number :'1.2-2'}}</td>
+                                    <td style="width: 20%; text-align: right;">{{row.total_amount | number :'1.2-2'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!--#earlyterminationtransaction list view-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

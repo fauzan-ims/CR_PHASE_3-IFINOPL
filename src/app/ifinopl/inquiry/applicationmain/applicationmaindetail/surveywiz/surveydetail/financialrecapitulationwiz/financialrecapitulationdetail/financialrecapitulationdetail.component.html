@@ -1,0 +1,387 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body ">
+        <!--#region form-->
+        <form #financialrecapitulationdetailForm="ngForm"
+          (ngSubmit)="onFormSubmit(financialrecapitulationdetailForm.value, financialrecapitulationdetailForm.valid)">
+
+          <!--#region button  back-->
+          <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+          <!--#endregion button  back-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region p_application_no-->
+            <input type="text" class="form-control" [ngModel]="this.param" maxlength="50" name="p_application_code"
+              hidden>
+            <!--#endregion p_application_no-->
+
+            <!--#region Code-->
+            <input type="text" class="form-control" [ngModel]="model.code" maxlength="50" name="p_code" hidden>
+            <!--#endregion code-->
+
+            <!--#region from_periode_year/from_periode_month-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="from_periode_year" class="control-label">From Month - Year *</label>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <!-- <label>Document Status</label> -->
+                      <select disabled class="form-control" [ngModel]="model.from_periode_month"
+                        name="p_from_periode_month">
+                        <option value='01'>January</option>
+                        <option value='02'>February</option>
+                        <option value='03'>March</option>
+                        <option value='04'>April</option>
+                        <option value='05'>May</option>
+                        <option value='06'>June</option>
+                        <option value='07'>July</option>
+                        <option value='08'>August</option>
+                        <option value='09'>September</option>
+                        <option value='10'>October</option>
+                        <option value='11'>November</option>
+                        <option value='12'>December</option>
+                      </select>
+                    </div>
+                  </div>
+                  -
+                  <div class="col-md-7">
+                    <input disabled type="text" class="form-control col-md-6" [ngModel]="model.from_periode_year"
+                      name="p_from_periode_year" required #from_periode_year="ngModel" maxlength="4" minlength="4"
+                      pattern="{{NumberOnlyPattern}}">
+                  </div>
+                </div>
+                <small
+                  *ngIf="(from_periode_year.errors?.required && from_periode_year.touched) || (from_periode_year.errors?.required && financialrecapitulationdetailForm.submitted)"
+                  class="text-danger">
+                  From Year is required
+                </small>
+                <small *ngIf="from_periode_year.errors?.pattern && from_periode_year.touched" class="text-danger">
+                  From Year is required and format should be <i>0-9</i>
+                </small>
+              </div>
+            </div>
+            <!--#endregion from_periode_year/from_periode_month-->
+
+            <!--#region to_periode_year/to_periode_month-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="to_periode_year" class="control-label">To Month - Year *</label>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <!-- <label>Document Status</label> -->
+                      <select disabled class="form-control" [ngModel]="model.to_periode_month"
+                        name="p_to_periode_month">
+                        <option value='01'>January</option>
+                        <option value='02'>February</option>
+                        <option value='03'>March</option>
+                        <option value='04'>April</option>
+                        <option value='05'>May</option>
+                        <option value='06'>June</option>
+                        <option value='07'>July</option>
+                        <option value='08'>August</option>
+                        <option value='09'>September</option>
+                        <option value='10'>October</option>
+                        <option value='11'>November</option>
+                        <option value='12'>December</option>
+                      </select>
+                    </div>
+                  </div>
+                  -
+                  <div class="col-md-7">
+                    <input disabled type="text" class="form-control col-md-6" [ngModel]="model.to_periode_year"
+                      name="p_to_periode_year" required #to_periode_year="ngModel" maxlength="4" minlength="4"
+                      pattern="{{NumberOnlyPattern}}">
+                  </div>
+                </div>
+                <small
+                  *ngIf="(to_periode_year.errors?.required && to_periode_year.touched) || (to_periode_year.errors?.required && financialrecapitulationdetailForm.submitted)"
+                  class="text-danger">
+                  To Year is required
+                </small>
+                <small *ngIf="to_periode_year.errors?.pattern && to_periode_year.touched" class="text-danger">
+                  To Year is required and format should be <i>0-9</i>
+                </small>
+              </div>
+            </div>
+            <!--#endregion to_periode_year/to_periode_month-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region current_rasio_pct-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label style="cursor: pointer;" title="Total Asset / Total Liabilitas">Current Ratio (%)</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.current_rasio_pct | number : '1.6-6'" name="p_current_rasio_pct" maxlength="10"
+                  rate="current_rasio_pct" disabled>
+              </div>
+            </div>
+            <!--#endregion current_rasio_pct-->
+
+            <!--#region debet_to_asset_pct-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label style="cursor: pointer;" title="Total Liabilitas / Total Asset">Debt To Asset (%)</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.debet_to_asset_pct | number : '1.6-6'" name="p_debet_to_asset_pct" maxlength="10"
+                  amount="debet_to_asset_pct" disabled>
+              </div>
+            </div>
+            <!--#endregion debet_to_asset_pct-->
+
+            <!--#region return_on_equity_pct-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label style="cursor: pointer;" title="Laba Ditahan / Modal Saham">Return On Equity (%)</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.return_on_equity_pct | number : '1.6-6'" name="p_return_on_equity_pct" maxlength="10"
+                  amount="return_on_equity_pct" disabled>
+              </div>
+            </div>
+            <!--#endregion return_on_equity_pct-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row" hidden>
+            <!--#region month_installment_amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Current Installment</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.month_installment_amount | number : '1.2-2'" name="p_month_installment_amount"
+                  maxlength="24" rate="month_installment_amount" disabled>
+              </div>
+            </div>
+            <!--#endregion month_installment_amount-->
+
+            <!--#region total_outstanding_amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Total Outstanding</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.total_outstanding_amount | number : '1.2-2'" name="p_total_outstanding_amount"
+                  maxlength="24" amount="total_outstanding_amount" disabled>
+              </div>
+            </div>
+            <!--#endregion total_outstanding_amount-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row" hidden>
+            <!--#region plafond_max_amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>OS Plafond</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.plafond_max_amount | number : '1.2-2'" name="p_plafond_max_amount" maxlength="24"
+                  rate="plafond_max_amount" disabled>
+              </div>
+            </div>
+            <!--#endregion plafond_max_amount-->
+
+            <!--#region presentation_installment_amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Total Overdue</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.presentation_installment_amount | number : '1.2-2'"
+                  name="p_presentation_installment_amount" maxlength="24" amount="presentation_installment_amount"
+                  disabled>
+              </div>
+            </div>
+            <!--#endregion presentation_installment_amount-->
+          </div>
+          <!--#endregion row-->
+        </form>
+        <!--#endregion form -->
+        <div *ngIf="params != null">
+          <!--#region list view-->
+          <span layout="row horizontal-divider">
+            <hr flex />
+          </span>
+          <div class="row">
+            <div class="col-md-12">
+              <h4 class="card-title">Financial Statement</h4>
+              <div class="card-body">
+                <div class="toolbar">
+                  <!--#region report_type-->
+                  <div class="col-md-4">
+                    <label class="labelgsubcode" (click)="resteReport()" style="cursor: pointer;" title="CLEAR">Report Type</label>
+                    <div class="form-group">
+                      <div class="col-md-12">
+                        <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                          type="button" (click)="btnLookupReportType()" data-target="#lookupModalReportType"
+                          data-toggle="modal" href="#">
+                          <i class="fa fa-search-plus"></i></button> {{report_type_desc}}
+                      </div>
+                    </div>
+                  </div>
+                  <!--#endregion report_type-->
+                </div>
+
+                <!--#region list view-->
+                <table id="datatableApplicationFinancialRecapitulationDetail" datatable [dtOptions]="dtOptions"
+                  class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                  <thead>
+                    <tr>
+                      <th style="display: none;"></th>
+                      <th class="disabled-sorting">No</th>
+                      <th>Sandi</th>
+                      <th>Description</th>
+                      <th>From Value</th>
+                      <th>To Value</th>
+                      <th>Variance (%)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of listfinancialrecapitulationdetail; let i = index">
+                      <td class="if-no-edit-btn" style="display: none;"></td>
+                      <td class="if-no-edit-btn" style="text-align: center;">
+                        {{listfinancialrecapitulationdetail.numberIndex+i+1}}</td>
+                      <td style="width: 10%;text-align: center;">{{row.code}}</td>
+                      <td style="width: 30%;">{{row.statement_description}}</td>
+                      <td style="width: 20%;text-align: right;">
+                        <input type="hidden" value="{{row.id}}" name="p_id">
+                        <input id="statement_from_value_amount{{i}}" (blur)="onBlur($event,i,'amount1')"
+                          (focus)="onFocus($event,i,'amount')" class="text-right" type="text"
+                          value="{{row.statement_from_value_amount | number : '1.2-2'}}"
+                          amount="statement_from_value_amount" name="p_statement_from_value_amount" disabled
+                          [hidden]="row.type === 'HEADER'">
+                      </td>
+                      <td style="width: 20%;text-align: right;">
+                        <input id="statement_to_value_amount{{i}}" (blur)="onBlur($event,i,'amount2')"
+                          (focus)="onFocus($event,i,'amount')" class="text-right" type="text"
+                          value="{{row.statement_to_value_amount | number : '1.2-2'}}"
+                          amount="statement_to_value_amount" name="p_statement_to_value_amount" disabled
+                          [hidden]="row.type === 'HEADER'">
+                      </td>
+                      <td style="width: 20%;text-align: right;">
+                        <span [hidden]="row.type === 'HEADER'">{{row.statement_ratio_pct | number : '1.6-6' }}</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!--#endregion list view-->
+              </div>
+            </div>
+          </div>
+          <!--#endregion list view-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region lookup SysGeneralSubcode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSysGeneralSubcode"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <!--#region button add-->
+          <button class="btn btn-info btn-round" (click)="btnSelectAllLookup()" role="P001" id="button">
+            Add
+          </button>
+          <!--#endregion button add--->
+          <div class="card-body col-md-12">
+            <table id="datatablelookupSysGeneralSubcode" class="table table-striped table-bordered hover"
+              cellspacing="0" style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th class="disabled-sorting">No</th>
+                  <th class="disabled-sorting">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="checkallLookup"
+                          [(ngModel)]="selectedAllLookup" (change)="selectAllLookup();" />
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </th>
+                  <th>Code</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupsysgeneralsubcode;let i=index ">
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupsysgeneralsubcode.numberIndex+i+1}}
+                  </td>
+                  <td class="disabled-sorting if-no-edit-btn">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="row.selectedLookup"
+                          (change)="checkIfAllLookupSelected($event, row.code);">
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup SysGeneralSubcode-->
+
+<!--#region lookup ReportType-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalReportType"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupReportType" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupReportType;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupReportType.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowReportType(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup ReportType-->

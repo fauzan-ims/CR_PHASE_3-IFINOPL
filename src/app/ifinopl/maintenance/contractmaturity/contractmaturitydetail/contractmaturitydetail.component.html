@@ -1,0 +1,532 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header ">
+          <h4 class="card-title">Contract Info</h4>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #contractmaturitydetailForm="ngForm"
+            (ngSubmit)="onFormSubmit(contractmaturitydetailForm.value, contractmaturitydetailForm.valid)">
+
+            <!--#region button save, proceed, cancel, back-->
+            <button [hidden]="model.status !== 'HOLD'" type="submit" class="btn btn-info btn-round"
+              data-role="R00020730002074C">Save</button>
+            <button [hidden]="model.status !== 'HOLD'" type="button" class="btn btn-success btn-round"
+              (click)="btnProceed()" data-role="R00020730002074O">Proceed</button>
+            <button [hidden]="model.status !== 'HOLD'" type="button" class="btn btn-warning btn-round"
+              (click)="btnCancel(model.agreement_no)" data-role="R00020730002074R">Cancel</button>
+            <button [hidden]="this.maturityCode === null || model.status === 'CANCEL' || model.result === 'STOP'"
+              type="button" style='float: right;' class="btn btn-success btn-round custom-button-width"
+              (click)="btnViewApproval()" data-toggle="modal" data-target="#lookupModalApproval" href="#">
+              View Approval
+            </button>
+            <button [hidden]="this.maturityCode === null || model.status == 'CANCEL'" type="button" (click)="btnPrint()"
+              style='float: right;' class="btn btn-info btn-round custom-button-width" data-role="R00020710012072P"
+              [hidden]="model.result !== 'STOP'">Print Maturity</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button save, proceed, cancel, back-->
+            <input hidden type="text" class="form-control" [ngModel]="model.code" name="p_code" readonly>
+            <!--#region row-->
+            <div class="row">
+              <!--#region agreement_no -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Agreement No</label>
+                  <input type="text" class="form-control" [ngModel]="model.agreement_no" name="p_agreement_no" hidden>
+                  <input type="text" class="form-control" [ngModel]="model.agreement_external_no"
+                    name="p_agreement_external_no" readonly>
+                </div>
+              </div>
+              <!--#endregion agreement_no -->
+
+              <!--#region client_name -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Client</label>
+                  <input type="text" class="form-control" [ngModel]="model.client_name" name="p_client_name" readonly>
+                </div>
+              </div>
+              <!--#endregion client_name -->
+
+              <!--#region status -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.status" name="p_status" readonly>
+                </div>
+              </div>
+              <!--#endregion status -->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region branch_name -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Branch</label>
+                  <input type="text" class="form-control" [ngModel]="model.branch_name" name="p_branch_name" readonly>
+                </div>
+              </div>
+              <!--#endregion branch_name -->
+
+              <!--#region date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="p_date" class="control-label">Date *</label>
+                  <input [ngStyle]="getStyles(model.status !== 'HOLD')" class="form-control col-md-6"
+                    placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.date" name="p_date"
+                    [options]="myDatePickerOptions" required #p_date="ngModel" #date="angular-mydatepicker"
+                    autocomplete="off" (click)="date.toggleCalendar()" [readonly]="model.status !== 'HOLD'" />
+                  <small
+                    *ngIf="p_date.errors?.required && p_date.touched || (p_date.errors?.required && contractmaturitydetailForm.submitted)"
+                    class="text-danger">
+                    Date is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion date-->
+
+              <!--#region remark-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="p_remark" class="control-label">Remark *</label>
+                  <textarea [disabled]="model.status !== 'HOLD'" type="text" class="form-control"
+                    [ngModel]="model.remark" name="p_remark" required #remark="ngModel" maxlength="4000"></textarea>
+                  <small
+                    *ngIf="(remark.errors?.required && remark.touched) || (remark.errors?.required && contractmaturitydetailForm.submitted)"
+                    class="text-danger">
+                    Remark is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion remark-->
+
+              <!--#region total_extend_periode -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Total Extend Periode</label>
+                  <input type="text" class="form-control col-md-2" [ngModel]="model.total_extend_periode"
+                    name="p_total_extend_periode" pattern="{{NumberOnlyPattern}}" #total_extend_periode="ngModel"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion total_extend_periode -->
+
+            </div>
+            <!--#endregion row-->
+            <span layout="row horizontal-divider">
+              <hr flex />
+            </span>
+
+            <!--#region row-->
+            <div class="row mt-2">
+              <!--#region result-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="p_result" class="control-label">Result</label>
+                  <select [disabled]="model.status !== 'HOLD'" class="form-control col-md-6" name="p_result"
+                    #result="ngModel" [ngModel]="model.result" (change)="changeConfirmationResult($event)">
+                    <option value='STOP'>STOP</option>
+                    <option value='CONTINUE'>CONTINUE RENTAL</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion result-->
+
+              <!--#region old_billing_type_desc -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Old Billing Type</label>
+                  <input type="text" class="form-control col-md-6" [ngModel]="model.old_billing_type_desc"
+                    name="p_old_billing_type_desc" #old_billing_type_desc="ngModel" readonly>
+                </div>
+              </div>
+              <!--#endregion old_billing_type_desc -->
+
+              <!--#region new_billing_type-->
+              <div class="col-md-4">
+                <label class="labelgsubcode">New Billing Type *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="model.status !== 'HOLD' || model.result === 'STOP'"
+                      class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      (click)="btnLookupBillingType()" data-target="#lookupModalBillingType" data-toggle="modal"
+                      href="#">
+                      <i class="fa fa-search-plus"></i></button> {{model.new_billing_type_desc}}
+                    <input required type="hidden" name="p_new_billing_type" [ngModel]="model.new_billing_type"
+                      #new_billing_type="ngModel" />
+                  </div>
+                  <small
+                    *ngIf="(new_billing_type.errors?.required && new_billing_type.touched) || (new_billing_type.errors?.required && contractmaturitydetailForm.submitted)"
+                    class="text-danger">
+                    New Billing Type is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion new_billing_type-->
+
+              <!--#region additional_periode -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Additional Periode (Month) </label><label [hidden]="model.result === 'STOP'"> *</label>
+                  <input type="text" class="form-control col-md-2" [ngModel]="model.additional_periode"
+                    name="p_additional_periode" pattern="{{NumberOnlyPattern}}" #additional_periode="ngModel"
+                    [readonly]="model.status !== 'HOLD' || model.result === 'STOP'">
+                  <small *ngIf="additional_periode.errors?.pattern && additional_periode.touched" class="text-danger">
+                    Additional Periode is required and format should be <i>0-9</i>
+                  </small>
+                  <small
+                    *ngIf="(additional_periode.errors?.required && additional_periode.touched) || (additional_periode.errors?.required && contractmaturitydetailForm.submitted)"
+                    class="text-danger">
+                    Additional Periode is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion additional_periode -->
+
+              <!--#region pickup_date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="p_pickup_date" class="control-label">Estimate Pickup Date </label>
+                  <input [ngStyle]="getStyles(model.status !== 'HOLD')" class="form-control col-md-6"
+                    placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.pickup_date" name="p_pickup_date"
+                    [options]="myDatePickerOptions" #p_pickup_date="ngModel" #pickup_date="angular-mydatepicker"
+                    autocomplete="off" (click)="pickup_date.toggleCalendar()" [readonly]="model.status !== 'HOLD'" />
+                </div>
+              </div>
+              <!--#endregion date-->
+
+              <!--#region file_path <i class="fa fa-check">-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>File</label>
+                  <div class="row" style="margin-left: 30px;">
+                    <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                      <div [hidden]="this.tampHidden !== true || model.status !== 'HOLD'">
+                        <span class="btn btn-info btn-round btn-file ">
+                          <input type="file" (change)="onUpload($event, this.maturityCode)" />
+                          <span>UPLOAD</span>
+                        </span>
+                        {{tempFile}}
+                      </div>
+                      <div [hidden]="this.tampHidden !== false">
+                        <span>
+                          <a class="btn btn-danger btn-round btn-file custom-button-width" type="button"
+                            (click)="deleteImage(model.file_name, model.file_paths)" [hidden]="model.status !== 'HOLD'">
+                            <span><i class="fa fa-trash"></i></span></a>
+                          <a class="btn btn-primary btn-round btn-file custom-button-width" type="button"
+                            (click)="priviewFile(model.file_name, model.file_paths)">
+                            <span><i class="fa fa-eye"></i></span></a>
+                        </span>
+                        <div> {{model.file_name}}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion file_path-->
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+          <span layout="row horizontal-divider">
+            <hr flex />
+          </span>
+          <!--#region list view-->
+          <div class="row">
+            <span layout="row horizontal-divider">
+              <hr flex />
+            </span>
+            <div class="col-md-12">
+              <div class="card-header">
+                <h4 class="card-title">Asset List</h4>
+              </div>
+              <div class="card-body">
+                <!--#region button delete-->
+                <!-- <button [hidden]="model.status !== 'HOLD'" class="btn btn-info btn-round" type="button"
+                  data-role="R00020730022074C" (click)="btnSaveList()">
+                  Save
+                </button> -->
+                <!--#endregion button delete-->
+
+                <!--#region list view-->
+                <table id="datatableApplicationAsset" datatable [dtOptions]="dtOptions"
+                  class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                  <thead>
+                    <tr>
+                      <th style="display: none;"></th>
+                      <th class="disabled-sorting">No</th>
+                      <th>Asset No</th>
+                      <th>Maturity Date</th>
+                      <!-- <th>Result</th>
+                      <th>Additional Periode</th>
+                      <th>Pickup Date</th> -->
+                      <th>Overdue Invoice</th>
+                      <th>Outstanding Rental</th>
+                      <th>Continue</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of listapplicationasset;let i=index ">
+                      <td class="if-no-edit-btn" style="display: none;">
+                        <input hidden name="p_id_detail" [ngModel]="row.id">
+                      </td>
+                      <td class="if-no-edit-btn" style="text-align: center;">{{listapplicationasset.numberIndex+i+1}}
+                      </td>
+                      <td style="width: 35%;">{{row.asset_no}} <br> {{row.asset_name}} <br>
+                        {{row.plat_no}} <br>
+                        {{row.chassis_no}} <br>
+                        {{row.engine_no}}</td>
+                      <td style="width: 25%; text-align: center;">{{row.maturity_date}} </td>
+
+                      <!-- <td style="width: 15%; text-align: center;">
+                        <select [disabled]="model.status !== 'HOLD'" class='form-control' name="p_result"
+                          [ngModel]="row.result" (change)="changeConfirmationResult(row.id, $event, i)">
+                          <option value='STOP'>STOP</option>
+                          <option value='CONTINUE'>CONTINUE RENTAL</option>
+                        </select>
+                      </td> -->
+
+                      <!-- <td style="width: 5%;">
+                        <input [readonly]="model.status !== 'HOLD' || row.result === 'STOP'" style="text-align: center;"
+                          id="additional_periode{{i}}" class="form-control" type="number"
+                          value="{{row.additional_periode}}" name="p_additional_periode">
+                      </td> -->
+
+                      <!-- <td style="width: 15%;">
+                        <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker [disabled]="row.result === 'CONTINUE'"
+                         name="p_pickup_date" [options]="myDatePickerOptions" [ngModel]="row.pickup_date" 
+                          #p_pickup_date="ngModel"#date="angular-mydatepicker" autocomplete="off" (click)="p_pickup_date.toggleCalendar()" />
+                      </td> -->
+
+                      <!-- <td style="width: 15%;">
+                        <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker
+                          value="{{row.pickup_date}}" [disabled]="row.result === 'CONTINUE'" name="p_pickup_date"
+                          [options]="myDatePickerOptions" (click)="p_pickup_date.toggleCalendar()"
+                          #p_pickup_date="angular-mydatepicker" autocomplete="off" />
+                      </td> -->
+                      <!-- <td style="width: 25%;">
+                        <textarea [readonly]="model.status !== 'HOLD'" id="remark{{i}}" class="form-control" type="text"
+                          value="{{row.remark}}" name="p_remark_detail">  </textarea>
+                      </td> -->
+                      <td style="width: 20%;text-align: right;">{{row.overdue_invice | number : '1.2-2'}}</td>
+                      <td style="width: 20%;text-align: right;">{{row.outstanding_rental | number : '1.2-2'}}</td>
+                      <td class="if-no-edit-btn" style="text-align: center;">
+                        <label class="switch">
+                          <input [disabled]="model.status !== 'HOLD'" type="checkbox" [ngModel]="row.result"
+                            (click)="btnContinue(row.id)">
+                          <span class="slider round"></span>
+                        </label>
+                      </td>
+                      <td style="text-align: center;">
+                        <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit"
+                          (click)="btnEdit(row.id)"><i class="fa fa-edit"></i></a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!--#endregion list view-->
+              </div>
+            </div>
+          </div>
+          <!--#endregion list view-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--#region lookup Asset-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalAsset" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupAsset" class="table table-striped table-bordered hover" cellspacing="0"
+              style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupasset;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupasset.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowAsset(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Asset -->
+
+<!--#region lookup employee-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalEmployee"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableEmployee" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Name</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupemployee;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupemployee.numberIndex+i+1}}</td>
+                  <td style="text-align: center; width: 20%;">{{ row.code }}</td>
+                  <td style="text-align: left; width: 80%;">{{ row.name }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowModule(row.code, row.name)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup employee-->
+
+<!--#region lookup Approval-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalApproval"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+
+            <table id="datatableLookupApproval" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Employee</th>
+                  <th>Position</th>
+                  <th>Level</th>
+                  <th>Result</th>
+                  <th>Remark</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupapproval;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupapproval.numberIndex+i+1}}</td>
+                  <td class="if-no-edit-btn" style="width: 30%;text-align: left;">
+                    {{row.emp_name}} {{row.is_mandatory_level}}</td>
+                  <td style="width: 20%;text-align: left;">{{row.emp_position_name}}</td>
+                  <td style="width: 5%;text-align: center;">{{row.approval_level}}</td>
+                  <td style="width: 15%;text-align: center;">
+                    {{row.result_status}}<br>
+                    {{row.result_date}}
+                  </td>
+                  <td style="width: 30%;">{{row.result_remarks}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Approval-->
+
+<!--#region lookup BillingType-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalBillingType"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupBillingType" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupbillingtype;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupbillingtype.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowBillingType(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup BillingType-->

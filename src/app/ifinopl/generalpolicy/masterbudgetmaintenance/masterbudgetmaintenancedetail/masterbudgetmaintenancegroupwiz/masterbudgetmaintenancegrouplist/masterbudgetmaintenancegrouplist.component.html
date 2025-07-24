@@ -1,0 +1,135 @@
+<router-outlet></router-outlet>
+
+<div id="hideMainPanelWiz" class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body">
+        <div class="toolbar">
+          <!--#region button add, delete-->
+          <button class="btn btn-info btn-round" type="button" (click)="btnLookupGroupService()"
+            data-target="#lookupModalGroupService" data-role="R00024040000004C" data-toggle="modal" href="#">
+            Add </button>
+          <button class="btn btn-danger btn-round" type="button"
+            (click)="btnDeleteAll()" data-role="R00024040000005D">
+            Delete
+          </button>
+          <!--#endregion button add, delete-->
+        </div>
+
+        <!--#region list view-->
+        <table id="datatableMaintenanceGroup" datatable [dtOptions]="dtOptions"
+          class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th class="disabled-sorting">No</th>
+              <th class="disabled-sorting">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" id="checkall" [(ngModel)]="selectedAll"
+                      (change)="selectAllTable();" />
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </th>
+              <th>Group</th>
+              <th>Probability (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of listmaintenancegroup;let i=index ">
+              <td class="if-no-edit-btn" style="text-align: center;">{{listmaintenancegroup.numberIndex+i+1}}</td>
+              <td class="disabled-sorting">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                      (change)="checkIfAllTableSelected($event, row.asset_no);">
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </td>
+              <td style="width: 65%;">{{row.group_description}}
+                <input type="text" class="form-control" value="{{row.code}}" name="p_codes" hidden>
+              </td>
+              <td style="width: 35%;text-align: right;">
+                <div class="form-group">
+                  <input type="text" class="form-control" style="text-align: right;" maxlength="5"
+                    value="{{row.probability_pct | number : '1.6-6'}}" rate="probability_pct" name="p_probability_pct"
+                    id="probability_pct{{i}}" (change)="changeProbability($event, row.code)">
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!--#endregion list view-->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region lookupModalGroupService-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalGroupService"
+  style="margin-top: -65px">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <!--#region button add-->
+            <button class="btn btn-info btn-round" (click)="btnSelectAllLookup()" data-role="R00024040000004C"
+              id="button">
+              add
+            </button>
+            <!--#endregion button add--->
+            <table id="datatableLookupGroupService" class="table table-striped table-bordered row-border hover"
+              cellspacing="0" style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th class="disabled-sorting">No</th>
+                  <th class="disabled-sorting">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="checkallLookup"
+                          [(ngModel)]="selectedAllLookup" (change)="selectAllLookup();" />
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </th>
+                  <th>Group</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupgroupservice; let i=index">
+                  <td style="text-align: center;">{{lookupgroupservice.numberIndex+i+1}}</td>
+                  <td class="disabled-sorting">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="row.selectedLookup"
+                          (change)="checkIfAllLookupSelected();">
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </td>
+                  <td style="width: 100%;" class="if-no-edit-btn">{{ row.general_subcode_desc }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookupModalGroupService-->

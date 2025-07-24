@@ -1,0 +1,45 @@
+<!-- spinner region -->
+<div class="panel-container-spinner" *ngIf="showSpinner">
+  <app-spinner class="spinner-container"></app-spinner>
+</div>
+<!-- end spinner region -->
+<div class="main-content margin-wizard-content">
+  <div class="row">
+    <div class="col-md-12">
+      <!--#list view-->
+      <table id="datatableAgreementloglist" datatable [dtOptions]="dtOptions"
+        class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th style="display: none;"></th>
+            <th class="disabled-sorting">No</th>
+            <th>Task Date</th>
+            <th>Posting Date</th>
+            <th>Result</th>
+            <th>Promise Date</th>
+            <th>Next FU Date</th>
+            <th>Remark</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of listdeskcolllog;let i=index ">
+            <td style="display: none;"></td>
+            <td style="text-align: center;">{{listdeskcolllog.numberIndex+i+1}}</td>
+            <td style="text-align: center; width: 15%;" class='if-no-edit-btn'>
+              {{row.task_date}}</td>
+            <td style="text-align: center; width: 15%;" class='if-no-edit-btn'>
+              {{row.posting_date}}</td>
+            <td style="text-align: center; width: 15%">
+              {{row.result_name}}</td>
+            <td style="text-align: center; width: 15%;" class='if-no-edit-btn'>
+              {{row.promise_date}}</td>
+            <td style="text-align: center; width: 15%;" class='if-no-edit-btn'>
+              {{row.next_fu_date}}</td>
+            <td style="text-align: left; width: 25%">{{row.remarks}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <!--#endlist view-->
+    </div>
+  </div>
+</div>

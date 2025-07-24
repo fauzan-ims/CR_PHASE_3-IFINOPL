@@ -1,0 +1,53 @@
+<router-outlet></router-outlet>
+
+<div id="hideMainPanelWiz" class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="main-content margin-wizard-content">
+    <div class="row">
+      <div class="col-md-12">
+        <!--#region list view-->
+        <table id="datatableAmortizationList" datatable [dtOptions]="dtOptions"
+          class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th class="disabled-sorting">No</th>
+              <th style="display: none;"></th>
+              <th>Invoice No</th>
+              <th>Invoice Type</th>
+              <th>Billing Date</th>
+              <th>Billing Due Date</th>
+              <th>Invoice Amount</th>
+              <th>OVD Days</th>
+              <th>Status</th>
+              <th>Paid Date</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of listdeskcolldetailamort;let i=index ">
+              <td style="display: none;"></td>
+              <td style="text-align: center;">{{listdeskcolldetailamort.numberIndex+i+1}}</td>
+              <td style="text-align: center; width: 15%;">{{row.invoice_no}} </td>
+              <td style="width: 15%;">{{row.invoice_type}}</td>
+              <td style="text-align: center; width: 10%;">{{row.billing_date}}</td>
+              <td style="text-align: center; width: 10%;">{{row.billing_due_date}}</td>
+              <td style="text-align: right; width: 15%;">{{row.total_billing_amount | number : '1.2-2'}}</td>
+              <td style="text-align: center; width: 10%;">{{row.ovd_days}}</td>
+              <td style="text-align: center; width: 15%;">{{row.invoice_status}}</td>
+              <td style="text-align: center; width: 10%;">{{row.invoice_due_date}}</td>
+              <td style="text-align: center;">
+                <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit" (click)="btnEdit(row.id, row.invoice_no)"><i
+                    class="fa fa-edit"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!--#endregion list view-->
+      </div>
+    </div>
+  </div>
+</div>

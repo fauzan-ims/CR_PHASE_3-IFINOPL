@@ -1,0 +1,156 @@
+<div class="main-content margin-wizard-content">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card-body">
+          <!-- region row -->
+          <div class="row">
+  
+            <!--#region lookup Branch Code -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="branch_name" class="control-label labelmodule" (click)="btnClearBranch()"
+                style="cursor: pointer;" title="Clear">Branch</label>
+                <div class="col-md-12 buttons">
+                  <span>
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      (click)="btnLookupSysBranch()" data-toggle="modal" data-target="#lookupModalSysBranchcode"
+                      href="#"><i class="fa fa-search-plus"></i></button>
+                    {{branch_name}}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <!--#endregion lookup Branch code -->
+  
+            <div class="col-md-4">
+              <div class="row">
+                <!--#region from date-->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="pdc_date">From Date</label>
+                    <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.from_date"
+                      name="p_from_date" [options]="myDatePickerOptions" (click)="from_date.toggleCalendar()"
+                      #p_from_date="ngModel" #from_date="angular-mydatepicker" autocomplete="off"
+                      (dateChanged)="FromDate($event)" />
+                  </div>
+                </div>
+                <!--#endregion from date-->
+  
+                <!--#region to date-->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="pdc_date">To Date</label>
+                    <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.to_date"
+                      name="p_to_date" [options]="myDatePickerOptions" (click)="to_date.toggleCalendar()"
+                      #p_transfer_value_date="ngModel" #to_date="angular-mydatepicker" autocomplete="off"
+                      (dateChanged)="ToDate($event)" />
+                  </div>
+                </div>
+                <!--#endregion to date-->
+              </div>
+            </div>
+            <!-- </div> -->
+            <!--#endregion date-->
+  
+            <!--#region Letter Type-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>SP Type</label>
+                <select class='form-control col-md-6' [ngModel]="this.letter_type" (change)="PageType($event)">
+                  <option value='ALL'>ALL</option>
+                  <option value='SP1'>SP1</option>
+                  <option value='SP2'>SP2</option>
+                  <option value='SOMASI'>SOMASI</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion Letter Type-->
+  
+          </div>
+          <!-- #endregion row -->
+  
+          <!--#Sp1 list view-->
+          <table id="datatableHistoryList" datatable [dtOptions]="dtOptions"
+            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th style="display: none;"></th>
+                <th class="disabled-sorting">No</th>
+                <th>SP No</th>
+                <th>Branch</th>
+                <th>SP Date</th>
+                <th>SP / Generate Type</th>
+                <th>Agreement No</th>
+                <th>overdue Days</th>
+                <th>Installment No</th>
+                <th>Last Print By</th>
+                <th>Delivery Date / Status</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of listhistory;let i=index ">
+                <td style="display: none;"></td>
+                <td style="text-align: center;">{{listhistory.numberIndex+i+1}}</td>
+                <td style="text-align: center; width: 15%;">{{row.letter_no}}</td>
+                <td style="text-align: left; width: 10%;">{{row.branch_name}}</td>
+                <td style="text-align: center; width: 10%;">{{row.letter_date}}</td>
+                <td style="text-align: left; width: 5%;">{{row.letter_type}} <br>{{row.generate_type}}</td>
+                <td style="text-align: left; width: 20%;">{{row.agreement_no}}<br>{{row.client_name}}</td>
+                <td style="text-align: center; width: 5%;">{{row.overdue_days}}</td>
+                <td style="text-align: center; width: 5%;">{{row.installment_no}}</td>
+                <td style="text-align: center; width: 10%;">{{row.last_print_by}}</td>
+                <td style="text-align: center; width: 10%;">{{row.delivery_date}} <br> {{row.delivery_status}} </td>
+                <td style="text-align: center; width: 10%;">{{row.letter_status}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <!--#endSp1 list view-->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!--#region modal lookup Branch-->
+  <div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSysBranchcode"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body" style="overflow:hidden;">
+          <div class="col-md-12">
+            <div class="card-body col-md-12">
+  
+              <table id="datatableLookupBranchcode" class="table table-striped table-bordered hover" cellspacing="0"
+                style="min-width: 100%;">
+                <thead>
+                  <tr>
+                    <th style="display: none;"></th>
+                    <th class="disabled-sorting">No</th> 
+                    <th style="width: 25%;">Code</th>
+                    <th style="width: 75%;">Name</th>
+                    <th style="text-align: center;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of lookupbranchcode ;let i=index ">
+                    <td style="display: none;"></td>
+                    <td style="text-align: center;">{{lookupbranchcode.numberIndex+i+1}}</td> 
+                    <td style="text-align: center; width: 25%;">{{ row.code }}</td>
+                    <td style="text-align: left; width: 75%;">{{ row.name }}</td>
+                    <td class="text-center">
+                      <button class="btn btn-outline-default btn-round"
+                        (click)="btnSelectRowBranchcode(row.code,row.name)">Select</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--#endregion modal lookup Branch-->
