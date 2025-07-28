@@ -84,9 +84,12 @@
                 <th>Branch</th>
                 <th>SP Date</th>
                 <th>SP / Generate Type</th>
-                <th>Agreement No</th>
+                <th>Client Name</th>
                 <th>Overdue Days</th>
-                <th>Installment No</th>
+                <th>Total Overdue Amount</th>
+                <th>Total Agreement</th>
+                <th>Total Asset</th>
+                <th>Total Monthly Rental Amount</th>
               </tr>
             </thead>
             <tbody>
@@ -101,13 +104,16 @@
                     </label>
                   </div>
                 </td>
-                <td style="text-align: center; width: 20%;">{{row.letter_no}}</td>
-                <td style="text-align: left; width: 15%;">{{row.branch_name}}</td>
+                <td style="text-align: center; width: 10%;">{{row.letter_no}}</td>
+                <td style="text-align: left; width: 10%;">{{row.branch_name}}</td>
                 <td style="text-align: center; width: 10%;">{{row.letter_date}}</td>
                 <td style="text-align: center; width: 10%;">{{row.letter_type}} <br> {{row.generate_type}} </td>
-                <td style="text-align: left; width: 20%;">{{row.agreement_external_no}}<br>{{row.client_name}}</td>
+                <td style="text-align: left; width: 10%;">{{row.client_name}}</td>
                 <td style="text-align: center; width: 10%;">{{row.overdue_days}}</td>
-                <td style="text-align: center; width: 15%;">{{row.installment_no}}</td>
+                <td style="text-align: center; width: 10%;">{{row.total_overdue_amount | number : '1.2-2'}}</td>
+                <td style="text-align: center; width: 10%;">{{row.total_agreement_count}}</td>
+                <td style="text-align: center; width: 10%;">{{row.total_asset_count}}</td>
+                <td style="text-align: center; width: 10%;">{{row.total_monthly_rental_amount | number : '1.2-2'}}</td>
               </tr>
             </tbody>
           </table>

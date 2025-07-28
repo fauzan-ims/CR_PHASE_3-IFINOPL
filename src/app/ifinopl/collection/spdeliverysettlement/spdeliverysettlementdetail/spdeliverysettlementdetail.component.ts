@@ -46,11 +46,16 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
   private base64textString: string;
   private tampDocumentCode: String;
   private tamps = new Array();
+  private tempFileSize: any;
+  public lookupReasonData: any = [];
+  public isFailed: Boolean = false;
+  public isButton: Boolean = false;
 
 
   private APIController: String = 'WarningLetterDelivery';
   private APIControllerWarningLetterDeliveryDetail: String = 'WarningLetterDeliveryDetail';
   private APIControllerSysGlobalparam: String = 'SysGlobalparam';
+  private APIControllerType: String = 'SysGeneralSubcode';
 
   private APIRouteForPriviewFile: String = 'Priview';
   private APIRouteForUploadFile: String = 'Upload';
@@ -63,6 +68,8 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
   private APIRouteForGetRows: String = 'GetRowsForSettlement';
   private APIRouteForLookup: String = 'GetRowsForLookup';
   private APIRouteForSettlement: String = 'ExecSpForSettlement';
+  private APIRouteForSave: String = 'ExecSpForSave';
+  private APIRouteLookup: String = 'GetRowsForLookup';
   public idDetailList: string;
   public readOnlyListDetail: string;
 
@@ -99,6 +106,7 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
       this.callGetrow();
       this.callGetrowDoc();
       this.loadData();
+      this.wizard();
     } else {
       this.showSpinner = false;
     }
@@ -185,10 +193,19 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
           const parse = JSON.parse(res);
           const parsedata = this.getrowNgb(parse.data[0]);
 
+          setTimeout(() => {
+            this.amortizationnwiz();
+          }, 200);
+
           // mapper dbtoui
           Object.assign(this.model, parsedata);
           // end mapper dbtoui
-
+          if (this.model.delivery_status == 'DONE')
+          {
+            this.isButton = true
+          }else{
+            this.isButton = false
+          }
           this.showSpinner = false;
         },
         error => {
@@ -196,6 +213,10 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
         });
   }
   //#endregion getrow data
+
+  amortizationnwiz() {
+    this.route.navigate(['/collection/subspdeliverysettlementlist/spdeliverysettlementdetail/' + this.param + '/spsettlementamortizationlist', this.param], { skipLocationChange: true });
+  }
 
   //#region getrow data
   callGetrowDoc() {
@@ -269,7 +290,6 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
 
   //#region  form submit
   onFormSubmit(spdeliverysettlementForm: NgForm, isValid: boolean) {
-    // validation form submit
     if (!isValid) {
       swal({
         title: 'Warning',
@@ -277,18 +297,14 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
         buttonsStyling: false,
         confirmButtonClass: 'btn btn-warning',
         type: 'warning'
-      }).catch(swal.noop)
+        }).catch(swal.noop);
       return;
-    } else {
-      this.showSpinner = true;
     }
+
     this.spdeliverysettlementData = this.JSToNumberFloats(spdeliverysettlementForm);
-    this.spdeliverysettlementData.p_generate_type = 'MANUAL';
     const usersJson: any[] = Array.of(this.spdeliverysettlementData);
-    if (this.param != null) {
-      this.spdeliverysettlementData.p_code = this.param;
       // call web service
-      this.dalservice.Update(usersJson, this.APIController, this.APIRouteForUpdate)
+      this.dalservice.Update(usersJson, this.APIController, this.APIRouteForSave)
         .subscribe(
           res => {
             this.showSpinner = false;
@@ -307,7 +323,46 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
 
           });
     }
-  }
+  // onFormSubmit(spdeliverysettlementForm: NgForm, isValid: boolean) {
+  //   // validation form submit
+  //   if (!isValid) {
+  //     swal({
+  //       title: 'Warning',
+  //       text: 'Please Fill a Mandatory Field OR Format Is Invalid',
+  //       buttonsStyling: false,
+  //       confirmButtonClass: 'btn btn-warning',
+  //       type: 'warning'
+  //     }).catch(swal.noop)
+  //     return;
+  //   } else {
+  //     this.showSpinner = true;
+  //   }
+  //   this.spdeliverysettlementData = this.JSToNumberFloats(spdeliverysettlementForm);
+  //   this.spdeliverysettlementData.p_generate_type = 'MANUAL';
+  //   const usersJson: any[] = Array.of(this.spdeliverysettlementData);
+  //   if (this.param != null) {
+  //     this.spdeliverysettlementData.p_code = this.param;
+  //     // call web service
+  //     this.dalservice.Update(usersJson, this.APIController, this.APIRouteForUpdate)
+  //       .subscribe(
+  //         res => {
+  //           this.showSpinner = false;
+  //           const parse = JSON.parse(res);
+  //           if (parse.result === 1) {
+  //             this.showNotification('bottom', 'right', 'success');
+  //             this.callGetrow();
+  //           } else {
+  //             this.swalPopUpMsg(parse.data);
+  //           }
+  //         },
+  //         error => {
+  //           this.showSpinner = false;
+  //           const parse = JSON.parse(error);
+  //           this.swalPopUpMsg(parse.data);
+
+  //         });
+  //   }
+  // }
   //#endregion form submit
 
   //#region button back
@@ -317,198 +372,199 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
   }
   //#endregion button back
 
-  //#region button select image
-  onUpload(event, code: String) {
-    const files = event.target.files;
-    const file = files[0];
+  // //#region button select image
+  // onUpload(event, code: String) {
+  //   const files = event.target.files;
+  //   const file = files[0];
 
-    if (this.CheckFileSize(files[0].size, this.model.value)) {
-      this.swalPopUpMsg('V;File size must be less or equal to ' + this.model.value + ' MB');
-      $('#datatableSpDeliverySettlementDetail').DataTable().ajax.reload(); //ganti dengan nama datatable jika ini di list
-    } else {
-      if (event.target.files && event.target.files[0]) {
-        const reader = new FileReader();
+  //   if (this.CheckFileSize(files[0].size, this.model.value)) {
+  //     this.swalPopUpMsg('V;File size must be less or equal to ' + this.model.value + ' MB');
+  //     $('#datatableSpDeliverySettlementDetail').DataTable().ajax.reload(); //ganti dengan nama datatable jika ini di list
+  //   } else {
+  //     if (event.target.files && event.target.files[0]) {
+  //       const reader = new FileReader();
 
-        reader.readAsDataURL(event.target.files[0]); // read file as data url
+  //       reader.readAsDataURL(event.target.files[0]); // read file as data url
 
-        // tslint:disable-next-line:no-shadowed-variable
-        reader.onload = (event) => {
-          reader.onload = this.handleFile.bind(this);
-          reader.readAsBinaryString(file);
-        }
-      }
-      this.tempFile = files[0].name;
-      this.tampDocumentCode = code;
-    }
-  }
-  //#endregion button select image
+  //       // tslint:disable-next-line:no-shadowed-variable
+  //       reader.onload = (event) => {
+  //         reader.onload = this.handleFile.bind(this);
+  //         reader.readAsBinaryString(file);
+  //       }
+  //     }
+  //     this.tempFile = files[0].name;
+  //     this.tampDocumentCode = code;
+  //   }
+  // }
+  // //#endregion button select image
 
-  //#region convert to base64
-  handleFile(event) {
-    this.showSpinner = true;
-    const binaryString = event.target.result;
-    this.base64textString = btoa(binaryString);
+  // //#region convert to base64
+  // handleFile(event) {
+  //   this.showSpinner = true;
+  //   const binaryString = event.target.result;
+  //   this.base64textString = btoa(binaryString);
 
-    this.tamps.push({
-      p_header: 'SP_DELIVERY_SETTLEMENT',
-      p_module: 'IFINOPL',
-      p_child: this.param,
-      p_id: this.tampDocumentCode,
-      p_file_paths: this.tampDocumentCode,
-      p_file_name: this.tempFile,
-      p_base64: this.base64textString,
+  //   this.tamps.push({
+  //     p_header: 'SP_DELIVERY_SETTLEMENT',
+  //     p_module: 'IFINOPL',
+  //     p_child: this.param,
+  //     p_id: this.tampDocumentCode,
+  //     p_file_paths: this.tampDocumentCode,
+  //     p_file_name: this.tempFile,
+  //     p_base64: this.base64textString,
 
-    });
-    console.log(this.tamps);
+  //   });
+  //   console.log(this.tamps);
 
 
-    this.dalservice.UploadFile(this.tamps, this.APIController, this.APIRouteForUploadFile)
-      .subscribe(
-        // tslint:disable-next-line:no-shadowed-variable
-        res => {
-          this.tamps = new Array();
-          // tslint:disable-next-line:no-shadowed-variable
-          const parses = JSON.parse(res);
-          if (parses.result === 1) {
-            this.showSpinner = false;
-          } else {
-            this.showSpinner = false;
-            this.swalPopUpMsg(parses.message);
-          }
-          $('#datatableSpDeliverySettlementDetail').DataTable().ajax.reload();
-        },
-        error => {
-          this.showSpinner = false;
-          this.tamps = new Array();
-          // tslint:disable-next-line:no-shadowed-variable
-          const parses = JSON.parse(error);
-          this.swalPopUpMsg(parses.message);
-          $('#datatableSpDeliverySettlementDetail').DataTable().ajax.reload();
-        });
-  }
-  //#endregion convert to base64
+  //   this.dalservice.UploadFile(this.tamps, this.APIController, this.APIRouteForUploadFile)
+  //     .subscribe(
+  //       // tslint:disable-next-line:no-shadowed-variable
+  //       res => {
+  //         this.tamps = new Array();
+  //         // tslint:disable-next-line:no-shadowed-variable
+  //         const parses = JSON.parse(res);
+  //         if (parses.result === 1) {
+  //           this.showSpinner = false;
+  //         } else {
+  //           this.showSpinner = false;
+  //           this.swalPopUpMsg(parses.message);
+  //         }
+  //         $('#datatableSpDeliverySettlementDetail').DataTable().ajax.reload();
+  //       },
+  //       error => {
+  //         this.showSpinner = false;
+  //         this.tamps = new Array();
+  //         // tslint:disable-next-line:no-shadowed-variable
+  //         const parses = JSON.parse(error);
+  //         this.swalPopUpMsg(parses.message);
+  //         $('#datatableSpDeliverySettlementDetail').DataTable().ajax.reload();
+  //       });
+  // }
+  // //#endregion convert to base64
 
-  //#region button priview image
-  previewFile(row1, row2) {
-    this.showSpinner = true;
-    const usersJson: any[] = Array.of();
+  // //#region button priview image
+  // previewFile(row1, row2) {
+  //   this.showSpinner = true;
+  //   const usersJson: any[] = Array.of();
 
-    usersJson.push({
-      p_file_name: row1,
-      p_file_paths: row2
-    });
+  //   usersJson.push({
+  //     p_file_name: row1,
+  //     p_file_paths: row2
+  //   });
 
-    this.dalservice.PriviewFile(usersJson, this.APIController, this.APIRouteForPriviewFile)
-      .subscribe(
-        (res) => {
-          const parse = JSON.parse(res);
-          if (parse.value.filename !== '') {
-            const fileType = parse.value.filename.split('.').pop();
-            if (fileType === 'PNG') {
-              this.downloadFile(parse.value.data, parse.value.filename, fileType);
-              // const newTab = window.open();
-              // newTab.document.body.innerHTML = this.pngFile(parse.value.data);
-              // this.showSpinner = false;
-            }
-            if (fileType === 'JPEG' || fileType === 'JPG') {
-              this.downloadFile(parse.value.data, parse.value.filename, fileType);
-              // const newTab = window.open();
-              // newTab.document.body.innerHTML = this.jpgFile(parse.value.data);
-              // this.showSpinner = false;
-            }
-            if (fileType === 'PDF') {
-              this.downloadFile(parse.value.data, parse.value.filename, 'pdf');
-              // const newTab = window.open();
-              // newTab.document.body.innerHTML = this.pdfFile(parse.value.data);
-              // this.showSpinner = false;
-            }
-            if (fileType === 'DOCX' || fileType === 'DOC') {
-              this.downloadFile(parse.value.data, parse.value.filename, 'msword');
-            }
-            if (fileType === 'XLSX') {
-              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.ms-excel');
-            }
-            if (fileType === 'PPTX') {
-              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.ms-powerpoint');
-            }
-            if (fileType === 'TXT') {
-              this.downloadFile(parse.value.data, parse.value.filename, 'txt');
-            }
-            if (fileType === 'ODT' || fileType === 'ODS' || fileType === 'ODP') {
-              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.oasis.opendocument');
-            }
-            if (fileType === 'ZIP') {
-              this.downloadFile(parse.value.data, parse.value.filename, 'zip');
-            }
-            if (fileType === '7Z') {
-              this.downloadFile(parse.value.data, parse.value.filename, 'x-7z-compressed');
-            }
-            if (fileType === 'RAR') {
-              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.rar');
-            }
-          }
-        }
-      );
-  }
+  //   this.dalservice.PriviewFile(usersJson, this.APIController, this.APIRouteForPriviewFile)
+  //     .subscribe(
+  //       (res) => {
+  //         const parse = JSON.parse(res);
+  //         if (parse.value.filename !== '') {
+  //           const fileType = parse.value.filename.split('.').pop();
+  //           if (fileType === 'PNG') {
+  //             this.downloadFile(parse.value.data, parse.value.filename, fileType);
+  //             // const newTab = window.open();
+  //             // newTab.document.body.innerHTML = this.pngFile(parse.value.data);
+  //             // this.showSpinner = false;
+  //           }
+  //           if (fileType === 'JPEG' || fileType === 'JPG') {
+  //             this.downloadFile(parse.value.data, parse.value.filename, fileType);
+  //             // const newTab = window.open();
+  //             // newTab.document.body.innerHTML = this.jpgFile(parse.value.data);
+  //             // this.showSpinner = false;
+  //           }
+  //           if (fileType === 'PDF') {
+  //             this.downloadFile(parse.value.data, parse.value.filename, 'pdf');
+  //             // const newTab = window.open();
+  //             // newTab.document.body.innerHTML = this.pdfFile(parse.value.data);
+  //             // this.showSpinner = false;
+  //           }
+  //           if (fileType === 'DOCX' || fileType === 'DOC') {
+  //             this.downloadFile(parse.value.data, parse.value.filename, 'msword');
+  //           }
+  //           if (fileType === 'XLSX') {
+  //             this.downloadFile(parse.value.data, parse.value.filename, 'vnd.ms-excel');
+  //           }
+  //           if (fileType === 'PPTX') {
+  //             this.downloadFile(parse.value.data, parse.value.filename, 'vnd.ms-powerpoint');
+  //           }
+  //           if (fileType === 'TXT') {
+  //             this.downloadFile(parse.value.data, parse.value.filename, 'txt');
+  //           }
+  //           if (fileType === 'ODT' || fileType === 'ODS' || fileType === 'ODP') {
+  //             this.downloadFile(parse.value.data, parse.value.filename, 'vnd.oasis.opendocument');
+  //           }
+  //           if (fileType === 'ZIP') {
+  //             this.downloadFile(parse.value.data, parse.value.filename, 'zip');
+  //           }
+  //           if (fileType === '7Z') {
+  //             this.downloadFile(parse.value.data, parse.value.filename, 'x-7z-compressed');
+  //           }
+  //           if (fileType === 'RAR') {
+  //             this.downloadFile(parse.value.data, parse.value.filename, 'vnd.rar');
+  //           }
+  //         }
+  //       }
+  //     );
+  // }
 
-  downloadFile(base64: string, fileName: string, extention: string) {
-    var temp = 'data:application/' + extention + ';base64,'
-      + encodeURIComponent(base64);
-    var download = document.createElement('a');
-    download.href = temp;
-    download.download = fileName;
-    document.body.appendChild(download);
-    download.click();
-    document.body.removeChild(download);
-    this.showSpinner = false;
-  }
-  //#endregion button priview image
+  // downloadFile(base64: string, fileName: string, extention: string) {
+  //   var temp = 'data:application/' + extention + ';base64,'
+  //     + encodeURIComponent(base64);
+  //   var download = document.createElement('a');
+  //   download.href = temp;
+  //   download.download = fileName;
+  //   document.body.appendChild(download);
+  //   download.click();
+  //   document.body.removeChild(download);
+  //   this.showSpinner = false;
+  // }
+  // //#endregion button priview image
 
-  //#region button delete image
-  deleteImage(code: String, paths: any, file_name: any) {
-    this.showSpinner = true;
-    const usersJson: any[] = Array.of();
-    usersJson.push({
-      'p_id': code,
-      'p_file_name': file_name,
-      'p_file_paths': paths
-    });
+  // //#region button delete image
+  // deleteImage(code: String, paths: any, file_name: any) {
+  //   this.showSpinner = true;
+  //   const usersJson: any[] = Array.of();
+  //   usersJson.push({
+  //     'p_id': code,
+  //     'p_file_name': file_name,
+  //     'p_file_paths': paths
+  //   });
 
-    swal({
-      allowOutsideClick: false,
-      title: 'Are you sure?',
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonClass: 'btn btn-success',
-      cancelButtonClass: 'btn btn-danger',
-      confirmButtonText: 'Yes',
-      buttonsStyling: false
-    }).then((result) => {
-      this.showSpinner = true;
-      if (result.value) {
-        this.dalservice.DeleteFile(usersJson, this.APIController, this.APIRouteForDeleteFile)
-          .subscribe(
-            res => {
-              const parse = JSON.parse(res);
-              if (parse.result === 1) {
-                this.showSpinner = false;
-                this.showNotification('bottom', 'right', 'success');
-              } else {
-                this.showSpinner = false;
-                this.swalPopUpMsg(parse.message);
-              }
-              $('#datatableSpDeliverySettlementDetail').DataTable().ajax.reload();
-            },
-            error => {
-              this.showSpinner = false;
-              const parse = JSON.parse(error);
-              this.swalPopUpMsg(parse.message);
-            });
-      } else {
-        this.showSpinner = false;
-      }
-    });
-  }
+  //   swal({
+  //     allowOutsideClick: false,
+  //     title: 'Are you sure?',
+  //     type: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonClass: 'btn btn-success',
+  //     cancelButtonClass: 'btn btn-danger',
+  //     confirmButtonText: 'Yes',
+  //     buttonsStyling: false
+  //   }).then((result) => {
+  //     this.showSpinner = true;
+  //     if (result.value) {
+  //       this.dalservice.DeleteFile(usersJson, this.APIController, this.APIRouteForDeleteFile)
+  //         .subscribe(
+  //           res => {
+  //             const parse = JSON.parse(res);
+  //             if (parse.result === 1) {
+  //               this.showSpinner = false;
+  //               this.showNotification('bottom', 'right', 'success');
+  //             } else {
+  //               this.showSpinner = false;
+  //               this.swalPopUpMsg(parse.message);
+  //             }
+  //             $('#datatableSpDeliverySettlementDetail').DataTable().ajax.reload();
+  //           },
+  //           error => {
+  //             this.showSpinner = false;
+  //             const parse = JSON.parse(error);
+  //             this.swalPopUpMsg(parse.message);
+  //           });
+  //     } else {
+  //       this.showSpinner = false;
+  //     }
+  //   });
+  // }
+
   //#endregion button delete image
   //#region lookup branch
   btnLookupBranch() {
@@ -673,192 +729,454 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
   //#endregion lookup DeliveryCollector
 
   //#region ddl ReceivedStatus
-  ReceivedStatus(status: any, id: any) {
+  // ReceivedStatus(status: any, id: any) {
 
-    this.idDetailList = id;
+  //   this.idDetailList = id;
 
-    this.readOnlyListDetail = status.target.value;
+  //   this.readOnlyListDetail = status.target.value;
 
-    this.listspdeliverysettlement = [];
+  //   this.listspdeliverysettlement = [];
 
-    var i = 0;
+  //   var i = 0;
 
-    const getID = $('[name="p_id"]')
-      .map(function () { return $(this).val(); }).get();
+  //   const getID = $('[name="p_id"]')
+  //     .map(function () { return $(this).val(); }).get();
 
-    const getStatus = $('[name="p_received_status"]')
-      .map(function () { return $(this).val(); }).get();
+  //   const getStatus = $('[name="p_received_status"]')
+  //     .map(function () { return $(this).val(); }).get();
 
-    const getReceived = $('[name="p_received_by"]')
-      .map(function () { return $(this).val(); }).get();
+  //   const getReceived = $('[name="p_received_by"]')
+  //     .map(function () { return $(this).val(); }).get();
 
-    const getDate = $('[name="p_received_date"]')
-      .map(function () { return $(this).val(); }).get();
+  //   const getDate = $('[name="p_received_date"]')
+  //     .map(function () { return $(this).val(); }).get();
 
-    const getRemarks = $('[name="p_received_remarks"]')
-      .map(function () { return $(this).val(); }).get();
+  //   const getRemarks = $('[name="p_received_remarks"]')
+  //     .map(function () { return $(this).val(); }).get();
 
-    while (i < getID.length) {
+  //   while (i < getID.length) {
 
-      while (i < getStatus.length) {
+  //     while (i < getStatus.length) {
 
-        while (i < getReceived.length) {
+  //       while (i < getReceived.length) {
 
-          while (i < getDate.length) {
+  //         while (i < getDate.length) {
 
-            while (i < getRemarks.length) {
+  //           while (i < getRemarks.length) {
 
-              if (getID[i] == this.idDetailList) {
-                if (getDate[i] === '') {
-                  getDate[i] = undefined;
-                }
-                if (getRemarks[i] === '') {
-                  getRemarks[i] = undefined;
-                }
-                if (getReceived[i] === '') {
-                  getReceived[i] = undefined;
-                }
+  //             if (getID[i] == this.idDetailList) {
+  //               if (getDate[i] === '') {
+  //                 getDate[i] = undefined;
+  //               }
+  //               if (getRemarks[i] === '') {
+  //                 getRemarks[i] = undefined;
+  //               }
+  //               if (getReceived[i] === '') {
+  //                 getReceived[i] = undefined;
+  //               }
 
-                this.listspdeliverysettlement = [{
-                  p_id: getID[i],
-                  p_received_status: getStatus[i],
-                  p_received_by: getReceived[i],
-                  p_received_date: this.dateFormatList(getDate[i]),
-                  p_received_remarks: getRemarks[i],
-                }];
+  //               this.listspdeliverysettlement = [{
+  //                 p_id: getID[i],
+  //                 p_received_status: getStatus[i],
+  //                 p_received_by: getReceived[i],
+  //                 p_received_date: this.dateFormatList(getDate[i]),
+  //                 p_received_remarks: getRemarks[i],
+  //               }];
 
-                //#region web service
-                this.dalservice.Update(this.listspdeliverysettlement, this.APIControllerWarningLetterDeliveryDetail, this.APIRouteForUpdate)
-                  .subscribe(
-                    res => {
-                      const parse = JSON.parse(res);
-                      if (parse.result === 1) {
-                        $('#datatableSpDeliverySettlementDetail').DataTable().ajax.reload();
-                      } else {
-                      }
-                    },
-                    error => {
-                      const parse = JSON.parse(error);
-                    });
-                //#endregion web service
-              }
+  //               //#region web service
+  //               this.dalservice.Update(this.listspdeliverysettlement, this.APIControllerWarningLetterDeliveryDetail, this.APIRouteForUpdate)
+  //                 .subscribe(
+  //                   res => {
+  //                     const parse = JSON.parse(res);
+  //                     if (parse.result === 1) {
+  //                       $('#datatableSpDeliverySettlementDetail').DataTable().ajax.reload();
+  //                     } else {
+  //                     }
+  //                   },
+  //                   error => {
+  //                     const parse = JSON.parse(error);
+  //                   });
+  //               //#endregion web service
+  //             }
 
-              i++;
-            }
-            i++;
-          }
-          i++;
-        }
-        i++;
-      }
-      i++;
-    }
+  //             i++;
+  //           }
+  //           i++;
+  //         }
+  //         i++;
+  //       }
+  //       i++;
+  //     }
+  //     i++;
+  //   }
 
-  }
+  // }
   //#endregion ddl ReceivedStatus
 
   //#region button save in list
-  btnSaveList() {
+  // btnSaveList() {
 
-    this.listspdeliverysettlement = [];
+  //   this.listspdeliverysettlement = [];
 
-    let i = 0;
-    let index = 0;
+  //   let i = 0;
+  //   let index = 0;
 
-    const getID = $('[name="p_id"]')
-      .map(function () { return $(this).val(); }).get();
+  //   const getID = $('[name="p_id"]')
+  //     .map(function () { return $(this).val(); }).get();
 
-    const getStatus = $('[name="p_received_status"]')
-      .map(function () { return $(this).val(); }).get();
+  //   const getStatus = $('[name="p_received_status"]')
+  //     .map(function () { return $(this).val(); }).get();
 
-    const getReceived = $('[name="p_received_by"]')
-      .map(function () { return $(this).val(); }).get();
+  //   const getReceived = $('[name="p_received_by"]')
+  //     .map(function () { return $(this).val(); }).get();
 
-    const getDate = $('[name="p_received_date"]')
-      .map(function () { return $(this).val(); }).get();
+  //   const getDate = $('[name="p_received_date"]')
+  //     .map(function () { return $(this).val(); }).get();
 
-    const getRemarks = $('[name="p_received_remarks"]')
-      .map(function () { return $(this).val(); }).get();
+  //   const getRemarks = $('[name="p_received_remarks"]')
+  //     .map(function () { return $(this).val(); }).get();
 
-    while (i < getID.length) {
+  //   while (i < getID.length) {
 
-      while (i < getStatus.length) {
+  //     while (i < getStatus.length) {
 
-        while (i < getReceived.length) {
+  //       while (i < getReceived.length) {
 
-          while (i < getDate.length) {
+  //         while (i < getDate.length) {
 
-            while (i < getRemarks.length) {
+  //           while (i < getRemarks.length) {
 
-              if (getStatus[i] === 'NOT DELIVERED') {
-                getDate[i] = undefined;
-                getReceived[i] = undefined;
+  //             if (getStatus[i] === 'NOT DELIVERED') {
+  //               getDate[i] = undefined;
+  //               getReceived[i] = undefined;
+  //             } else {
+  //               if (getDate[i] === '' || getRemarks[i] === '' || getReceived[i] === '') {
+  //                 swal({
+  //                   title: 'Warning',
+  //                   text: 'Please Fill a Mandatory Field',
+  //                   buttonsStyling: false,
+  //                   confirmButtonClass: 'btn btn-warning',
+  //                   type: 'warning'
+  //                 }).catch(swal.noop)
+  //                 return;
+  //               }
+  //             }
+
+  //             this.listspdeliverysettlement = [{
+  //               p_id: getID[i],
+  //               p_received_status: getStatus[i],
+  //               p_received_by: getReceived[i],
+  //               p_received_date: this.dateFormatList(getDate[i]),
+  //               p_received_remarks: getRemarks[i],
+  //               // p_file_name: getFileName[i],
+  //               // p_paths: getpaths[i],
+  //               //p_base64: this.tamps[i].base64
+  //             }];
+
+  //             this.showSpinner = true;
+  //             //#region web service
+
+  //             this.dalservice.Update(this.listspdeliverysettlement, this.APIControllerWarningLetterDeliveryDetail, this.APIRouteForUpdate)
+  //               .subscribe(
+  //                 res => {
+  //                   const parse = JSON.parse(res);
+  //                   if (parse.result === 1) {
+  //                     index += 1;
+  //                     if (index === getID.length) {
+  //                       this.showSpinner = false;
+  //                       index += 1;
+  //                       this.showNotification('bottom', 'right', 'success');
+  //                       $('#datatableSpDeliverySettlementDetail').DataTable().ajax.reload();
+  //                     }
+
+  //                   } else {
+  //                     this.showSpinner = false;
+  //                     this.swalPopUpMsg(parse.data);
+  //                   }
+  //                 },
+  //                 error => {
+  //                   this.showSpinner = false;
+  //                   const parse = JSON.parse(error);
+  //                   this.swalPopUpMsg(parse.data);
+  //                 });
+  //             //#endregion web service
+  //             i++;
+  //           }
+  //           i++;
+  //         }
+  //         i++;
+  //       }
+  //       i++;
+  //     }
+  //     i++;
+  //   }
+
+  // }
+  // dateFomatList(arg0: any) {
+  //   throw new Error('Method not implemented.');
+  // }
+  //#endregion button save in list
+
+  //#region button priview image
+  priviewFile(row1, row2) {
+    this.showSpinner = true;
+    const usersJson: any[] = Array.of();
+
+    usersJson.push({
+      p_file_name: row1,
+      p_file_paths: row2
+    });
+
+    this.dalservice.PriviewFile(usersJson, this.APIController, this.APIRouteForPriviewFile)
+      .subscribe(
+        (res) => {
+          const parse = JSON.parse(res);
+
+          if (parse.value.filename !== '') {
+            const fileType = parse.value.filename.split('.').pop();
+            if (fileType === 'PNG') {
+              this.downloadFile(parse.value.data, parse.value.filename, fileType);
+              // const newTab = window.open();
+              // newTab.document.body.innerHTML = this.pngFile(parse.value.data);
+              // this.showSpinner = false;
+            }
+            if (fileType === 'JPEG' || fileType === 'JPG') {
+              this.downloadFile(parse.value.data, parse.value.filename, fileType);
+              // const newTab = window.open();
+              // newTab.document.body.innerHTML = this.jpgFile(parse.value.data);
+              // this.showSpinner = false;
+            }
+            if (fileType === 'PDF') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'pdf');
+            }
+            if (fileType === 'DOCX' || fileType === 'DOC') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'msword');
+            }
+            if (fileType === 'XLSX') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.ms-excel');
+            }
+            if (fileType === 'PPTX') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.ms-powerpoint');
+            }
+            if (fileType === 'TXT') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'txt');
+            }
+            if (fileType === 'ODT' || fileType === 'ODS' || fileType === 'ODP') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.oasis.opendocument');
+            }
+            if (fileType === 'ZIP') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'zip');
+            }
+            if (fileType === '7Z') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'x-7z-compressed');
+            }
+            if (fileType === 'RAR') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.rar');
+            }
+          }
+        }
+      );
+  }
+  //#endregion button priview image
+
+  downloadFile(base64: string, fileName: string, extention: string) {
+    var temp = 'data:application/' + extention + ';base64,'
+      + encodeURIComponent(base64);
+    var download = document.createElement('a');
+    download.href = temp;
+    download.download = fileName;
+    document.body.appendChild(download);
+    download.click();
+    document.body.removeChild(download);
+    this.showSpinner = false;
+  }
+
+  //#region button select image
+  onUpload(event, code) {
+    const files = event.target.files;
+    const file = files[0];
+
+    if (this.CheckFileSize(files[0].size, this.tempFileSize)) {
+      this.swalPopUpMsg('V;File size must be less or equal to ' + this.tempFileSize + ' MB');
               } else {
-                if (getDate[i] === '' || getRemarks[i] === '' || getReceived[i] === '') {
-                  swal({
-                    title: 'Warning',
-                    text: 'Please Fill a Mandatory Field',
-                    buttonsStyling: false,
-                    confirmButtonClass: 'btn btn-warning',
-                    type: 'warning'
-                  }).catch(swal.noop)
-                  return;
-                }
-              }
+      if (event.target.files && event.target.files[0]) {
+        const reader = new FileReader();
 
-              this.listspdeliverysettlement = [{
-                p_id: getID[i],
-                p_received_status: getStatus[i],
-                p_received_by: getReceived[i],
-                p_received_date: this.dateFormatList(getDate[i]),
-                p_received_remarks: getRemarks[i],
-                // p_file_name: getFileName[i],
-                // p_paths: getpaths[i],
-                //p_base64: this.tamps[i].base64
-              }];
+        reader.readAsDataURL(event.target.files[0]); // read file as data url
 
+        // tslint:disable-next-line:no-shadowed-variable
+        reader.onload = (event) => {
+          reader.onload = this.handleFile.bind(this);
+          reader.readAsBinaryString(file);
+        }
+      }
+      this.tempFile = files[0].name;
+      this.tampDocumentCode = code;
+    }
+  }
+  //#endregion button select image 
+
+  //#region convert to base64
+  handleFile(event) {
+    this.showSpinner = true;
+    const binaryString = event.target.result;
+    this.base64textString = btoa(binaryString);
+
+    this.tamps.push({
+      p_header: 'TEMPSPDELIVERY',
+      p_module: 'IFINOPL',
+      p_child: this.tampDocumentCode,
+      p_code: this.tampDocumentCode,
+      p_file_paths: this.tampDocumentCode,
+      p_file_name: this.tempFile,
+      p_base64: this.base64textString
+    });
+
+    // console.log(this.tamps)
+    this.dalservice.UploadFile(this.tamps, this.APIController, this.APIRouteForUploadFile)
+      .subscribe(
+        res => {
+          this.tamps = new Array();
+          const parses = JSON.parse(res);
+          if (parses.result === 1) {
+            $('#fileControl').val('');
+            this.showSpinner = false;
+          } else {
+            $('#fileControl').val('');
+            this.showSpinner = false;
+            this.swalPopUpMsg(parses.message);
+          }
+          // $('#spdeliverysettlementForm').DataTable().ajax.reload();
+          this.callGetrow();
+        },
+        error => {
+          $('#fileControl').val('');
+          this.showSpinner = false;
+          this.tamps = new Array();
+          const parses = JSON.parse(error);
+          this.swalPopUpMsg(parses.message);
+        });
+  }
+  //#endregion convert to base64
+
+  //#region button delete image
+  deleteImage(file_name: any, path: any, code: any) {
+    console.log(code)
+    console.log(this.tampDocumentCode)
               this.showSpinner = true;
-              //#region web service
+    const usersJson: any[] = Array.of();
+    usersJson.push({
+      'p_code': code,
+      'p_file_name': file_name,
+      'p_file_paths': path
+    });
 
-              this.dalservice.Update(this.listspdeliverysettlement, this.APIControllerWarningLetterDeliveryDetail, this.APIRouteForUpdate)
+    swal({
+      allowOutsideClick: false,
+      title: 'Are you sure?',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonClass: 'btn btn-success',
+      cancelButtonClass: 'btn btn-danger',
+      confirmButtonText: 'Yes',
+      buttonsStyling: false
+    }).then((result) => {
+      this.showSpinner = true;
+      if (result.value) {
+        this.dalservice.DeleteFile(usersJson, this.APIController, this.APIRouteForDeleteFile)
                 .subscribe(
                   res => {
                     const parse = JSON.parse(res);
                     if (parse.result === 1) {
-                      index += 1;
-                      if (index === getID.length) {
                         this.showSpinner = false;
-                        index += 1;
                         this.showNotification('bottom', 'right', 'success');
-                        $('#datatableSpDeliverySettlementDetail').DataTable().ajax.reload();
-                      }
-
+                $('#fileControl').val();
+                this.tempFile = undefined;
                     } else {
                       this.showSpinner = false;
-                      this.swalPopUpMsg(parse.data);
+                this.swalPopUpMsg(parse.message);
                     }
+              this.callGetrow();
+              // $('#datatableReturnDetail').DataTable().ajax.reload();
                   },
                   error => {
                     this.showSpinner = false;
                     const parse = JSON.parse(error);
-                    this.swalPopUpMsg(parse.data);
-                  });
-              //#endregion web service
-              i++;
-            }
-            i++;
-          }
-          i++;
-        }
-        i++;
+              this.swalPopUpMsg(parse.message);
+            });
+      } else {
+        this.showSpinner = false;
       }
-      i++;
+    });
+  }
+  //#endregion button delete image
+
+  //#region Lookup Parking Location
+    btnLookupModalReason() {
+        $('#datatableLookupModalReason').DataTable().clear().destroy();
+        $('#datatableLookupModalReason').DataTable({
+            'pagingType': 'first_last_numbers',
+            'pageLength': 5,
+            'processing': true,
+            'serverSide': true,
+            responsive: true,
+            lengthChange: false, // hide lengthmenu
+            searching: true, // jika ingin hilangin search box nya maka false
+            ajax: (dtParameters: any, callback) => {
+                // param tambahan untuk getrows dynamic
+                dtParameters.paramTamp = [];
+                dtParameters.paramTamp.push({
+                    // 'p_company_code': this.company_code,
+                    'p_general_code': 'RSRJT'
+                });
+
+                // end param tambahan untuk getrows dynamic
+                this.dalservice.Getrows(dtParameters, this.APIControllerType, this.APIRouteLookup).subscribe(resp => {
+                    const parse = JSON.parse(resp);
+
+                    this.lookupReasonData = parse.data;
+                    if (parse.data != null) {
+                        this.lookupReasonData.numberIndex = dtParameters.start;
     }
 
-  }
-  dateFomatList(arg0: any) {
-    throw new Error('Method not implemented.');
-  }
-  //#endregion button save in list
+                    callback({
+                        draw: parse.draw,
+                        recordsTotal: parse.recordsTotal,
+                        recordsFiltered: parse.recordsFiltered,
+                        data: []
+                    });
+                }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
+            },
+            columnDefs: [{ orderable: false, width: '5%', targets: [0,4] }], // for disabled coloumn
+            language: {
+                search: '_INPUT_',
+                searchPlaceholder: 'Search records',
+                infoEmpty: '<p style="color:red;" > No Data Available !</p> '
+            },
+            searchDelay: 800 // pake ini supaya gak bug search
+        });
+    }
 
+    btnSelectRowModalReason(code: string, general_subcode_desc: string) {
+        this.model.reason_code = code;
+        this.model.reason_desc = general_subcode_desc;
+        $('#lookupModalReason').modal('hide');
+        // $('#datatable').DataTable().ajax.reload();
+        // this.callGetrow();
+    }
+
+    btnClearModalReason() {
+        this.model.reason_desc = undefined;
+        this.model.reason_code = undefined;
+        // $('#datatable').DataTable().ajax.reload();
+        // this.callGetrow();
+  }
+    //#endregion Lookup Parking Location
+
+    //#region ddl clientType
+    resultType(event: any) {
+        this.isFailed = this.model.result === 'Failed';
+        console.log(this.model.result)
+    }
+    //#endregion ddl clientType
 }

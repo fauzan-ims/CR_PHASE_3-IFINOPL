@@ -66,7 +66,6 @@ import { WriteOfflistComponent } from './agreement/agreementdetail/agreementwrit
 import { KaroseriaccessorieslistinquiryComponent } from './applicationmain/applicationmaindetail/assetwiz/assetdetail/karoseriaccessories/karoseriaccessorieslist/karoseriaccessorieslist.component';
 import { AssetinsurancedetaildetailinquiryComponent } from './applicationmain/applicationmaindetail/assetwiz/assetdetail/assetinsurancedetail/assetinsurancedetaildetail/assetinsurancedetaildetail.component';
 import { InvoicelistwizComponent } from './agreement/agreementdetail/invoicewiz/invoicelist/invoicelistwiz.component';
-import { AmortizationdetailComponent } from '../collection/deskcolltask/deskcolldetail/amortizationwiz/amortizationdetail/amortizationdetail.component';
 import { InquiryAmortizationdetailComponent } from './inquirydeskcolltask/inquirydeskcolldetail/inquiryamortizationwiz/inquiryamortizationdetail/inquiryamortizationdetail.component';
 import { InquiryAmortizationlistComponent } from './inquirydeskcolltask/inquirydeskcolldetail/inquiryamortizationwiz/inquiryamortizationlist/inquiryamortizationlist.component';
 import { InquiryAgreementloglistComponent } from './inquirydeskcolltask/inquirydeskcolldetail/inquiryagreementlogwiz/inquiryagreementloglist/inquiryagreementloglist.component';

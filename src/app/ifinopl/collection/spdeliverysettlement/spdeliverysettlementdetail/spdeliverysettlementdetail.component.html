@@ -25,6 +25,9 @@
             (ngSubmit)="onFormSubmit(spdeliverysettlementForm.value, spdeliverysettlementForm.valid)">
 
             <!--#region button submit dan back-->
+            <button type="submit" [hidden]=""
+              class="btn btn-info btn-round" data-role="R00021030002104O">Save</button>
+
             <button [hidden]="model.code == null || model.delivery_status !== 'ON PROCESS'" type="button"
               data-role="R00021030002104O" class="btn btn-success btn-round"
               (click)="btnSettlement(model.code)">Post</button>
@@ -40,11 +43,6 @@
                   <label for="code" class="control-label">Delivery No</label>
                   <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.code" name="p_code"
                     required #code="ngModel">
-                  <small
-                    *ngIf="(code.errors?.required && code.touched) || (code.errors?.required && spdeliverysettlementForm.submitted)"
-                    class="text-danger">
-                    Delivery No is required
-                  </small>
                 </div>
               </div>
               <!--#endregion Code-->
@@ -63,10 +61,6 @@
                       <input type="hidden" class="form-control" [ngModel]="model.branch_name" name="p_branch_name"
                         required #branch_name="ngModel">
                     </span>
-                    <small [hidden]="branch_name.valid || (branch_name.pristine && !spdeliverysettlementForm.submitted)"
-                      class="text-danger">
-                      Branch is required
-                    </small>
                   </div>
                 </div>
               </div>
@@ -78,11 +72,6 @@
                   <label for="delivery_status" class="control-label">Status </label>
                   <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.delivery_status"
                     name="p_delivery_status" required #delivery_status="ngModel">
-                  <small
-                    *ngIf="(delivery_status.errors?.required && delivery_status.touched) || (delivery_status.errors?.required && spdeliverysettlementForm.submitted)"
-                    class="text-danger">
-                    Status is required
-                  </small>
                 </div>
               </div>
               <!--#endregion Status-->
@@ -130,15 +119,10 @@
                       data-target="#lookupModalDeliveryCourier" href="#"><i class="fa fa-search-plus"></i></button>
                     {{model.courier}}
                     <input type="hidden" class="form-control" [ngModel]="model.delivery_courier_code"
-                      name="p_delivery_courier_code" [required]="model.delivery_courier_type != 'EXTERNAL'"
+                      name="p_delivery_courier_code" 
                       #delivery_courier_code="ngModel">
                     <input type="hidden" class="form-control" [ngModel]="model.courier" name="p_description">
                   </div>
-                  <small
-                    [hidden]="delivery_courier_code.valid || (delivery_courier_code.pristine && !spdeliverysettlementForm.submitted)"
-                    class="text-danger">
-                    Courier is required
-                  </small>
                 </div>
               </div>
               <!--#region lookup Delivery courier code -->
@@ -153,41 +137,370 @@
                       data-target="#lookupModalDeliverycollector" href="#"><i class="fa fa-search-plus"></i></button>
                     {{model.delivery_collector_name}}
                     <input type="hidden" class="form-control" [ngModel]="model.delivery_collector_code"
-                      name="p_delivery_collector_code" [required]="model.delivery_courier_type === 'INTERNAL'"
+                      name="p_delivery_collector_code" 
                       #delivery_collector_code="ngModel">
                     <input type="hidden" class="form-control" [ngModel]="model.collector_name"
                       name="p_delivery_collector_name">
                   </div>
-                  <small
-                    [hidden]="delivery_collector_code.valid || (delivery_collector_code.pristine && !spdeliverysettlementForm.submitted)"
-                    class="text-danger">
-                    Collector is required
-                  </small>
                 </div>
               </div>
               <!--#region lookup Delivery collector code -->
+
+              <!--#region Client Name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="client_name" class="control-label">Client Name </label>
+                  <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.client_name"
+                    name="p_client_name" #client_name="ngModel">
+                </div>
+              </div>
+              <!--#endregion Client Name-->
+
+              <!--#region Delivery collector code -->
+              <div class="col-md-4" [hidden]="model.delivery_courier_type != 'INTERNAL'">
+                <div class="form-group">
+                  <label>Delivery Address *</label>
+                  <div class="col-md-12 buttons">
+                    <button disabled
+                      class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      (click)="btnLookupDeliveryAddress()" data-toggle="modal"
+                      data-target="#lookupModalDeliveryAddress" href="#"><i class="fa fa-search-plus"></i></button>
+                    {{model.delivery_address}}
+                    <input type="hidden" class="form-control" [ngModel]="model.delivery_address"
+                      name="p_delivery_address">
+                  </div>
+                </div>
+              </div>
+              <!--#region lookup Delivery collector code -->
+
+              <!--#region Delivery To Name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="delivery_to_name" class="control-label">Delivery To Name </label>
+                  <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.delivery_to_name"
+                    name="p_delivery_to_name" #delivery_to_name="ngModel">
+                </div>
+              </div>
+              <!--#endregion Delivery To Name-->
+
+              <!--#region Client Phone No-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="client_phone_no" class="control-label">Client Phone No </label>
+                  <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.client_phone_no"
+                    name="p_client_phone_no" #client_phone_no="ngModel">
+                </div>
+              </div>
+              <!--#endregion Client Phone No-->
+
+              <!--#region Client NPWP-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="client_npwp" class="control-label">Client NPWP </label>
+                  <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.client_npwp"
+                    name="p_client_npwp" #client_npwp="ngModel">
+                </div>
+              </div>
+              <!--#endregion Client NPWP-->
+
+              <!--#region Client Email-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="client_email" class="control-label">Client Email </label>
+                  <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.client_email"
+                    name="p_client_email" #client_email="ngModel">
+                </div>
+              </div>
+              <!--#endregion Client Email-->
+
+              <!--#region SP Date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="letter_date" class="control-label">SP Date *</label>
+                  <input [ngStyle]="getStyles(isReadOnly)" class="form-control col-md-6" placeholder="dd/mm/yyyy"
+                    angular-mydatepicker [ngModel]="model.letter_date" name="p_letter_date"
+                    [options]="myDatePickerOptions" (click)="letter_date.toggleCalendar()"
+                    #p_letter_date="ngModel" #letter_date="angular-mydatepicker" autocomplete="off"
+                    [readonly]="isReadOnly" />
+                </div>
+              </div>
+              <!--#endregion SP Date-->
+
+              <!--#region SP Type-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="letter_type" class="control-label">SP Type </label>
+                  <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.letter_type"
+                    name="p_letter_type" #letter_type="ngModel">
+                </div>
+              </div>
+              <!--#endregion SP Type-->
+
+              <!--#region Generate Type-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="generate_type" class="control-label">Generate Type </label>
+                  <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.generate_type"
+                    name="p_generate_type" #generate_type="ngModel">
+                </div>
+              </div>
+              <!--#endregion Generate Type-->
+
+              <!--#region Overdue Days-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="overdue_days" class="control-label">Overdue Days </label>
+                  <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.overdue_days"
+                    name="p_overdue_days" #overdue_days="ngModel">
+                </div>
+              </div>
+              <!--#endregion Overdue Days-->
+
+              <!--#region Total Overdue Amount-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="total_overdue_amount" class="control-label">Total Overdue Amount </label>
+                  <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.total_overdue_amount | number : '1.2-2'"
+                    name="p_total_overdue_amount" #total_overdue_amount="ngModel">
+                </div>
+              </div>
+              <!--#endregion Total Overdue Amount-->
+
+              <!--#region Total Agreement-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="total_agreement_count" class="control-label">Total Agreement </label>
+                  <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.total_agreement_count"
+                    name="p_total_agreement_count" #total_agreement_count="ngModel">
+                </div>
+              </div>
+              <!--#endregion Total Agreement-->
+
+              <!--#region Total Asset-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="total_asset_count" class="control-label">Total Asset </label>
+                  <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.total_asset_count"
+                    name="p_total_asset_count" #total_asset_count="ngModel">
+                </div>
+              </div>
+              <!--#endregion Total Asset-->
+
+              <!--#region Total Monthly Rental Amount-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="total_monthly_rental_amount" class="control-label">Total Monthly Rental Amount </label>
+                  <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.total_monthly_rental_amount | number : '1.2-2'"
+                    name="p_total_monthly_rental_amount" #total_monthly_rental_amount="ngModel">
+                </div>
+              </div>
+              <!--#endregion Total Monthly Rental Amount-->
 
               <!--#region Delivery Remarks-->
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="delivery_remarks" class="control-label">Remark </label>
                   <textarea disabled type="text" class="form-control" [ngModel]="model.delivery_remarks"
-                    name="p_delivery_remarks" required #delivery_remarks="ngModel"></textarea>
-                  <small
-                    *ngIf="(delivery_remarks.errors?.required && delivery_remarks.touched) || (delivery_remarks.errors?.required && spdeliverysettlementForm.submitted)"
-                    class="text-danger">
-                    Remark is required
-                  </small>
+                    name="p_delivery_remarks" #delivery_remarks="ngModel"></textarea>
                 </div>
               </div>
               <!--#endregion Delivery Remarks-->
+
+              <hr>
+
+              <!--#region Result -->
+              <div class="col-md-4">
+                  <div class="form-group">
+                      <label>Result</label>
+                      <select class='form-control col-md-8' [(ngModel)]="model.result" name="p_result"
+                          (change)="resultType($event)" [disabled]="model.status === 'DONE'">
+                          <option value='Accepted'>Accepted</option>
+                          <option value='Failed'>Failed</option>
+                      </select>
+                  </div>
+              </div>
+              <!--#endregion Result -->
+
+              <!--#region receive_date-->
+              <div class="col-md-4" *ngIf="model.result === 'Accepted'">
+                  <div class="form-group">
+                      <label for="received_date" class="control-label">Receive Date *</label>
+                      <div>
+                          <input [ngStyle]="getStyles(isButton)" class="form-control col-md-6"
+                              placeholder="dd/mm/yyyy" angular-mydatepicker
+                              [(ngModel)]="model.received_date" name="p_received_date"
+                              [options]="myDatePickerOptions" required #p_received_date="ngModel"
+                              #received_date="angular-mydatepicker" [readonly]="isButton"
+                              autocomplete="off" (click)="received_date.toggleCalendar()" />
+                          <small
+                              *ngIf="model.result === 'Accepted' && (p_received_date.errors?.required && p_received_date.touched) || (p_received_date.errors?.required && spdeliverysettlementForm.submitted)"
+                              class="text-danger">
+                              Receive Date is required
+                          </small>
+                      </div>
+                  </div>
+              </div>
+              <!--#endregion elivery_date-->
+
+              <!--#region Receive By-->
+              <div class="col-md-4" *ngIf="model.result === 'Accepted'">
+                  <div class="form-group"
+                      [class.has-error]="received_by.invalid && received_by.touched">
+                      <label for="received_by" class="control-label">Received By *</label>
+                      <input type="text" class="form-control" maxlength="250" required [disabled]="model.status === 'DONE'"
+                          [(ngModel)]="model.received_by" name="p_received_by" #received_by="ngModel"
+                          >
+                      <input type="hidden">
+                      <small
+                          *ngIf="model.result === 'Accepted' && (received_by.errors?.required && received_by.touched) || (received_by.errors?.required && spdeliverysettlementForm.submitted)"
+                          class="text-danger">
+                          Received By is required
+                      </small>
+                  </div>
+              </div>
+              <!--#endregion Receive By-->
+
+              <!--#region Delivery Resi No-->
+              <div class="col-md-4" *ngIf="model.result === 'Accepted'">
+                  <div class="form-group"
+                      [class.has-error]="resi_no.invalid && resi_no.touched">
+                      <label for="resi_no" class="control-label">Resi No *</label>
+                      <input type="text" class="form-control" maxlength="250" required [disabled]="model.status === 'DONE'"
+                          [(ngModel)]="model.resi_no" name="p_resi_no" #resi_no="ngModel"
+                      >
+                      <small
+                          *ngIf="model.result === 'Accepted' && (resi_no.errors?.required && resi_no.touched) || (resi_no.errors?.required && spdeliverysettlementForm.submitted)"
+                          class="text-danger">
+                          Received By is required
+                      </small>
+                  </div>
+              </div>
+              <!--#endregion Delivery Resi No-->
+
+              <!--#region reject_date-->
+              <div class="col-md-4" *ngIf="model.result === 'Failed'">
+                  <div class="form-group">
+                      <label for="reject_date" class="control-label">Reject Date *</label>
+                      <div>
+                          <input [ngStyle]="getStyles(isButton)" class="form-control col-md-6"
+                              placeholder="dd/mm/yyyy" angular-mydatepicker
+                              [(ngModel)]="model.reject_date" name="p_reject_date"
+                              [options]="myDatePickerOptions" required #p_reject_date="ngModel"
+                              #reject_date="angular-mydatepicker" required [readonly]="isButton"
+                              autocomplete="off" (click)="reject_date.toggleCalendar()" />
+                          <small
+                              *ngIf="model.result === 'Failed' && (p_reject_date.errors?.required && p_reject_date.touched) || (p_reject_date.errors?.required && spdeliverysettlementForm.submitted)"
+                              class="text-danger">
+                              Reject Date is required
+                          </small>
+                      </div>
+                  </div>
+              </div>
+              <!--#endregion reject_date-->
+
+              <!--#region Reason Reject-->
+              <div class="col-md-4" *ngIf="model.result === 'Failed'">
+                  <label class="labelmodule">Reason Reject *</label>
+                  <div class="form-group">
+                      <div class="col-md-12">
+                          <span>
+                              <button
+                                  class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                                  type="button" (click)="btnLookupModalReason()" data-target="#lookupModalReason"
+                                  data-toggle="modal" href="#" [disabled]="model.status === 'DONE'">
+                                  <i class="fa fa-search-plus"></i></button>
+                              {{model.reason_desc}}
+                              <input type="hidden" name="p_reason_code"
+                                  [(ngModel)]="model.reason_code" required
+                                  #reason_code="ngModel" />
+                              <input type="hidden" name="p_reason_desc" required
+                                  [(ngModel)]="model.reason_desc"
+                                  #reason_desc="ngModel" />
+                          </span>
+                      </div>
+                      <small
+                          *ngIf="model.result === 'Failed' && (reason_desc.errors?.required && reason_desc.touched) || (reason_desc.errors?.required && spdeliverysettlementForm.submitted)"
+                          class="text-danger">
+                      Reason Reject is required
+                      </small>
+
+                  </div>
+              </div>
+              <!--#endregion Reason Reject-->
+
+              <!--#region result_remark-->
+              <div class="col-md-4">
+                  <div class="form-group">
+                      <label for="result_remark" class="control-label">Result Remark</label>
+                      <textarea type="text" class="form-control" [(ngModel)]="model.result_remark" [disabled]="model.status === 'DONE'"
+                          maxlength="4000" name="p_result_remark" #result_remark="ngModel"
+                          ></textarea>
+                  </div>
+              </div>
+              <!--#endregion result_remark-->
+
+              <!--#region upload-->
+              <div class="col-md-4">
+                <label for="result_remark" class="control-label">File *</label>
+                <div class="form-group">
+                      <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                        <div [hidden]="!!model.file_name">
+                          <span class="btn btn-info btn-round btn-file ">
+                            <input type="file" (change)="onUpload($event, model.code)" id="fileControl" />
+                            <span>Choose File</span>
+                          </span>
+                          {{model.tempFile}}
+                        </div>
+                        <div [hidden]="model.file_name == '' || model.file_name == null">
+                          <!-- <div> {{model.file_name}}</div> -->
+                            <span>
+                            <a class="btn btn-danger btn-round btn-file " type="button"
+                              (click)="deleteImage(model.file_name, model.path, model.code)">
+                              <span><i class="fa fa-trash"></i></span></a>
+                            <a class="btn btn-primary btn-round btn-file " type="button"
+                              (click)="priviewFile(model.file_name, model.path)">
+                              <span><i class="fa fa-eye"></i></span></a>
+                          </span>
+                          <div> {{model.file_name}}</div>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+              
+              <!--#endregion upload-->
             </div>
             <!-- endregion row -->
           </form>
           <!--#endregion form-->
         </div>
-        <div *ngIf="param != null">
-          <!--#region list view-->
+
+        <!--#region wizard-->
+        <div class="wizard-custom-margin">
+            <!--#region wizard container -->
+            <div class="wizard-container">
+                <div class="card-wizard" style="opacity: 1 !important; min-height: 0px;" data-color="primary"
+                    id="wizardProfile2">
+                    <div class="text-center">
+                        <div class="wizard-navigation">
+                            <ul>
+                                <li class="nav-item">
+                                    <a class="nav-link" (click)="amortizationnwiz()" href="#amortizationnlist"
+                                        data-toggle="tab" role="tab" aria-controls="amortizationnlist"
+                                        aria-selected="true">
+                                        Invoice
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--endregion wizard-->
+        <router-outlet></router-outlet>
+
+        <!-- <div *ngIf="param != null">
+          #region list view
           <span layout="row horizontal-divider">
             <hr flex />
           </span>
@@ -201,7 +514,7 @@
                 <button [hidden]="model.code == null || model.delivery_status !== 'ON PROCESS'" type="button"
                   class="btn btn-info btn-round" (click)="btnSaveList()">Save</button>
 
-                <!--#region list view-->
+                #region list view
                 <table id="datatableSpDeliverySettlementDetail" datatable [dtOptions]="dtOptions"
                   class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
                   <thead>
@@ -291,14 +604,14 @@
                     </tr>
                   </tbody>
                 </table>
-                <!--#endregion list view-->
+                #endregion list view
               </div>
             </div>
           </div>
-          <!--#endregion list view-->
+          #endregion list view
         </div>
         <div class="card-footer ">
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -435,3 +748,45 @@
   </div>
 </div>
 <!--#endregion lookup DeliveryCollector-->
+
+<!--#region lookup Reason Return-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalReason" style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupModalReason" class="table table-striped table-bordered hover" cellspacing="0"
+                            style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="disabled-sorting">No</th>
+                                    <th style="display: none;"></th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupReasonData;let i=index ">
+                                    <td style="text-align: center;">{{lookupReasonData.numberIndex+i+1}}</td>
+                                    <td style="display: hidden;">{{row.code}}</td>
+                                    <!-- <td style="width: 70%;">{{ row.code }}</td> -->
+                                    <td style="width: 70%;" class="text-center">{{ row.description }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowModalReason(row.code, row.description)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup Reason Return -->

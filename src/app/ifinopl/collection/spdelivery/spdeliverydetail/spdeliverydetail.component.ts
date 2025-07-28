@@ -25,6 +25,7 @@ export class SpdeliverydetailComponent extends BaseComponent implements OnInit {
   public lookupbranch: any = [];
   public lookupDeliveryCourier: any = [];
   public lookupDeliverycollector: any = [];
+  public lookupDeliveryAddress: any = [];
   public lookupAgreement: any = [];
   public lookupbranchname: any = [];
   public NumberOnlyPattern = this._numberonlyformat;
@@ -36,6 +37,7 @@ export class SpdeliverydetailComponent extends BaseComponent implements OnInit {
   private dataCancelTamp: any = [];
   private dataTamp: any = [];
   private setStyle: any = [];
+  public pageType: String;
 
   private APIController: String = 'WarningLetterDelivery';
   private APIControllerSysemployeemain: String = 'SysEmployeeMain';
@@ -48,7 +50,9 @@ export class SpdeliverydetailComponent extends BaseComponent implements OnInit {
   private APIRouteForGetRows: String = 'GetRows';
   private APIRouteForLookup: String = 'GetRowsForLookup';
   private APIRouteLookupSysBranch: String = 'GetRowsLookupSysBranch';
+  private APIRouteLookupDeliveryAddress: String = 'GetRowsForLookupDeliveryAddress';
   private APIRouteForPost: String = 'ExecSpForPost';
+  private APIRouteForProceed: String = 'ExecSpForProceed';
   private APIRouteForCancel: String = 'ExecSpForCancel';
   private APIControllerMailMerge: String = 'WarningLetterDeliveryDetail';
   private APIRouteForDownloadMailMerge: String = '';
@@ -82,12 +86,15 @@ export class SpdeliverydetailComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     this.callGetRole(this.userId, this._elementRef, this.dalservice, this.RoleAccessCode, this.route);
+    this.getRouteparam.url.subscribe(url => this.pageType = url[0].path);
+
     if (this.param != null) {
       this.isReadOnly = true;
 
       // call web service
       this.callGetrow();
       this.loadData();
+      this.wizard();
     } else {
       this.showSpinner = false;
     }
@@ -175,6 +182,10 @@ export class SpdeliverydetailComponent extends BaseComponent implements OnInit {
         res => {
           const parse = JSON.parse(res);
           const parsedata = this.getrowNgb(parse.data[0]);
+
+          setTimeout(() => {
+            this.amortizationnwiz();
+          }, 200);
 
           if (parsedata.delivery_status !== 'HOLD') {
             this.isButton = true;
@@ -278,7 +289,7 @@ export class SpdeliverydetailComponent extends BaseComponent implements OnInit {
       buttonsStyling: false
     }).then((result) => {
       if (result.value) {
-        this.dalservice.ExecSp(this.dataPostTamp, this.APIController, this.APIRouteForPost)
+        this.dalservice.ExecSp(this.dataPostTamp, this.APIController, this.APIRouteForProceed)
           .subscribe(
             res => {
               this.showSpinner = false;
@@ -352,14 +363,14 @@ export class SpdeliverydetailComponent extends BaseComponent implements OnInit {
     const rptParam = {
       p_user_id: this.userId,
       p_letter_no: letter_no,
-      p_code: this.model.report_code_sp1,
-      p_report_name: this.model.report_name_sp1,
+      p_code: this.model.report_code_sp,
+      p_report_name: this.model.report_name_sp,
       p_print_option: 'PDF'
     }
 
     const dataParam = {
-      TableName: this.model.table_name_sp1,
-      SpName: this.model.sp_name_sp1,
+      TableName: this.model.table_name_sp,
+      SpName: this.model.sp_name_sp,
       reportparameters: rptParam
     };
 
@@ -793,5 +804,66 @@ console.log(dataParam);
   }
 
   //#end region button print somasi pemenuhan
+
+  //#region amortizationnwiz
+  amortizationnwiz() {
+    this.route.navigate(['/collection/subspdeliverylist/spdeliverydetail/' + this.param + '/spamortizationlist', this.param], { skipLocationChange: true });
+  }
+  //#endregion amortizationnwiz
+
+  //#region lookup Deliverycollector
+  btnLookupDeliveryAddress() {
+    $('#datatableLookupDeliveryAddress').DataTable().clear().destroy();
+    $('#datatableLookupDeliveryAddress').DataTable({
+      'pagingType': 'first_last_numbers',
+      'pageLength': 5,
+      'processing': true,
+      'serverSide': true,
+      responsive: true,
+      lengthChange: false, // hide lengthmenu
+      searching: true, // jika ingin hilangin search box nya maka false
+
+      ajax: (dtParameters: any, callback) => {
+
+        dtParameters.paramTamp = [];
+        dtParameters.paramTamp.push({
+          'p_code': this.param,
+          'default': '',
+        });
+
+        this.dalservice.Getrows(dtParameters, this.APIController, this.APIRouteLookupDeliveryAddress).subscribe(resp => {
+          const parse = JSON.parse(resp);
+          this.lookupDeliveryAddress = parse.data;
+          if (parse.data != null) {
+            this.lookupDeliveryAddress.numberIndex = dtParameters.start;
+          }
+
+          callback({
+            draw: parse.draw,
+            recordsTotal: parse.recordsTotal,
+            recordsFiltered: parse.recordsFiltered,
+            data: []
+          });
+        }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
+      },
+      columnDefs: [{ orderable: false, width: '5%', targets: [1, 7] }], // for disabled coloumn
+      language: {
+        search: '_INPUT_',
+        searchPlaceholder: 'Search records',
+        infoEmpty: '<p style="color:red;" > No Data Available !</p> '
+      },
+      searchDelay: 800 // pake ini supaya gak bug search
+    });
+    // } , 1000);
+  }
+  btnSelectRowDeliveryAddress(delivery_address: String, delivery_to_name: String, client_phone_no:String, client_npwp:String, client_email:String) {
+    this.model.delivery_address = delivery_address;
+    this.model.delivery_to_name = delivery_to_name;
+    this.model.client_phone_no = client_phone_no;
+    this.model.client_npwp = client_npwp;
+    this.model.client_email = client_email;
+    $('#lookupModalDeliveryAddress').modal('hide');
+  }
+  //#endregion lookup DeliveryCollector
 
 }

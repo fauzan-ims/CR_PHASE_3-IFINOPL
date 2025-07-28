@@ -37,6 +37,11 @@ import { SktdetailComponent } from './skt/sktdetail/sktdetail.component';
 import { SktsettlementlistComponent } from './sktsettlement/sktsettlementlist/sktsettlementlist.component';
 import { SktsettlementdetailComponent } from './sktsettlement/sktsettlementdetail/sktsettlementdetail.component';
 import { AmortizationdetailComponent } from './deskcolltask/deskcolldetail/amortizationwiz/amortizationdetail/amortizationdetail.component';
+import { SpAmortizationlistComponent } from './spdelivery/spdeliverydetail/spamortizationwiz/spamortizationlist/spamortizationlist.component';
+import { SpAmortizationdetailComponent } from './spdelivery/spdeliverydetail/spamortizationwiz/spamortizationdetail/spamortizationdetail.component';
+import { SpSettlementAmortizationdetailComponent } from './spdeliverysettlement/spdeliverysettlementdetail/spsettlementamortizationwiz/spsettlementamortizationdetail/spsettlementamortizationdetail.component';
+import { SpSettlementAmortizationlistComponent } from './spdeliverysettlement/spdeliverysettlementdetail/spsettlementamortizationwiz/spsettlementamortizationlist/spsettlementamortizationlist.component';
+// import { AmortizationdetailComponent } from './deskcolltask/deskcolldetail/amortizationwiz/amortizationdetail/amortizationdetail.component';
 
 
 @NgModule({
@@ -76,7 +81,11 @@ import { AmortizationdetailComponent } from './deskcolltask/deskcolldetail/amort
         SktdetailComponent,
         SktsettlementlistComponent,
         SktsettlementdetailComponent,
-        AmortizationdetailComponent
+        AmortizationdetailComponent,
+        SpAmortizationlistComponent,
+        SpAmortizationdetailComponent,
+        SpSettlementAmortizationlistComponent,
+        SpSettlementAmortizationdetailComponent,
     ],
 
     providers: [

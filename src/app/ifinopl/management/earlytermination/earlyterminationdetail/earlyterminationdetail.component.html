@@ -287,9 +287,9 @@
                           (click)="btnLookupBank()"></i></button>
                       {{model.bank_name}}
                       <input type="hidden" class="form-control" [ngModel]="model.bank_code" name="p_bank_code"
-                        #bank_code="ngModel">
+                        [disabled]="this.isDate" #bank_code="ngModel">
                       <input type="hidden" class="form-control" [ngModel]="model.bank_name" name="p_bank_name"
-                        #bank_name="ngModel" >
+                        #bank_name="ngModel" [disabled]="this.isDate">
                     </span>
                   </div>
                 </div>

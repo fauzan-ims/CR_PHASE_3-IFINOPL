@@ -26,6 +26,11 @@ import { SpdeliverysettlementlistComponent } from './spdeliverysettlement/spdeli
 import { SpmanualdetailComponent } from './spmanual/spmanualdetail/spmanualdetail.component';
 import { SpmanuallistComponent } from './spmanual/spmanuallist/spmanuallist.component';
 import { AmortizationdetailComponent } from './deskcolltask/deskcolldetail/amortizationwiz/amortizationdetail/amortizationdetail.component';
+import { SpAmortizationlistComponent } from './spdelivery/spdeliverydetail/spamortizationwiz/spamortizationlist/spamortizationlist.component';
+import { SpAmortizationdetailComponent } from './spdelivery/spdeliverydetail/spamortizationwiz/spamortizationdetail/spamortizationdetail.component';
+import { SpSettlementAmortizationlistComponent } from './spdeliverysettlement/spdeliverysettlementdetail/spsettlementamortizationwiz/spsettlementamortizationlist/spsettlementamortizationlist.component';
+import { SpSettlementAmortizationdetailComponent } from './spdeliverysettlement/spdeliverysettlementdetail/spsettlementamortizationwiz/spsettlementamortizationdetail/spsettlementamortizationdetail.component';
+// import { AmortizationdetailComponent } from './deskcolltask/deskcolldetail/amortizationwiz/amortizationdetail/amortizationdetail.component';
 
 export const Collection: Routes = [{
     path: '',
@@ -47,8 +52,6 @@ export const Collection: Routes = [{
                     // outlet: "register"
                 },
             ]
-
-
 
         },
 
@@ -131,9 +134,38 @@ export const Collection: Routes = [{
                 {
                     path: 'spdeliverydetail/:id', /*detail*/
                     component: SpdeliverydetailComponent,
+                    children: [
+                        {
+                            path: 'spamortizationlist/:id', /*update*/
+                            component: SpAmortizationlistComponent,
+                        },
+                        // {
+                        //     path: 'spamortizationdetail/:id', /*update*/
+                        //     component: SpAmortizationdetailComponent,
+                        // },
+                        {
+                            path: 'spamortizationdetail/:id/:id2',
+                            component: SpAmortizationdetailComponent
+                        }
+                    ]
                 }
             ]
         },
+
+        // {
+        //     path: 'spdeliverydetail/:id', /*detail*/
+        //     component: SpdeliverydetailComponent,
+        //     children: [
+        //         {
+        //             path: 'spamortizationlist/:id', /*update*/
+        //             component: SpAmortizationlistComponent,
+        //         },
+        //         {
+        //             path: 'spamortizationdetail/:id/:id2',
+        //             component: SpAmortizationdetailComponent
+        //         }
+        //     ]
+        // },
 
         {
             path: 'subspdeliverysettlementlist',
@@ -142,7 +174,21 @@ export const Collection: Routes = [{
             children: [
                 {
                     path: 'spdeliverysettlementdetail/:id',
-                    component: SpdeliverysettlementdetailComponent
+                    component: SpdeliverysettlementdetailComponent,
+                    children: [
+                        {
+                            path: 'spsettlementamortizationlist/:id', /*update*/
+                            component: SpSettlementAmortizationlistComponent,
+                        },
+                        // {
+                        //     path: 'spamortizationlist/:id/:id2', /*update*/
+                        //     component: SpAmortizationdetailComponent,
+                        // },
+                        {
+                            path: 'spsettlementamortizationdetail/:id/:id2',
+                            component: SpSettlementAmortizationdetailComponent
+                        }
+                    ]
                 }
             ]
         },
