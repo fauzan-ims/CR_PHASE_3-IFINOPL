@@ -15,8 +15,8 @@
             <!--#endregion watermark-->
             <div class="card-body ">
                 <!--#region form-->
-                <form #deliverydetailForm="ngForm"
-                    (ngSubmit)="onFormSubmit(deliverydetailForm.value, deliverydetailForm.valid)">
+                <form #deliverydetailForm="ngForm">
+                    <!-- (ngSubmit)="onFormSubmit(deliverydetailForm.value, deliverydetailForm.valid)"> -->
 
                     <!--#region button Save, Back-->
                     <button [hidden]="modelHeader.desk_status !== 'HOLD'" type="submit" class="btn btn-info btn-round"

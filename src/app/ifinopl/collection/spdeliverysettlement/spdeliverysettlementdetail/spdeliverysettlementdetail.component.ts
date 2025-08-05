@@ -50,6 +50,7 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
   public lookupReasonData: any = [];
   public isFailed: Boolean = false;
   public isButton: Boolean = false;
+  public lookupDeliveryAddress: any = [];
 
 
   private APIController: String = 'WarningLetterDelivery';
@@ -70,6 +71,7 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
   private APIRouteForSettlement: String = 'ExecSpForSettlement';
   private APIRouteForSave: String = 'ExecSpForSave';
   private APIRouteLookup: String = 'GetRowsForLookup';
+  private APIRouteLookupDeliveryAddress: String = 'GetRowsForLookupDeliveryAddress';
   public idDetailList: string;
   public readOnlyListDetail: string;
 
@@ -1179,4 +1181,59 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
         console.log(this.model.result)
     }
     //#endregion ddl clientType
+
+     //#region lookup Deliverycollector
+  btnLookupDeliveryAddress() {
+    $('#datatableLookupDeliveryAddress').DataTable().clear().destroy();
+    $('#datatableLookupDeliveryAddress').DataTable({
+      'pagingType': 'first_last_numbers',
+      'pageLength': 5,
+      'processing': true,
+      'serverSide': true,
+      responsive: true,
+      lengthChange: false, // hide lengthmenu
+      searching: true, // jika ingin hilangin search box nya maka false
+
+      ajax: (dtParameters: any, callback) => {
+
+        dtParameters.paramTamp = [];
+        dtParameters.paramTamp.push({
+          'p_code': this.param,
+          'default': '',
+        });
+
+        this.dalservice.Getrows(dtParameters, this.APIController, this.APIRouteLookupDeliveryAddress).subscribe(resp => {
+          const parse = JSON.parse(resp);
+          this.lookupDeliveryAddress = parse.data;
+          if (parse.data != null) {
+            this.lookupDeliveryAddress.numberIndex = dtParameters.start;
+          }
+
+          callback({
+            draw: parse.draw,
+            recordsTotal: parse.recordsTotal,
+            recordsFiltered: parse.recordsFiltered,
+            data: []
+          });
+        }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
+      },
+      columnDefs: [{ orderable: false, width: '5%', targets: [1, 7] }], // for disabled coloumn
+      language: {
+        search: '_INPUT_',
+        searchPlaceholder: 'Search records',
+        infoEmpty: '<p style="color:red;" > No Data Available !</p> '
+      },
+      searchDelay: 800 // pake ini supaya gak bug search
+    });
+    // } , 1000);
+  }
+  btnSelectRowDeliveryAddress(delivery_address: String, delivery_to_name: String, client_phone_no:String, client_npwp:String, client_email:String) {
+    this.model.delivery_address = delivery_address;
+    this.model.delivery_to_name = delivery_to_name;
+    this.model.client_phone_no = client_phone_no;
+    this.model.client_npwp = client_npwp;
+    this.model.client_email = client_email;
+    $('#lookupModalDeliveryAddress').modal('hide');
+  }
+  //#endregion lookup DeliveryCollector
 }

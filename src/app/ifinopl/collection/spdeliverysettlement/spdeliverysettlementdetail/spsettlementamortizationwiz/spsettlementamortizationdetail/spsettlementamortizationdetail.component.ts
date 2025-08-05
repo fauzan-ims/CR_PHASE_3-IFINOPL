@@ -156,4 +156,55 @@ export class SpSettlementAmortizationdetailComponent extends BaseComponent imple
 
     }
     //#endregion load all data
+
+      //#endregion master Descoll lookup
+  btnLookupMasterDeskcollResult() {
+    $('#datatableLookupMasterDeskcollResult').DataTable().clear().destroy();
+    $('#datatableLookupMasterDeskcollResult').DataTable({
+      'pagingType': 'first_last_numbers',
+      'pageLength': 5,
+      'processing': true,
+      'serverSide': true,
+      responsive: true,
+      lengthChange: false, // hide lengthmenu
+      searching: true, // jika ingin hilangin search box nya maka false
+
+      ajax: (dtParameters: any, callback) => {
+        dtParameters.paramTamp = [];
+        dtParameters.paramTamp.push({
+          'p_result_code': this.model.result_code
+        });
+        this.dalservice.Getrows(dtParameters, this.APIControllerMasterDeskcollResult, this.APIRouteForLookup).subscribe(resp => {
+          const parse = JSON.parse(resp);
+          this.lookupMasterDeskcollResult = parse.data;
+          if (parse.data != null) {
+            this.lookupMasterDeskcollResult.numberIndex = dtParameters.start;
+          }
+
+
+          callback({
+            draw: parse.draw,
+            recordsTotal: parse.recordsTotal,
+            recordsFiltered: parse.recordsFiltered,
+            data: []
+          })
+        }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
+      },
+      columnDefs: [{ orderable: false, width: '5%', targets: [1, 4] }], // for disabled coloumn
+      language: {
+        search: '_INPUT_',
+        searchPlaceholder: 'Search records',
+        infoEmpty: '<p style="color:red;" > No Data Available !</p> '
+      },
+      searchDelay: 800 // pake ini supaya gak bug search
+    });
+  }
+
+  //#region master collector lookup
+  btnSelectRowMasterDeskcollResult(Code: String, Name: String) {
+    this.model.result_code = Code;
+    this.model.result_name = Name;
+    $('#lookupModalMasterDeskcollResult').modal('hide');
+  }
+  //#endregion master Descoll lookup
 }
