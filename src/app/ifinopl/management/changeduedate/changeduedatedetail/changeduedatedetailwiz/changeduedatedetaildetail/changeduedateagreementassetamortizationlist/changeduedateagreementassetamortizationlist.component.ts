@@ -125,7 +125,7 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
 
         }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
       },
-      columnDefs: [{ orderable: false, width: '5%', targets: [0, 1, 2, 3, 4, 5, 6, 7] }], // for disabled coloumn
+      columnDefs: [{ orderable: false, width: '5%', targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] }], // for disabled coloumn
       language: {
         search: '_INPUT_',
         searchPlaceholder: 'Search records',

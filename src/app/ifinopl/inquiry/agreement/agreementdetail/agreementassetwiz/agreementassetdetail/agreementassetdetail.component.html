@@ -525,11 +525,26 @@
           <!--#endregion pickup_address-->
         </div>
         <!-- #endregion row -->
-
+        <div class="row">
+        <!--#region billing_to_faktur_type-->
+          <div class="col-md-4">
+            <label class="labelgsubcode">Faktur Transaction Code</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                  type="button" data-target="#lookupModalFakturType" data-toggle="modal" href="#">
+                  <i class="fa fa-search-plus"></i></button> <b>{{model.billing_to_faktur_type}}</b>
+                <input type="text" hidden name="p_billing_to_faktur_type" [ngModel]="model.billing_to_faktur_type"
+                  #billing_to_faktur_type="ngModel" />
+              </div>
+            </div>
+          </div>
+          <!--#endregion billing_to_faktur_type-->
+          </div>
         <!--#region row-->
         <div class="row">
           <!--#region radio button billing_mode-->
-          <div class="col-md-4">
+          <!-- <div class="col-md-4">
             <label>Billing Mode</label>
             <div class="form-group" style="margin-left: 15px;">
               <div class="row">
@@ -556,11 +571,11 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
           <!--#endregion radio button billing_mode-->
 
           <!--#region billing_to_faktur_type-->
-          <div class="col-md-4">
+          <!-- <div class="col-md-4">
             <label class="labelgsubcode">Faktur Transaction Code</label>
             <div class="form-group">
               <div class="col-md-12">
@@ -571,8 +586,23 @@
                   #billing_to_faktur_type="ngModel" />
               </div>
             </div>
-          </div>
+          </div> -->
           <!--#endregion billing_to_faktur_type-->
+
+          <!--#region billing_mode-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Billing Mode</label>
+                <select class="form-control col-md-6" disabled [ngModel]="model.billing_mode" name="p_billing_mode"
+                  (change)="billingMode($event)">
+                  <option value='NORMAL'>NORMAL</option>
+                  <option value='BY DATE'>DATE</option>
+                  <option value='BEFORE DUE'>BEFORE DUE</option>
+                  <option value='END MONTH'>END MONTH</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion billing_mode-->
 
           <!--#region billing_mode_date-->
           <div class="col-md-4">
@@ -583,6 +613,30 @@
             </div>
           </div>
           <!--#endregion billing_mode_date-->
+
+          <!--#region radio button prorate-->
+            <div class="col-md-4">
+              <label>Prorate *</label>
+              <div class="form-group" style="margin-left: 15px;">
+                <div class="row">
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input disabled class="form-check-input col-md-6" type="radio" name="p_prorate" value="Yes"
+                        [(ngModel)]="model.prorate">Yes
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input disabled class="form-check-input col-md-6" type="radio" name="p_prorate" value="No"
+                        [(ngModel)]="model.prorate">No
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--#endregion radio button prorate-->          
         </div>
         <!--#endregion row-->
 

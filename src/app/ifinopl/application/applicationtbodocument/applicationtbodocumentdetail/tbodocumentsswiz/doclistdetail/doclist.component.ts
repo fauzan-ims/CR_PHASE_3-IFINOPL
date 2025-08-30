@@ -22,23 +22,30 @@ export class TboDoclistComponent extends BaseComponent implements OnInit {
   public listdoc: any = [];
   public docData: any = [];
   public tempFile: any;
-  public listdataDoc: any = [];
+  public listdatadoc: any = [];
+  public dataTampPush: any = [];
   public listID: any = [];
   public setStyle: any = [];
   public listExpDate: any = [];
   public valid: String;
+  public transactionName: String;
+  public tempStatus: String;
+  public isHold: boolean;
+  public isVerification: boolean;
   private dataTamp: any = [];
   private DocumentIframe: any;
   private dataTempThirdParty: any = [];
   private tempLiteDmsUser: any;
   private tempLiteDmsRole: any;
   private tempLiteDmsOption: any;
+  public tempTransactionNo: any;
 
   private APIController: String = 'ApplicationDoc';
   private APIControllerTboDocument: String = 'TboDocument';
   private APIControllerSysGlobalparam: String = 'SysGlobalparam';
 
   private APIRouteForGetRows: String = 'GetRows';
+  private APIRouteForGetRowsTboDocumentDetail: String = 'GetRowsTboDocumentDetail';
   private APIRouteForGetThirddParty: String = 'ExecSpForGetThirddParty';
   private APIRouteForUpdateIsValid: String = 'ExecSpForUpdateIsValid';
   private APIRouteForGetRow: String = 'GetRow';
@@ -82,6 +89,22 @@ export class TboDoclistComponent extends BaseComponent implements OnInit {
         res => {
           const parse = JSON.parse(res);
           const parsedata = this.getrowNgb(parse.data[0]);
+
+          this.tempTransactionNo = parsedata.transaction_no;
+          this.transactionName = parsedata.transaction_name;
+          this.tempStatus = parsedata.status;
+
+          if (this.tempStatus === 'HOLD' || this.tempStatus === 'DONE') {
+            this.isHold = true
+          } else {
+            this.isHold = false
+          }
+
+          if (this.tempStatus === 'VERIFICATION' || this.tempStatus === 'DONE') {
+            this.isVerification = true
+          } else {
+            this.isVerification = false
+          }
 
           // mapper dbtoui
           Object.assign(this.model, parsedata);
@@ -223,12 +246,29 @@ export class TboDoclistComponent extends BaseComponent implements OnInit {
 
         dtParameters.paramTamp = [];
         dtParameters.paramTamp.push({
-          'p_application_no': this.applicationNo,
-          'p_is_tbo': '1'
+          'p_id': this.param,
+          'p_is_tbo': '1',
+          'p_transaction_name': this.transactionName
         });
 
-        this.dalservice.Getrows(dtParameters, this.APIController, this.APIRouteForGetRows).subscribe(resp => {
+        this.dalservice.Getrows(dtParameters, this.APIControllerTboDocument, this.APIRouteForGetRowsTboDocumentDetail).subscribe(resp => {
           const parse = JSON.parse(resp);
+          for (let i = 0; i < parse.data.length; i++) {
+            // checkbox
+            if (parse.data[i].is_valid === '1') {
+              parse.data[i].is_valid = true;
+            } else {
+              parse.data[i].is_valid = false;
+            }
+
+            if (parse.data[i].is_received === '1') {
+              parse.data[i].is_received = true;
+            } else {
+              parse.data[i].is_received = false;
+            }
+            // end checkbox
+
+          }
           this.listdoc = parse.data;
           if (parse.data != null) {
             this.listdoc.numberIndex = dtParameters.start;
@@ -241,7 +281,7 @@ export class TboDoclistComponent extends BaseComponent implements OnInit {
           });
         }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
       },
-      columnDefs: [{ orderable: false, width: '5%', targets: [0, 1] }], // for disabled coloumn
+      columnDefs: [{ orderable: false, width: '5%', targets: [0, 1, 4, 6] }], // for disabled coloumn
       language: {
         search: '_INPUT_',
         searchPlaceholder: 'Search records',
@@ -270,74 +310,192 @@ export class TboDoclistComponent extends BaseComponent implements OnInit {
   //#endregion 
 
   //#region button save in list
-  saveList() {
+  // saveList() {
 
+  //   this.showSpinner = true;
+  //   this.listdoctbo = [];
+
+  //   let i = 0;
+
+  //   const getID = $('[name="p_id"]')
+  //     .map(function () { return $(this).val(); }).get();
+
+
+  //   const getPromiseDate = $('[name="p_promise_date"]')
+  //     .map(function () { return $(this).val(); }).get();
+
+
+  //   while (i < getID.length) {
+
+  //     while (i < getPromiseDate.length) {
+
+  //         if (getPromiseDate[i] === '') {
+  //           getPromiseDate[i] = undefined;
+  //         }
+  //         this.listdoctbo.push({
+  //           p_id: getID[i],
+  //           p_promise_date: this.dateFormatList(getPromiseDate[i]),
+  //           p_is_tbo: '1'
+  //         });
+
+  //       i++;
+  //     }
+
+  //     i++;
+  //   }
+
+  //   //#region web service
+  //   this.dalservice.Update(this.listdoctbo, this.APIController, this.APIRouteForUpdate)
+  //     .subscribe(
+  //       res => {
+  //         console.log(this.listdoctbo)
+  //         const parse = JSON.parse(res);
+  //         if (parse.result === 1) {
+  //           this.showSpinner = false;
+  //           // $('#applicationDetail').click();
+  //           this.showNotification('bottom', 'right', 'success');
+  //           $('#datatableApplicationTboDocument').DataTable().ajax.reload();
+  //         } else {
+  //           this.showSpinner = false;
+  //           this.swalPopUpMsg(parse.data);
+  //         }
+  //       },
+  //       error => {
+  //         this.showSpinner = false;
+  //         const parse = JSON.parse(error);
+  //         this.swalPopUpMsg(parse.data);
+  //       });
+  //   //#endregion web service
+
+  // }
+  //#endregion button save in list
+
+  //#region button save list
+  // btnSavelist() {
+  //   this.showSpinner = true;
+
+  //   this.dataTampPush = [];
+
+  //   var i = 0;
+
+  //   var getID = $('[name="p_id"]')
+  //     .map(function () { return $(this).val(); }).get();
+
+  //   var getRemarks = $('[name="p_remarks"]')
+  //     .map(function () { return $(this).val(); }).get();
+
+  //   var getIsValid = $('[name="p_is_valid"]')
+  //     .map(function () { return $(this).val(); }).get();
+
+  //   var getIsReceived = $('[name="p_is_received"]')
+  //     .map(function () { return $(this).val(); }).get();  
+
+  //   var getReffDate = $('[name="p_promise_date"]')
+  //     .map(function () { return $(this).val(); }).get();
+
+  //   while (i < getID.length) {
+
+  //     while (i < getReffDate.length) {
+
+  //        while (i < getIsValid.length) {
+
+  //        while (i < getIsReceived.length) {
+
+  //         while (i < getRemarks.length) {
+
+  //           if (getReffDate[i] === '') {
+  //             getReffDate[i] = undefined;
+  //           }
+
+  //           if (getIsReceived[i] === '') {
+  //             getIsReceived[i] = 0;
+  //           }
+  //           this.dataTampPush.push({
+  //             p_id: getID[i],
+  //             p_promise_date: this.dateFormatList(getReffDate[i]),
+  //             p_remarks: getRemarks[i],
+  //             p_is_received: getIsReceived[i],
+  //             p_is_valid: getIsValid[i]
+  //           });
+  //             i++;
+  //           }
+
+  //         i++;
+  //       }
+  //       i++;
+  //     }
+  //       i++;
+  //     }
+  //      i++;
+  //     }
+
+  //   //#region web service
+  //   this.dalservice.Update(this.dataTampPush, this.APIController, this.APIRouteForUpdate)
+  //     .subscribe(
+  //       res => {
+  //         const parse = JSON.parse(res);
+  //         if (parse.result === 1) {
+  //           this.showNotification('bottom', 'right', 'success');
+  //           $('#datatableApplicationTboDocument').DataTable().ajax.reload();
+  //           this.showSpinner = false;
+  //         } else {
+  //           this.swalPopUpMsg(parse.data);
+  //           this.showSpinner = false;
+  //         }
+  //       },
+  //       error => {
+  //         const parse = JSON.parse(error);
+  //         this.swalPopUpMsg(parse.data);
+  //         this.showSpinner = false;
+  //       });
+  //   //#endregion web service
+  // }
+  //#endregion button save list
+
+  btnSavelist() {
     this.showSpinner = true;
-    this.listdataDoc = [];
+    this.dataTampPush = [];
 
-    let i = 0;
+    // Ambil semua nilai input
+    const getID = $('[name="p_id_tbo"]').map((_, el) => $(el).val()).get();
+    const getRemarks = $('[name="p_remarks"]').map((_, el) => $(el).val()).get();
+    const getIsValid = $('[name="p_is_valid"]').map((_, el) => $(el).prop("checked") ? 1 : 0).get();
+    const getIsReceived = $('[name="p_is_received"]').map((_, el) => $(el).prop("checked") ? 1 : 0).get();
+    const getReffDate = $('[name="p_promise_date"]').map((_, el) => $(el).val()).get();
 
-    const getID = $('[name="p_id"]')
-      .map(function () { return $(this).val(); }).get();
-
-    const getReceivedDate = $('[name="p_received_date"]')
-      .map(function () { return $(this).val(); }).get();
-
-    const getPromiseDate = $('[name="p_promise_date"]')
-      .map(function () { return $(this).val(); }).get();
-
-
-    while (i < getID.length) {
-
-      while (i < getReceivedDate.length) {
-
-        while (i < getPromiseDate.length) {
-          if (getReceivedDate[i] === '') {
-            getReceivedDate[i] = undefined;
-          }
-          if (getPromiseDate[i] === '') {
-            getPromiseDate[i] = undefined;
-          }
-          this.listdataDoc.push({
-            p_id: getID[i],
-            p_received_date: this.dateFormatList(getReceivedDate[i]),
-            p_promise_date: this.dateFormatList(getPromiseDate[i]),
-            p_is_tbo: '1'
-          });
-
-          i++;
-        }
-
-        i++;
-      }
-
-      i++;
+    // Loop satu kali saja
+    for (let i = 0; i < getID.length; i++) {
+      let reffDate = getReffDate[i] || undefined; // kosong → undefined
+      this.dataTampPush.push({
+        p_id: getID[i],
+        p_promise_date: this.dateFormatList(reffDate),
+        p_remarks: getRemarks[i],
+        p_is_received: getIsReceived[i], // boolean
+        p_is_valid: getIsValid[i],        // boolean
+        p_transaction_name: this.transactionName
+      });
     }
 
-    //#region web service
-    this.dalservice.Update(this.listdataDoc, this.APIController, this.APIRouteForUpdate)
+    // Web service
+    this.dalservice.Update(this.dataTampPush, this.APIControllerTboDocument, this.APIRouteForUpdate)
       .subscribe(
         res => {
           const parse = JSON.parse(res);
           if (parse.result === 1) {
-            this.showSpinner = false;
-            $('#applicationDetail').click();
             this.showNotification('bottom', 'right', 'success');
             $('#datatableApplicationTboDocument').DataTable().ajax.reload();
           } else {
-            this.showSpinner = false;
             this.swalPopUpMsg(parse.data);
           }
+          this.showSpinner = false;
         },
         error => {
-          this.showSpinner = false;
           const parse = JSON.parse(error);
           this.swalPopUpMsg(parse.data);
-        });
-    //#endregion web service
-
+          this.showSpinner = false;
+        }
+      );
   }
-  //#endregion button save in list
 
   //#region iframe lite dms
   btnOpenLD() {

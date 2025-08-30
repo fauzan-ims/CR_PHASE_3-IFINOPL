@@ -141,6 +141,15 @@
                 </div>
               </div>
               <!--#endregion Client Name-->
+              <!--#region Client No-->
+              <div class="col-md-4" [hidden]="true">
+                <div class="form-group">
+                  <label for="client_no" class="control-label">Client Name</label>
+                  <input readonly type="text" class="form-control" [ngModel]="model.client_no" name="p_client_no"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion Client No-->
             </div>
             <!-- endregion row -->
 
@@ -262,6 +271,82 @@
         </div>
         <div class="card-footer ">
         </div>
+        <!--#region wizard-->
+        <div class="wizard-custom-margin">
+          <!--#region wizard container -->
+          <div class="wizard-container">
+            <div class="card-wizard" style="opacity: 1 !important; min-height: 0px;" data-color="primary"
+              id="wizardProfile2">
+              <div class="text-center">
+                <div class="wizard-navigation">
+                  <ul>
+                    <li class="nav-item">
+                      <a class="nav-link" (click)="amortizationnwiz()" href="#amortizationnlist" data-toggle="tab"
+                        role="tab" aria-controls="amortizationnlist" aria-selected="true">
+                        Invoice
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <!-- </th>
+                      <th>SP No</th>
+                      <th>SP Date</th>
+                      <th>Agreement No</th>
+                      <th>SP Type</th>
+                      <th>Last Print By</th>
+                      <th>Print Count</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of listspdeliverydetail;let i=index ">
+                      <td style="text-align: center;">{{listspdeliverydetail.numberIndex+i+1}}</td>
+                      <td class="disabled-sorting">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                              [disabled]="model.code == null || isButton"
+                              (change)="checkIfAllTableSelected($event, row.id);">
+                            <span class="form-check-sign"></span>
+                          </label> -->
+              </div>
+              <!-- </td>
+                      <td style="text-align: center; width: 20%;">{{ row.letter_no }}</td>
+                      <td style="text-align: center; width: 15%;">{{ row.letter_date }}</td>
+                      <td style="text-align: left; width: 20%;">{{ row.agreement_no}}<br>{{ row.client_name }}
+                      </td>
+                      <td style="text-align: center; width: 15%;">{{ row.letter_type }}</td>
+                      <td style="width: 15%;">{{ row.last_print_by }}</td>
+                      <td style="text-align: center; width: 15%;">{{ row.print_count }}</td>
+                      <td style="text-align: center;">
+                        <a class="btn btn-warning btn-link btn-icon btn-sm print" title="Print SP1"
+                          [hidden]="row.letter_type !== 'SP1'" (click)="btnPrintSP(row.letter_no)"><i
+                            class="fa fa-print"></i></a>
+                        <a class="btn btn-warning btn-link btn-icon btn-sm print" title="Print SP2"
+                          [hidden]="row.letter_type !== 'SP2'" (click)="btnPrintSP2(row.letter_no)"><i
+                            class="fa fa-print"></i></a>
+                        <a class="btn btn-warning btn-link btn-icon btn-sm print" title="Print SOMASI"
+                          [hidden]="row.letter_type !== 'SOMASI'" (click)="btnPrintSomasiPemenuhan(row.letter_no)"><i
+                            class="fa fa-print"></i></a> -->
+              <!-- <a class="btn btn-warning btn-link btn-icon btn-sm print" title="Print SP"
+                            (click)="btnMailMerge(row.letter_no, row.letter_type)"><i class="fa fa-print"></i></a> -->
+              <!-- <a class="btn btn-warning btn-link btn-icon btn-sm print" title="Print tanda Terima"
+                            [hidden]="isButton" (click)="btnPrint(row.letter_no)"><i class="fa fa-print"></i></a> -->
+              <!-- </td>
+                    </tr>
+                  </tbody>
+                </table> -->
+              <!--#endregion list view-->
+              <!-- </form> -->
+            </div>
+          </div>
+          <!-- </div> -->
+          <!--#endregion list view-->
+          <!-- </div>
+        <div class="card-footer "> -->
+        </div>
+        <!--endregion wizard-->
+        <router-outlet></router-outlet>
       </div>
     </div>
   </div>
@@ -331,6 +416,7 @@
                   <th class="disabled-sorting">No</th>
                   <th style="width: 20%;">Agreement No</th>
                   <th style="width: 75%;">Client Name</th>
+                  <th style="display: none;">Client No</th>
                   <th style="text-align: center;">Action</th>
                 </tr>
               </thead>
@@ -340,9 +426,10 @@
                   <td style="text-align: center;">{{lookupAgreement.numberIndex+i+1}}</td>
                   <td>{{ row.agreement_external_no }}</td>
                   <td>{{ row.client_name}}</td>
+                  <td style="display: none;">{{ row.client_no}}</td>
                   <td class="text-center">
                     <button class="btn btn-outline-default btn-round"
-                      (click)="btnSelectRowAgreement(row.agreement_no, row.agreement_external_no, row.client_name)">Select</button>
+                      (click)="btnSelectRowAgreement(row.agreement_no, row.agreement_external_no, row.client_name, row.client_no)">Select</button>
                   </td>
                 </tr>
               </tbody>

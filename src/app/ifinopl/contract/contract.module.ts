@@ -21,7 +21,7 @@ import { PurchaserequestdetailComponent } from './purchaserequest/purchasereques
 import { RequestgtslistComponent } from './requestgts/requestgtslist/requestgtslist.component';
 import { RequestgtsdetailComponent } from './requestgts/requestgtsdetail/requestgtsdetail.component';
 import { DeliverydetaillistComponent } from './delivery/deliverydetail/deliverywiz/asset/deliverydetaillist.component';
-import { DocumentlistComponent } from './delivery/deliverydetail/deliverywiz/document/documentlist.component';
+import { DocumentrealizationlistComponent } from './delivery/deliverydetail/deliverywiz/documentrealization/documentrealizationlist.component';
 import { DeliveryassetdetailComponent } from './delivery/deliverydetail/deliverywiz/asset/deliveryassetdetail/deliveryassetdetail.component';
 // import { DocumentTBOlistComponent } from './documenttbo/documentbolist/documenttbolist.component';
 // import { DocumentTBOdetailComponent } from './documenttbo/documenttbodetail/documenttbodetail.component';
@@ -29,6 +29,8 @@ import { DeliveryassetdetailComponent } from './delivery/deliverydetail/delivery
 // import { DocumenttbodetailtbowizlistComponent } from './documenttbo/documenttbodetail/documenttbodetailtbowiz/documenttbodetailtbowizlist/documenttbodetailtbowizlist.component';
 import { MonitoringassetallocationComponent } from './monitoring/monitoringassetallocation.component';
 import { LoglistComponent } from './delivery/deliverydetail/deliverywiz/logwiz/loglist/loglist.component';
+import { DocumentlistComponent } from './delivery/deliverydetail/deliverywiz/document/documentlist.component';
+
 
 @NgModule({
     imports: [
@@ -59,7 +61,8 @@ import { LoglistComponent } from './delivery/deliverydetail/deliverywiz/logwiz/l
         // DocumentTBOdetailComponent,
         // DocumenttbodetailcontractwizlistComponent,
         // DocumenttbodetailtbowizlistComponent,
-        MonitoringassetallocationComponent
+        MonitoringassetallocationComponent,
+        DocumentrealizationlistComponent
     ],
     providers: [
         DALService,

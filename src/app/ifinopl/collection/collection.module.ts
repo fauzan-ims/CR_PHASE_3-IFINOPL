@@ -41,6 +41,8 @@ import { SpAmortizationlistComponent } from './spdelivery/spdeliverydetail/spamo
 import { SpAmortizationdetailComponent } from './spdelivery/spdeliverydetail/spamortizationwiz/spamortizationdetail/spamortizationdetail.component';
 import { SpSettlementAmortizationdetailComponent } from './spdeliverysettlement/spdeliverysettlementdetail/spsettlementamortizationwiz/spsettlementamortizationdetail/spsettlementamortizationdetail.component';
 import { SpSettlementAmortizationlistComponent } from './spdeliverysettlement/spdeliverysettlementdetail/spsettlementamortizationwiz/spsettlementamortizationlist/spsettlementamortizationlist.component';
+import { SpAmortizationManuallistComponent } from './spmanual/spmanualdetail/spamortizationwiz/spamortizationlist/spamortizationmanuallist.component';
+import { SpAmortizationManualdetailComponent } from './spmanual/spmanualdetail/spamortizationwiz/spamortizationdetail/spamortizationmanualdetail.component';
 // import { AmortizationdetailComponent } from './deskcolltask/deskcolldetail/amortizationwiz/amortizationdetail/amortizationdetail.component';
 
 
@@ -86,6 +88,8 @@ import { SpSettlementAmortizationlistComponent } from './spdeliverysettlement/sp
         SpAmortizationdetailComponent,
         SpSettlementAmortizationlistComponent,
         SpSettlementAmortizationdetailComponent,
+        SpAmortizationManuallistComponent,
+        SpAmortizationManualdetailComponent
     ],
 
     providers: [

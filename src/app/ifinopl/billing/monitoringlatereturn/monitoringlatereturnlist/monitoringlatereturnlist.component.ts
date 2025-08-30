@@ -27,6 +27,10 @@ export class MonitoringlatereturnlistComponent extends BaseComponent implements 
   public lookupagreementno: any = [];
   public listmonitoringlatereturn: any = [];
   public tampPaymentStatus: String;
+  public checkedList: any = [];
+  public selectedAll: any;
+  private dataTamp: any = [];
+  private dataTampProceed: any = [];
 
   // form 2 way binding
   model: any = {};
@@ -39,7 +43,9 @@ export class MonitoringlatereturnlistComponent extends BaseComponent implements 
 
   //router
   private APIRouteGetRowsForLookup: String = 'GetRowsForLookup';
+  private APIRouteGetRowsForLookupWaive: String = 'GetRowsForLookupWaive';
   private APIRouteForGetRows: String = 'GetRowsForMonitoringLateReturn';
+  private APIRouteForPost: String = 'ExecSpforGetMonitoringLateReturnPost';
 
   private RoleAccessCode = 'R00024700000001A';
 
@@ -62,7 +68,7 @@ export class MonitoringlatereturnlistComponent extends BaseComponent implements 
   ngOnInit() {
     this.callGetRole(this.userId, this._elementRef, this.dalservice, this.RoleAccessCode, this.route);
     this.compoSide(this._location, this._elementRef, this.route);
-    this.tampPaymentStatus = 'ALL';
+    this.tampPaymentStatus = 'HOLD';
     this.loadData();
   }
 
@@ -99,10 +105,15 @@ export class MonitoringlatereturnlistComponent extends BaseComponent implements 
           const parse = JSON.parse(resp);
           this.listmonitoringlatereturn = parse.data;
           if (parse.data != null) {
-            this.showSpinner = false;
+            // this.showSpinner = false;
             this.listmonitoringlatereturn.numberIndex = dtParameters.start;
+            // if use checkAll use this
+            $('#checkall').prop('checked', false);
+            // end checkall
 
           }
+
+
           callback({
             draw: parse.draw,
             recordsTotal: parse.recordsTotal,
@@ -112,7 +123,7 @@ export class MonitoringlatereturnlistComponent extends BaseComponent implements 
 
         }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
       },
-      columnDefs: [{ orderable: false, searchable: false, width: '5%', targets: [0, 1] }], // for disabled coloumn
+      columnDefs: [{ orderable: false, searchable: false, width: '5%', targets: [0, 1, 2] }], // for disabled coloumn
       language: {
         search: '_INPUT_',
         searchPlaceholder: 'Search records',
@@ -268,7 +279,7 @@ export class MonitoringlatereturnlistComponent extends BaseComponent implements 
           'p_client_no': this.client_no
         });
 
-        this.dalservice.Getrows(dtParameters, this.APIControllerAgreementMain, this.APIRouteGetRowsForLookup).subscribe(resp => {
+        this.dalservice.Getrows(dtParameters, this.APIControllerAgreementMain, this.APIRouteGetRowsForLookupWaive).subscribe(resp => {
           const parse = JSON.parse(resp);
           this.lookupagreementno = parse.data;
           if (parse.data != null) {
@@ -308,4 +319,112 @@ export class MonitoringlatereturnlistComponent extends BaseComponent implements 
     $('#datatablemonitoringlatereturn').DataTable().ajax.reload();
   }
   //#endregion resteAgreementNo
+
+
+  //#region btnPost
+    btnPost() {
+      this.dataTampProceed = [];
+      this.checkedList = [];
+  
+      for (let i = 0; i < this.listmonitoringlatereturn.length; i++) {
+        if (this.listmonitoringlatereturn[i].selected) {
+          this.checkedList.push({
+            'asset_no': this.listmonitoringlatereturn[i].asset_no
+          })
+        }
+      }
+      // jika tidak di checklist
+      if (this.checkedList.length === 0) {
+        swal({
+          title: this._listdialogconf,
+          buttonsStyling: false,
+          confirmButtonClass: 'btn btn-danger'
+        }).catch(swal.noop)
+        return
+      }
+  
+      // jika tidak di checklist
+      if (this.checkedList.length === 0) {
+        swal({
+          title: this._listdialogconf,
+          buttonsStyling: false,
+          confirmButtonClass: 'btn btn-danger'
+        }).catch(swal.noop)
+        return
+      }
+  
+      swal({
+        allowOutsideClick: false,
+        title: 'Are you sure?',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Yes',
+        buttonsStyling: false
+      }).then((result) => {
+        this.showSpinner = true;
+        if (result.value) {
+          this.showSpinner = true;
+          this.dataTamp = [];
+          let th = this;
+          var i = 0;
+          (function loopPostInvoice() {
+            if (i < th.checkedList.length) {
+              const tempInvoicePost = [
+                {
+                  'p_asset_no': th.checkedList[i].asset_no,
+                  'action': ''
+                }
+              ];
+  
+              // call web service
+              th.dalservice.ExecSp(tempInvoicePost, th.APIController, th.APIRouteForPost)
+                .subscribe(
+                  res => {
+                    const parse = JSON.parse(res);
+                    if (parse.result === 1) {
+                      if (th.checkedList.length == i + 1) {
+                        th.showNotification('bottom', 'right', 'success');
+                        $('#datatablemonitoringlatereturn').DataTable().ajax.reload();
+                        th.showSpinner = false;
+                      } else {
+                        i++;
+                        loopPostInvoice();
+                      }
+                    } else {
+                      // tempInvoicePost = null;
+                      // $('#datatablemonitoringlatereturn').DataTable().ajax.reload();
+                      th.swalPopUpMsg(parse.data)
+                      th.showSpinner = false;
+                    }
+                  },
+                  error => {
+                    // $('#datatablemonitoringlatereturn').DataTable().ajax.reload();
+                    const parse = JSON.parse(error);
+                    th.swalPopUpMsg(parse.data);
+                    th.showSpinner = false;
+                  });
+            }
+          })();
+        } else {
+          this.showSpinner = false;
+        }
+      });
+    }
+  
+    selectAllTable() {
+      for (let i = 0; i < this.listmonitoringlatereturn.length; i++) {
+        // if (this.listmonitoringlatereturn[i].is_calculated !== '1') {
+          this.listmonitoringlatereturn[i].selected = this.selectedAll;
+        // }
+      }
+    }
+  
+    checkIfAllTableSelected() {
+      this.selectedAll = this.listmonitoringlatereturn.every(function (item: any) {
+        return item.selected === true;
+      })
+    }
+    //#endregion btnPost 
 }

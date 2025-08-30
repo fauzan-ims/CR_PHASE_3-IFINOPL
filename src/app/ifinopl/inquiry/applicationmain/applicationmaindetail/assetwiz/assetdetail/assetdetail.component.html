@@ -94,6 +94,19 @@
             <!--#endregion unit_source-->
             <!-- </div> -->
 
+            <!--#region asset_condition-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Condition</label>
+                <select class="form-control col-md-6" disabled [ngModel]="model.asset_condition"
+                  name="p_asset_condition">
+                  <option value='NEW'>NEW</option>
+                  <option value='USED'>USED</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion asset_condition-->
+
             <!--#region row [hidden]="this.params == null"-->
             <!-- <div class="row" > -->
             <!--#region category_code-->
@@ -649,7 +662,7 @@
           <!--#region row-->
           <div class="row">
             <!--#region asset_condition-->
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
               <div class="form-group">
                 <label>Condition</label>
                 <select class="form-control col-md-6" disabled [ngModel]="model.asset_condition"
@@ -658,11 +671,11 @@
                   <option value='USED'>USED</option>
                 </select>
               </div>
-            </div>
+            </div> -->
             <!--#endregion asset_condition-->
 
             <!--#region start_due_date-->
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
               <div class="form-group">
                 <label>Start Due Date</label>
                 <select class="form-control col-md-6" disabled [ngModel]="model.start_due_date" name="p_start_due_date">
@@ -670,8 +683,52 @@
                   <option value='BAST Date + 1'>BAST Date + 1</option>
                 </select>
               </div>
-            </div>
+            </div> -->
             <!--#endregion start_due_date-->
+
+            <!--#region billing_to_faktur_type-->
+            <div class="col-md-4">
+              <label class="labelgsubcode">Faktur Transaction Code *</label>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                    type="button" (click)="btnLookupFakturType()" data-target="#lookupModalFakturType"
+                    data-toggle="modal" href="#">
+                    <i class="fa fa-search-plus"></i></button> <b>{{model.billing_to_faktur_type}}</b>
+                  <input type="text" hidden name="p_billing_to_faktur_type" [ngModel]="model.billing_to_faktur_type"
+                    #billing_to_faktur_type="ngModel" />
+                </div>
+              </div>
+            </div>
+            <!--#endregion billing_to_faktur_type-->
+          </div>
+          <!--#region row-->
+          <div class="row">
+            <!--#region billing_mode-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Billing Mode</label>
+                <select class="form-control col-md-6" disabled [ngModel]="model.billing_mode" name="p_billing_mode"
+                  (change)="billingMode($event)">
+                  <option value='NORMAL'>NORMAL</option>
+                  <option value='BY DATE'>DATE</option>
+                  <option value='BEFORE DUE'>BEFORE DUE</option>
+                  <option value='END MONTH'>END MONTH</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion billing_mode-->
+
+            <!--#region billing_mode_date-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="billing_mode_date" class="control-label">Date *</label>
+                <input disabled type="text" class="form-control col-md-4" [ngModel]="model.billing_mode_date"
+                  name="p_billing_mode_date" required #billing_mode_date="ngModel" maxlength="4"
+                  pattern="{{NumberOnlyPattern}}">
+              </div>
+            </div>
+            <!--#endregion billing_mode_date-->
 
             <!--#region radio button prorate-->
             <div class="col-md-4">
@@ -700,9 +757,9 @@
           <!-- #endregion row  -->
 
           <!--#region row-->
-          <div class="row">
-            <!--#region billing_mode-->
-            <div class="col-md-4">
+          <!-- <div class="row"> -->
+          <!--#region billing_mode-->
+          <!-- <div class="col-md-4">
               <div class="form-group">
                 <label>Billing Mode</label>
                 <select class="form-control col-md-6" disabled [ngModel]="model.billing_mode" name="p_billing_mode"
@@ -713,11 +770,11 @@
                   <option value='END MONTH'>END MONTH</option>
                 </select>
               </div>
-            </div>
-            <!--#endregion billing_mode-->
+            </div> -->
+          <!--#endregion billing_mode-->
 
-            <!--#region billing_to_faktur_type-->
-            <div class="col-md-4">
+          <!--#region billing_to_faktur_type-->
+          <!-- <div class="col-md-4">
               <label class="labelgsubcode">Faktur Transaction Code *</label>
               <div class="form-group">
                 <div class="col-md-12">
@@ -729,20 +786,20 @@
                     #billing_to_faktur_type="ngModel" />
                 </div>
               </div>
-            </div>
-            <!--#endregion billing_to_faktur_type-->
+            </div> -->
+          <!--#endregion billing_to_faktur_type-->
 
-            <!--#region billing_mode_date-->
-            <div class="col-md-4">
+          <!--#region billing_mode_date-->
+          <!-- <div class="col-md-4">
               <div class="form-group">
                 <label for="billing_mode_date" class="control-label">Date *</label>
                 <input disabled type="text" class="form-control col-md-4" [ngModel]="model.billing_mode_date"
                   name="p_billing_mode_date" required #billing_mode_date="ngModel" maxlength="4"
                   pattern="{{NumberOnlyPattern}}">
               </div>
-            </div>
-            <!--#endregion billing_mode_date-->
-          </div>
+            </div> -->
+          <!--#endregion billing_mode_date-->
+          <!-- </div> -->
           <!--#endregion row-->
 
           <!--#region row-->

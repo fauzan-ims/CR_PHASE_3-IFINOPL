@@ -30,6 +30,8 @@ import { SpAmortizationlistComponent } from './spdelivery/spdeliverydetail/spamo
 import { SpAmortizationdetailComponent } from './spdelivery/spdeliverydetail/spamortizationwiz/spamortizationdetail/spamortizationdetail.component';
 import { SpSettlementAmortizationlistComponent } from './spdeliverysettlement/spdeliverysettlementdetail/spsettlementamortizationwiz/spsettlementamortizationlist/spsettlementamortizationlist.component';
 import { SpSettlementAmortizationdetailComponent } from './spdeliverysettlement/spdeliverysettlementdetail/spsettlementamortizationwiz/spsettlementamortizationdetail/spsettlementamortizationdetail.component';
+import { SpAmortizationManuallistComponent } from './spmanual/spmanualdetail/spamortizationwiz/spamortizationlist/spamortizationmanuallist.component';
+import { SpAmortizationManualdetailComponent } from './spmanual/spmanualdetail/spamortizationwiz/spamortizationdetail/spamortizationmanualdetail.component';
 // import { AmortizationdetailComponent } from './deskcolltask/deskcolldetail/amortizationwiz/amortizationdetail/amortizationdetail.component';
 
 export const Collection: Routes = [{
@@ -97,7 +99,21 @@ export const Collection: Routes = [{
                 },
                 {
                     path: 'spmanualdetail/:id', /*update*/
-                    component: SpmanualdetailComponent
+                    component: SpmanualdetailComponent,
+                    children: [
+                        {
+                            path: 'spamortizationlist/:id', /*update*/
+                            component: SpAmortizationManuallistComponent,
+                        },
+                        // {
+                        //     path: 'spamortizationdetail/:id', /*update*/
+                        //     component: SpAmortizationdetailComponent,
+                        // },
+                        {
+                            path: 'spamortizationdetail/:id/:id2',
+                            component: SpAmortizationManualdetailComponent
+                        }
+                    ]
                 },
             ]
         },
@@ -151,6 +167,32 @@ export const Collection: Routes = [{
                 }
             ]
         },
+
+        {
+            path: 'subsplist',
+            component: SplistComponent,
+            canActivate: [AuthGuard],
+            children: [
+                {
+                    path: 'subhistorylist', /*wiz history*/
+                    component: HistorylistComponent
+                },
+                {
+                    path: 'subsp1list', /*wiz sp1*/
+                    component: Sp1listComponent
+                },
+                {
+                    path: 'subsp2list', /*wiz sp3*/
+                    component: Sp2listComponent
+                },
+                {
+                    path: 'subsp3list', /*wiz sp3*/
+                    component: Sp3listComponent
+                },
+            ]
+        },
+
+
 
         // {
         //     path: 'spdeliverydetail/:id', /*detail*/

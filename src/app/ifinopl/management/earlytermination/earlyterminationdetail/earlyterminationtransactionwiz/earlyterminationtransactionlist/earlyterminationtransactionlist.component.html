@@ -23,7 +23,7 @@
             <th class="disabled-sorting">No</th>
             <th>Transaction</th>
             <th>Transaction Amount</th>
-            <th>Discount (%)</th>
+            <th style="display: none;">Discount (%)</th>
             <th>Discount Amount</th>
             <th>Total Amount</th>
           </tr>
@@ -39,19 +39,24 @@
                 class="text-right" type="text" value="{{row.transaction_amount | number : '1.2-2'}}"
                 amount="transaction_amount" name="p_transaction_amount">
             </td>
-            <td style="width: 15%;text-align: right;">
+            <td style="display: none;width: 15%;text-align: right;">
               <input [disabled]="model.et_status !== 'HOLD' || row.is_discount_editable === '0'" id="disc_pct{{i}}"
                 (blur)="onBlur($event,i,'rate')" maxlength="10" (focus)="onFocus($event,i,'rate')" class="text-right"
                 type="text" value="{{row.disc_pct | number : '1.6-6'}}" rate="disc_pct" name="p_disc_pct">
             </td>
-            <td style="width: 15%;text-align: right;">
+            <!-- <td style="width: 15%;text-align: right;">
               <input [disabled]="model.et_status !== 'HOLD' || row.is_discount_editable === '0'" id="disc_amount{{i}}"
+                (blur)="onBlur($event,i,'amount2')" (focus)="onFocus($event,i,'amount2')" class="text-right" type="text"
+                value="{{row.disc_amount | number : '1.2-2'}}" amount="disc_amount" name="p_disc_amount">
+            </td> -->
+            <td style="width: 15%;text-align: right;">
+              <input disabled id="disc_amount{{i}}"
                 (blur)="onBlur($event,i,'amount2')" (focus)="onFocus($event,i,'amount2')" class="text-right" type="text"
                 value="{{row.disc_amount | number : '1.2-2'}}" amount="disc_amount" name="p_disc_amount">
             </td>
             <td style="width: 15%;text-align: right;">
               <input id="total_amount{{i}}" class="text-right" type="text"
-                value="{{row.total_amount | number : '1.2-2'}}" amount="total_amount" name="p_total_amount" disabled>
+                value="{{row.total_amount | number : '1.2-2'}}" amount="total_amount" name="p_total_amount" [disabled]="model.et_status !== 'HOLD' || row.is_discount_editable === '0'">
             </td>
           </tr>
         </tbody>

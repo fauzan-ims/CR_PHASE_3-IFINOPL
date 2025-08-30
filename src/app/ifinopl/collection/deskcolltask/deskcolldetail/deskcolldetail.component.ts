@@ -338,6 +338,12 @@ export class DeskColltaskdetailComponent extends BaseComponent implements OnInit
   btnSelectRowMasterDeskcollResult(Code: String, Name: String) {
     this.model.result_code = Code;
     this.model.result_name = Name;
+    console.log(this.model.sysdate.singleDate.date);
+    console.log(this.model.sysdate.singleDate.date.year+1);
+    console.log(this.system_date.getDate());
+    console.log(this.system_date);
+    
+    
     if (Code == 'MD005') {
       if (this.isFU == true) {
         this.Date();
@@ -566,7 +572,10 @@ export class DeskColltaskdetailComponent extends BaseComponent implements OnInit
       if (this.model.result_code != null) {
         if (this.model.result_code == 'MD005') {
           this.Date();
-        } else if (this.model.result_code != 'MD005' && this.model.result_code != 'MD004') {
+        // } else if (this.model.result_code != 'MD005' && this.model.result_code != 'MD004') {
+        //   this.Date2();
+        // }
+        } else if (this.model.result_code != 'MD005') {
           this.Date2();
         }
       }
@@ -577,21 +586,22 @@ export class DeskColltaskdetailComponent extends BaseComponent implements OnInit
 
   //#region currentDate
   Date() {
-    let day: any = this.system_date.getDate() + 1;
+    let day: any = this.model.sysdate.singleDate.date.day + 1;
     let today: any = 1;
-    let from_month: any = this.system_date.getMonth() + 1;
-    let to_month: any = this.system_date.getMonth() + 2;
-    let year: any = this.system_date.getFullYear();
+    // let from_month: any = this.model.sysdate.singleDate.date.month + 1;
+    let from_month: any = this.model.sysdate.singleDate.date.month;
+    let to_month: any = this.model.sysdate.singleDate.date.month + 2;
+    let year: any = this.model.sysdate.singleDate.date.year;
 
-    if (day < 10) {
-      day = '0' + day.toString();
-    }
-    if (from_month < 10) {
-      from_month = '0' + from_month.toString();
-    }
-    if (to_month < 10) {
-      to_month = '0' + to_month.toString();
-    }
+    // if (day < 10) {
+    //   day = '0' + day.toString();
+    // }
+    // if (from_month < 10) {
+    //   from_month = '0' + from_month.toString();
+    // }
+    // if (to_month < 10) {
+    //   to_month = '0' + to_month.toString();
+    // }
 
     this.nextFUDate = { 'year': ~~year, 'month': ~~from_month, 'day': ~~day.toString() };
     const obj2 = {
@@ -612,21 +622,22 @@ export class DeskColltaskdetailComponent extends BaseComponent implements OnInit
 
   //#region currentDate
   Date2() {
-    let day: any = this.system_date.getDate() + 7;
+    let day: any = this.model.sysdate.singleDate.date.day + 7;
     let today: any = 1;
-    let from_month: any = this.system_date.getMonth() + 1;
-    let to_month: any = this.system_date.getMonth() + 2;
-    let year: any = this.system_date.getFullYear();
+    // let from_month: any = this.model.sysdate.singleDate.date.month + 1;
+    let from_month: any = this.model.sysdate.singleDate.date.month;
+    let to_month: any = this.model.sysdate.singleDate.date.month + 2;
+    let year: any = this.model.sysdate.singleDate.date.year;
 
-    if (day < 10) {
-      day = '0' + day.toString();
-    }
-    if (from_month < 10) {
-      from_month = '0' + from_month.toString();
-    }
-    if (to_month < 10) {
-      to_month = '0' + to_month.toString();
-    }
+    // if (day < 10) {
+    //   day = '0' + day.toString();
+    // }
+    // if (from_month < 10) {
+    //   from_month = '0' + from_month.toString();
+    // }
+    // if (to_month < 10) {
+    //   to_month = '0' + to_month.toString();
+    // }
 
     this.nextFUDate = { 'year': ~~year, 'month': ~~from_month, 'day': ~~day.toString() };
     const obj2 = {

@@ -134,6 +134,7 @@ import { ObjectInfoApprovalpurchaseorderlistComponent } from './objectinfo/objec
 import { MasterContractChargeslistComponent } from './mastercontract/mastercontractdetail/chargeswiz/chargeslist/chargeslist.component';
 import { MasterContractChargesdetailComponent } from './mastercontract/mastercontractdetail/chargeswiz/chargesdetail/chargesdetail.component';
 import { tclistComponent } from './mastercontract/mastercontractdetail/tc/tclist/tclist.component';
+import { DocumentlistComponent } from './mastercontract/mastercontractdetail/documentwiz/documentlist/documentlist.component';
 
 export const Application: Routes = [{
     path: '',
@@ -585,6 +586,10 @@ export const Application: Routes = [{
                         {
                             path: 'tclist/:id',
                             component: tclistComponent
+                        },
+                        {
+                            path: 'documentlist/:id',
+                            component: DocumentlistComponent
                         },
                     ]
                 },

@@ -109,7 +109,7 @@
                             <!--#region date-->
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="date" class="control-label">Date *</label>
+                                    <label for="date" class="control-label">Shipping Date *</label>
                                     <div>
                                         <input [ngStyle]="getStyles(model.status !== 'HOLD')"
                                             class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
@@ -238,7 +238,7 @@
                             <!--#region client_address-->
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="client_address" class="control-label">Delivery Address</label>
+                                    <label for="client_address" class="control-label">Billing To Address</label>
                                     <textarea type="text" class="form-control" [ngModel]="model.client_address"
                                         name="p_client_address" #client_address="ngModel" readonly>
                                         </textarea>

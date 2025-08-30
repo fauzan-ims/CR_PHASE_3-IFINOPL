@@ -135,7 +135,7 @@ export class AgreementassetdetailComponent extends BaseComponent implements OnIn
             parsedata.is_bbn_client = false
             this.isBBNClient = false
           }
-          
+
           if (parsedata.is_purchase_requirement_after_lease === '1') {
             parsedata.is_purchase_requirement_after_lease = true;
           } else {
@@ -157,6 +157,15 @@ export class AgreementassetdetailComponent extends BaseComponent implements OnIn
         });
   }
   //#endregion getrow data
+
+  //#region billingMode
+  billingMode(event: any) {
+    if (event.target.value === 'NORMAL') {
+      this.model.billing_mode = event.target.value;
+      this.model.billing_mode_date = '0';
+    }
+  }
+  //#endregion billingMode
 
   //#region List tabs
   amortizationwiz() {

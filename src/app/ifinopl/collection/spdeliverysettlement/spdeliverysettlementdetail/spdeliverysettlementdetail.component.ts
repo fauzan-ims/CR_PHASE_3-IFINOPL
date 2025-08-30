@@ -202,10 +202,9 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
           // mapper dbtoui
           Object.assign(this.model, parsedata);
           // end mapper dbtoui
-          if (this.model.delivery_status == 'DONE')
-          {
+          if (this.model.delivery_status == 'DONE') {
             this.isButton = true
-          }else{
+          } else {
             this.isButton = false
           }
           this.showSpinner = false;
@@ -299,32 +298,32 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
         buttonsStyling: false,
         confirmButtonClass: 'btn btn-warning',
         type: 'warning'
-        }).catch(swal.noop);
+      }).catch(swal.noop);
       return;
     }
 
     this.spdeliverysettlementData = this.JSToNumberFloats(spdeliverysettlementForm);
     const usersJson: any[] = Array.of(this.spdeliverysettlementData);
-      // call web service
-      this.dalservice.Update(usersJson, this.APIController, this.APIRouteForSave)
-        .subscribe(
-          res => {
-            this.showSpinner = false;
-            const parse = JSON.parse(res);
-            if (parse.result === 1) {
-              this.showNotification('bottom', 'right', 'success');
-              this.callGetrow();
-            } else {
-              this.swalPopUpMsg(parse.data);
-            }
-          },
-          error => {
-            this.showSpinner = false;
-            const parse = JSON.parse(error);
+    // call web service
+    this.dalservice.Update(usersJson, this.APIController, this.APIRouteForSave)
+      .subscribe(
+        res => {
+          this.showSpinner = false;
+          const parse = JSON.parse(res);
+          if (parse.result === 1) {
+            this.showNotification('bottom', 'right', 'success');
+            this.callGetrow();
+          } else {
             this.swalPopUpMsg(parse.data);
+          }
+        },
+        error => {
+          this.showSpinner = false;
+          const parse = JSON.parse(error);
+          this.swalPopUpMsg(parse.data);
 
-          });
-    }
+        });
+  }
   // onFormSubmit(spdeliverysettlementForm: NgForm, isValid: boolean) {
   //   // validation form submit
   //   if (!isValid) {
@@ -1000,7 +999,7 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
 
     if (this.CheckFileSize(files[0].size, this.tempFileSize)) {
       this.swalPopUpMsg('V;File size must be less or equal to ' + this.tempFileSize + ' MB');
-              } else {
+    } else {
       if (event.target.files && event.target.files[0]) {
         const reader = new FileReader();
 
@@ -1065,7 +1064,7 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
   deleteImage(file_name: any, path: any, code: any) {
     console.log(code)
     console.log(this.tampDocumentCode)
-              this.showSpinner = true;
+    this.showSpinner = true;
     const usersJson: any[] = Array.of();
     usersJson.push({
       'p_code': code,
@@ -1086,24 +1085,24 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
       this.showSpinner = true;
       if (result.value) {
         this.dalservice.DeleteFile(usersJson, this.APIController, this.APIRouteForDeleteFile)
-                .subscribe(
-                  res => {
-                    const parse = JSON.parse(res);
-                    if (parse.result === 1) {
-                        this.showSpinner = false;
-                        this.showNotification('bottom', 'right', 'success');
+          .subscribe(
+            res => {
+              const parse = JSON.parse(res);
+              if (parse.result === 1) {
+                this.showSpinner = false;
+                this.showNotification('bottom', 'right', 'success');
                 $('#fileControl').val();
                 this.tempFile = undefined;
-                    } else {
-                      this.showSpinner = false;
+              } else {
+                this.showSpinner = false;
                 this.swalPopUpMsg(parse.message);
-                    }
+              }
               this.callGetrow();
               // $('#datatableReturnDetail').DataTable().ajax.reload();
-                  },
-                  error => {
-                    this.showSpinner = false;
-                    const parse = JSON.parse(error);
+            },
+            error => {
+              this.showSpinner = false;
+              const parse = JSON.parse(error);
               this.swalPopUpMsg(parse.message);
             });
       } else {
@@ -1114,75 +1113,75 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
   //#endregion button delete image
 
   //#region Lookup Parking Location
-    btnLookupModalReason() {
-        $('#datatableLookupModalReason').DataTable().clear().destroy();
-        $('#datatableLookupModalReason').DataTable({
-            'pagingType': 'first_last_numbers',
-            'pageLength': 5,
-            'processing': true,
-            'serverSide': true,
-            responsive: true,
-            lengthChange: false, // hide lengthmenu
-            searching: true, // jika ingin hilangin search box nya maka false
-            ajax: (dtParameters: any, callback) => {
-                // param tambahan untuk getrows dynamic
-                dtParameters.paramTamp = [];
-                dtParameters.paramTamp.push({
-                    // 'p_company_code': this.company_code,
-                    'p_general_code': 'RSRJT'
-                });
-
-                // end param tambahan untuk getrows dynamic
-                this.dalservice.Getrows(dtParameters, this.APIControllerType, this.APIRouteLookup).subscribe(resp => {
-                    const parse = JSON.parse(resp);
-
-                    this.lookupReasonData = parse.data;
-                    if (parse.data != null) {
-                        this.lookupReasonData.numberIndex = dtParameters.start;
-    }
-
-                    callback({
-                        draw: parse.draw,
-                        recordsTotal: parse.recordsTotal,
-                        recordsFiltered: parse.recordsFiltered,
-                        data: []
-                    });
-                }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
-            },
-            columnDefs: [{ orderable: false, width: '5%', targets: [0,4] }], // for disabled coloumn
-            language: {
-                search: '_INPUT_',
-                searchPlaceholder: 'Search records',
-                infoEmpty: '<p style="color:red;" > No Data Available !</p> '
-            },
-            searchDelay: 800 // pake ini supaya gak bug search
+  btnLookupModalReason() {
+    $('#datatableLookupModalReason').DataTable().clear().destroy();
+    $('#datatableLookupModalReason').DataTable({
+      'pagingType': 'first_last_numbers',
+      'pageLength': 5,
+      'processing': true,
+      'serverSide': true,
+      responsive: true,
+      lengthChange: false, // hide lengthmenu
+      searching: true, // jika ingin hilangin search box nya maka false
+      ajax: (dtParameters: any, callback) => {
+        // param tambahan untuk getrows dynamic
+        dtParameters.paramTamp = [];
+        dtParameters.paramTamp.push({
+          // 'p_company_code': this.company_code,
+          'p_general_code': 'RSRJT'
         });
-    }
 
-    btnSelectRowModalReason(code: string, general_subcode_desc: string) {
-        this.model.reason_code = code;
-        this.model.reason_desc = general_subcode_desc;
-        $('#lookupModalReason').modal('hide');
-        // $('#datatable').DataTable().ajax.reload();
-        // this.callGetrow();
-    }
+        // end param tambahan untuk getrows dynamic
+        this.dalservice.Getrows(dtParameters, this.APIControllerType, this.APIRouteLookup).subscribe(resp => {
+          const parse = JSON.parse(resp);
 
-    btnClearModalReason() {
-        this.model.reason_desc = undefined;
-        this.model.reason_code = undefined;
-        // $('#datatable').DataTable().ajax.reload();
-        // this.callGetrow();
+          this.lookupReasonData = parse.data;
+          if (parse.data != null) {
+            this.lookupReasonData.numberIndex = dtParameters.start;
+          }
+
+          callback({
+            draw: parse.draw,
+            recordsTotal: parse.recordsTotal,
+            recordsFiltered: parse.recordsFiltered,
+            data: []
+          });
+        }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
+      },
+      columnDefs: [{ orderable: false, width: '5%', targets: [0, 4] }], // for disabled coloumn
+      language: {
+        search: '_INPUT_',
+        searchPlaceholder: 'Search records',
+        infoEmpty: '<p style="color:red;" > No Data Available !</p> '
+      },
+      searchDelay: 800 // pake ini supaya gak bug search
+    });
   }
-    //#endregion Lookup Parking Location
 
-    //#region ddl clientType
-    resultType(event: any) {
-        this.isFailed = this.model.result === 'Failed';
-        console.log(this.model.result)
-    }
-    //#endregion ddl clientType
+  btnSelectRowModalReason(code: string, general_subcode_desc: string) {
+    this.model.reason_code = code;
+    this.model.reason_desc = general_subcode_desc;
+    $('#lookupModalReason').modal('hide');
+    // $('#datatable').DataTable().ajax.reload();
+    // this.callGetrow();
+  }
 
-     //#region lookup Deliverycollector
+  btnClearModalReason() {
+    this.model.reason_desc = undefined;
+    this.model.reason_code = undefined;
+    // $('#datatable').DataTable().ajax.reload();
+    // this.callGetrow();
+  }
+  //#endregion Lookup Parking Location
+
+  //#region ddl clientType
+  resultType(event: any) {
+    this.isFailed = this.model.result === 'Failed';
+    console.log(this.model.result)
+  }
+  //#endregion ddl clientType
+
+  //#region lookup Deliverycollector
   btnLookupDeliveryAddress() {
     $('#datatableLookupDeliveryAddress').DataTable().clear().destroy();
     $('#datatableLookupDeliveryAddress').DataTable({
@@ -1227,7 +1226,7 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
     });
     // } , 1000);
   }
-  btnSelectRowDeliveryAddress(delivery_address: String, delivery_to_name: String, client_phone_no:String, client_npwp:String, client_email:String) {
+  btnSelectRowDeliveryAddress(delivery_address: String, delivery_to_name: String, client_phone_no: String, client_npwp: String, client_email: String) {
     this.model.delivery_address = delivery_address;
     this.model.delivery_to_name = delivery_to_name;
     this.model.client_phone_no = client_phone_no;

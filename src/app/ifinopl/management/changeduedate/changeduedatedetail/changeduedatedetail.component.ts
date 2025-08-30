@@ -35,8 +35,10 @@ export class ChangeduedatedetailComponent extends BaseComponent implements OnIni
   private dataTamp: any = [];
   private dataTampDynamic: any = [];
   private dataTampTransaction: any = [];
+  public lookupbillingtype: any = [];
 
   //Controller
+  private APIControllerBillingType: String = 'MasterBillingType';
   private APIController: String = 'DueDateChangeMain';
   private APIControllerSysBranch: String = 'SysBranch';
   private APIControllerAgreementMain: String = 'AgreementMain';
@@ -60,7 +62,7 @@ export class ChangeduedatedetailComponent extends BaseComponent implements OnIni
   private APIRouteForProceed: String = 'ExecSpForProceed';
   private APIRouteForCancel: String = 'ExecSpForCancel';
   private APIRouteForRevert: String = 'ExecSpForRevert';
-  
+
   private RoleAccessCode = 'R00023870000001A'; // role access 
 
   // report
@@ -157,74 +159,76 @@ export class ChangeduedatedetailComponent extends BaseComponent implements OnIni
   }
   //#endregion
 
- //#region form submit
- onFormSubmit(earlyterminationForm: NgForm, isValid: boolean) {
-  // validation form submit
-  if (!isValid) {
-    swal({
-      title: 'Warning',
-      text: 'Please Fill a Mandatory Field OR Format Is Invalid',
-      buttonsStyling: false,
-      confirmButtonClass: 'btn btn-warning',
-      type: 'warning'
-    }).catch(swal.noop)
-    return;
-  } else {
-    this.showSpinner = true;
-  }
+  //#region form submit
+  onFormSubmit(earlyterminationForm: NgForm, isValid: boolean) {
+    // validation form submit
+    if (!isValid) {
+      swal({
+        title: 'Warning',
+        text: 'Please Fill a Mandatory Field OR Format Is Invalid',
+        buttonsStyling: false,
+        confirmButtonClass: 'btn btn-warning',
+        type: 'warning'
+      }).catch(swal.noop)
+      return;
+    } else {
+      this.showSpinner = true;
+    }
 
-  this.earlyterminationData = this.JSToNumberFloats(earlyterminationForm);
-  const usersJson: any[] = Array.of(this.earlyterminationData);
-  if (this.param != null) {
-    // call web service
-    this.dalservice.Update(usersJson, this.APIController, this.APIRouteForUpdate)
-      .subscribe(
-        res => {
-          const parse = JSON.parse(res);
-          if (parse.result === 1) {
-            this.callGetrow();
-            $('#datatableAgreement').DataTable().ajax.reload();
-            $('#datatableTransaction').DataTable().ajax.reload();
-            $('#datatableTransactionChangeDueDate').DataTable().ajax.reload();
-            this.showNotification('bottom', 'right', 'success');
-            this.showSpinner = false;
-          } else {
+    this.earlyterminationData = this.JSToNumberFloats(earlyterminationForm);
+    const usersJson: any[] = Array.of(this.earlyterminationData);
+    console.log(usersJson);
+    
+    if (this.param != null) {
+      // call web service
+      this.dalservice.Update(usersJson, this.APIController, this.APIRouteForUpdate)
+        .subscribe(
+          res => {
+            const parse = JSON.parse(res);
+            if (parse.result === 1) {
+              this.callGetrow();
+              $('#datatableAgreement').DataTable().ajax.reload();
+              $('#datatableTransaction').DataTable().ajax.reload();
+              $('#datatableTransactionChangeDueDate').DataTable().ajax.reload();
+              this.showNotification('bottom', 'right', 'success');
+              this.showSpinner = false;
+            } else {
+              this.swalPopUpMsg(parse.data);
+              this.showSpinner = false;
+            }
+          },
+          error => {
+            const parse = JSON.parse(error);
             this.swalPopUpMsg(parse.data);
             this.showSpinner = false;
-          }
-        },
-        error => {
-          const parse = JSON.parse(error);
-          this.swalPopUpMsg(parse.data);
-          this.showSpinner = false;
-        });
-  } else {
-    // call web service
-    this.dalservice.Insert(usersJson, this.APIController, this.APIRouteForInsert)
-      .subscribe(
-        res => {
-          const parse = JSON.parse(res);
-          if (parse.result === 1) {
-            this.route.navigate(['/management/subchangeduedatelistifinopl/changeduedatedetail', parse.code]);
-            this.callGetrow();
-            $('#datatableInformation').DataTable().ajax.reload();
-            $('#datatableTransaction').DataTable().ajax.reload();
-            $('#datatabledetail').DataTable().ajax.reload();
-            this.showNotification('bottom', 'right', 'success');
-            this.showSpinner = false;
-          } else {
+          });
+    } else {
+      // call web service
+      this.dalservice.Insert(usersJson, this.APIController, this.APIRouteForInsert)
+        .subscribe(
+          res => {
+            const parse = JSON.parse(res);
+            if (parse.result === 1) {
+              this.route.navigate(['/management/subchangeduedatelistifinopl/changeduedatedetail', parse.code]);
+              this.callGetrow();
+              $('#datatableInformation').DataTable().ajax.reload();
+              $('#datatableTransaction').DataTable().ajax.reload();
+              $('#datatabledetail').DataTable().ajax.reload();
+              this.showNotification('bottom', 'right', 'success');
+              this.showSpinner = false;
+            } else {
+              this.swalPopUpMsg(parse.data);
+              this.showSpinner = false;
+            }
+          },
+          error => {
+            const parse = JSON.parse(error);
             this.swalPopUpMsg(parse.data);
             this.showSpinner = false;
-          }
-        },
-        error => {
-          const parse = JSON.parse(error);
-          this.swalPopUpMsg(parse.data);
-          this.showSpinner = false;
-        });
+          });
+    }
   }
-}
-//#endregion form submit
+  //#endregion form submit
 
   //#region btnProceed
   btnProceed(code: any) {
@@ -604,6 +608,55 @@ export class ChangeduedatedetailComponent extends BaseComponent implements OnIni
     });
   }
   //#endregion approval Lookup
+
+  //#region BillingType Lookup
+  btnLookupBillingType() {
+    $('#datatableLookupBillingType').DataTable().clear().destroy();
+    $('#datatableLookupBillingType').DataTable({
+      'pagingType': 'first_last_numbers',
+      'pageLength': 5,
+      'processing': true,
+      'serverSide': true,
+      responsive: true,
+      lengthChange: false, // hide lengthmenu
+      searching: true, // jika ingin hilangin search box nya maka false
+      ajax: (dtParameters: any, callback) => {
+
+        dtParameters.paramTamp = [];
+        dtParameters.paramTamp.push({
+          'default': ''
+        });
+
+        this.dalservice.Getrows(dtParameters, this.APIControllerBillingType, this.APIRouteForLookup).subscribe(resp => {
+          const parse = JSON.parse(resp);
+          this.lookupbillingtype = parse.data;
+          if (parse.data != null) {
+            this.lookupbillingtype.numberIndex = dtParameters.start;
+          }
+          callback({
+            draw: parse.draw,
+            recordsTotal: parse.recordsTotal,
+            recordsFiltered: parse.recordsFiltered,
+            data: []
+          });
+        }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
+      },
+      columnDefs: [{ orderable: false, width: '5%', targets: [0, 1, 4] }], // for disabled coloumn
+      language: {
+        search: '_INPUT_',
+        searchPlaceholder: 'Search records',
+        infoEmpty: '<p style="color:red;" > No Data Available !</p> '
+      },
+      searchDelay: 800 // pake ini supaya gak bug search
+    });
+  }
+
+  btnSelectRowBillingType(code: String, description: String) {
+    this.model.billing_type = code;
+    this.model.billing_type_desc = description;
+    $('#lookupModalBillingType').modal('hide');
+  }
+  //#endregion BillingType lookup
 }
 
 

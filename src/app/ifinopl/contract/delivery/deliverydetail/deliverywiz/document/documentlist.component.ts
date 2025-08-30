@@ -17,33 +17,51 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class DocumentlistComponent extends BaseComponent implements OnInit {
   // get param from url
   param = this.getRouteparam.snapshot.paramMap.get('id');
+  pageType = this.getRouteparam.snapshot.paramMap.get('page');
 
   // variable
   public listdoc: any = [];
+  public docData: any = [];
+  public tempFile: any;
   public listdataDoc: any = [];
-  public valid: String;
+  public listID: any = [];
+  public listExpDate: any = [];
+  private tampDocumentCode: String;
   private dataTamp: any = [];
+  private dataTampDelete: any = [];
+  private dataTampDeleteFile: any = [];
+  private dataTamps: any = [];
+  private base64textString: string;
+  private tamps = new Array();
+  public expired_date: String;
+  private tempFileSize: any;
   private dataTempThirdParty: any = [];
   private DocumentIframe: any;
   private tempURL: any;
   private tempLiteDmsUser: any;
   private tempLiteDmsRole: any;
-  private tempLiteDmsOptionAllRole: any;
-  private tempLiteDmsOptionViewRole: any;
+  // private tempLiteDmsOptionAllRole: any;
+  // private tempLiteDmsOptionViewRole: any;
   private tempLiteDmsOption: any;
 
   private APIController: String = 'ApplicationDoc';
   private APIControllerSysGlobalparam: String = 'SysGlobalparam';
-  private APIControllerRealization: String = 'Realization';
+  private APIControllerApplicationMain: String = 'ApplicationMain';
 
 
+  private APIRouteForDelete: String = 'Delete';
   private APIRouteForGetThirddParty: String = 'ExecSpForGetThirddParty';
   private APIRouteForGetRow: String = 'GetRow';
   private APIRouteForGetRows: String = 'GetRows';
-  private APIRouteForUpdateIsValid: String = 'ExecSpForUpdateIsValid';
+  // private APIRouteForUpdateIsValid: String = 'ExecSpForUpdateIsValid';
   private APIRouteForUpdate: String = 'Update';
+  private APIRouteForUploadFile: String = 'Upload';
+  private APIRouteForDeleteFile: String = 'Deletefile';
+  private APIRouteForPriviewFile: String = 'Priview';
+  private APIRouteForGenerate: String = 'ExecSpForGenerate';
+  private APIRouteForGetRowsForDelete: String = 'ExecSpForGetRowsForDelete';
 
-  private RoleAccessCode = 'R00020670000000A'; // role access 
+  private RoleAccessCode = 'R00019900000000A'; // role access 
 
   // form 2 way binding
   model: any = {};
@@ -65,20 +83,24 @@ export class DocumentlistComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     this.callGetRole(this.userId, this._elementRef, this.dalservice, this.RoleAccessCode, this.route);
-    this.compoSide('', this._elementRef, this.route);
+    // this.compoSide('', this._elementRef, this.route);
     this.loadData();
-    this.callGetrowRealization();
+    // this.callGetrowRealization();
+    this.callGetrow();
+    this.callGetrowApplicationMain();
     this.callGlobalParamForThirdPartyLiteDMS();
   }
 
   //#region callGetrowRealization
-  callGetrowRealization() {
+  // callGetrowRealization() {
+  //#region callGetrowApplicationMain
+  callGetrowApplicationMain() {
 
     this.dataTamp = [{
-      'p_code': this.param
+      'p_application_no': this.param
     }];
 
-    this.dalservice.Getrow(this.dataTamp, this.APIControllerRealization, this.APIRouteForGetRow)
+    this.dalservice.Getrow(this.dataTamp, this.APIControllerApplicationMain, this.APIRouteForGetRow)
       .subscribe(
         res => {
           const parse = JSON.parse(res);
@@ -87,8 +109,7 @@ export class DocumentlistComponent extends BaseComponent implements OnInit {
           // mapper dbtoui
           Object.assign(this.model, parsedata);
           // end mapper dbtoui
-
-          $('#datatableApplicationDocument').DataTable().ajax.reload();
+          // $('#datatableApplicationDocument').DataTable().ajax.reload();
 
           this.showSpinner = false;
         },
@@ -98,7 +119,30 @@ export class DocumentlistComponent extends BaseComponent implements OnInit {
           this.swalPopUpMsg(parse.data);
         });
   }
-  //#endregion callGetrowRealization
+  //#endregion callGetrowApplicationMain
+
+  //#region getrow data
+  callGetrow() {
+
+    this.dataTamp = [{
+      'p_code': 'FUPS'
+    }];
+
+    this.dalservice.Getrow(this.dataTamp, this.APIControllerSysGlobalparam, this.APIRouteForGetRow)
+      .subscribe(
+        res => {
+          const parse = JSON.parse(res);
+          const parsedata = parse.data[0];
+
+          this.tempFileSize = parsedata.file_size;
+
+          this.showSpinner = false;
+        },
+        error => {
+          console.log('There was an error while Retrieving Data(API) !!!' + error);
+        });
+  }
+  //#endregion getrow data
 
   //#region GlobalParam for Thirdparty
   callGlobalParamForThirdPartyLiteDMS() {
@@ -125,10 +169,11 @@ export class DocumentlistComponent extends BaseComponent implements OnInit {
               this.tempLiteDmsRole = parsedata[i].value
             }
             else if (parsedata[i].code === 'ENIFR06') {
-              this.tempLiteDmsOptionAllRole = parsedata[i].value
-            }
-            else if (parsedata[i].code === 'ENIFR07') {
-              this.tempLiteDmsOptionViewRole = parsedata[i].value
+              // this.tempLiteDmsOptionAllRole = parsedata[i].value
+              // }
+              // else if (parsedata[i].code === 'ENIFR07') {
+              this.tempLiteDmsOption = parsedata[i].value
+              // this.tempLiteDmsOptionViewRole = parsedata[i].value
             }
           }
 
@@ -156,11 +201,12 @@ export class DocumentlistComponent extends BaseComponent implements OnInit {
 
         dtParameters.paramTamp = [];
         dtParameters.paramTamp.push({
-          'p_application_no': this.model.application_no
+          'p_application_no': this.param
         });
 
         this.dalservice.Getrows(dtParameters, this.APIController, this.APIRouteForGetRows).subscribe(resp => {
           const parse = JSON.parse(resp);
+
           for (let i = 0; i < parse.data.length; i++) {
             // checkbox
             if (parse.data[i].is_valid === '1') {
@@ -171,6 +217,7 @@ export class DocumentlistComponent extends BaseComponent implements OnInit {
             // end checkbox
 
           }
+
           this.listdoc = parse.data;
           if (parse.data != null) {
             this.listdoc.numberIndex = dtParameters.start;
@@ -183,7 +230,7 @@ export class DocumentlistComponent extends BaseComponent implements OnInit {
           });
         }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
       },
-      columnDefs: [{ orderable: false, width: '5%', targets: [0, 1, 4] }], // for disabled coloumn
+      columnDefs: [{ orderable: false, width: '5%', targets: [0, 1] }], // for disabled coloumn
       language: {
         search: '_INPUT_',
         searchPlaceholder: 'Search records',
@@ -194,79 +241,430 @@ export class DocumentlistComponent extends BaseComponent implements OnInit {
   }
   //#endregion load all data
 
-  //#region isValid
-  isValid(event: any, remark: any, id: any) {
-    this.showSpinner = true;
+  //#region button save in list
+  saveList() {
 
-    if (event.target.checked === true) {
-      this.valid = 'T'
-    } else {
-      this.valid = 'F'
+    this.showSpinner = true;
+    this.listdataDoc = [];
+
+    let i = 0;
+
+    const getID = $('[name="p_id"]')
+      .map(function () { return $(this).val(); }).get();
+
+    const getReceivedDate = $('[name="p_received_date"]')
+      .map(function () { return $(this).val(); }).get();
+
+    const getPromiseDate = $('[name="p_promise_date"]')
+      .map(function () { return $(this).val(); }).get();
+
+
+    while (i < getID.length) {
+
+      while (i < getReceivedDate.length) {
+
+        while (i < getPromiseDate.length) {
+          if (getReceivedDate[i] === '') {
+            getReceivedDate[i] = undefined;
+          }
+          if (getPromiseDate[i] === '') {
+            getPromiseDate[i] = undefined;
+          }
+          this.listdataDoc.push({
+            p_id: getID[i],
+            p_received_date: this.dateFormatList(getReceivedDate[i]),
+            p_promise_date: this.dateFormatList(getPromiseDate[i]),
+            p_is_tbo: '1'
+          });
+
+          i++;
+        }
+
+        i++;
+      }
+
+      i++;
     }
 
-    this.dataTamp = [{
-      'p_id': id,
-      'p_application_no': this.param,
-      'p_remarks': remark,
-      'p_is_valid': this.valid,
-      'action': 'default'
-    }];
-
-    this.dalservice.ExecSp(this.dataTamp, this.APIController, this.APIRouteForUpdateIsValid)
+    //#region web service
+    this.dalservice.Update(this.listdataDoc, this.APIController, this.APIRouteForUpdate)
       .subscribe(
         res => {
           const parse = JSON.parse(res);
           if (parse.result === 1) {
             this.showSpinner = false;
+            $('#applicationDetail').click();
             this.showNotification('bottom', 'right', 'success');
             $('#datatableApplicationDocument').DataTable().ajax.reload();
           } else {
             this.showSpinner = false;
             this.swalPopUpMsg(parse.data);
-            $('#datatableApplicationDocument').DataTable().ajax.reload();
+            // $('#datatableApplicationDocument').DataTable().ajax.reload();
           }
         },
         error => {
           this.showSpinner = false;
           const parse = JSON.parse(error);
-          this.swalPopUpMsg(parse.data)
+          this.swalPopUpMsg(parse.data);
         });
-  }
-  //#endregion isValid
+    //#endregion web service
 
-  //#region isValid
-  saveRemarks(event: any, isValid: any, id: any) {
+  }
+  //#endregion button save in list
+
+  //#region button priview image
+  previewFile(row1, row2) {
     this.showSpinner = true;
+    const usersJson: any[] = Array.of();
 
+    usersJson.push({
+      p_file_name: row1,
+      p_file_paths: row2
+    });
+
+    this.dalservice.PriviewFile(usersJson, this.APIController, this.APIRouteForPriviewFile)
+      .subscribe(
+        (res) => {
+          const parse = JSON.parse(res);
+          if (parse.value.filename !== '') {
+            console.log('doc name', parse.value.filename);
+
+            const fileType = parse.value.filename.split('.').pop();
+            if (fileType === 'PNG') {
+              const newTab = window.open();
+              newTab.document.body.innerHTML = this.pngFile(parse.value.data);
+              this.showSpinner = false;
+            }
+            if (fileType === 'JPEG' || fileType === 'JPG') {
+              const newTab = window.open();
+              newTab.document.body.innerHTML = this.jpgFile(parse.value.data);
+              this.showSpinner = false;
+            }
+            if (fileType === 'PDF') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'pdf');
+              // const newTab = window.open();
+              // newTab.document.body.innerHTML = this.pdfFile(parse.value.data);
+              // this.showSpinner = false;
+            }
+            if (fileType === 'DOCX' || fileType === 'DOC') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'msword');
+            }
+            if (fileType === 'XLSX') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.ms-excel');
+            }
+            if (fileType === 'PPTX') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.ms-powerpoint');
+            }
+            if (fileType === 'TXT') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'txt');
+            }
+            if (fileType === 'ODT' || fileType === 'ODS' || fileType === 'ODP') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.oasis.opendocument');
+            }
+            if (fileType === 'ZIP') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'zip');
+            }
+            if (fileType === '7Z') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'x-7z-compressed');
+            }
+            if (fileType === 'RAR') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.rar');
+            }
+          }
+        }
+      );
+  }
+
+  downloadFile(base64: string, fileName: string, extention: string) {
+    var temp = 'data:application/' + extention + ';base64,'
+      + encodeURIComponent(base64);
+    var download = document.createElement('a');
+    download.href = temp;
+    download.download = fileName;
+    document.body.appendChild(download);
+    download.click();
+    document.body.removeChild(download);
+    this.showSpinner = false;
+  }
+  //#endregion button priview image
+
+  //#region button delete image
+  deleteImage(code: String, file_name: any, paths: any, exp_date: string) {
+    this.showSpinner = true;
+    const usersJson: any[] = Array.of();
+    usersJson.push({
+      'p_id': code,
+      'p_file_name': file_name,
+      'p_file_paths': paths,
+      'p_expired_date': exp_date
+    });
+
+    swal({
+      allowOutsideClick: false,
+      title: 'Are you sure?',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonClass: 'btn btn-success',
+      cancelButtonClass: 'btn btn-danger',
+      confirmButtonText: 'Yes',
+      buttonsStyling: false
+    }).then((result) => {
+      this.showSpinner = true;
+      if (result.value) {
+
+        this.dalservice.DeleteFile(usersJson, this.APIController, this.APIRouteForDeleteFile)
+          .subscribe(
+            res => {
+              const parse = JSON.parse(res);
+              if (parse.result === 1) {
+                this.showSpinner = false;
+                this.showNotification('bottom', 'right', 'success');
+              } else {
+                this.showSpinner = false;
+                this.swalPopUpMsg(parse.message);
+              }
+              $('#applicationDetail').click();
+              $('#datatableApplicationDocument').DataTable().ajax.reload();
+            },
+            error => {
+              this.showSpinner = false;
+              const parse = JSON.parse(error);
+              this.swalPopUpMsg(parse.message);
+            });
+      } else {
+        this.showSpinner = false;
+      }
+    });
+  }
+  //#endregion button delete image 
+
+  //#region button select image
+  onUpload(event, code: String) {
+    const files = event.target.files;
+    const file = files[0];
+
+    if (this.CheckFileSize(files[0].size, this.tempFileSize)) {
+      this.swalPopUpMsg('V;File size must be less or equal to ' + this.tempFileSize + ' MB');
+      $('#datatableApplicationDocument').DataTable().ajax.reload();
+    } else {
+      if (event.target.files && event.target.files[0]) {
+        const reader = new FileReader();
+
+        reader.readAsDataURL(event.target.files[0]); // read file as data url
+
+        // tslint:disable-next-line:no-shadowed-variable
+        reader.onload = (event) => {
+          reader.onload = this.handleFile.bind(this);
+          reader.readAsBinaryString(file);
+        }
+      }
+      this.tempFile = files[0].name;
+      this.tampDocumentCode = code;
+    }
+  }
+  //#endregion button select image
+
+  //#region convert to base64
+  handleFile(event) {
+    this.showSpinner = true;
+    const binaryString = event.target.result;
+    this.base64textString = btoa(binaryString);
+
+    this.tamps.push({
+      p_module: 'IFINLOS',
+      p_header: 'APPLICATION_DOCUMENT',
+      p_child: this.param,
+      p_id: this.tampDocumentCode,
+      p_file_paths: this.tampDocumentCode,
+      p_file_name: this.tempFile,
+      p_base64: this.base64textString
+    });
+
+    this.dalservice.UploadFile(this.tamps, this.APIController, this.APIRouteForUploadFile)
+      .subscribe(
+        // tslint:disable-next-line:no-shadowed-variable
+        res => {
+          this.tamps = new Array();
+          // tslint:disable-next-line:no-shadowed-variable
+          const parses = JSON.parse(res);
+          if (parses.result === 1) {
+            this.showSpinner = false;
+          } else {
+            this.showSpinner = false;
+            this.swalPopUpMsg(parses.message);
+          }
+          $('#applicationDetail').click();
+          $('#datatableApplicationDocument').DataTable().ajax.reload();
+        },
+        error => {
+          this.showSpinner = false;
+          this.tamps = new Array();
+          // tslint:disable-next-line:no-shadowed-variable
+          const parses = JSON.parse(error);
+          this.swalPopUpMsg(parses.message);
+          $('#applicationDetail').click();
+          $('#datatableApplicationDocument').DataTable().ajax.reload();
+        });
+  }
+  //#endregion convert to base64
+
+  //#region button Refresh
+  btnRefresh() {
+
+    this.showSpinner = true;
     this.dataTamp = [{
-      'p_id': id,
+      // 'p_id': id,
       'p_application_no': this.param,
-      'p_remarks': event.target.value,
-      'p_is_valid': isValid,
+      // 'p_remarks': event.target.value,
+      // 'p_is_valid': isValid,
       'action': 'default'
     }];
+    this.dataTamps = [{
+      'p_application_no': this.param,
+      'action': 'getResponse'
+    }];
 
-    this.dalservice.ExecSp(this.dataTamp, this.APIController, this.APIRouteForUpdateIsValid)
+
+    // call web service
+    this.dalservice.ExecSp(this.dataTamps, this.APIController, this.APIRouteForGetRowsForDelete)
       .subscribe(
         res => {
           const parse = JSON.parse(res);
           if (parse.result === 1) {
-            this.showSpinner = false;
-            this.showNotification('bottom', 'right', 'success');
-            $('#datatableApplicationDocument').DataTable().ajax.reload();
+            if (parse.data.length > 0) {
+              this.dataTampDelete = [];
+              let th = this;
+              var J = 0;
+              (function loopRefreshDocument() {
+                if (J < parse.data.length) {
+                  th.dataTampDelete = [{
+                    'p_id': parse.data[J].id,
+                    'p_application_no': th.param
+                  }];
+
+                  th.dataTampDeleteFile = [{
+                    'p_id': parse.data[J].id,
+                    'p_file_name': parse.data[J].filename,
+                    'p_file_paths': parse.data[J].paths
+                  }];
+
+                  if (parse.data[J].paths !== '') {
+                    th.dalservice.DeleteFile(th.dataTampDeleteFile, th.APIController, th.APIRouteForDeleteFile)
+                      .subscribe(
+                        res => {
+                          const parse = JSON.parse(res);
+                          if (parse.result === 1) {
+                            th.dalservice.Delete(th.dataTampDelete, th.APIController, th.APIRouteForDelete)
+                              .subscribe(
+                                res => {
+                                  const parses = JSON.parse(res);
+                                  if (parses.result === 1) {
+                                    th.dalservice.ExecSp(th.dataTamp, th.APIController, th.APIRouteForGenerate)
+                                      .subscribe(
+                                        res => {
+                                          const parse = JSON.parse(res);
+                                          if (parse.result === 1) {
+                                            if (J + 1 == parse.data.length) {
+                                              th.showSpinner = false;
+                                              $('#applicationDetail').click();
+                                              th.showNotification('bottom', 'right', 'success');
+                                              $('#datatableApplicationDocument').DataTable().ajax.reload();
+                                            } else {
+                                              J++;
+                                              loopRefreshDocument();
+                                            }
+                                          } else {
+                                            th.showSpinner = false;
+                                            th.swalPopUpMsg(parse.data);
+                                          }
+                                        },
+                                        error => {
+                                          th.showSpinner = false;
+                                          const parse = JSON.parse(error);
+                                          th.swalPopUpMsg(parse.data);
+                                        });
+                                  } else {
+                                    th.showSpinner = false;
+                                    th.swalPopUpMsg(parses.data);
+                                  }
+                                },
+                                error => {
+                                  th.showSpinner = false;
+                                  const parse = JSON.parse(error);
+                                  th.swalPopUpMsg(parse.data);
+                                });
+                          } else {
+                            th.showSpinner = false;
+                            th.swalPopUpMsg(parse.data);
+                          }
+                        },
+                        error => {
+                          th.showSpinner = false;
+                          const parse = JSON.parse(error);
+                          th.swalPopUpMsg(parse.data);
+                        });
+                  } else {
+                    th.dalservice.Delete(th.dataTampDelete, th.APIController, th.APIRouteForDelete)
+                      .subscribe(
+                        res => {
+                          const parses = JSON.parse(res);
+                          if (parses.result === 1) {
+                            if (J + 1 === parse.data.length) {
+                              $('#applicationDetail').click();
+                              th.showSpinner = false;
+                              th.showNotification('bottom', 'right', 'success');
+                              $('#datatableApplicationDocument').DataTable().ajax.reload();
+                            } else {
+                              J++;
+                              loopRefreshDocument();
+                            }
+                          } else {
+                            th.showSpinner = false;
+                            th.swalPopUpMsg(parses.data);
+                          }
+                        },
+                        error => {
+                          th.showSpinner = false;
+                          const parse = JSON.parse(error);
+                          th.swalPopUpMsg(parse.data);
+                        });
+                  }
+                }
+              })();
+            } else {
+              this.dalservice.ExecSp(this.dataTamp, this.APIController, this.APIRouteForGenerate)
+                .subscribe(
+                  res => {
+                    const parse = JSON.parse(res);
+                    if (parse.result === 1) {
+                      this.showSpinner = false;
+                      $('#applicationDetail').click();
+                      this.showNotification('bottom', 'right', 'success');
+                      $('#datatableApplicationDocument').DataTable().ajax.reload();
+                    } else {
+                      this.showSpinner = false;
+                      this.swalPopUpMsg(parse.data);
+                    }
+                  },
+                  error => {
+                    this.showSpinner = false;
+                    const parse = JSON.parse(error);
+                    this.swalPopUpMsg(parse.data);
+                  });
+            }
           } else {
             this.showSpinner = false;
             this.swalPopUpMsg(parse.data);
-            $('#datatableApplicationDocument').DataTable().ajax.reload();
+            // $('#datatableApplicationDocument').DataTable().ajax.reload();
           }
         },
         error => {
           this.showSpinner = false;
           const parse = JSON.parse(error);
-          this.swalPopUpMsg(parse.data)
+          this.swalPopUpMsg(parse.data);
         });
   }
-  //#endregion isValid
+  //#endregion button Refresh
 
   //#region iframe lite dms
   btnOpenLD() {
@@ -280,11 +678,11 @@ export class DocumentlistComponent extends BaseComponent implements OnInit {
     let MetadataObject: any = [];
     let Option: any = [];
 
-    if (this.model.status === 'HOLD') {
-      this.tempLiteDmsOption = this.tempLiteDmsOptionAllRole
-    } else {
-      this.tempLiteDmsOption = this.tempLiteDmsOptionViewRole
-    }
+    // if (this.model.status === 'HOLD') {
+    //   this.tempLiteDmsOption = this.tempLiteDmsOptionAllRole
+    // } else {
+    //   this.tempLiteDmsOption = this.tempLiteDmsOptionViewRole
+    // }
 
     MetadataParent = [
       {
@@ -336,58 +734,58 @@ export class DocumentlistComponent extends BaseComponent implements OnInit {
   }
   //#endregion iframe lite dms
 
-  //#region button save in list
-  saveList() {
+  // //#region button save in list
+  // saveList() {
 
-    this.showSpinner = true;
-    this.listdataDoc = [];
+  //   this.showSpinner = true;
+  //   this.listdataDoc = [];
 
-    let i = 0;
+  //   let i = 0;
 
-    const getID = $('[name="p_id"]')
-      .map(function () { return $(this).val(); }).get();
+  //   const getID = $('[name="p_id"]')
+  //     .map(function () { return $(this).val(); }).get();
 
-    const getPromiseDate = $('[name="p_promise_date"]')
-      .map(function () { return $(this).val(); }).get();
+  //   const getPromiseDate = $('[name="p_promise_date"]')
+  //     .map(function () { return $(this).val(); }).get();
 
 
-    while (i < getID.length) {
+  //   while (i < getID.length) {
 
-      while (i < getPromiseDate.length) {
-        if (getPromiseDate[i] === '') {
-          getPromiseDate[i] = undefined;
-        }
-        this.listdataDoc.push(this.JSToNumberFloats({
-          p_id: getID[i],
-          p_promise_date: this.dateFormatList(getPromiseDate[i])
-        }));
+  //     while (i < getPromiseDate.length) {
+  //       if (getPromiseDate[i] === '') {
+  //         getPromiseDate[i] = undefined;
+  //       }
+  //       this.listdataDoc.push(this.JSToNumberFloats({
+  //         p_id: getID[i],
+  //         p_promise_date: this.dateFormatList(getPromiseDate[i])
+  //       }));
 
-        i++;
-      }
-      i++;
-    }
+  //       i++;
+  //     }
+  //     i++;
+  //   }
 
-    //#region web service
-    this.dalservice.Update(this.listdataDoc, this.APIController, this.APIRouteForUpdate)
-      .subscribe(
-        res => {
-          const parse = JSON.parse(res);
-          if (parse.result === 1) {
-            this.showSpinner = false;
-            this.showNotification('bottom', 'right', 'success');
-            $('#datatableApplicationDocument').DataTable().ajax.reload();
-          } else {
-            this.showSpinner = false;
-            this.swalPopUpMsg(parse.data);
-          }
-        },
-        error => {
-          this.showSpinner = false;
-          const parse = JSON.parse(error);
-          this.swalPopUpMsg(parse.data);
-        });
-    //#endregion web service
+  //   //#region web service
+  //   this.dalservice.Update(this.listdataDoc, this.APIController, this.APIRouteForUpdate)
+  //     .subscribe(
+  //       res => {
+  //         const parse = JSON.parse(res);
+  //         if (parse.result === 1) {
+  //           this.showSpinner = false;
+  //           this.showNotification('bottom', 'right', 'success');
+  //           $('#datatableApplicationDocument').DataTable().ajax.reload();
+  //         } else {
+  //           this.showSpinner = false;
+  //           this.swalPopUpMsg(parse.data);
+  //         }
+  //       },
+  //       error => {
+  //         this.showSpinner = false;
+  //         const parse = JSON.parse(error);
+  //         this.swalPopUpMsg(parse.data);
+  //       });
+  //   //#endregion web service
 
-  }
-  //#endregion button save in list
+  // }
+  // //#endregion button save in list
 }

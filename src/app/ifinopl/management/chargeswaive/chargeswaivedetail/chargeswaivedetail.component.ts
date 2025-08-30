@@ -40,6 +40,7 @@ export class ChargeswaivedetailComponent extends BaseComponent implements OnInit
     private APIControllerSysBranch: String = 'SysBranch';
     private APIControllerApprovalSchedule: String = 'ApprovalSchedule';
     private APIRouteForLookup: String = 'GetRowsForLookup';
+    private APIRouteForLookupWaive: String = 'GetRowsForLookupWaive';
     private APIRouteForLookupAgreementObligation: String = 'GetRowsForLookupObligation';
 
     private APIRouteForGetRows: String = 'GetRows';
@@ -632,7 +633,7 @@ export class ChargeswaivedetailComponent extends BaseComponent implements OnInit
                     'p_agreement_status': 'GO LIVE'
                 });
 
-                this.dalservice.Getrows(dtParameters, this.APIControllerAgreementMain, this.APIRouteForLookup).subscribe(resp => {
+                this.dalservice.Getrows(dtParameters, this.APIControllerAgreementMain, this.APIRouteForLookupWaive).subscribe(resp => {
                     const parse = JSON.parse(resp);
                     this.lookupagreement = parse.data;
                     if (parse.data != null) {

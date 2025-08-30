@@ -21,15 +21,19 @@ export class ApplicationtbodocumentdetailComponent extends BaseComponent impleme
   public NumberOnlyPattern = this._numberonlyformat;
   public isApproval: Boolean = false;
   public isReadOnly: Boolean = false;
+  public tampHiddenMemo: Boolean;
   private dataTamp: any = [];
   public setStyle: any = [];
 
   private APIController: String = 'TboDocument';
+    private APIControllerApplicationExtention: String = 'ApplicationExtention';
+      private APIController_Realization: String = 'Realization';
 
   private APIRouteForGetRow: String = 'GETROW';
   private APIRouteForProceed: String = 'ExecSpForProceed';
   private APIRouteForPost: String = 'ExecSpForPost';
   private APIRouteForReturn: String = 'ExecSpForReturn';
+    private APIRouteForPriviewFile: String = 'Priview';
 
   private RoleAccessCode = 'R00024730000001A'; // role access 
 
@@ -95,8 +99,15 @@ export class ApplicationtbodocumentdetailComponent extends BaseComponent impleme
           Object.assign(this.model, parsedata);
           // end mapper dbtoui
 
+          if (parsedata.file_memo === '' || parsedata.file_path_memo == null) {
+            this.tampHiddenMemo = true;
+          } else {
+
+            this.tampHiddenMemo = false;
+          }
+
           setTimeout(() => {
-            this.documentsswiz(this.model.application_no);
+            this.documentsswiz();
           }, 200);
           this.showSpinner = false;
         },
@@ -116,8 +127,8 @@ export class ApplicationtbodocumentdetailComponent extends BaseComponent impleme
   //#endregion button back
 
   //#region List tabs
-  documentsswiz(application_no: any) {
-    this.route.navigate(['/application/subtbodocumentlist/tbodocumentdetail/' + this.param + '/doclist/', this.param, application_no], { skipLocationChange: true });
+  documentsswiz() {
+    this.route.navigate(['/application/subtbodocumentlist/tbodocumentdetail/' + this.param + '/doclist/', this.param], { skipLocationChange: true });
   }
   //#endregion List tabs
 
@@ -252,4 +263,156 @@ export class ApplicationtbodocumentdetailComponent extends BaseComponent impleme
     });
   }
   //#endregion btnReturn 
+    //#region button priview image
+  priviewFileMasterContractDetail(row1, row2) {
+    this.showSpinner = true;
+    const usersJson: any[] = Array.of();
+
+    usersJson.push({
+      p_file_name: row1,
+      p_file_paths: row2
+    });
+
+    this.dalservice.PriviewFile(usersJson, this.APIControllerApplicationExtention, this.APIRouteForPriviewFile)
+      .subscribe(
+        (res) => {
+          const parse = JSON.parse(res);
+          if (parse.value.filename !== '') {
+            const fileType = parse.value.filename.split('.').pop();
+            if (fileType === 'PNG') {
+              this.downloadFile(parse.value.data, parse.value.filename, fileType);
+              // const newTab = window.open();
+              // newTab.document.body.innerHTML = this.pngFile(parse.value.data);
+              // this.showSpinner = false;
+            }
+            if (fileType === 'JPEG' || fileType === 'JPG') {
+              this.downloadFile(parse.value.data, parse.value.filename, fileType);
+              // const newTab = window.open();
+              // newTab.document.body.innerHTML = this.jpgFile(parse.value.data);
+              // this.showSpinner = false;
+            }
+            if (fileType === 'PDF') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'pdf');
+              // const newTab = window.open();
+              // newTab.document.body.innerHTML = this.pdfFile(parse.value.data);
+              // this.showSpinner = false;
+            }
+            if (fileType === 'DOCX' || fileType === 'DOC') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'msword');
+            }
+            if (fileType === 'XLSX') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.ms-excel');
+            }
+            if (fileType === 'PPTX') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.ms-powerpoint');
+            }
+            if (fileType === 'TXT') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'txt');
+            }
+            if (fileType === 'ODT' || fileType === 'ODS' || fileType === 'ODP') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.oasis.opendocument');
+            }
+            if (fileType === 'ZIP') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'zip');
+            }
+            if (fileType === '7Z') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'x-7z-compressed');
+            }
+            if (fileType === 'RAR') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.rar');
+            }
+          }
+        }
+      );
+  }
+
+  // downloadFile(base64: string, fileName: string, extention: string) {
+  downloadFile(base64: string, fileName: string, extention: string) {
+    var temp = 'data:application/' + extention + ';base64,'
+      + encodeURIComponent(base64);
+    var download = document.createElement('a');
+    download.href = temp;
+    download.download = fileName;
+    document.body.appendChild(download);
+    download.click();
+    document.body.removeChild(download);
+    this.showSpinner = false;
+  }
+
+  //#endregion button priview image
+
+  //#region button priview image
+  priviewFileDeliveryDetail(row1, row2) {
+    this.showSpinner = true;
+    const usersJson: any[] = Array.of();
+
+    usersJson.push({
+      p_file_name: row1,
+      p_file_paths: row2
+    });
+
+    this.dalservice.PriviewFile(usersJson, this.APIController_Realization, this.APIRouteForPriviewFile)
+      .subscribe(
+        (res) => {
+          const parse = JSON.parse(res);
+          if (parse.value.filename !== '') {
+            const fileType = parse.value.filename.split('.').pop();
+            if (fileType === 'PNG') {
+              const newTab = window.open();
+              newTab.document.body.innerHTML = this.pngFile(parse.value.data);
+              this.showSpinner = false;
+            }
+            if (fileType === 'JPEG' || fileType === 'JPG') {
+              const newTab = window.open();
+              newTab.document.body.innerHTML = this.jpgFile(parse.value.data);
+              this.showSpinner = false;
+            }
+            if (fileType === 'PDF') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'pdf');
+              // const newTab = window.open();
+              // newTab.document.body.innerHTML = this.pdfFile(parse.value.data);
+              // this.showSpinner = false;
+            }
+            if (fileType === 'DOCX' || fileType === 'DOC') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'msword');
+            }
+            if (fileType === 'XLSX') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.ms-excel');
+            }
+            if (fileType === 'PPTX') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.ms-powerpoint');
+            }
+            if (fileType === 'TXT') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'txt');
+            }
+            if (fileType === 'ODT' || fileType === 'ODS' || fileType === 'ODP') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.oasis.opendocument');
+            }
+            if (fileType === 'ZIP') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'zip');
+            }
+            if (fileType === '7Z') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'x-7z-compressed');
+            }
+            if (fileType === 'RAR') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'vnd.rar');
+            }
+          }
+        }
+      );
+  }
+
+  // downloadFile(base64: string, fileName: string, extention: string) {
+  //   var temp = 'data:application/' + extention + ';base64,'
+  //     + encodeURIComponent(base64);
+  //   var download = document.createElement('a');
+  //   download.href = temp;
+  //   download.download = fileName;
+  //   document.body.appendChild(download);
+  //   download.click();
+  //   document.body.removeChild(download);
+  //   this.showSpinner = false;
+  // }
+
+  //#endregion button priview image
 }

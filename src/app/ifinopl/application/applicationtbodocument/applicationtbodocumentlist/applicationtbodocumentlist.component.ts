@@ -19,6 +19,7 @@ export class ApplicationTboDocumentlistComponent extends BaseComponent implement
   public branch_name: String;
   public branch_code: String;
   public tempStatus: String;
+  public tempTransactionName: String;
 
   private APIController: String = 'TboDocument';
   private APIControllerSysBranch: String = 'SysBranch';
@@ -44,6 +45,7 @@ export class ApplicationTboDocumentlistComponent extends BaseComponent implement
     this.callGetRole(this.userId, this._elementRef, this.dalservice, this.RoleAccessCode, this.route);
     this.compoSide(this._location, this._elementRef, this.route);
     this.tempStatus = 'ALL';
+    this.tempTransactionName = 'ALL';
     this.loadData();
   }
 
@@ -64,7 +66,8 @@ export class ApplicationTboDocumentlistComponent extends BaseComponent implement
         dtParameters.paramTamp = [];
         dtParameters.paramTamp.push({
           'p_branch_code': this.branch_code,
-          'p_status': this.tempStatus
+          'p_status': this.tempStatus,
+          'p_transaction_name': this.tempTransactionName
         })
 
         this.dalservice.Getrows(dtParameters, this.APIController, this.APIRouteForGetRowsTBODocument).subscribe(resp => {
@@ -81,7 +84,7 @@ export class ApplicationTboDocumentlistComponent extends BaseComponent implement
           });
         }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
       },
-      columnDefs: [{ orderable: false, width: '5%', targets: [0, 1, 7] }], // for disabled coloumn
+      columnDefs: [{ orderable: false, width: '5%', targets: [0, 1, 10] }], // for disabled coloumn
       language: {
         search: '_INPUT_',
         searchPlaceholder: 'Search records',
@@ -102,6 +105,13 @@ export class ApplicationTboDocumentlistComponent extends BaseComponent implement
   //#region changeStatus
   changeStatus(event) {
     this.tempStatus = event.target.value;
+    $('#datatableApplicationTboDocumentList').DataTable().ajax.reload();
+  }
+  //#endregion changeStatus
+
+  //#region changeStatus
+  changeTransactionName(event) {
+    this.tempTransactionName = event.target.value;
     $('#datatableApplicationTboDocumentList').DataTable().ajax.reload();
   }
   //#endregion changeStatus

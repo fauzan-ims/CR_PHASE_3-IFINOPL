@@ -246,6 +246,7 @@
                                                 </div>
                                             </th>
                                             <th style="display: none;"></th>
+                                            <th>Invoice No / Asset No</th>
                                             <th>Obligation Type</th>
                                             <th>Obligation Name</th>
                                             <th>Installment No</th>
@@ -267,9 +268,10 @@
                                                 </div>
                                             </td>
                                             <td style="display: none;"></td>
-                                            <td style="width: 15%;">{{row.obligation_type}}</td>
+                                            <td style="width: 15%;">{{row.invoice_no}}</td>
+                                            <td style="width: 10%;">{{row.obligation_type}}</td>
                                             <td style="width: 20%;">{{row.obligation_name}}</td>
-                                            <td style="text-align: center; width: 15%;">{{row.installment_no}}</td>
+                                            <td style="text-align: center; width: 10%;">{{row.installment_no}}</td>
                                             <td style="text-align: right; width: 25%;">
                                                 {{row.obligation_amount | number : '1.2-2'}}</td>
                                             <td style="text-align: right; width: 25%;" class="if-no-edit-btn">

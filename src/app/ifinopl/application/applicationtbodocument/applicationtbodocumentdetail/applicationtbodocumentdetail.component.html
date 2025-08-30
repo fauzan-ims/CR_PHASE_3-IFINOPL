@@ -16,7 +16,7 @@
             (click)="btnProceed(model.id)" data-role="R00024730000003O">Proceed</button>
           <button [hidden]="model.status !== 'VERIFICATION'" type="button" class="btn btn-success btn-round"
             (click)="btnPost(model.id)" data-role="R00024730000004O">Post</button>
-          <button [hidden]="model.status !== 'VERIFICATION'" type="button" class="btn btn-success btn-round"
+          <button [hidden]="model.status !== 'VERIFICATION'" type="button" class="btn btn-warning btn-round"
             (click)="btnReturn(model.id)" data-role="R00024730000005R">Return</button>
           <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
           <!--#endregion button Back-->
@@ -30,23 +30,42 @@
             <!-- #endregion id-->
 
             <!--#region application_external_no -->
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
               <div class="form-group">
                 <label>Application No</label>
                 <input type="text" class="form-control" [ngModel]="model.application_external_no"
                   name="p_application_external_no" readonly>
               </div>
-            </div>
+            </div> -->
             <!--#endregion application_external_no -->
 
             <!--#region client_name -->
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
               <div class="form-group">
                 <label>Client Name</label>
                 <input type="text" class="form-control" [ngModel]="model.client_name" name="p_client_name" readonly>
               </div>
-            </div>
+            </div> -->
             <!--#endregion client_name -->
+            <!--#region branch_name -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Branch</label>
+                <input type="text" class="form-control" [ngModel]="model.branch_name" name="p_branch_name" readonly>
+              </div>
+            </div>
+            <!--#endregion branch_name -->
+
+            <!--#region date-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_date" class="control-label">Date</label>
+                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                  [ngModel]="model.date" name="p_date" [options]="myDatePickerOptions" required #p_date="ngModel"
+                  #date="angular-mydatepicker" autocomplete="off" readonly />
+              </div>
+            </div>
+            <!--#endregion date-->
 
             <!--#region status -->
             <div class="col-md-4">
@@ -57,26 +76,61 @@
             </div>
             <!--#endregion status -->
           </div>
-          <!--#endregion row-->
 
-          <!--#region row-->
           <div class="row">
+            <!--#region client_name -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Client Name</label>
+                <input type="text" class="form-control" [ngModel]="model.client_name" name="p_client_name" readonly>
+              </div>
+            </div>
+            <!--#endregion client_name -->
+
+
+            <!--#region row-->
             <!--#region SysBranch code -->
             <div class="col-md-4">
               <div class="form-group">
-                <label>Branch</label>
-                <input type="text" class="form-control" [ngModel]="model.branch_name" name="p_branch_name" readonly>
+                <!-- <label>Branch</label>
+                <input type="text" class="form-control" [ngModel]="model.branch_name" name="p_branch_name" readonly> -->
+                <label>Application No</label>
+                <input type="text" class="form-control" [ngModel]="model.application_no" name="p_application_no"
+                  readonly>
               </div>
             </div>
             <!--#endregion SysBranch code -->
+          </div>
+          <!--#endregion row-->
+
+          <div class="row">
+            <!--#region transaction_name -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Transaction Name</label>
+                <input type="text" class="form-control" [ngModel]="model.transaction_name" name="p_transaction_name"
+                  readonly>
+              </div>
+            </div>
+            <!--#endregion client_name -->
+
+            <!--#region transaction_no -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Transaction No</label>
+                <input type="text" class="form-control" [ngModel]="model.transaction_no" name="p_transaction_no"
+                  readonly>
+              </div>
+            </div>
+            <!--#endregion transaction_no -->
 
             <!--#region date-->
             <div class="col-md-4">
               <div class="form-group">
-                <label for="p_date" class="control-label">Realization Post Date</label>
+                <label for="p_transaction_date" class="control-label">Transaction Date</label>
                 <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
-                  [ngModel]="model.date" name="p_date" [options]="myDatePickerOptions" required #p_date="ngModel"
-                  #date="angular-mydatepicker" autocomplete="off" readonly />
+                  [ngModel]="model.transaction_date" name="p_date" [options]="myDatePickerOptions" required
+                  #p_transaction_date="ngModel" #transaction_date="angular-mydatepicker" autocomplete="off" readonly />
               </div>
             </div>
             <!--#endregion date-->
@@ -93,41 +147,157 @@
           </div>
           <!--#endregion row-->
 
+          <span layout="row horizontal-divider">
+            <hr flex />
+          </span>
+          <br>
+
           <!--#region row-->
-          <div class="row">
-            <!--#region agreement_no -->
-            <input type="text" class="form-control" [ngModel]="model.agreement_no" name="p_agreement_no" hidden>
+          <div class="row" [hidden]="model.transaction_name === 'MASTER CONTRACT'">
+            <!--#region file_path_memo   <i class="fa fa-edit"></i>-->
             <div class="col-md-4">
               <div class="form-group">
-                <label>Agreement No</label>
-                <input type="text" class="form-control" [ngModel]="model.agreement_external_no"
-                  name="p_agreement_external_no" readonly>
+                <label>File Memo</label>
+                <div class="row" style="margin-left: 30px;">
+                  <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                    <div>
+                      <a class="btn btn-primary btn-round btn-file custom-button-width" type="button"
+                        (click)="priviewFileDeliveryDetail(model.file_memo, model.file_path_memo)">
+                        <span><i class="fa fa-eye"></i></span></a>
+                      {{model.file_memo}}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <!--#endregion agreement_no -->
+            <!--#endregion file_path_memo-->
 
-            <!--#region agreement_date-->
+            <!--#region exp_date-->
             <div class="col-md-4">
               <div class="form-group">
-                <label for="p_agreement_date" class="control-label">Agreement Date</label>
-                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
-                  [ngModel]="model.agreement_date" name="p_agreement_date" [options]="myDatePickerOptions" required
-                  #p_agreement_date="ngModel" #agreement_date="angular-mydatepicker" autocomplete="off" readonly />
+                <label for="p_exp_date" class="control-label">Expired Date</label>
+                <input [ngStyle]="getStyles(model.status !== 'VERIFICATION')" class="form-control col-md-6"
+                  placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.exp_date" name="p_exp_date"
+                  [options]="myDatePickerOptions" (click)="exp_date.toggleCalendar()" #p_exp_date="ngModel"
+                  #exp_date="angular-mydatepicker" autocomplete="off" readonly />
               </div>
             </div>
             <!--#endregion application_date-->
 
-            <!--#region result-->
+            <!--#region realization_remark-->
             <div class="col-md-4">
               <div class="form-group">
-                <label>Result</label>
-                <textarea type="text" class="form-control" readonly [ngModel]="model.result" name="p_result"
-                  #result="ngModel" maxlength="4000"></textarea>
+                <label>Realization Remark</label>
+                <textarea type="text" class="form-control" readonly [ngModel]="model.realization_remark"
+                  name="p_realization_remark" #realization_remark="ngModel" maxlength="4000"></textarea>
               </div>
             </div>
-            <!--#endregion result-->
+            <!--#endregion realization_remark-->
           </div>
           <!-- #endregion row  -->
+
+          <!-- #region row -->
+          <div class="row" [hidden]="model.transaction_name === 'REALIZATION'">
+            <!--#region radio button main_contract_status-->
+            <div class="col-md-4">
+              <label>Main Contract Status</label>
+              <div class="form-group" style="margin-left: 15px;">
+                <fieldset disabled>
+                  <div class="row">
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input col-md-6" type="radio" name="p_main_contract_status" value="NEW"
+                          [(ngModel)]="model.main_contract_status">NEW
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input col-md-6" type="radio" name="p_main_contract_status"
+                          value="EXISTING" [(ngModel)]="model.main_contract_status">EXISTING
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+            <!--#endregion radio button main_contract_status-->
+
+            <!--#region main_contract_date-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_main_contract_date" class="control-label">Main Contract Date</label>
+                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                  [ngModel]="model.main_contract_date" name="p_date" [options]="myDatePickerOptions" required
+                  #p_main_contract_date="ngModel" #main_contract_date="angular-mydatepicker" autocomplete="off"
+                  readonly />
+              </div>
+            </div>
+            <!--#endregion main_contract_date-->
+
+            <!--#region main_contract_remarks-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="main_contract_remarks" class="control-label">Remarks</label>
+                <fieldset disabled>
+                  <textarea readonly type="text" class="form-control" [ngModel]="model.main_contract_remarks"
+                    maxlength="4000" name="p_main_contract_remarks" #main_contract_remarks="ngModel"></textarea>
+                </fieldset>
+              </div>
+            </div>
+            <!--#endregion main_contract_remarks-->
+
+            <!--#region file_path -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Main Contract File</label>
+                <div class="row" style="margin-left: 30px;">
+                  <fieldset [disabled]="this.model.agreement_exists === '1'">
+                    <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                      <div>
+                        <span>
+                          <a class="btn btn-primary btn-round btn-file custom-button-width" type="button"
+                            (click)="priviewFileMasterContractDetail(model.main_contract_file_name, model.main_contract_file_path)">
+                            <span><i class="fa fa-eye"></i></span></a>
+                        </span>
+                        <div> {{model.main_contract_file_name}}</div>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+            </div>
+            <!--#endregion file_path-->
+
+            <!-- <div class="col-md-4" [hidden]="this.model.main_contract_status !== 'EXISTING'"> -->
+            <div class="col-md-4">
+              <label>Contract Standart</label>
+              <div class="form-group" style="margin-left: 15px;">
+                <fieldset disabled>
+                  <div class="row">
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input col-md-6" type="radio" name="p_is_standart" value="1"
+                          [(ngModel)]="model.is_standart">Standart
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input col-md-6" type="radio" name="p_is_standart" value="0"
+                          [(ngModel)]="model.is_standart">Non
+                        Standart
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+
+          </div>
+          <!-- #endregion row -->
         </div>
         <!--#region wizard-->
         <div class="wizard-custom-margin" [hidden]="param == null">
@@ -139,7 +309,9 @@
                 <div class="wizard-navigation">
                   <ul>
                     <li class="nav-item">
-                      <a class="nav-link" (click)="documentsswiz(model.application_no)" href="#documentdetail" data-toggle="tab" role="tab"
+                      <!-- <a class="nav-link" (click)="documentsswiz(model.application_no)" href="#documentdetail"
+                        data-toggle="tab" role="tab" aria-controls="documentdetail" aria-selected="true"> -->
+                      <a class="nav-link" (click)="documentsswiz()" href="#documentdetail" data-toggle="tab" role="tab"
                         aria-controls="documentdetail" aria-selected="true">
                         Document
                       </a>

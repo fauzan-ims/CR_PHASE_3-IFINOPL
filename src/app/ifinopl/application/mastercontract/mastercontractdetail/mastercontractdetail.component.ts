@@ -814,6 +814,10 @@ export class MastercontractdetailComponent extends BaseComponent implements OnIn
   tcwiz() {
     this.route.navigate(['/application/subapplicationtbodocumentlist/applicationtbodocumentdetail/' + this.param + '/tclist/', this.param], { skipLocationChange: true });
   }
+
+  documentwiz() {
+    this.route.navigate(['/application/subapplicationtbodocumentlist/applicationtbodocumentdetail/' + this.param + '/documentlist/', this.param], { skipLocationChange: true });
+  }
   //#endregion tab
 
   //#region validate

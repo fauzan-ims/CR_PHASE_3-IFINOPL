@@ -89,8 +89,8 @@
                                 <th>Agreement No</th>
                                 <th>Asset No</th>
                                 <th>Plat / Chasiss / Engine No</th>
-                                <th>Transaction</th>
-                                <th>Transaction Date</th>
+                                <th>Transaction Type / No</th>
+                                <th>Transaction Date / Status</th>
                                 <th>Due Date</th>
                                 <th>Billing Date</th>
                             </tr>
@@ -106,9 +106,9 @@
                                 <td style="text-align: left; width: 15%;">Plat No : {{row.plat_no}} <br>
                                     Chasiss No : {{row.chasiss_no}} <br>Engine No : {{row.engine_no}}</td>
                                 <td style="text-align: left; width: 10%;">
-                                    {{row.opl_status}}</td>
+                                    {{row.opl_status}} <br> {{row.transaction_no}}</td>
                                 <td style="text-align: left; width: 10%;">
-                                    {{row.transaction_date}}</td>
+                                    {{row.transaction_date}} <br> {{row.transaction_status}}</td>
                                 <td style="text-align: left; width: 10%;">{{row.due_date}}</td>
                                 <td style="text-align: left; width: 10%;">{{row.billing_date}}</td>
                             </tr>

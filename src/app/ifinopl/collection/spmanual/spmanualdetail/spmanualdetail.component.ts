@@ -77,6 +77,7 @@ export class SpmanualdetailComponent extends BaseComponent implements OnInit {
 
       // call web service
       this.callGetrow();
+      this.wizard();
     } else {
       this.model.letter_status = 'REQUEST';
       this.model.letter_type = 'SP1';
@@ -112,6 +113,10 @@ export class SpmanualdetailComponent extends BaseComponent implements OnInit {
         res => {
           const parse = JSON.parse(res);
           const parsedata = this.getrowNgb(parse.data[0]);
+
+          setTimeout(() => {
+            this.amortizationnwiz();
+          }, 200);
 
           if (parsedata.letter_status !== 'REQUEST') {
             this.isButton = true;
@@ -393,12 +398,19 @@ export class SpmanualdetailComponent extends BaseComponent implements OnInit {
     });
   }
 
-  btnSelectRowAgreement(agreement_no: String, agreement_external_no: String, agreement_desc: String) {
+  btnSelectRowAgreement(agreement_no: String, agreement_external_no: String, agreement_desc: String, client_no: String) {
     this.model.agreement_no = agreement_no;
     this.model.agreement_external_no = agreement_external_no;
     this.model.client_name = agreement_desc;
+    this.model.client_no = client_no;
     $('#lookupModalAgreement').modal('hide');
   }
+
+    //#region amortizationnwiz
+  amortizationnwiz() {
+    this.route.navigate(['/collection/subspmanuallist/spmanualdetail/' + this.param + '/spamortizationlist', this.param], { skipLocationChange: true });
+  }
+  //#endregion amortizationnwiz
   //#endregion Agreement lookup
 }
 

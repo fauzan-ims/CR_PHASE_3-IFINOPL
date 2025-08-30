@@ -128,6 +128,7 @@ import { MasterContractChargeslistComponent } from './mastercontract/mastercontr
 import { MasterContractChargesdetailComponent } from './mastercontract/mastercontractdetail/chargeswiz/chargesdetail/chargesdetail.component';
 import { tclistComponent } from './mastercontract/mastercontractdetail/tc/tclist/tclist.component';
 import { TboDoclistComponent } from './applicationtbodocument/applicationtbodocumentdetail/tbodocumentsswiz/doclistdetail/doclist.component';
+import { DocumentlistComponent } from './mastercontract/mastercontractdetail/documentwiz/documentlist/documentlist.component';
 
 
 @NgModule({
@@ -256,7 +257,8 @@ import { TboDoclistComponent } from './applicationtbodocument/applicationtbodocu
         ObjectInfoApprovalpurchaseorderlistComponent,
         MasterContractChargeslistComponent,
         MasterContractChargesdetailComponent,
-        tclistComponent
+        tclistComponent,
+        DocumentlistComponent
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

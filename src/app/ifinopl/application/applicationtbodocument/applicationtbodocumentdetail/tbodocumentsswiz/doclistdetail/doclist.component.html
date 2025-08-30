@@ -9,12 +9,11 @@
       <div class="card-body">
 
         <!--#region button submit-->
-        <button type="button" class="btn btn-info btn-round" (click)="saveList()" data-role="R00024730000002C"
-          [hidden]="this.model.status !== 'HOLD'">
+        <button type="button" class="btn btn-info btn-round" (click)="btnSavelist()" data-role="R00024730000002C"
+          [hidden]="this.model.status === 'DONE'">
           Save
         </button>
-        <button type="button" class="btn btn-info btn-round" (click)="btnOpenLD()"
-          [hidden]="this.model.status !== 'HOLD'">
+        <button type="button" class="btn btn-info btn-round" (click)="btnOpenLD()">
           Lite DMS</button>
         <button type="button" class="btn btn-danger btn-round" (click)="callGetrow()" id="TboDetail" hidden></button>
         <!--#endregion button submit-->
@@ -28,18 +27,17 @@
               <th class="disabled-sorting">No</th>
               <th>Document</th>
               <th>Promise Date</th>
-              <th>Received Date</th>
+              <th>Received</th>
               <!-- <th>File Name</th>
               <th>Expired Date</th> -->
-              <!-- <th style="text-align: center;">Action</th> -->
-              <th>Aging</th>
               <th>Remarks</th>
               <th>Valid</th>
+              <!-- <th style="text-align: center;">Action</th> -->
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let row of listdoc;let i=index ">
-              <td style="display: none;"><input name="p_id" value="{{row.id}}"></td>
+              <td style="display: none;"><input name="p_id_tbo" value="{{row.id}}"></td>
               <td class="if-no-edit-btn" style="text-align: center;">{{listdoc.numberIndex+i+1}}</td>
               <td style="width: 35%;">{{row.document_name}} {{row.is_required}}</td>
               <!-- <td style="width: 30%;">
@@ -54,28 +52,50 @@
                   [options]="myDatePickerOptions" (click)="p_expired_date.toggleCalendar()"
                   #p_expired_date="angular-mydatepicker" autocomplete="off" [readonly]="row.filename === ''" />
               </td> -->
-              <td style="width: 10%;">
+              <!-- <td style="width: 10%;">
                 <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker value="{{row.promise_date}}"
                   name="p_promise_date" [options]="myDatePickerOptions" #p_promise_date="angular-mydatepicker"
                   autocomplete="off" readonly />
-              </td>
+              </td> -->
               <td style="width: 10%;">
+                <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker value="{{row.promise_date}}"
+                  name="p_promise_date" [options]="myDatePickerOptions" (click)="p_promise_date.toggleCalendar()"
+                  #p_promise_date="angular-mydatepicker" autocomplete="off" [disabled]="isHold" />
+              </td>
+              <!-- <td style="width: 10%;">
                 <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker value="{{row.received_date}}"
                   name="p_received_date" [options]="myDatePickerOptions" (click)="p_received_date.toggleCalendar()"
-                  #p_received_date="angular-mydatepicker" autocomplete="off"
-                  [disabled]="this.model.status !== 'HOLD'" />
+                  #p_received_date="angular-mydatepicker" autocomplete="off" disabled />
+              </td> -->
+              <td style="width: 5%; text-align: center;">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input [disabled]="isVerification" class="form-check-input" type="checkbox" name="p_is_received"
+                      [(ngModel)]="row.is_received">
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
               </td>
-              <td style="width: 5%;">{{row.aging}}</td>
-              <td style="width: 35%;">
-                <textarea [readonly]="this.model.status !== 'VERIFICATION'"
-                  (change)="saveRemarks($event, row.is_valid, row.id);" class="form-control" type="text"
-                  value="{{row.remarks}}" name="p_remarks"> </textarea>
+              <!-- <td style="width: 35%;">
+                <input [hidden]="row.filename != '' || pageType !=null" type="file" (change)="onUpload($event, row.id)"
+                  disabled />
+                <a>{{row.filename}}</a>
+              </td>
+              <td style="width: 15%;">
+                <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker value="{{row.promise_date}}"
+                  name="p_promise_date" [options]="myDatePickerOptions" (click)="p_promise_date.toggleCalendar()"
+                  #p_promise_date="angular-mydatepicker" autocomplete="off" disabled />
+              </td> -->
+              <!-- [hidden]="this.isSign === '0'" -->
+              <td style="width: 40%;">
+                <textarea [readonly]="isHold" class="form-control" type="text" value="{{row.remarks}}"
+                  name="p_remarks"> </textarea>
               </td>
               <td style="width: 5%; text-align: center;">
                 <div class="form-check">
                   <label class="form-check-label">
-                    <input [disabled]="this.model.status !== 'VERIFICATION'" class="form-check-input" type="checkbox"
-                      [(ngModel)]="row.is_valid" (change)="isValid($event, row.remarks, row.id);">
+                    <input [disabled]="isHold" class="form-check-input" type="checkbox" name="p_is_valid"
+                      [(ngModel)]="row.is_valid">
                     <span class="form-check-sign"></span>
                   </label>
                 </div>

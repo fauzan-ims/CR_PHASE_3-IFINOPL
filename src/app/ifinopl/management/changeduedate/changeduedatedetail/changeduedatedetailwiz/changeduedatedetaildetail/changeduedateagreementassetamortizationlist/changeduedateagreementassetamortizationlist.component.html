@@ -77,15 +77,15 @@
                             </div>
                         </div>
                         <!--#endregion asset_year-->
-                        
+
                         <!--#region unit_source-->
-                        <div class="col-md-4">
+                        <!-- <div class="col-md-4">
                             <div class="form-group">
                                 <label>Unit Source</label>
                                 <input type="text" class="form-control col-md-4" [ngModel]="model.unit_source"
                                     name="p_unit_source" readonly #unit_source="ngModel" readonly>
                             </div>
-                        </div>
+                        </div> -->
                         <!--#endregion unit_source-->
 
                         <!--#region asset_condition -->
@@ -111,6 +111,52 @@
                     </div>
                     <!--#endregion row-->
 
+                    <!--#region changeduedate detail row-->
+                    <div class="row">
+
+                        <!--#region Status-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Billing Mode</label>
+                                <select class="form-control col-md-6"
+                                    >
+                                <!-- <select class="form-control col-md-6" [ngModel]="this.tampStatus"
+                                    (change)="PageStatus($event)"> -->
+                                    <option value="Normal">Normal</option>
+                                    <option value="Before Due">Before Due</option>
+                                    <option value="Date">Date</option>
+                                    <option value="End Month">End Month</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!--#endregion rounding Status-->
+
+                        <!--#region print_option-->
+                        <div class="col-md-4">
+                            <label>Prorate *</label>
+                            <div class="form-group col-md-12">
+                                <div class="row">
+                                    <div class="form-check-radio form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="radio" name="p_print_option"
+                                                value="Yes" [(ngModel)]="model.print_option">Yes
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check-radio form-check-inline">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="radio" name="p_print_option"
+                                                value="No" [(ngModel)]="model.print_option">No
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion print_option-->
+                    </div>
+                    <!--#endregion changeduedate detail row-->
+
                     <!--#endregion form-->
                     <span layout="row horizontal-divider">
                         <hr flex />
@@ -134,8 +180,10 @@
                                             <th>Billing No</th>
                                             <th>Due Date</th>
                                             <th>Billing Date</th>
+                                            <th>From - To Date</th>
                                             <th>Description</th>
                                             <th>Billing Amount</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -148,10 +196,24 @@
                                                 {{row.asset_name}}</td>
                                             <td style="width: 10%;text-align: center;">{{row.installment_no}}</td>
                                             <td style="width: 10%;text-align: center;">{{row.due_date}}</td>
-                                            <td style="width: 10%;text-align: center;">{{row.billing_date}}</td>
+                                            <!-- <td style="width: 10%;text-align: center;">{{row.billing_date}}</td> -->
+                                            <td class="if-no-edit-btn" style="width: 10%;">
+                                                <div style="text-align: center;">{{row.billing_date}} <br></div>
+                                                <input class="form-control" placeholder="dd/mm/yyyy"
+                                                    [readonly]="row.is_change === true || row.change_status !== 'HOLD'"
+                                                    value="{{row.new_due_date_day}}" name="p_new_due_date_day"
+                                                    [options]="myDatePickerOptions"
+                                                    (click)="p_new_due_date_day.toggleCalendar()"
+                                                    #p_new_due_date_day="angular-mydatepicker" autocomplete="off"
+                                                    angular-mydatepicker/>
+                                                    <!-- [ngStyle]="getStyles(row.is_change === true)" /> -->
+                                            </td>
+                                            <td style="width: 10%;text-align: center;">{{row.billing_date}} -
+                                                {{row.billing_date}}</td>
                                             <td style="width: 35%;text-align: left;">{{row.description}}</td>
                                             <td style="width: 10%;text-align: right;">{{row.billing_amount | number :
                                                 '1.2-2'}}</td>
+                                            <td style="width: 10%;text-align: center;">{{row.old_or_new}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
