@@ -107,7 +107,8 @@ export class ApplicationtbodocumentdetailComponent extends BaseComponent impleme
           }
 
           setTimeout(() => {
-            this.documentsswiz();
+            this.documentsswiz(this.model.application_no);
+            // this.documentsswiz();
           }, 200);
           this.showSpinner = false;
         },
@@ -127,8 +128,10 @@ export class ApplicationtbodocumentdetailComponent extends BaseComponent impleme
   //#endregion button back
 
   //#region List tabs
-  documentsswiz() {
-    this.route.navigate(['/application/subtbodocumentlist/tbodocumentdetail/' + this.param + '/doclist/', this.param], { skipLocationChange: true });
+  documentsswiz(application_no: any) {
+    this.route.navigate(['/application/subtbodocumentlist/tbodocumentdetail/' + this.param + '/doclist/', this.param, application_no], { skipLocationChange: true });
+  // documentsswiz() {
+    // this.route.navigate(['/application/subtbodocumentlist/tbodocumentdetail/' + this.param + '/doclist/', this.param], { skipLocationChange: true });
   }
   //#endregion List tabs
 

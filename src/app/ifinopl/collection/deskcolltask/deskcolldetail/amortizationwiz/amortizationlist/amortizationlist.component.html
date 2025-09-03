@@ -38,7 +38,7 @@
               <td style="text-align: right; width: 15%;">{{row.total_billing_amount | number : '1.2-2'}}</td>
               <td style="text-align: center; width: 10%;">{{row.ovd_days}}</td>
               <td style="text-align: center; width: 15%;">{{row.invoice_status}}</td>
-              <td style="text-align: center; width: 10%;">{{row.paid_date}}</td>
+              <td style="text-align: center; width: 10%;">{{row.invoice_due_date}}</td>
               <td style="text-align: center;">
                 <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit" (click)="btnEdit(row.id)"><i
                     class="fa fa-edit"></i></a>

@@ -616,9 +616,11 @@ export class EarlyterminationdetailComponent extends BaseComponent implements On
               // newTab.document.body.innerHTML = this.pdfFile(parse.value.data);
               // this.showSpinner = false;
             }
-            if (fileType === 'DOC') {
-              const newTab = window.open();
-              newTab.document.body.innerHTML = this.docFile(parse.value.data);
+            // if (fileType === 'DOC') {
+            //   const newTab = window.open();
+            //   newTab.document.body.innerHTML = this.docFile(parse.value.data);
+            if (fileType === 'DOCX' || fileType === 'DOC') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'msword');
             }
           }
         }

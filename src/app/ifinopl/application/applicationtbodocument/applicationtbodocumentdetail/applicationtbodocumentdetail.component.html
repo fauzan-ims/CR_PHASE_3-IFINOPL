@@ -162,7 +162,8 @@
                   <div class="fileinput fileinput-new text-center" data-provides="fileinput">
                     <div>
                       <a class="btn btn-primary btn-round btn-file custom-button-width" type="button"
-                        (click)="priviewFileDeliveryDetail(model.file_memo, model.file_path_memo)">
+                      (click)="priviewFileDeliveryDetail(model.file_memo, model.file_path_memo)">
+                        <!-- (click)="priviewFile(model.file_memo, model.file_path_memo)"> -->
                         <span><i class="fa fa-eye"></i></span></a>
                       {{model.file_memo}}
                     </div>
@@ -258,7 +259,8 @@
                       <div>
                         <span>
                           <a class="btn btn-primary btn-round btn-file custom-button-width" type="button"
-                            (click)="priviewFileMasterContractDetail(model.main_contract_file_name, model.main_contract_file_path)">
+                          (click)="priviewFileMasterContractDetail(model.main_contract_file_name, model.main_contract_file_path)">
+                            <!-- (click)="priviewFile(model.main_contract_file_name, model.main_contract_file_path)"> -->
                             <span><i class="fa fa-eye"></i></span></a>
                         </span>
                         <div> {{model.main_contract_file_name}}</div>
@@ -311,7 +313,7 @@
                     <li class="nav-item">
                       <!-- <a class="nav-link" (click)="documentsswiz(model.application_no)" href="#documentdetail"
                         data-toggle="tab" role="tab" aria-controls="documentdetail" aria-selected="true"> -->
-                      <a class="nav-link" (click)="documentsswiz()" href="#documentdetail" data-toggle="tab" role="tab"
+                      <a class="nav-link" (click)="documentsswiz(model.application_no)" href="#documentdetail" data-toggle="tab" role="tab"
                         aria-controls="documentdetail" aria-selected="true">
                         Document
                       </a>

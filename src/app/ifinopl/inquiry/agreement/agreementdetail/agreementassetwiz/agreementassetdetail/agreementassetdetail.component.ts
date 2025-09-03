@@ -135,7 +135,7 @@ export class AgreementassetdetailComponent extends BaseComponent implements OnIn
             parsedata.is_bbn_client = false
             this.isBBNClient = false
           }
-
+          
           if (parsedata.is_purchase_requirement_after_lease === '1') {
             parsedata.is_purchase_requirement_after_lease = true;
           } else {
