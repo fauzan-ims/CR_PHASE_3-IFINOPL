@@ -29,6 +29,7 @@ export class ObjectInfoEarlyterminationdetailComponent extends BaseComponent imp
   private APIController: String = 'EtMain';
   private APIControllerEtDetail: String = 'EtDetail';
   private APIControllerEtTransaction: String = 'EtTransaction';
+    private APIRouteForPriviewFile: String = 'Priview';
 
   private APIRouteForGetRow: String = 'GetRow';
   private APIRouteForGetRows: String = 'GetRows';
@@ -194,6 +195,57 @@ export class ObjectInfoEarlyterminationdetailComponent extends BaseComponent imp
       },
       searchDelay: 800 // pake ini supaya gak bug search
     }
+  }
+
+  downloadFile(base64: string, fileName: string, extention: string) {
+    var temp = 'data:application/' + extention + ';base64,'
+      + encodeURIComponent(base64);
+    var download = document.createElement('a');
+    download.href = temp;
+    download.download = fileName;
+    document.body.appendChild(download);
+    download.click();
+    document.body.removeChild(download);
+    this.showSpinner = false;
+  }
+  //#endregion button priview image
+
+
+    previewFile(row1, row2) {
+    const usersJson: any[] = Array.of();
+
+    usersJson.push({
+      p_file_name: row1,
+      p_file_paths: row2
+    });
+
+    this.dalservice.PriviewFile(usersJson, this.APIController, this.APIRouteForPriviewFile)
+      .subscribe(
+        (res) => {
+          const parse = JSON.parse(res);
+          if (parse.value.filename !== '') {
+            const fileType = parse.value.filename.split('.').pop();
+
+            if (fileType === 'PNG') {
+              const newTab = window.open();
+              newTab.document.body.innerHTML = this.pngFile(parse.value.data);
+            }
+            if (fileType === 'JPEG' || fileType === 'JPG') {
+              const newTab = window.open();
+              newTab.document.body.innerHTML = this.jpgFile(parse.value.data);
+            }
+            if (fileType === 'PDF') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'pdf');
+              // const newTab = window.open();
+              // newTab.document.body.innerHTML = this.pdfFile(parse.value.data);
+              // this.showSpinner = false;
+            }
+            if (fileType === 'DOCX' || fileType === 'DOC') {
+              this.downloadFile(parse.value.data, parse.value.filename, 'msword');
+            }
+          }
+        }
+      );
   }
   //#endregion load all data transaction
 

@@ -114,7 +114,117 @@
                     </div>
                     <!--#endregion Remarks-->
                 </div>
+
+
+
+
+
+
+
+                <div class="row">
+              <!--#region paths-->
+              <div class="col-md-4" [hidden]="this.param == null">
+                <div class="form-group">
+                  <label [hidden]="model.et_status !== 'HOLD'">Upload
+                    File</label>
+                  <div class="row" style="margin-left: 30px;">
+                    <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                      <div>
+                        <span>
+                          <a class="btn btn-primary btn-round btn-file "
+                            type="button" (click)="previewFile(model.file_name, model.file_path)">
+                            <span><i class="fa fa-eye"></i></span></a>
+                        </span>
+                        <div> {{model.file_name}}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion paths-->
+
+              <!--#region reason-->
+              <!-- <div class="col-md-4" [hidden]="this.param == null">
+                <div class="form-group">
+                  <label for="reason" class="control-label">Reason</label>
+                  <textarea [disabled]="model.et_status != 'HOLD'" type="text" class="form-control"
+                    [ngModel]="model.reason" maxlength="4000" name="p_reason" #reason="ngModel"></textarea>
+                </div>
+              </div> -->
+              <!--#endregion reason-->
+
+               <!--#region credit_note_amount-->
+              <div class="col-md-4" [hidden]="this.param == null">
+                <div class="form-group">
+                  <label>Credit Note Amount</label>
+                  <input type="text" class="form-control col-md-6" style="text-align: right;"
+                    [ngModel]="model.credit_note_amount | number : '1.2-2'" amount="p_credit_note_amount"
+                    name="p_credit_note_amount" disabled>
+                </div>
+              </div>
+              <!--#endregion credit_note_amount-->
+
+              <!--#region refund_amount-->
+              <div class="col-md-4" [hidden]="this.param == null">
+                <div class="form-group">
+                  <label>Refund Amount</label>
+                  <input type="text" class="form-control col-md-6" style="text-align: right;"
+                    [ngModel]="model.refund_amount | number : '1.2-2'" amount="p_refund_amount" name="p_refund_amount"
+                    disabled>
+                </div>
+              </div>
+              <!--#endregion refund_amount-->
+            </div>
                 <!--#endregion row-->
+
+                <div class="row">
+              <!--#region look up to bank name-->
+              <!-- <div class="col-md-4" [hidden]="this.param == null || isBank"> -->
+              <div class="col-md-4" [hidden]="this.param == null">
+                <div class="form-group">
+                  <label class="control-label labelmodule">Bank Name</label>
+                  <div class="col-md-12 buttons btn-lookup-margin">
+                    <span>
+                      <button [disabled]="model.et_status !== 'HOLD'"
+                        class="btn btn-icon btn-outline-default btn-round btn-md" type="button" data-toggle="modal"
+                        data-target="#lookupModalBank" href="#"><i class="fa fa-search-plus"
+                          ></i></button>
+                      {{model.bank_name}}
+                      <input type="hidden" class="form-control" [ngModel]="model.bank_code" name="p_bank_code"
+                         #bank_code="ngModel">
+                        <!-- [disabled]="this.isDate" #bank_code="ngModel"> -->
+                      <input type="hidden" class="form-control" [ngModel]="model.bank_name" name="p_bank_name"
+                        #bank_name="ngModel">
+                        <!-- #bank_name="ngModel" [disabled]="this.isDate"> -->
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!--#region bank_account_no -->
+              <!-- <div class="col-md-4" [hidden]="this.param == null || isBank"> -->
+              <div class="col-md-4" [hidden]="this.param == null">
+                <div class="form-group">
+                  <label for="bank_account_no" class="control-label">Bank Account No</label>
+                  <input type="text" class="form-control" [ngModel]="model.bank_account_no" maxlength="50"
+                    name="p_bank_account_no" #bank_account_no="ngModel" [disabled]="model.et_status !== 'HOLD'">
+                </div>
+              </div>
+              <!--#endregion bank_account_no-->
+
+              <!--#region bank_account_name -->
+              <!-- <div class="col-md-4" [hidden]="this.param == null || isBank"> -->
+              <div class="col-md-4" [hidden]="this.param == null">
+                <div class="form-group">
+                  <label for="bank_account_name" class="control-label">Bank Account Name</label>
+                  <input type="text" class="form-control" [ngModel]="model.bank_account_name" maxlength="250"
+                    name="p_bank_account_name" #bank_account_name="ngModel" [disabled]="model.et_status !== 'HOLD'">
+                </div>
+              </div>
+              <!--#endregion bank_account_name-->
+            </div>
+
+
             </div>
 
             <span layout="row horizontal-divider">
@@ -137,7 +247,14 @@
                                     <th style="display: none;"></th>
                                     <th class="disabled-sorting">No</th>
                                     <th>Name </th>
+                                    <th>Plat/Chasis/Engine No</th>
                                     <th>Outstanding Rental Amount</th>
+                                     <th>Approve To Sell</th>
+                                     <th>Pickup Address</th>
+                                    <th>PIC Customer Name</th>
+                                    <th>Monthly Rental Rounded Amount</th>
+                                    <th>Refund Amount</th>
+                                    <th>Credit Note Amount</th>
                                     <th>Terminate</th>
                                 </tr>
                             </thead>
@@ -145,9 +262,29 @@
                                 <tr *ngFor="let row of listearlyterminationdetail;let i=index ">
                                     <td style="display: none;"></td>
                                     <td style="text-align: center;">{{listearlyterminationdetail.numberIndex+i+1}}</td>
-                                    <td class="if-no-edit-btn" style="width: 60%;">{{row.asset_name}}</td>
-                                    <td style="width: 30%;text-align: right;">{{row.os_rental_amount | number :'1.2-2'}}</td>
-                                    <td style="width: 10%;text-align: center;">{{row.terminate}}</td>
+                                    <td class="if-no-edit-btn" style="width: 20%;">{{row.asset_name}}</td>
+                                    <td class="if-no-edit-btn" style="width: 15%;">{{row.fa_reff_no_01}} <br> {{row.fa_reff_no_02}} <br>
+                                     {{row.fa_reff_no_03}}</td>
+                                   <td style="width: 15%;text-align: right;">{{row.os_rental_amount | number : '1.2-2'}}</td>
+                                   <td class="if-no-edit-btn" style="text-align: center;">
+                                    <label class="switch">
+                                        <input [disabled]="row.et_status !== 'HOLD'" type="checkbox" [ngModel]="row.is_approve_to_sell"
+                                        (click)="btnApproveToSell(row.id)">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    </td>
+                                     <td class="if-no-edit-btn" style="width: 15%;">{{row.pickup_address}}</td>
+                                    <td class="if-no-edit-btn" style="width: 10%;">{{row.pickup_name}}</td>
+                                    <td class="if-no-edit-btn" style="width: 10%; text-align: right;">{{row.monthly_rental_rounded_amount | number : '1.2-2'}}</td>
+                                    <td style="width: 15%;text-align: right;">{{row.refund_amount | number : '1.2-2'}}</td>
+                                    <td style="width: 15%;text-align: right;">{{row.credit_amount | number : '1.2-2'}}</td>
+                                    <td class="if-no-edit-btn" style="text-align: center;">
+                                    <label class="switch">
+                                        <input [disabled]="row.et_status !== 'HOLD'" type="checkbox" [ngModel]="row.is_terminate"
+                                        (click)="btnTerminate(row.id)">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

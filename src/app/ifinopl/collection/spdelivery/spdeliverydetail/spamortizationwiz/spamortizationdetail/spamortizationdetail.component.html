@@ -65,10 +65,8 @@
                             <div class="form-group">
                                 <label for="billing_date" class="control-label">Billing Date
                                 </label>
-                                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
-                                    [ngModel]="model.billing_date" name="p_billing_date" [options]="myDatePickerOptions"
-                                    #p_billing_date="ngModel" #billing_date="angular-mydatepicker" autocomplete="off"
-                                    readonly />
+                                <input type="text" class="form-control col-md-4" placeholder="dd/mm/yyyy"
+                                    [ngModel]="model.billing_date" name="p_billing_date" readonly>
                             </div>
                         </div>
                         <!--#endregion billing_date-->
@@ -78,10 +76,8 @@
                             <div class="form-group">
                                 <label for="billing_mode_date" class="control-label">New Billing Date
                                 </label>
-                                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
-                                    [ngModel]="model.billing_mode_date" name="p_billing_mode_date"
-                                    [options]="myDatePickerOptions" #p_billing_date="ngModel"
-                                    #billing_mode_date="angular-mydatepicker" autocomplete="off" readonly />
+                                <input type="text" class="form-control col-md-4" placeholder="dd/mm/yyyy"
+                                    [ngModel]="model.billing_mode_date" name="p_billing_mode_date" readonly>
                             </div>
                         </div>
                         <!--#endregion billing_mode_date-->
@@ -91,10 +87,8 @@
                             <div class="form-group">
                                 <label for="billing_due_date" class="control-label">Billing Due Date
                                 </label>
-                                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
-                                    [ngModel]="model.billing_due_date" name="p_billing_due_date"
-                                    [options]="myDatePickerOptions" #p_billing_date="ngModel"
-                                    #billing_due_date="angular-mydatepicker" autocomplete="off" readonly />
+                                <input type="text" class="form-control col-md-4" placeholder="dd/mm/yyyy"
+                                    [ngModel]="model.billing_due_date" name="p_billing_due_date" readonly>
                             </div>
                         </div>
                         <!--#endregion billing_due_date-->
@@ -219,7 +213,7 @@
                             </div>
                         </div>
                         <!--#endregion last_partial_payment_date-->
-                        
+
                         <!--#region result code-->
                         <!-- <div class="col-md-4">
                             <div class="form-group">
