@@ -67,6 +67,10 @@ export class InvoiceDeliverydetailComponent extends BaseComponent implements OnI
     private APIRouteForDownload: String = 'DownloadFileWithData';
     private APIRouteForUploadDataFile: String = 'UploadDataExcel';
 
+    // report
+    private APIControllerReport: String = 'Report';
+    private APIRouteForDownloadReport: String = 'getReport';
+
 
     // form 2 way binding
     model: any = {};
@@ -881,4 +885,29 @@ export class InvoiceDeliverydetailComponent extends BaseComponent implements OnI
         this.model.delivery_result = event.target.value;
     }
     //#endregion changeResult
+
+    //#region button print tanda terima
+    btnPrintTandaTerima() {
+        this.showSpinner = true;
+        const dataParam = {
+            TableName: 'RPT_INVOICE_DELIVERY',
+            SpName: 'xsp_rpt_invoice_delivery',
+            reportparameters: {
+                p_user_id: this.userId,
+                p_delivery_code: this.param,
+                p_register_no: this.model.code,
+                p_print_option: 'PDF'
+            }
+        };
+
+        this.dalservice.ReportFile(dataParam, this.APIControllerReport, this.APIRouteForDownloadReport).subscribe(res => {
+            this.printRptNonCore(res);
+            this.showSpinner = false;
+        }, err => {
+            this.showSpinner = false;
+            const parse = JSON.parse(err);
+            this.swalPopUpMsg(parse.data);
+        });
+    }
+    //#endregion button print tanda terima
 }

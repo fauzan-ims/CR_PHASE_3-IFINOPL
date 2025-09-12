@@ -28,7 +28,7 @@ export class SpAmortizationdetailComponent extends BaseComponent implements OnIn
     private APIController: String = 'WarningLetterDelivery';
     private APIControllerMasterDeskcollResult: String = 'MasterDeskcollResult';
 
-    private APIRouteForGetRows: String = 'GetRowsForAmortInvoiceAgreement';
+    private APIRouteForGetRows: String = 'GetRowsInvoiceDetailAgreement';
     private APIRouteForGetRow: String = 'GetRowInvoiceDetail';
     private APIRouteForLookup: String = 'GetRowsForLookup';
     private APIRouteForGetRowsAgreement: String = 'GetRowsAgreement';

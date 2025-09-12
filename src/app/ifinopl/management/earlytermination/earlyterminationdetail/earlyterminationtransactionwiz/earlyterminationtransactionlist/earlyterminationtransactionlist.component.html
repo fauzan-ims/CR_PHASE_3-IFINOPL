@@ -13,6 +13,7 @@
           hidden></button>
         <!--#endregion button add, delete-->
       </div>
+      
 
       <!--#earlyterminationtransaction list view-->
       <table id="datatableTransaction" datatable [dtOptions]="dtOptions"
@@ -24,15 +25,15 @@
             <th>Transaction</th>
             <th>Transaction Amount</th>
             <th style="display: none;">Discount (%)</th>
-            <th>Discount Amount</th>
+            <th>Adjustment Amount</th>
             <th>Total Amount</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let row of listearlyterminationtransaction; let i=index">
             <td style="display: none;"><input type="hidden" value="{{row.id}}" name="p_id"></td>
-            <td style="text-align: center;">{{listearlyterminationtransaction.numberIndex+i+1}}</td>
-            <td style="width: 40%;">{{row.transaction_name}}</td>
+            <td style="text-align: center; width: 1%;">{{listearlyterminationtransaction.numberIndex+i+1}}</td>
+            <td style="width: 35%;">{{row.transaction_name}}</td>
             <td style="width: 15%;text-align: right;">
               <input [disabled]="model.et_status !== 'HOLD' || row.is_amount_editable === '0'"
                 id="transaction_amount{{i}}" (blur)="onBlur($event,i,'amount1')" (focus)="onFocus($event,i,'amount1')"
@@ -54,7 +55,7 @@
                 (blur)="onBlur($event,i,'amount2')" (focus)="onFocus($event,i,'amount2')" class="text-right" type="text"
                 value="{{row.disc_amount | number : '1.2-2'}}" amount="disc_amount" name="p_disc_amount">
             </td>
-            <td style="width: 15%;text-align: right;">
+            <td style="width: 19%;text-align: right;">
               <input id="total_amount{{i}}" class="text-right" type="text"
                 value="{{row.total_amount | number : '1.2-2'}}" amount="total_amount" name="p_total_amount" [disabled]="model.et_status !== 'HOLD' || row.is_discount_editable === '0'">
             </td>

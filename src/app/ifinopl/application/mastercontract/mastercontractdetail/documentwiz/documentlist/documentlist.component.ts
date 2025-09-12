@@ -305,24 +305,26 @@ export class DocumentlistComponent extends BaseComponent implements OnInit {
   this.showSpinner = true;
   this.listdataDoc = [];
 
-  // Ambil semua nilai input
-  const getID         = $('[name="p_id_tbo"]').map((_, el) => $(el).val()).get();
-  const getRemarks    = $('[name="p_remarks"]').map((_, el) => $(el).val()).get();
-  const getIsValid    = $('[name="p_is_valid"]').map((_, el) => $(el).prop("checked")? 1 : 0).get();
-  const getIsReceived = $('[name="p_is_received"]').map((_, el) => $(el).prop("checked")? 1 : 0).get();
-  const getReffDate   = $('[name="p_promise_date"]').map((_, el) => $(el).val()).get();
+$('#datatableApplicationDocument tbody tr').each((i, row) => {
+  const $row = $(row);
 
-  // Loop satu kali saja
-  for (let i = 0; i < getID.length; i++) {
-    let reffDate = getReffDate[i] || undefined; // kosong → undefined
+  const id           = $row.find('[name="p_id_tbo"]').val();
+  const remarks      = $row.find('[name="p_remarks"]').val();
+  const isReceived   = $row.find('[name="p_is_received"]').prop("checked") ? 1 : 0;
+  const isValid      = $row.find('[name="p_is_valid"]').prop("checked") ? 1 : 0;
+  const promiseDate  = $row.find('[name="p_promise_date"]').val();
+
+  if (id) { // pastikan p_id tidak kosong/null
     this.listdataDoc.push({
-      p_id: getID[i],
-      p_promise_date: this.dateFormatList(reffDate),
-      p_remarks: getRemarks[i],
-      p_is_received: getIsReceived[i], // boolean
-      p_is_valid: getIsValid[i]        // boolean
+      p_id: id,
+      p_promise_date: this.dateFormatList(promiseDate || undefined),
+      p_remarks_doc: remarks,
+      p_is_received: isReceived,
+      p_is_valid: isValid
     });
   }
+});
+
 
   // Web service
   this.dalservice.Update(this.listdataDoc, this.APIController, this.APIRouteForUpdate)

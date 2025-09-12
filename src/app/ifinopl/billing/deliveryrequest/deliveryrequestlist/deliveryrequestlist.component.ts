@@ -341,8 +341,9 @@ export class DeliveryRequestlistComponent extends BaseComponent implements OnIni
   }
 
   selectAllTable() {
+    // alert(this.listinvoice[0].deliver_code);
     for (let i = 0; i < this.listinvoice.length; i++) {
-      if (this.listinvoice[i].deliver_code !== null) {
+      if (this.listinvoice[i].deliver_code !== '1') {
         this.listinvoice[i].selected = this.selectedAll;
       }
     }

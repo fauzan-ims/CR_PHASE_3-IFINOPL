@@ -88,6 +88,11 @@ export class ChangeduedatedetaillistComponent extends BaseComponent implements O
                         } else {
                             parse.data[i].is_change = false;
                         }
+                        if (parse.data[i].is_change_billing_date === '1') {
+                            parse.data[i].is_change_billing_date = true;
+                        } else {
+                            parse.data[i].is_change_billing_date = false;
+                        }
 
                         if (parse.data[i].is_every_eom === '1') {
                             parse.data[i].is_every_eom = true;
@@ -167,27 +172,31 @@ export class ChangeduedatedetaillistComponent extends BaseComponent implements O
     }
     //#endregion getrow data
 
-      //#region btnChange
-    btnChange(id: any, i: any) {
+    //#region btnChange
+    btnChange(id: any, i: any, p_is_change_billing_date: any) {
         this.showSpinner = true;
         this.dataTamp = [];
 
         const getNewDueDateDay = $('[name="p_new_due_date_day"]')
             .map(function () { return $(this).val(); }).get();
+        const getNewBillingDateDay = $('[name="p_old_billing_date_day"]')
+            .map(function () { return $(this).val(); }).get();
 
-
-        i = i%100;
+        i = i % 100;
 
         if (getNewDueDateDay[i] == '' || getNewDueDateDay[i] == null) {
             getNewDueDateDay[i] = undefined;
         }
 
-        
+
         this.dataTamp.push(
             this.JSToNumberFloats({
                 p_id: id,
                 p_due_date_change_code: this.param,
                 p_new_due_date_day: this.dateFormatList(getNewDueDateDay[i]),
+                p_new_billing_date_day: this.dateFormatList(getNewBillingDateDay[i]),
+                p_is_change: '1',
+                p_is_change_billing_date: p_is_change_billing_date ? '1' : '0',
             }))
 
 
@@ -212,6 +221,56 @@ export class ChangeduedatedetaillistComponent extends BaseComponent implements O
                 });
     }
     //#endregion btnChange
+    //#region btnChangeBilingDate
+    btnChangeBillingDate(id: any, i: any, is_change: any) {
+        this.showSpinner = true;
+        this.dataTamp = [];
+
+        const getNewDueDateDay = $('[name="p_old_due_date_day"]')
+            .map(function () { return $(this).val(); }).get();
+        const getNewBillingDateDay = $('[name="p_new_billing_date_day"]')
+            .map(function () { return $(this).val(); }).get();
+
+
+        i = i % 100;
+
+        if (getNewBillingDateDay[i] == '' || getNewBillingDateDay[i] == null) {
+            getNewBillingDateDay[i] = undefined;
+        }
+
+
+        this.dataTamp.push(
+            this.JSToNumberFloats({
+                p_id: id,
+                p_due_date_change_code: this.param,
+                p_new_due_date_day: this.dateFormatList(getNewDueDateDay[i]),
+                p_new_billing_date_day: this.dateFormatList(getNewBillingDateDay[i]),
+                p_is_change_billing_date: '1',
+                p_is_change: is_change ? '1' : '0',
+            }))
+
+
+        this.dalservice.Update(this.dataTamp, this.APIController, this.APIRouteForUpdate)
+            .subscribe(
+                res => {
+                    const parse = JSON.parse(res);
+                    if (parse.result === 1) {
+                        this.showSpinner = false;
+                        this.showNotification('bottom', 'right', 'success');
+                        $('#datatabledetail').DataTable().ajax.reload(null, false);
+                    } else {
+                        this.showSpinner = false;
+                        this.swalPopUpMsg(parse.data);
+                        $('#datatabledetail').DataTable().ajax.reload(null, false);
+                    }
+                },
+                error => {
+                    this.showSpinner = false;
+                    const parse = JSON.parse(error);
+                    this.swalPopUpMsg(parse.data)
+                });
+    }
+    //#endregion btnChangeBilingDate
 
     //#region isEveryEom
     isEveryEom(event: any, id: any, i: any) {
@@ -221,11 +280,16 @@ export class ChangeduedatedetaillistComponent extends BaseComponent implements O
 
         const getNewDueDateDay = $('[name="p_new_due_date_day"]')
             .map(function () { return $(this).val(); }).get();
+        const getNewBillingDateDay = $('[name="p_new_billing_date_day"]')
+            .map(function () { return $(this).val(); }).get();
 
-        i = i%100;
+        i = i % 100;
 
         if (getNewDueDateDay[i] == '' || getNewDueDateDay[i] == null) {
             getNewDueDateDay[i] = undefined;
+        }
+        if (getNewBillingDateDay[i] == '' || getNewBillingDateDay[i] == null) {
+            getNewBillingDateDay[i] = undefined;
         }
 
         this.dataTamp.push(
@@ -233,6 +297,7 @@ export class ChangeduedatedetaillistComponent extends BaseComponent implements O
                 p_id: id,
                 p_due_date_change_code: this.param,
                 p_new_due_date_day: this.dateFormatList(getNewDueDateDay[i]),
+                p_new_billing_date_day: this.dateFormatList(getNewBillingDateDay[i]),
                 p_is_every_eom: event.target.checked
             }))
 

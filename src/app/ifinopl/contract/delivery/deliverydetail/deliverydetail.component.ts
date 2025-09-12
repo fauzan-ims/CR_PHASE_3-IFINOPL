@@ -244,7 +244,15 @@ export class DeliverydetailComponent extends BaseComponent implements OnInit {
       .map(function () { return $(this).val(); }).get();
 
     const getExpDate = $('[name="p_exp_date"]')
-      .map(function () { return $(this).val(); }).get();
+  .map(function () {
+    const val = $(this).val();
+    const parts = val.split('/');
+    if (parts.length === 3) {
+      return `${parts[2]}-${parts[1]}-${parts[0]}`; 
+    }
+    return val; 
+  }).get();
+
 
     while (i < getResult.length) {
       this.dataTampPost.push({
@@ -599,6 +607,7 @@ export class DeliverydetailComponent extends BaseComponent implements OnInit {
 
           if (parses.result === 1) {
             this.callGetrow();
+             this.showNotification('bottom', 'right', 'success');
           } else {
             this.swalPopUpMsg(parses.message);
           }
@@ -654,6 +663,9 @@ export class DeliverydetailComponent extends BaseComponent implements OnInit {
                 this.tempFile = undefined;
                 this.showNotification('bottom', 'right', 'success');
                 this.tamps = []
+                this.callGetrow();
+                this.redirectTo('/contract/subdeliverylist/deliverydetail/' + this.param)
+                
               } else {
                 this.showSpinner = false;
                 this.swalPopUpMsg(parse.message);

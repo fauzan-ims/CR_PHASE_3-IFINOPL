@@ -23,6 +23,7 @@
             <th>Approve To Sell</th>
             <th>Pickup Address</th>
             <th>PIC Customer Name</th>
+            <th>Monthly Rental Rounded Amount</th>
             <th>Refund Amount</th>
             <th>Credit Note Amount</th>
             <th>Terminate</th>
@@ -30,34 +31,37 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of listearlyterminationdetail;let i=index ">
+          <tr *ngFor="let row of listearlyterminationdetail; let i = index">
             <td style="display: none;"></td>
-            <td style="text-align: center;">{{listearlyterminationdetail.numberIndex+i+1}}</td>
-            <td class="if-no-edit-btn" style="width: 15%;">{{row.asset_name}}</td>
-            <td class="if-no-edit-btn" style="width: 15%;">{{row.fa_reff_no_01}} <br> {{row.fa_reff_no_02}} <br>
-              {{row.fa_reff_no_03}}</td>
-            <td style="width: 15%;text-align: right;">{{row.os_rental_amount | number : '1.2-2'}}</td>
-            <td class="if-no-edit-btn" style="text-align: center;">
+            <td style="width: 1%; text-align: center;">{{ listearlyterminationdetail.numberIndex + i + 1 }}</td>
+            <td class="if-no-edit-btn" style="width: 10%;">{{ row.asset_name }}</td>
+            <td class="if-no-edit-btn" style="width: 10%;">
+              {{ row.fa_reff_no_01 }} <br> {{ row.fa_reff_no_02 }} <br> {{ row.fa_reff_no_03 }}
+            </td>
+            <td style="width: 10%; text-align: right;">{{ row.os_rental_amount | number : '1.2-2' }}</td>
+            <td class="if-no-edit-btn" style="width: 7%; text-align: center;">
               <label class="switch">
                 <input [disabled]="row.et_status !== 'HOLD'" type="checkbox" [ngModel]="row.is_approve_to_sell"
                   (click)="btnApproveToSell(row.id)">
                 <span class="slider round"></span>
               </label>
             </td>
-            <td class="if-no-edit-btn" style="width: 15%;">{{row.pickup_address}}</td>
-            <td class="if-no-edit-btn" style="width: 10%;">{{row.pickup_name}}</td>
-            <td style="width: 15%;text-align: right;">{{row.refund_amount | number : '1.2-2'}}</td>
-            <td style="width: 15%;text-align: right;">{{row.credit_amount | number : '1.2-2'}}</td>
-            <td class="if-no-edit-btn" style="text-align: center;">
+            <td class="if-no-edit-btn" style="width: 10%;">{{ row.pickup_address }}</td>
+            <td class="if-no-edit-btn" style="width: 8%;">{{ row.pickup_name }}</td>
+            <td style="width: 10%; text-align: right;">{{ row.monthly_rental_rounded_amount | number : '1.2-2' }}</td>
+            <td style="width: 10%; text-align: right;">{{ row.refund_amount | number : '1.2-2' }}</td>
+            <td style="width: 10%; text-align: right;">{{ row.credit_amount | number : '1.2-2' }}</td>
+            <td class="if-no-edit-btn" style="width: 7%; text-align: center;">
               <label class="switch">
                 <input [disabled]="row.et_status !== 'HOLD'" type="checkbox" [ngModel]="row.is_terminate"
                   (click)="btnTerminate(row.id)">
                 <span class="slider round"></span>
               </label>
             </td>
-            <td style="text-align: center;">
-              <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit" (click)="btnEdit(row.id)"><i
-                  class="fa fa-edit"></i></a>
+            <td style="width: 7%; text-align: center;">
+              <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit" (click)="btnEdit(row.id)">
+                <i class="fa fa-edit"></i>
+              </a>
             </td>
           </tr>
         </tbody>

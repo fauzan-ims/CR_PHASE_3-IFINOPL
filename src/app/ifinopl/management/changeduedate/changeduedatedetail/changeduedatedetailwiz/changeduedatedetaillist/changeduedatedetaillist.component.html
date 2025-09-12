@@ -22,7 +22,7 @@
                         <th>Old Due Date / New Due Date</th>
                         <th>Old Billing Date / New Billing Date</th>
                         <th>Outstanding Rental Amount</th>
-                        <th>Every End Of Month</th>
+                        <th style="display: none;">Every End Of Month</th>
                         <th>Change</th>
                         <th>Action</th>
                     </tr>
@@ -31,11 +31,11 @@
                     <tr *ngFor="let row of listduedatechangedetail;let i=index ">
                         <td style="display: none;"></td>
                         <td style="text-align: center;">{{listduedatechangedetail.numberIndex+i+1}}</td>
-                        <td class="if-no-edit-btn" style="width: 50%;">{{row.asset_no}} <br> {{row.asset_name}}</td>
+                        <td class="if-no-edit-btn" style="width: 40%;">{{row.asset_no}} <br> {{row.asset_name}}</td>
                         <td class="if-no-edit-btn" style="width: 5%;text-align: center;">{{row.at_installment_no}}
                         </td>
                         <td class="if-no-edit-btn" style="width: 10%; text-align: center;">
-                            <div style="text-align: center;">{{row.old_due_date_day}} <br></div>
+                            {{row.old_due_date_day | date:'dd/MM/yyyy'}}
                             <input class="form-control" placeholder="dd/mm/yyyy"
                                 [readonly]="row.is_change === true || row.change_status !== 'HOLD'"
                                 value="{{row.new_due_date_day}}" name="p_new_due_date_day"
@@ -44,19 +44,20 @@
                                 [ngStyle]="getStyles(row.is_change === true)" />
                         </td>
                         <td class="if-no-edit-btn" style="width: 10%;">
-                            <div style="text-align: center;">{{row.old_due_date_day}} <br></div>
+                            {{row.old_billing_date_day | date:'dd/MM/yyyy'}}
                             <input class="form-control" placeholder="dd/mm/yyyy"
-                                [readonly]="row.is_change === true || row.change_status !== 'HOLD'"
-                                value="{{row.new_due_date_day}}" name="p_new_due_date_day"
-                                [options]="myDatePickerOptions" (click)="p_new_due_date_day.toggleCalendar()"
-                                #p_new_due_date_day="angular-mydatepicker" autocomplete="off" angular-mydatepicker
-                                [ngStyle]="getStyles(row.is_change === true)" />
+                                [readonly]="row.is_change_billing_date === true || row.change_status !== 'HOLD'"
+                                value="{{row.new_due_date_day}}" name="p_new_billing_date_day"
+                                [options]="myDatePickerOptions" (click)="p_new_billing_date_day.toggleCalendar()"
+                                #p_new_billing_date_day="angular-mydatepicker" autocomplete="off" angular-mydatepicker
+                                [ngStyle]="getStyles(row.is_change_billing_date === true)" />
                         </td>
                         <td style="width: 25%;text-align: right;">{{row.os_rental_amount | number : '1.2-2'}}</td>
-                        <td style="width: 5%; text-align: center;">
+                        <td style="width: 5%; text-align: center; display: none;">
                             <div class="form-check">
                                 <label class="form-check-label">
-                                    <input [disabled]="row.change_status !== 'HOLD' || row.is_change === true"
+                                    <input
+                                        [disabled]="row.change_status !== 'HOLD' || row.is_change === true || row.is_change_billing_date === true"
                                         class="form-check-input" type="checkbox" [(ngModel)]="row.is_every_eom"
                                         name="p_is_every_eom"
                                         (change)="isEveryEom($event, row.id, listduedatechangedetail.numberIndex+i);">
@@ -68,13 +69,13 @@
                             <label class=" switch">
                                 <input [disabled]="row.change_status !== 'HOLD'" type="checkbox"
                                     [ngModel]="row.is_change"
-                                    (click)="btnChange(row.id, listduedatechangedetail.numberIndex+i)">
+                                    (click)="btnChange(row.id, listduedatechangedetail.numberIndex+i, row.is_change_billing_date)">
                                 <span class="slider round"></span>
                             </label>
                             <label class=" switch">
                                 <input [disabled]="row.change_status !== 'HOLD'" type="checkbox"
-                                    [ngModel]="row.is_change"
-                                    (click)="btnChange(row.id, listduedatechangedetail.numberIndex+i)">
+                                    [ngModel]="row.is_change_billing_date"
+                                    (click)="btnChangeBillingDate(row.id, listduedatechangedetail.numberIndex+i, row.is_change)">
                                 <span class="slider round"></span>
                             </label>
                         </td>

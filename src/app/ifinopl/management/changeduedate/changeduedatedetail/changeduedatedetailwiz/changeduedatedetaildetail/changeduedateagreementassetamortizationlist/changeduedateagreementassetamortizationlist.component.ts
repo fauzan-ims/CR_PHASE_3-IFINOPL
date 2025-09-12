@@ -27,6 +27,7 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
   public listLookupAsset: any = [];
   public asset_no: String;
   public asset_name: String;
+  public listinvoicedetail: any = [];
 
   //controller
   private APIController: String = 'DueDateChangeAmortizationHistory';
@@ -38,6 +39,7 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
   private APIRouteForGetRow: String = 'GetRow';
   private APIRouteForGetRows: String = 'GetRows';
   private APIRouteLookup: String = 'GetRowsForLookup';
+  private APIRouteForUpdate: String = 'Update';
   private RoleAccessCode = 'R00023870000001A'; // role access 
 
   // form 2 way binding
@@ -112,6 +114,13 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
         // end param tambahan untuk getrow dynamic
         this.dalservice.Getrows(dtParameters, this.APIController, this.APIRouteForGetRows).subscribe(resp => {
           const parse = JSON.parse(resp);
+
+          this.listinvoicedetail = parse.data;
+          if (parse.data != null) {
+            this.listinvoicedetail.numberIndex = dtParameters.start;
+          }
+
+
           this.listchangeduedateagreementamortizationhistory = parse.data;
           if (parse.data != null) {
             this.listchangeduedateagreementamortizationhistory.numberIndex = dtParameters.start;
@@ -175,7 +184,7 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
         infoEmpty: '<p style="color:red;" > No Data Available !</p> '
       },
       searchDelay: 800 // pake ini supaya gak bug search
-    });                                    
+    });
   }
   //#endregion branch
 
@@ -185,4 +194,157 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
     $('#datatabledetail').DataTable().ajax.reload();
   }
   //#endregion button back
+
+  //#region onBlur
+  onBlur(event, i, type) {
+    // console.log(event, i, type);
+
+    if (type === 'new_billing_date_day') {
+      event = '' + event.target.value;
+      event = event.trim();
+      event = parseFloat(event).toFixed(2); // ganti jadi 6 kalo mau pct
+      event = event.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
+      // console.log(event);
+      
+    } else {
+      event = '' + event.target.value;
+      event = event.trim();
+      event = parseFloat(event).toFixed(6);
+    }
+
+    if (event === 'NaN') {
+      event = 0;
+      event = parseFloat(event).toFixed(2);
+    }
+
+    if (type === 'new_billing_date_day') {
+      $('#new_billing_date_day' + i)
+        .map(function () { return $(this).val(event); }).get();
+    }
+  }
+  //#endregion onBlur
+
+  //#region onFocus
+  onFocus(event, i, type) {
+    // console.log(event, i, type);
+    event = '' + event.target.value;
+
+    if (event != null) {
+      event = event.replace(/[ ]*,[ ]*|[ ]+/g, '');
+    }
+
+    if (type === 'new_billing_date_day') {
+      $('#new_billing_date_day' + i)
+        .map(function () { return $(this).val(event); }).get();
+            // console.log(event);
+    }
+  }
+  //#endregion onFocus
+
+  //#region button save in list 
+  btnSaveList() {
+    this.showSpinner = true;
+    this.listinvoicedetail = [];
+
+    let i = 0;
+
+    const getInstallment = $('[name="installment_no"]')
+      .map(function () { return $(this).val(); }).get();
+
+    const getNewBillingDateDay = $('[name="new_billing_date_day"]')
+      .map(function () { return $(this).val(); }).get();
+
+    const getAssetNo = $('[name="p_asset_no"]')
+      .map(function () { return $(this).val(); }).get();
+
+    const getBillingDateChangeCode = $('[name="p_due_date_change_code"]')
+      .map(function () { return $(this).val(); }).get();
+
+    while (i < getInstallment.length) {
+
+      while (i < getNewBillingDateDay.length) {
+        this.listinvoicedetail.push(this.JSToNumberFloats({
+          p_id: getInstallment[i],
+          new_billing_date_day: getNewBillingDateDay[i],
+          p_asset_no: getAssetNo[i],
+          p_due_date_change_code: getBillingDateChangeCode[i],
+          // p_credit_note_code: this.creditnotecode,
+          // p_invoice_no: this.model.invoice_no
+        }));
+        i++;
+      }
+      i++;
+    }
+
+    //#region web service
+    this.dalservice.Update(this.listinvoicedetail, this.APIController, this.APIRouteForUpdate)
+      .subscribe(
+        res => {
+          const parse = JSON.parse(res);
+          if (parse.result === 1) {
+            this.callGetrow();
+            this.showNotification('bottom', 'right', 'success');
+            $('#datatableAgreement').DataTable().ajax.reload();
+            this.showSpinner = false;
+          } else {
+            $('#datatableAgreement').DataTable().ajax.reload();
+            this.swalPopUpMsg(parse.data);
+            this.showSpinner = false;
+          }
+        },
+        error => {
+          this.showSpinner = false;
+          $('#datatableAgreement').DataTable().ajax.reload();
+          const parse = JSON.parse(error);
+          this.swalPopUpMsg(parse.data);
+        });
+    //#endregion web service
+  }
+  //#endregion button save in list 
+
+  //#region changeAdjusmentAmount
+  changeAdjusmentAmount(event: any, id: any, asset_no: any, due_date_change_code: any) {
+    this.showSpinner = true;
+    this.listinvoicedetail = [];
+    console.log(event.singleDate.formatted);
+    // return;
+    
+
+    this.listinvoicedetail.push(this.JSToNumberFloats({
+      p_installment_no: id,
+      p_billing_date: event.singleDate.formatted,
+      p_asset_no: asset_no,
+      p_due_date_change_code: due_date_change_code,
+      // p_credit_note_code: this.creditnotecode,
+      // p_invoice_no: this.model.invoice_no
+    }));
+    console.log(this.listinvoicedetail);
+    
+
+
+    //#region web service
+    this.dalservice.Update(this.listinvoicedetail, this.APIController, this.APIRouteForUpdate)
+      .subscribe(
+        res => {
+          const parse = JSON.parse(res);
+          if (parse.result === 1) {
+            this.callGetrow();
+            $('#datatableAgreement').DataTable().ajax.reload();
+            this.showNotification('bottom', 'right', 'success');
+            this.showSpinner = false;
+          } else {
+            $('#datatableAgreement').DataTable().ajax.reload();
+            this.swalPopUpMsg(parse.data);
+            this.showSpinner = false;
+          }
+        },
+        error => {
+          this.showSpinner = false;
+          $('#datatableAgreement').DataTable().ajax.reload();
+          const parse = JSON.parse(error);
+          this.swalPopUpMsg(parse.data);
+        });
+    //#endregion web service
+  }
+  //#endregion changeAdjusmentAmount
 }

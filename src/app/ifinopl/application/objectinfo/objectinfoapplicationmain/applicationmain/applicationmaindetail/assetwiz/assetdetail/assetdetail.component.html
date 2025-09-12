@@ -55,6 +55,14 @@
             </div>
             <!--#endregion asset_type_code-->
 
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="asset_status" class="control-label">Status</label>
+                <input readonly type="text" class="form-control" [ngModel]="model.asset_status" maxlength="250"
+                  name="p_asset_status" #asset_status="ngModel">
+              </div>
+            </div>
+
             <!--#region transmisi-->
             <div class="col-md-4" [hidden]="model.asset_type_code !== 'VHCL'">
               <div class="form-group">
@@ -66,12 +74,18 @@
               </div>
             </div>
             <!--#endregion transmisi-->
-          </div>
-          <!--#endregion row-->
 
-          <!--#region row-->
-          <div class="row">
-            <!--#region asset_year-->
+
+
+            <div class="col-md-4" hidden>
+              <div class="form-group">
+                <label for="asset_name" class="control-label">Name</label>
+                <input readonly type="text" class="form-control" [ngModel]="model.asset_name" maxlength="250"
+                  name="p_asset_name" #asset_name="ngModel">
+              </div>
+            </div>
+
+
             <div class="col-md-4">
               <div class="form-group">
                 <label for="asset_year" class="control-label">Asset Year *</label>
@@ -81,8 +95,8 @@
             </div>
             <!--#endregion asset_year-->
 
-            <!--#region unit_source-->
-            <div class="col-md-4">
+
+             <div class="col-md-4">
               <div class="form-group">
                 <label>Unit Source</label>
                 <select class="form-control col-md-6" disabled [ngModel]="model.unit_source" name="p_unit_source">
@@ -91,12 +105,21 @@
                 </select>
               </div>
             </div>
-            <!--#endregion unit_source-->
-            <!-- </div> -->
 
-            <!--#region row [hidden]="this.params == null"-->
-            <!-- <div class="row" > -->
-            <!--#region category_code-->
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Condition</label>
+                <select class="form-control col-md-6" disabled
+                  [ngModel]="model.asset_condition" name="p_asset_condition">
+                  <option value='NEW'>NEW</option>
+                  <option value='USED'>USED</option>
+                </select>
+              </div>
+            </div>
+
+
+                        <!--#region category_code-->
             <div class="col-md-4" hidden>
               <label>Category *</label>
               <div class="form-group">
@@ -197,11 +220,10 @@
             </div>
             <!--#endregion type_code-->
 
-            <!--#region unit_code-->
             <div class="col-md-4">
               <label>Unit *</label>
               <div class="form-group">
-                <div class="col-md-12">
+                <div class="col-md-8">
                   <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
                     type="button" (click)="btnLookupUnit()" data-target="#lookupModalUnit" data-toggle="modal" href="#">
                     <i class="fa fa-search-plus"></i></button> {{model.unit_desc}}
@@ -209,13 +231,12 @@
                 </div>
               </div>
             </div>
-            <!--#endregion unit_code-->
 
-            <!--#region fa_code-->
+
             <div class="col-md-4" [hidden]="model.unit_source !== 'Stock'">
               <label style="cursor: pointer;" title="CLEAR">FA No *</label>
               <div class="form-group">
-                <div class="col-md-12">
+                <div class="col-md-10">
                   <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
                     type="button" (click)="btnLookupFixAsset()" data-target="#lookupModalFixAsset" data-toggle="modal"
                     href="#">
@@ -225,10 +246,9 @@
                 </div>
               </div>
             </div>
-            <!--#endregion fa_code-->
 
-            <!--#region initial_price_amount-->
-            <div class="col-md-4" [hidden]="model.unit_source !== 'Stock'">
+
+             <div class="col-md-4" [hidden]="model.unit_source !== 'Stock'">
               <div class="form-group">
                 <label>Initial Purchase Price</label>
                 <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
@@ -236,9 +256,8 @@
                   name="p_initial_price_amount" #initial_price_amount="ngModel">
               </div>
             </div>
-            <!--#endregion initial_price_amount-->
 
-            <!--#region colour-->
+
             <div class="col-md-4">
               <div class="form-group">
                 <label for="colour" class="control-label">Colour *</label>
@@ -246,6 +265,68 @@
                   name="p_colour" #colour="ngModel">
               </div>
             </div>
+
+
+
+            <div class="col-md-4" [hidden]="this.model.asset_type_code !== 'VHCL'">
+              <label>Plat Colour</label>
+              <div class="form-group" style="margin-left: 15px;">
+                <div class="row">
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input disabled  class="form-check-input col-md-6" type="radio"
+                        name="p_plat_colour" value="KUNING" [(ngModel)]="model.plat_colour"
+                        (change)="platColour($event)">KUNING
+
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input disabled  class="form-check-input col-md-6" type="radio"
+                        name="p_plat_colour" value="HITAM" [(ngModel)]="model.plat_colour"
+                        (change)="platColour($event)">HITAM
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region asset_year-->
+            
+            <!--#endregion asset_year-->
+
+            <!--#region unit_source-->
+           
+            <!--#endregion unit_source-->
+            <!-- </div> -->
+
+            <!--#region row [hidden]="this.params == null"-->
+            <!-- <div class="row" > -->
+
+
+            <!--#region unit_code-->
+            
+            <!--#endregion unit_code-->
+
+            <!--#region fa_code-->
+            
+            <!--#endregion fa_code-->
+
+            <!--#region initial_price_amount-->
+           
+            <!--#endregion initial_price_amount-->
+
+            <!--#region colour-->
+            
             <!--#endregion colour-->
 
             <!--#region check box is_otr-->
@@ -281,27 +362,7 @@
             <!--#endregion bbn_location_code-->
 
             <!--#region radio button plat_colour-->
-            <div class="col-md-4" [hidden]="this.model.asset_type_code !== 'VHCL'">
-              <label>Plat Colour</label>
-              <div class="form-group" style="margin-left: 15px;">
-                <div class="row">
-                  <div class="form-check-radio form-check-inline">
-                    <label class="form-check-label">
-                      <input disabled class="form-check-input col-md-6" type="radio" name="p_plat_colour" value="KUNING"
-                        [(ngModel)]="model.plat_colour" (change)="platColour($event)">KUNING
-                      <span class="form-check-sign"></span>
-                    </label>
-                  </div>
-                  <div class="form-check-radio form-check-inline">
-                    <label class="form-check-label">
-                      <input disabled class="form-check-input col-md-6" type="radio" name="p_plat_colour" value="HITAM"
-                        [(ngModel)]="model.plat_colour" (change)="platColour($event)">HITAM
-                      <span class="form-check-sign"></span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
+          
             <!--#endregion radio button plat_colour-->
 
             <!--#region check box is_bbn_client-->
@@ -500,7 +561,7 @@
             <!--#endregion billing_to_address-->
 
             <!--#region document_no-->
-            <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="col-md-2" [hidden]="model.is_simulation === '1'">
               <div class="form-group">
                 <label>
                   NPWP No *
@@ -508,6 +569,16 @@
                 <input id="npwp" type="text" class="form-control" [(ngModel)]="this.model.billing_to_npwp"
                   name="p_billing_to_npwp" disabled #p_billing_to_npwp="ngModel" (keydown)="onKeydownNpwp($event)"
                   (paste)="onPasteNpwp($event)" (focus)="onFokusNpwp($event)" (blur)="onChangeNpwp($event)">
+              </div>
+            </div>
+
+
+             <div class="col-md-2" [hidden]="model.is_simulation === '1'">
+              <div class="form-group">
+                <label for="client_nitku" class="control-label">NITKU *</label>
+                <input type="text" class="form-control" [ngModel]="model.client_nitku" name="p_client_nitku"
+                  [disabled]="this.pageType != null || model.is_simulation === '1'" required #p_client_nitku="ngModel"
+                  pattern={{NumberOnlyPattern}} maxlength="6">
               </div>
             </div>
 
@@ -638,20 +709,23 @@
           <!--#region row-->
           <div class="row">
             <!--#region asset_condition-->
-            <div class="col-md-4">
+             <div class="col-md-4">
+              <label class="labelgsubcode">Faktur Transaction Code *</label>
               <div class="form-group">
-                <label>Condition</label>
-                <select class="form-control col-md-6" disabled [ngModel]="model.asset_condition"
-                  name="p_asset_condition">
-                  <option value='NEW'>NEW</option>
-                  <option value='USED'>USED</option>
-                </select>
+                <div class="col-md-12">
+                  <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                    type="button" (click)="btnLookupFakturType()" data-target="#lookupModalFakturType"
+                    data-toggle="modal" href="#">
+                    <i class="fa fa-search-plus"></i></button> <b>{{model.billing_to_faktur_type}}</b>
+                  <input type="text" hidden name="p_billing_to_faktur_type" [ngModel]="model.billing_to_faktur_type"
+                    #billing_to_faktur_type="ngModel" />
+                </div>
               </div>
             </div>
             <!--#endregion asset_condition-->
 
             <!--#region start_due_date-->
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
               <div class="form-group">
                 <label>Start Due Date</label>
                 <select class="form-control col-md-6" disabled [ngModel]="model.start_due_date" name="p_start_due_date">
@@ -659,31 +733,11 @@
                   <option value='BAST Date + 1'>BAST Date + 1</option>
                 </select>
               </div>
-            </div>
+            </div> -->
             <!--#endregion start_due_date-->
 
             <!--#region radio button prorate-->
-            <div class="col-md-4">
-              <label>Prorate *</label>
-              <div class="form-group" style="margin-left: 15px;">
-                <div class="row">
-                  <div class="form-check-radio form-check-inline">
-                    <label class="form-check-label">
-                      <input disabled class="form-check-input col-md-6" type="radio" name="p_prorate" value="Yes"
-                        [(ngModel)]="model.prorate">Yes
-                      <span class="form-check-sign"></span>
-                    </label>
-                  </div>
-                  <div class="form-check-radio form-check-inline">
-                    <label class="form-check-label">
-                      <input disabled class="form-check-input col-md-6" type="radio" name="p_prorate" value="No"
-                        [(ngModel)]="model.prorate">No
-                      <span class="form-check-sign"></span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
+            
             <!--#endregion radio button prorate-->
           </div>
           <!-- #endregion row  -->
@@ -705,23 +759,6 @@
             </div>
             <!--#endregion billing_mode-->
 
-            <!--#region billing_to_faktur_type-->
-            <div class="col-md-4">
-              <label class="labelgsubcode">Faktur Transaction Code *</label>
-              <div class="form-group">
-                <div class="col-md-12">
-                  <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
-                    type="button" (click)="btnLookupFakturType()" data-target="#lookupModalFakturType"
-                    data-toggle="modal" href="#">
-                    <i class="fa fa-search-plus"></i></button> <b>{{model.billing_to_faktur_type}}</b>
-                  <input type="text" hidden name="p_billing_to_faktur_type" [ngModel]="model.billing_to_faktur_type"
-                    #billing_to_faktur_type="ngModel" />
-                </div>
-              </div>
-            </div>
-            <!--#endregion billing_to_faktur_type-->
-
-            <!--#region billing_mode_date-->
             <div class="col-md-4">
               <div class="form-group">
                 <label for="billing_mode_date" class="control-label">Date *</label>
@@ -730,6 +767,32 @@
                   pattern="{{NumberOnlyPattern}}">
               </div>
             </div>
+
+
+            <div class="col-md-4">
+              <label>Prorate *</label>
+              <div class="form-group" style="margin-left: 5px;">
+                <div class="row">
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input disabled class="form-check-input col-md-6" type="radio" name="p_prorate" value="Yes"
+                        [(ngModel)]="model.prorate">Yes
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input disabled class="form-check-input col-md-6" type="radio" name="p_prorate" value="No"
+                        [(ngModel)]="model.prorate">No
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--#region billing_mode_date-->
+            
             <!--#endregion billing_mode_date-->
           </div>
           <!--#endregion row-->
@@ -1133,6 +1196,7 @@
                       <th>Budget Cost</th>
                       <th>Initial Budget Amount</th>
                       <th>Budget Amount</th>
+                      <th>Subject To Purchase</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1148,13 +1212,15 @@
                         {{row.description}}
                       </td>
                       <td [ngStyle]="{'backgroundColor': row.budget_adjustment_amount < 0 ? '#ff8080'  : 'none'}"
-                        style="width: 30%;text-align: right;">{{row.cost_amount_yearly | number : '1.2-2'}}</td>
+                        style="width: 25%;text-align: right;">{{row.cost_amount_yearly | number : '1.2-2'}}</td>
                       <td [ngStyle]="{'backgroundColor': row.budget_adjustment_amount < 0 ? '#ff8080'  : 'none'}"
-                        style="width: 30%;text-align: right;">
+                        style="width: 25%;text-align: right;">
                         <input class="col-md-12" style="text-align: right;" type="text"
                           value="{{row.budget_amount | number : '1.2-2'}}" amount="budget_amount" name="p_budget_amount"
                           (change)="costAmountYearly()" disabled>
                       </td>
+                      <td [ngStyle]="{'backgroundColor': row.budget_adjustment_amount < 0 ? '#ff8080'  : 'none'}"
+                        style="width: 10%;text-align: center;">{{row.is_subject_to_purchase}}</td>
                     </tr>
                   </tbody>
                 </table>

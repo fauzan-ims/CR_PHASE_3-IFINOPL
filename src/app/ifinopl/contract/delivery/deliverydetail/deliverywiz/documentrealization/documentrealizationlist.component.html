@@ -43,7 +43,7 @@
               <td style="width: 10%;">
                 <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker value="{{row.promise_date}}"
                   name="p_promise_date" [options]="myDatePickerOptions" (click)="p_promise_date.toggleCalendar()"
-                  #p_promise_date="angular-mydatepicker" autocomplete="off" [disabled]="this.model.status !== 'VERIFICATION'" />
+                  #p_promise_date="angular-mydatepicker" autocomplete="off" [disabled]="!(model.status === 'HOLD' || model.status === 'ON PROCESS' || model.status === 'VERIFICATION')"  />
               </td>
               <td style="width: 5%; text-align: center;">
                 <div class="form-check">
@@ -55,7 +55,7 @@
                 </div>
               </td>
              <td style="width: 40%;">
-                <textarea [disabled]="this.model.status !== 'VERIFICATION'"
+                <textarea   [disabled]="!(model.status === 'HOLD' || model.status === 'ON PROCESS' || model.status === 'VERIFICATION')" 
                   class="form-control" type="text" value="{{row.remarks}}" name="p_remarks"> </textarea>
               </td>
               <td style="width: 5%; text-align: center;">
