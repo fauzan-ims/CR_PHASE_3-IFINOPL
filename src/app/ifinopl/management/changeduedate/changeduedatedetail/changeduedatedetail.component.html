@@ -159,7 +159,7 @@
                       class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
                       (click)="btnLookupBillingType()" data-target="#lookupModalBillingType" data-toggle="modal"
                       href="#">
-                      <i class="fa fa-search-plus"></i></button> {{model.billing_type_desc}}
+                      <i class="fa fa-search-plus"></i></button> {{model.billing_type}}
                     <input required type="hidden" name="p_billing_type" [ngModel]="model.billing_type"
                       #billing_type="ngModel" />
                   </div>
@@ -177,15 +177,28 @@
                 <div class="form-group">
                   <label>Billing Mode</label>
                   <!-- <select class="form-control col-md-6" name="p_billing_mode" [ngModel]="model.billing_mode" (change)="PageStatus($event)"> -->
-                  <select class="form-control col-md-6" name="p_billing_mode" [ngModel]="model.billing_mode">
-                    <option value="Normal">Normal</option>
-                    <option value="Before Due">Before Due</option>
-                    <option value="Date">Date</option>
-                    <option value="End Month">End Month</option>
+                  <select class="form-control col-md-6" name="p_billing_mode" [(ngModel)]="model.billing_mode">
+                    <option value="NORMAL">Normal</option>
+                    <option value="BEFORE DUE">Before Due</option>
+                    <option value="DATE">Date</option>
+                    <option value="END MONTH">End Month</option>
                   </select>
                 </div>
               </div>
               <!--#endregion rounding billing_mode-->
+
+              <!--#region Date-->
+              <div class="col-md-4" [hidden]="model.billing_mode !== 'BEFORE DUE' && model.billing_mode !== 'DATE'">
+                <div class="form-group">
+                  <label>Date</label>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.date" name="p_date" [options]="myDatePickerOptions"
+                    #change_exp_date="angular-mydatepicker" autocomplete="off" readonly />
+
+                </div>
+              </div>
+              <!--#endregion Date-->
+
               
               <!--#region is_prorate-->
               <div class="col-md-4">
@@ -195,14 +208,14 @@
                     <div class="form-check-radio form-check-inline">
                       <label class="form-check-label">
                         <input class="form-check-input" type="radio" name="p_is_prorate" value="Yes"
-                          [(ngModel)]="model.is_prorate">Yes
+                          [ngModel]="model.is_prorate">Yes
                         <span class="form-check-sign"></span>
                       </label>
                     </div>
                     <div class="form-check-radio form-check-inline">
                       <label class="form-check-label">
                         <input class="form-check-input" type="radio" name="p_is_prorate" value="No"
-                          [(ngModel)]="model.is_prorate">No
+                          [ngModel]="model.is_prorate">No
                         <span class="form-check-sign"></span>
                       </label>
                     </div>
@@ -445,7 +458,7 @@
                   <td style="width: 80%;">{{ row.client_name}}</td>
                   <td class="text-right">
                     <button class="btn btn-outline-default btn-round"
-                      (click)="btnSelectRowAgreement(row.agreement_no, row.agreement_external_no, row.client_name)">Select</button>
+                      (click)="btnSelectRowAgreement(row.agreement_no, row.agreement_external_no, row.client_name, row.billing_type, row.billing_mode, row.prorate)">Select</button>
                   </td>
                 </tr>
               </tbody>

@@ -913,7 +913,7 @@ export class DeliverydetailComponent extends BaseComponent implements OnInit {
   }
 
   DocumentList() {
-    this.route.navigate(['/contract/subdeliverylist/deliverydetail/' + this.param + '/documentlist', this.param], { skipLocationChange: true });
+    this.route.navigate(['/contract/subdeliverylist/deliverydetail/' + this.param + '/documentlist', this.model.application_no], { skipLocationChange: true });
   }
 
   DocumentRealizationList() {

@@ -11,7 +11,12 @@
           <h4 class="card-title">Application TBO Document Info</h4>
         </div>
         <div class="card-body ">
+
+        <form #tbodocumentForm="ngForm"
+            (ngSubmit)="onFormSubmit(tbodocumentForm.value, tbodocumentForm.valid)">
           <!--#region button Back-->
+          <button [hidden]="model.status !== 'HOLD'" type="submit" class="btn btn-info btn-round"
+            data-role="R00024730000002C">Save</button>
           <button [hidden]="model.status !== 'HOLD'" type="button" class="btn btn-success btn-round"
             (click)="btnProceed(model.id)" data-role="R00024730000003O">Proceed</button>
           <button [hidden]="model.status !== 'VERIFICATION'" type="button" class="btn btn-success btn-round"
@@ -138,14 +143,16 @@
             <!--#region remark-->
             <div class="col-md-4">
               <div class="form-group">
-                <label for="package_description" class="control-label">Remark</label>
-                <textarea readonly type="text" class="form-control" [ngModel]="model.remark" name="p_remark" required
+                <label for="package_description" class="control-label">Remark *</label>
+                <textarea [readOnly]="model.status !=='HOLD'" type="text" class="form-control" [ngModel]="model.remark" name="p_remark" required
                   #remark="ngModel" maxlength="4000"></textarea>
               </div>
             </div>
             <!--#endregion remark-->
           </div>
           <!--#endregion row-->
+        </form>
+          <!--#endregion form-->
 
           <span layout="row horizontal-divider">
             <hr flex />

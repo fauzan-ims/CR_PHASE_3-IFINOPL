@@ -24,6 +24,9 @@
                 <div class="card-body ">
                     <!--#region form-->
                     <!--#region button post, Back-->
+                    <button type="button" class="btn btn-info btn-round" (click)="btnSaveList()">Save</button>
+                    <!--#endregion button post, Back-->
+                    <!--#region button post, Back-->
                     <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
                     <!--#endregion button post, Back-->
 
@@ -54,7 +57,7 @@
                         <!--#endregion collateral_type_desc-->
 
                         <!--#region asset_name-->
-                         <div class="col-md-4">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="asset_name" class="control-label">Asset Name </label>
                                 <input type="text" class="form-control" [ngModel]="model.asset_name" maxlength="250"
@@ -167,6 +170,10 @@
                                 <h4 class="card-title">Agreement Asset Amortization</h4>
                             </div>
                             <div class="card-body">
+                                <!--#region button post, Back-->
+                                <button type="button" class="btn btn-info btn-round"
+                                    (click)="btnSaveList()">Save</button>
+                                <!--#endregion button post, Back-->
                                 <!--#region list view-->
                                 <table id="datatableAgreement" datatable [dtOptions]="dtOptions"
                                     class="table table-striped table-bordered row-border hover" cellspacing="0"
@@ -188,18 +195,19 @@
                                     <tbody>
                                         <tr
                                             *ngFor="let row of listchangeduedateagreementamortizationhistory;let i=index">
-                                            <td class="if-no-edit-btn" style="display: none;">{{row.installment_no}}
+                                            <td class="if-no-edit-btn" style="display: none;" name="p_id_doc">{{row.installment_no}}
                                             </td>
                                             <td style="text-align: center;">
                                                 {{listchangeduedateagreementamortizationhistory.numberIndex+i+1}}</td>
                                             <td style="width: 25%;text-align: left;">{{row.asset_no}} <br>
                                                 {{row.asset_name}}</td>
-                                            <td style="width: 10%;text-align: center;">{{row.installment_no}}</td>
+                                            <td style="width: 10%;text-align: center;" name="p_installment_no">{{row.installment_no}}</td>
                                             <td style="width: 10%;text-align: center;">{{row.due_date}}</td>
                                             <!-- <td style="width: 10%;text-align: center;">{{row.billing_date}}</td> -->
+                                            <!-- ----------------------------------------------------------------------------------------------------------------------- -->
                                             <td class="if-no-edit-btn" style="width: 10%;">
                                                 <div style="text-align: center;">{{row.billing_date}} <br></div>
-                                                <input class="form-control" placeholder="dd/mm/yyyy"
+                                                <!-- <input class="form-control" placeholder="dd/mm/yyyy"
                                                     id="new_billing_date_day{{i}}"
                                                     (blur)="onBlur($event,i,'new_billing_date_day')"
                                                     (focus)="onFocus($event,i,'new_billing_date_day')" class="col-md-12"
@@ -210,7 +218,18 @@
                                                     (click)="p_new_billing_date_day.toggleCalendar()"
                                                     #p_new_billing_date_day="angular-mydatepicker" autocomplete="off"
                                                     angular-mydatepicker
-                                                    (dateChanged)="changeAdjusmentAmount($event, row.installment_no, row.asset_no, row.due_date_change_code)" />
+                                                    (dateChanged)="changeAdjusmentAmount($event, row.installment_no, row.asset_no, row.due_date_change_code)" /> -->
+                                                <input class="form-control col-md-12" id="new_billing_date_day{{i}}"
+                                                    (blur)="onBlur($event,i,'new_billing_date_day')"
+                                                    (focus)="onFocus($event,i,'new_billing_date_day')" class="col-md-12"
+                                                    [readonly]="row.is_change === true || row.change_status !== 'HOLD'"
+                                                    [placeholder]="row.billing_date ? row.billing_date : 'dd/mm/yyyy'"
+                                                    style="text-align: center;" value="{{row.new_billing_date_day}}"
+                                                    name="p_new_billing_date_day" [options]="myDatePickerOptions"
+                                                    (click)="p_new_billing_date_day.toggleCalendar()"
+                                                    #p_new_billing_date_day="angular-mydatepicker" autocomplete="off"
+                                                    angular-mydatepicker />
+                                                <!-- ----------------------------------------------------------------------------------------------------------------------- -->
                                                 <!-- [ngStyle]="getStyles(row.is_change === true)" /> -->
 
                                                 <!-- <td style="width: 15%;text-align: right;">

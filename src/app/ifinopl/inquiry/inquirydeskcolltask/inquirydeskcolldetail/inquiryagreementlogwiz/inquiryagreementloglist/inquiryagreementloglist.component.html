@@ -14,6 +14,7 @@
             <th style="display: none;"></th>
             <th class="disabled-sorting">No</th>
             <th>Task Date</th>
+            <th>Posting By</th>
             <th>Posting Date</th>
             <th>Result</th>
             <th>Promise Date</th>
@@ -25,17 +26,19 @@
           <tr *ngFor="let row of listdeskcolllog;let i=index ">
             <td style="display: none;"></td>
             <td style="text-align: center;">{{listdeskcolllog.numberIndex+i+1}}</td>
-            <td style="text-align: center; width: 15%;" class='if-no-edit-btn'>
+            <td style="text-align: center; width: 10%;" class='if-no-edit-btn'>
               {{row.task_date}}</td>
-            <td style="text-align: center; width: 15%;" class='if-no-edit-btn'>
+            <td style="text-align: left; width: 15%">
+              {{row.posting_by}}</td>
+            <td style="text-align: center; width: 10%;" class='if-no-edit-btn'>
               {{row.posting_date}}</td>
-            <td style="text-align: center; width: 15%">
+            <td style="text-align: left; width: 15%">
               {{row.result_name}}</td>
-            <td style="text-align: center; width: 15%;" class='if-no-edit-btn'>
+            <td style="text-align: center; width: 10%;" class='if-no-edit-btn'>
               {{row.promise_date}}</td>
-            <td style="text-align: center; width: 15%;" class='if-no-edit-btn'>
+            <td style="text-align: center; width: 10%;" class='if-no-edit-btn'>
               {{row.next_fu_date}}</td>
-            <td style="text-align: left; width: 25%">{{row.remarks}}</td>
+            <td style="text-align: left; width: 30%">{{row.remarks}}</td>
           </tr>
         </tbody>
       </table>

@@ -11,7 +11,7 @@
       <div class="card-body">
 
         <!--#region button submit-->
-        <button [hidden]="model.status !== 'VERIFICATION'" type="button" class="btn btn-info btn-round" (click)="btnSavelist()"
+        <button [hidden]="!(model.status === 'HOLD' || model.status === 'VERIFICATION')" type="button" class="btn btn-info btn-round" (click)="btnSavelist()"
           data-role="R00020670022075C">
           Save</button>
         <button type="button" class="btn btn-info btn-round" (click)="btnOpenLD()">
@@ -41,27 +41,27 @@
               <td class="if-no-edit-btn" style="text-align: center;">{{listdataDoc.numberIndex+i+1}}</td>
               <td style="width: 40%;">{{row.document_name}} {{row.is_required}}</td>
               <td style="width: 10%;">
-                <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker value="{{row.promise_date}}"
-                  name="p_promise_date" [options]="myDatePickerOptions" (click)="p_promise_date.toggleCalendar()"
-                  #p_promise_date="angular-mydatepicker" autocomplete="off" [disabled]="!(model.status === 'HOLD' || model.status === 'ON PROCESS' || model.status === 'VERIFICATION')"  />
+                <input class="form-control" placeholder="dd/mm/yyyy"angular-mydatepicker [(ngModel)]="row.promise_date"name="p_promise_date"
+                  [options]="myDatePickerOptions"(click)="p_promise_date.toggleCalendar()"#p_promise_date="angular-mydatepicker"
+                  autocomplete="off"[disabled]="isDatepickerDisabled(row)" />
               </td>
               <td style="width: 5%; text-align: center;">
                 <div class="form-check">
                   <label class="form-check-label">
-                    <input [disabled]="this.model.status !== 'VERIFICATION'" class="form-check-input" name="p_is_received" type="checkbox"
-                      [(ngModel)]="row.is_received">
+                    <input class="form-check-input"name="p_is_received" type="checkbox" [(ngModel)]="row.is_received"
+                        [disabled]="isCheckboxDisabled(row)">
                     <span class="form-check-sign"></span>
                   </label>
                 </div>
               </td>
              <td style="width: 40%;">
-                <textarea   [disabled]="!(model.status === 'HOLD' || model.status === 'ON PROCESS' || model.status === 'VERIFICATION')" 
+                <textarea   [disabled]="model.status !== 'VERIFICATION'" 
                   class="form-control" type="text" value="{{row.remarks}}" name="p_remarks"> </textarea>
               </td>
               <td style="width: 5%; text-align: center;">
                 <div class="form-check">
                   <label class="form-check-label">
-                    <input [disabled]="this.model.status !== 'VERIFICATION'" class="form-check-input" type="checkbox"name="p_is_valid"
+                    <input [disabled]="model.status !== 'VERIFICATION'" class="form-check-input" type="checkbox"name="p_is_valid"
                       [(ngModel)]="row.is_valid" >
                     <span class="form-check-sign"></span>
                   </label>

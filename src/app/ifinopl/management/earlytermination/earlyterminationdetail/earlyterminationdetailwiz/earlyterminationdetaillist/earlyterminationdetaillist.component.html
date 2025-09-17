@@ -20,7 +20,7 @@
             <th>Name </th>
             <th>Plat/Chasis/Engine No</th>
             <th>Outstanding Rental Amount</th>
-            <th>Approve To Sell</th>
+            <th *ngIf="model.is_purchase_requirement_after_lease !== '0'">Approve To Sell</th>
             <th>Pickup Address</th>
             <th>PIC Customer Name</th>
             <th>Monthly Rental Rounded Amount</th>
@@ -39,7 +39,7 @@
               {{ row.fa_reff_no_01 }} <br> {{ row.fa_reff_no_02 }} <br> {{ row.fa_reff_no_03 }}
             </td>
             <td style="width: 10%; text-align: right;">{{ row.os_rental_amount | number : '1.2-2' }}</td>
-            <td class="if-no-edit-btn" style="width: 7%; text-align: center;">
+            <td class="if-no-edit-btn" style="width: 7%; text-align: center;" *ngIf="model.is_purchase_requirement_after_lease === '1'">
               <label class="switch">
                 <input [disabled]="row.et_status !== 'HOLD'" type="checkbox" [ngModel]="row.is_approve_to_sell"
                   (click)="btnApproveToSell(row.id)">

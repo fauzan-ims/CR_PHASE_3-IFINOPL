@@ -100,7 +100,7 @@ export class TboDoclistComponent extends BaseComponent implements OnInit {
             this.isHold = false
           }
 
-          if (this.tempStatus === 'VERIFICATION' || this.tempStatus === 'DONE') {
+          if (this.tempStatus === 'VERIFICATION' || this.tempStatus === 'DONE' ) {
             this.isVerification = true
           } else {
             this.isVerification = false

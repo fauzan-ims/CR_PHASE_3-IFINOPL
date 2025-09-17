@@ -478,10 +478,13 @@ export class ChangeduedatedetailComponent extends BaseComponent implements OnIni
     });
   }
 
-  btnSelectRowAgreement(agreement_no: String, agreement_external_no: String, agreement_desc: string) {
-    this.model.agreement_no = agreement_no;
-    this.model.agreement_external_no = agreement_external_no;
-    this.model.client_name = agreement_desc;
+  btnSelectRowAgreement(agreement_no: String, agreement_external_no: String, agreement_desc: string, billtype: string, billmode: string, pror: string) {
+    this.model.agreement_no           = agreement_no;
+    this.model.agreement_external_no  = agreement_external_no;
+    this.model.client_name            = agreement_desc;
+    this.model.billing_type           = billtype;
+    this.model.billing_mode           = billmode;
+    this.model.is_prorate             = pror;
     $('#lookupModalAgreement').modal('hide');
   }
   //#endregion Agreement lookup

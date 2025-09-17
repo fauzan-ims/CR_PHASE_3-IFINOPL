@@ -205,7 +205,7 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
       event = parseFloat(event).toFixed(2); // ganti jadi 6 kalo mau pct
       event = event.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
       // console.log(event);
-      
+
     } else {
       event = '' + event.target.value;
       event = event.trim();
@@ -236,7 +236,7 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
     if (type === 'new_billing_date_day') {
       $('#new_billing_date_day' + i)
         .map(function () { return $(this).val(event); }).get();
-            // console.log(event);
+      // console.log(event);
     }
   }
   //#endregion onFocus
@@ -247,11 +247,13 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
     this.listinvoicedetail = [];
 
     let i = 0;
-
-    const getInstallment = $('[name="installment_no"]')
+    const getID = $('[name="p_id_doc"]')
       .map(function () { return $(this).val(); }).get();
 
-    const getNewBillingDateDay = $('[name="new_billing_date_day"]')
+    const getInstallment = $('[name="p_installment_no"]')
+      .map(function () { return $(this).val(); }).get();
+
+    const getNewBillingDateDay = $('[name="p_new_billing_date_day"]')
       .map(function () { return $(this).val(); }).get();
 
     const getAssetNo = $('[name="p_asset_no"]')
@@ -259,22 +261,67 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
 
     const getBillingDateChangeCode = $('[name="p_due_date_change_code"]')
       .map(function () { return $(this).val(); }).get();
+      
+    while (i < getID.length) {
 
-    while (i < getInstallment.length) {
+      while (i < getInstallment.length) {
 
-      while (i < getNewBillingDateDay.length) {
-        this.listinvoicedetail.push(this.JSToNumberFloats({
-          p_id: getInstallment[i],
-          new_billing_date_day: getNewBillingDateDay[i],
-          p_asset_no: getAssetNo[i],
-          p_due_date_change_code: getBillingDateChangeCode[i],
-          // p_credit_note_code: this.creditnotecode,
-          // p_invoice_no: this.model.invoice_no
-        }));
+        while (i < getNewBillingDateDay.length) {
+
+          while (i < getAssetNo.length) {
+
+            while (i < getBillingDateChangeCode.length) {
+
+              if (getAssetNo[i] == null) {
+                swal({
+                  title: 'Warning',
+                  text: 'Please fill in assets first.',
+                  buttonsStyling: false,
+                  confirmButtonClass: 'btn btn-danger',
+                  type: 'warning'
+                }).catch(swal.noop)
+                return;
+              }
+              this.listinvoicedetail.push(this.JSToNumberFloats({
+                p_id: getInstallment[i],
+                new_billing_date_day: getNewBillingDateDay[i],
+                p_asset_no: getAssetNo[i],
+                p_due_date_change_code: getBillingDateChangeCode[i],
+                // p_credit_note_code: this.creditnotecode,
+                // p_invoice_no: this.model.invoice_no
+              }));
+              i++
+            }
+            i++;
+          }
+          i++;
+        }
         i++;
       }
       i++;
     }
+    // console.log
+    //   (getInstallment
+    //     , getNewBillingDateDay
+    //     , getAssetNo
+    //     , getBillingDateChangeCode);
+
+    // while (i < getInstallment.length) {
+
+    //   while (i < getNewBillingDateDay.length) {
+    //     this.listinvoicedetail.push(this.JSToNumberFloats({
+    //       p_id: getInstallment[i],
+    //       new_billing_date_day: getNewBillingDateDay[i],
+    //       p_asset_no: getAssetNo[i],
+    //       p_due_date_change_code: getBillingDateChangeCode[i],
+    //       // p_credit_note_code: this.creditnotecode,
+    //       // p_invoice_no: this.model.invoice_no
+    //     }));
+    //     i++;
+    //   }
+    //   i++;
+    // }
+    // console.log(this.listinvoicedetail);
 
     //#region web service
     this.dalservice.Update(this.listinvoicedetail, this.APIController, this.APIRouteForUpdate)
@@ -308,7 +355,7 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
     this.listinvoicedetail = [];
     console.log(event.singleDate.formatted);
     // return;
-    
+
 
     this.listinvoicedetail.push(this.JSToNumberFloats({
       p_installment_no: id,
@@ -319,7 +366,7 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
       // p_invoice_no: this.model.invoice_no
     }));
     console.log(this.listinvoicedetail);
-    
+
 
 
     //#region web service
@@ -347,4 +394,6 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
     //#endregion web service
   }
   //#endregion changeAdjusmentAmount
+
+
 }

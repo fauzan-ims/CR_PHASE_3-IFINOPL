@@ -109,7 +109,7 @@
                                 <div class="form-group">
                                     <label for="status" class="control-label">Status </label>
                                     <input type="text" class="form-control" [ngModel]="model.status" maxlength="10"
-                                        name="p_status" required #status="ngModel" readonly>
+                                        name="p_status" #status="ngModel" readonly>
                                 </div>
                             </div>
                             <!--#endregion status-->
@@ -425,7 +425,7 @@
                                         placeholder="dd/mm/yyyy" angular-mydatepicker
                                         [ngModel]="model.delivery_reject_date" name="p_delivery_reject_date"
                                         [options]="myDatePickerOptions" (click)="delivery_reject_date.toggleCalendar()"
-                                        [required]="model.delivery_result !== 'ACCEPTED'"
+                                        [required]="model.delivery_result === 'FAILED' || model.status === 'ON PROCESS'"
                                         #p_delivery_reject_date="ngModel" #delivery_reject_date="angular-mydatepicker"
                                         autocomplete="off" [readonly]="model.status !== 'ON PROCESS'" />
                                     <small
@@ -450,7 +450,7 @@
                                             <i class="fa fa-search-plus"></i></button> {{model.delivery_reason_desc}}
                                         <input id="DeliveryReasonCode" type="text" hidden name="p_delivery_reason_code"
                                             [ngModel]="model.delivery_reason_code"
-                                            [required]="model.delivery_result !== 'ACCEPTED'"
+                                            [required]="model.delivery_result === 'FAILED' || model.status === 'ON PROCESS'"
                                             #delivery_reason="ngModel" />
                                     </div>
                                     <small

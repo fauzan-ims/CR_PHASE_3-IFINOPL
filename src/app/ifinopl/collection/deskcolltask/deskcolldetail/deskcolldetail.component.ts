@@ -40,6 +40,7 @@ export class DeskColltaskdetailComponent extends BaseComponent implements OnInit
   private setStyle: any = [];
   private RoleAccessCode = 'R00020970002098A';
   public isFU: boolean = false;
+  public isFUDate: boolean = false;
   public system_date = new Date();
   public nextFUDate: any = [];
 
@@ -334,25 +335,26 @@ export class DeskColltaskdetailComponent extends BaseComponent implements OnInit
   }
   //#endregion btnLookupMasterDeskcollResult
 
-  //#region master collector lookup
-  btnSelectRowMasterDeskcollResult(Code: String, Name: String) {
+  //#region master collector lookupn
+  btnSelectRowMasterDeskcollResult(Code: string, Name: string) {
     this.model.result_code = Code;
     this.model.result_name = Name;
-    console.log(this.model.sysdate.singleDate.date);
-    console.log(this.model.sysdate.singleDate.date.year+1);
-    console.log(this.system_date.getDate());
-    console.log(this.system_date);
-    
-    
-    if (Code == 'MD005') {
-      if (this.isFU == true) {
-        this.Date();
-      }
-    } else if (Code != 'MD005' && Code != 'MD004') {
-      if (this.isFU == true) {
-        this.Date2();
-      }
-    }
+
+    this.applyReasonRule(Code);
+    // if (Code == 'MD005') {
+    //   if (this.isFU == true) {
+    //     this.Date();
+    //   }
+    // } else if (Code != 'MD005' && Code != 'MD004') {
+    //   if (this.isFU == true) {
+    //     this.Date2();
+    //   }
+    // }
+
+    // if (Code == 'MD005') {
+    //   this.isFUDate === true
+    // }else
+    //   this.isFUDate === false
     $('#lookupModalMasterDeskcollResult').modal('hide');
   }
   //#endregion master collector lookup
@@ -566,26 +568,63 @@ export class DeskColltaskdetailComponent extends BaseComponent implements OnInit
 
   //#region checkbox
   changeFU(event: any) {
-    this.isFU = event.target.checked
+    // this.isFU = event.target.checked
 
-    if (this.isFU == true) {
+    // if (this.isFU == true) {
+    //   if (this.model.result_code != null) {
+    //     if (this.model.result_code == 'MD005') {
+    //       this.Date();
+    //       this.model.is_need_next_fu == true
+    //     } else if (this.model.result_code != 'MD005' && this.model.result_code != 'MD004') {
+    //       this.Date2();
+    //       this.model.is_need_next_fu == true
+    //     }
+    //   }
+    // } else {
+    //   this.model.next_fu_date = undefined; 
+    //   this.model.is_need_next_fu == false
+    // }
+    this.model.is_need_next_fu = event.target.checked;
+
+    if (this.model.is_need_next_fu) {
+      if (this.model.result_code === 'MD005') {  
+        // NO RESPOND
+        this.model.next_fu_date = this.Date(); // H+1
+      } else if (this.model.result_code !== 'MD004') { 
+        // Selain JANJI BAYAR & NO RESPOND
+        this.model.next_fu_date = this.Date2(); // H+7
+      } else {
+        // JANJI BAYAR → biarkan user isi manual
+        this.model.next_fu_date = null;
+      }
+    } else {
+      this.model.next_fu_date = null;
+    }
+  }
+
+
+  // #region fu_date
+  changeFUDate(event: any) {
+    this.isFUDate = event.target.checked
+
+    if (this.isFUDate == true) {
       if (this.model.result_code != null) {
         if (this.model.result_code == 'MD005') {
           this.Date();
-        // } else if (this.model.result_code != 'MD005' && this.model.result_code != 'MD004') {
-        //   this.Date2();
-        // }
-        } else if (this.model.result_code != 'MD005') {
+        } else if (this.model.result_code != 'MD005' && this.model.result_code != 'MD004') {
           this.Date2();
         }
       }
     } else {
-      this.model.next_fu_date = undefined;
+      this.model.next_fu_date = undefined; 
     }
   }
 
+
+  
+
   //#region currentDate
-  Date() {
+  DateOld() {
     let day: any = this.model.sysdate.singleDate.date.day + 1;
     let today: any = 1;
     // let from_month: any = this.model.sysdate.singleDate.date.month + 1;
@@ -621,7 +660,42 @@ export class DeskColltaskdetailComponent extends BaseComponent implements OnInit
   //#endregion currentDate
 
   //#region currentDate
-  Date2() {
+  Date() {
+    let day: any = this.system_date.getDate() + 1;
+    let today: any = 1;
+    let from_month: any = this.system_date.getMonth() + 1;
+    let to_month: any = this.system_date.getMonth() + 2;
+    let year: any = this.system_date.getFullYear();
+
+    if (day < 10) {
+      day = '0' + day.toString();
+    }
+    if (from_month < 10) {
+      from_month = '0' + from_month.toString();
+    }
+    if (to_month < 10) {
+      to_month = '0' + to_month.toString();
+    }
+
+    this.nextFUDate = { 'year': ~~year, 'month': ~~from_month, 'day': ~~day.toString() };
+    const obj2 = {
+      dateRange: null,
+      isRange: false,
+      singleDate: {
+        date: this.nextFUDate,
+        // epoc: 1600102800,
+        formatted: day.toString() + '/' + from_month + '/' + year,
+        // jsDate: new Date(dob[key])
+      }
+    }
+
+    this.model.next_fu_date = obj2
+    return obj2; // ✅ tambahkan ini
+  }
+  //#endregion currentDate
+
+  //#region currentDate
+  Date2Old() {
     let day: any = this.model.sysdate.singleDate.date.day + 7;
     let today: any = 1;
     // let from_month: any = this.model.sysdate.singleDate.date.month + 1;
@@ -655,6 +729,74 @@ export class DeskColltaskdetailComponent extends BaseComponent implements OnInit
     // this.model.to_date = obj2
   }
   //#endregion currentDate
+
+  //#region currentDate
+  Date2() {
+    let day: any = this.system_date.getDate() + 7;
+    let today: any = 1;
+    let from_month: any = this.system_date.getMonth() + 1;
+    let to_month: any = this.system_date.getMonth() + 2;
+    let year: any = this.system_date.getFullYear();
+
+    if (day < 10) {
+      day = '0' + day.toString();
+    }
+    if (from_month < 10) {
+      from_month = '0' + from_month.toString();
+    }
+    if (to_month < 10) {
+      to_month = '0' + to_month.toString();
+    }
+
+    this.nextFUDate = { 'year': ~~year, 'month': ~~from_month, 'day': ~~day.toString() };
+    const obj2 = {
+      dateRange: null,
+      isRange: false,
+      singleDate: {
+        date: this.nextFUDate,
+        // epoc: 1600102800,
+        formatted: day.toString() + '/' + from_month + '/' + year,
+        // jsDate: new Date(dob[key])
+      }
+    }
+
+    this.model.next_fu_date = obj2
+    return obj2; // ✅ tambahkan ini
+  }
+  // #endregion currentDate
+
+  applyReasonRule(code: string) {
+  this.model.result_code = code;
+
+  if (code === 'MD004') { // JANJI BAYAR
+    this.model.is_need_next_fu = false;
+    this.model.next_fu_date = null;
+
+    this.isFU = false; // checkbox bisa edit
+    this.isFUDate = false;   // date bisa edit
+  } 
+  else if (code === 'MD005') { // NO RESPOND
+    this.model.is_need_next_fu = true;
+    this.model.next_fu_date = this.Date(); // H+1
+
+    this.isFU = true;  // checkbox terkunci
+    this.isFUDate = true;    // date terkunci
+  } 
+  else { // Selain itu
+    this.model.is_need_next_fu = true;
+    this.model.next_fu_date = this.Date2(); // H+7
+
+    this.isFU = true;  // checkbox terkunci
+    this.isFUDate = false;   // date bisa edit
+  }
+}
+
+// helper tambah hari
+// addDays(date: Date, days: number): Date {
+//   const result = new Date(date);
+//   result.setDate(result.getDate() + days);
+//   return result;
+// }
 
   //#region btnApplyToAll
   btnApplyToAll(isValid: boolean) {

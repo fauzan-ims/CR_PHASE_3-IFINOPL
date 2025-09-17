@@ -28,8 +28,8 @@ export class SpSettlementAmortizationdetailComponent extends BaseComponent imple
     private APIController: String = 'WarningLetterDelivery';
     private APIControllerMasterDeskcollResult: String = 'MasterDeskcollResult';
 
-    private APIRouteForGetRows: String = 'GetRowsInvoiceDetailAgreement';
-    private APIRouteForGetRow: String = 'GetRowInvoiceDetail';
+    private APIRouteForGetRows: String = 'GetRowsForAmortInvoiceAgreement';
+    private APIRouteForGetRow: String = 'GetRowInvoiceAmort';
     private APIRouteForLookup: String = 'GetRowsForLookup';
 
     private RoleAccessCode = 'R00020670000000A'; // role access 

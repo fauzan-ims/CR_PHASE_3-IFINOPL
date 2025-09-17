@@ -339,23 +339,21 @@
                                 <div class="form-group">
                                     <label [hidden]="!this.isFU">Next FU Date *</label>
                                     <label [hidden]="this.isFU">Next FU Date</label>
-                                    <input [ngStyle]="getStyles(model.desk_status !== 'HOLD' || !this.isFU)"
+                                    <input [ngStyle]="getStyles(model.desk_status !== 'HOLD' || !this.isFU )"
                                         class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
-                                        [ngModel]="model.next_fu_date" name="p_next_fu_date"
-                                        [options]="myDatePickerOptions" (click)="model.desk_status !== 'HOLD' || !this.isFU || model.result_code === 'MD005' ? '': next_fu_date.toggleCalendar() "
+                                        [ngModel]="model.next_fu_date" name="p_next_fu_date" (change)="changeFUDate($event)"
+                                        [options]="myDatePickerOptions" (click)="next_fu_date.toggleCalendar()"
                                         #p_next_fu_date="ngModel" #next_fu_date="angular-mydatepicker"
-                                        autocomplete="off"
-                                        [readonly]="model.desk_status !== 'HOLD' || !this.isFU || model.result_code === 'MD005'"
-                                        [required]="this.isFU" />
+                                        autocomplete="off" [readonly]="isFUDate"
+                                        [required]="model.is_need_next_fu" />
                                     <small
                                         *ngIf="(p_next_fu_date.errors?.required && p_next_fu_date.touched) || (p_next_fu_date.errors?.required && DeskcollForm.submitted)"
                                         class="text-danger">
                                         Next FU Date is required
                                     </small>
-                                    <!-- [disabled]="model.result_code = 'MD005'" -->
                                 </div>
                             </div>
-                            <!--#endregion next_fu_date-->
+                            <!-- #endregion next_fu_date  -->
 
                         </div>
                         <!--#endregion row-->

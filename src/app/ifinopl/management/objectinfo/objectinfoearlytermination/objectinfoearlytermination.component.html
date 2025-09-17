@@ -193,7 +193,7 @@
                 <div class="row">
               <!--#region look up to bank name-->
               <!-- <div class="col-md-4" [hidden]="this.param == null || isBank"> -->
-              <div class="col-md-4" [hidden]="this.param == null">
+              <div class="col-md-4" [hidden]="this.param == null || model.refund_amount == 0">
                 <div class="form-group">
                   <label class="control-label labelmodule">Bank Name</label>
                   <div class="col-md-12 buttons btn-lookup-margin">
@@ -216,7 +216,7 @@
 
               <!--#region bank_account_no -->
               <!-- <div class="col-md-4" [hidden]="this.param == null || isBank"> -->
-              <div class="col-md-4" [hidden]="this.param == null">
+              <div class="col-md-4" [hidden]="this.param == null || model.refund_amount == 0">
                 <div class="form-group">
                   <label for="bank_account_no" class="control-label">Bank Account No</label>
                   <input type="text" class="form-control" [ngModel]="model.bank_account_no" maxlength="50"
@@ -227,7 +227,7 @@
 
               <!--#region bank_account_name -->
               <!-- <div class="col-md-4" [hidden]="this.param == null || isBank"> -->
-              <div class="col-md-4" [hidden]="this.param == null">
+              <div class="col-md-4" [hidden]="this.param == null || model.refund_amount == 0">
                 <div class="form-group">
                   <label for="bank_account_name" class="control-label">Bank Account Name</label>
                   <input type="text" class="form-control" [ngModel]="model.bank_account_name" maxlength="250"
