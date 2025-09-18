@@ -26,15 +26,15 @@ export class ApplicationtbodocumentdetailComponent extends BaseComponent impleme
   public setStyle: any = [];
 
   private APIController: String = 'TboDocument';
-    private APIControllerApplicationExtention: String = 'ApplicationExtention';
-      private APIController_Realization: String = 'Realization';
+  private APIControllerApplicationExtention: String = 'ApplicationExtention';
+  private APIController_Realization: String = 'Realization';
 
   private APIRouteForGetRow: String = 'GETROW';
   private APIRouteForUpdate: String = 'Update';
   private APIRouteForProceed: String = 'ExecSpForProceed';
   private APIRouteForPost: String = 'ExecSpForPost';
   private APIRouteForReturn: String = 'ExecSpForReturn';
-    private APIRouteForPriviewFile: String = 'Priview';
+  private APIRouteForPriviewFile: String = 'Priview';
 
   private RoleAccessCode = 'R00024730000001A'; // role access 
 
@@ -131,7 +131,7 @@ export class ApplicationtbodocumentdetailComponent extends BaseComponent impleme
   //#region List tabs
   documentsswiz(application_no: any) {
     this.route.navigate(['/application/subtbodocumentlist/tbodocumentdetail/' + this.param + '/doclist/', this.param, application_no], { skipLocationChange: true });
-  // documentsswiz() {
+    // documentsswiz() {
     // this.route.navigate(['/application/subtbodocumentlist/tbodocumentdetail/' + this.param + '/doclist/', this.param], { skipLocationChange: true });
   }
   //#endregion List tabs
@@ -224,49 +224,49 @@ export class ApplicationtbodocumentdetailComponent extends BaseComponent impleme
   }
   //#endregion btnPost
 
-//#region form submit
+  //#region form submit
   onFormSubmit(tbodocumentForm: NgForm, isValid: boolean) {
-        // validation form submit
-        if (!isValid) {
-            swal({
-                title: 'Warning',
-                text: 'Please Fill a Mandatory Field OR Format Is Invalid',
-                buttonsStyling: false,
-                confirmButtonClass: 'btn btn-warning',
-                type: 'warning'
-            }).catch(swal.noop)
-            return;
-        } else {
-            this.showSpinner = true;
-        }
-
-        this.dataTamp = this.JSToNumberFloats(tbodocumentForm);
-
-        if (this.dataTamp.p_editable == null) {
-            this.dataTamp.p_editable = false;
-        }
-        const usersJson: any[] = Array.of(this.dataTamp);
-        if (this.param != null) {
-            // call web service
-            this.dalservice.Update(usersJson, this.APIController, this.APIRouteForUpdate)
-                .subscribe(
-                    res => {
-                        this.showSpinner = false;
-                        const parse = JSON.parse(res);
-                        if (parse.result === 1) {
-                            this.showNotification('bottom', 'right', 'success');
-                            this.callGetrow();
-                        } else {
-                            this.swalPopUpMsg(parse.data);
-                        }
-                    },
-                    error => {
-                        const parse = JSON.parse(error);
-                        this.swalPopUpMsg(parse.data);
-                    });
-        }
+    // validation form submit
+    if (!isValid) {
+      swal({
+        title: 'Warning',
+        text: 'Please Fill a Mandatory Field OR Format Is Invalid',
+        buttonsStyling: false,
+        confirmButtonClass: 'btn btn-warning',
+        type: 'warning'
+      }).catch(swal.noop)
+      return;
+    } else {
+      this.showSpinner = true;
     }
-    //#endregion form submit
+
+    this.dataTamp = this.JSToNumberFloats(tbodocumentForm);
+
+    if (this.dataTamp.p_editable == null) {
+      this.dataTamp.p_editable = false;
+    }
+    const usersJson: any[] = Array.of(this.dataTamp);
+    if (this.param != null) {
+      // call web service
+      this.dalservice.Update(usersJson, this.APIController, this.APIRouteForUpdate)
+        .subscribe(
+          res => {
+            this.showSpinner = false;
+            const parse = JSON.parse(res);
+            if (parse.result === 1) {
+              this.showNotification('bottom', 'right', 'success');
+              this.callGetrow();
+            } else {
+              this.swalPopUpMsg(parse.data);
+            }
+          },
+          error => {
+            const parse = JSON.parse(error);
+            this.swalPopUpMsg(parse.data);
+          });
+    }
+  }
+  //#endregion form submit
 
   //#region btnReturn
   btnReturn(id: any) {
@@ -293,6 +293,7 @@ export class ApplicationtbodocumentdetailComponent extends BaseComponent impleme
               if (parse.result === 1) {
                 this.showNotification('bottom', 'right', 'success');
                 this.callGetrow();
+                this.documentsswiz(id);
                 $('#TboDetail').click();
                 this.showSpinner = false;
               } else {
@@ -311,7 +312,7 @@ export class ApplicationtbodocumentdetailComponent extends BaseComponent impleme
     });
   }
   //#endregion btnReturn 
-    //#region button priview image
+  //#region button priview image
   priviewFileMasterContractDetail(row1, row2) {
     this.showSpinner = true;
     const usersJson: any[] = Array.of();

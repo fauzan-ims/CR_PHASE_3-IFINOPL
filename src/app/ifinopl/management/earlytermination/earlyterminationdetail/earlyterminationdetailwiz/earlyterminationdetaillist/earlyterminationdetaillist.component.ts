@@ -148,7 +148,7 @@ export class EarlyterminationdetaillistComponent extends BaseComponent implement
 
         }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
       },
-      columnDefs: [{ orderable: false, width: '5%', targets: [0, 1, 11] }], // for disabled coloumn
+      columnDefs: [{ orderable: false, width: '5%', targets: [0, 1, 12] }], // for disabled coloumn
       language: {
         search: '_INPUT_',
         searchPlaceholder: 'Search records',

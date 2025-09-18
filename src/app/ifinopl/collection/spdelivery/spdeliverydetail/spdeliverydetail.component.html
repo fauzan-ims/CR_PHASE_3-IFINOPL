@@ -52,7 +52,7 @@
                 <div class="form-group">
                   <label for="code" class="control-label">Delivery No *</label>
                   <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.code" name="p_code"
-                    required #code="ngModel">
+                     #code="ngModel">
                   <small
                     *ngIf="(code.errors?.required && code.touched) || (code.errors?.required && spdeliveryForm.submitted)"
                     class="text-danger">
@@ -74,7 +74,7 @@
                       {{model.branch_name}}
                       <input type="hidden" class="form-control" [ngModel]="model.branch_code" name="p_branch_code">
                       <input type="hidden" class="form-control" [ngModel]="model.branch_name" name="p_branch_name"
-                        required #branch_name="ngModel">
+                       #branch_name="ngModel">
                     </span>
                     <small [hidden]="branch_name.valid || (branch_name.pristine && !spdeliveryForm.submitted)"
                       class="text-danger">
@@ -90,7 +90,7 @@
                 <div class="form-group">
                   <label for="delivery_status" class="control-label">Status </label>
                   <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.delivery_status"
-                    name="p_delivery_status" required #delivery_status="ngModel">
+                    name="p_delivery_status" #delivery_status="ngModel">
                   <small
                     *ngIf="(delivery_status.errors?.required && delivery_status.touched) || (delivery_status.errors?.required && spdeliveryForm.submitted)"
                     class="text-danger">
@@ -151,7 +151,7 @@
                       href="#"><i class="fa fa-search-plus"></i></button>
                     {{model.courier}}
                     <input type="hidden" class="form-control" [ngModel]="model.delivery_courier_code"
-                      name="p_delivery_courier_code" [required]="model.delivery_courier_type === 'EXTERNAL'"
+                      name="p_delivery_courier_code" 
                       #delivery_courier_code="ngModel">
                     <input type="hidden" class="form-control" [ngModel]="model.courier" name="p_description">
                   </div>
@@ -175,7 +175,7 @@
                       data-target="#lookupModalDeliverycollector" href="#"><i class="fa fa-search-plus"></i></button>
                     {{model.delivery_collector_name}}
                     <input type="hidden" class="form-control" [ngModel]="model.delivery_collector_code"
-                      name="p_delivery_collector_code" [required]="model.delivery_courier_type === 'INTERNAL'"
+                      name="p_delivery_collector_code" 
                       #delivery_collector_code="ngModel">
                     <input type="hidden" class="form-control" [ngModel]="model.delivery_collector_name"
                       name="p_delivery_collector_name">
@@ -194,13 +194,13 @@
                 <div class="form-group">
                   <label for="client_name" class="control-label">Client Name </label>
                   <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.client_name"
-                    name="p_client_name" required #client_name="ngModel">
+                    name="p_client_name" #client_name="ngModel">
                 </div>
               </div>
               <!--#endregion Client Name-->
 
               <!--#region Delivery collector code -->
-              <div class="col-md-4" [hidden]="model.delivery_courier_type != 'INTERNAL'">
+              <div class="col-md-4">
                 <div class="form-group">
                   <label>Delivery Address *</label>
                   <div class="col-md-12 buttons">
@@ -224,8 +224,8 @@
               <!--#region Delivery To Name-->
               <div class="col-md-4">
                 <div class="form-group">
-                  <label for="delivery_to_name" class="control-label">Delivery To Name </label>
-                  <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.delivery_to_name"
+                  <label for="delivery_to_name" class="control-label">Delivery To Name *</label>
+                  <input [readonly]="isButton" type="text" class="form-control" [ngModel]="model.delivery_to_name" required
                     name="p_delivery_to_name" #delivery_to_name="ngModel">
                 </div>
               </div>
@@ -234,8 +234,8 @@
               <!--#region Client Phone No-->
               <div class="col-md-4">
                 <div class="form-group">
-                  <label for="client_phone_no" class="control-label">Client Phone No </label>
-                  <input [readonly]="isReadOnly" type="text" class="form-control" [ngModel]="model.client_phone_no"
+                  <label for="client_phone_no" class="control-label">Client Phone No *</label>
+                  <input [readonly]="isButton" type="text" class="form-control" [ngModel]="model.client_phone_no" required
                     name="p_client_phone_no" #client_phone_no="ngModel">
                 </div>
               </div>
@@ -261,13 +261,23 @@
               </div>
               <!--#endregion Client Email-->
 
+              <!--#region SP no-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="letter_no" class="control-label">SP no </label>
+                  <input [readonly]="isReadOnly" no="text" class="form-control" [ngModel]="model.letter_no"
+                    name="p_letter_no" #letter_no="ngModel">
+                </div>
+              </div>
+              <!--#endregion SP Type-->
+
               <!--#region SP Date-->
               <div class="col-md-4">
                 <div class="form-group">
-                  <label for="letter_date" class="control-label">SP Date *</label>
+                  <label for="letter_date" class="control-label">SP Date </label>
                   <input [ngStyle]="getStyles(isReadOnly)" class="form-control col-md-6" placeholder="dd/mm/yyyy"
                     angular-mydatepicker [ngModel]="model.letter_date" name="p_letter_date"
-                    [options]="myDatePickerOptions" (click)="letter_date.toggleCalendar()" required
+                    [options]="myDatePickerOptions" (click)="letter_date.toggleCalendar()" 
                     #p_letter_date="ngModel" #letter_date="angular-mydatepicker" autocomplete="off"
                     [readonly]="isReadOnly" />
                 </div>
@@ -364,6 +374,22 @@
               </div>
               <!--#endregion Print Count-->
 
+              <!--#region Last Print By-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="up_print_sp" class="control-label">UP Print SP *</label>
+                  <input [readonly]="isButton" type="text" class="form-control" [ngModel]="model.up_print_sp" required
+                    name="p_up_print_sp" #up_print_sp="ngModel">
+
+                  <small
+                    *ngIf="(up_print_sp.errors?.required && up_print_sp.touched) || (up_print_sp.errors?.required && spdeliveryForm.submitted)"
+                    class="text-danger">
+                    Up Print SP is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Last Print By-->
+
               <!--#region Delivery Remarks-->
               <div class="col-md-4">
                 <div class="form-group">
@@ -402,62 +428,9 @@
                                 </li>
                             </ul>
                         </div>
-                <!-- </th>
-                      <th>SP No</th>
-                      <th>SP Date</th>
-                      <th>Agreement No</th>
-                      <th>SP Type</th>
-                      <th>Last Print By</th>
-                      <th>Print Count</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let row of listspdeliverydetail;let i=index ">
-                      <td style="text-align: center;">{{listspdeliverydetail.numberIndex+i+1}}</td>
-                      <td class="disabled-sorting">
-                        <div class="form-check">
-                          <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
-                              [disabled]="model.code == null || isButton"
-                              (change)="checkIfAllTableSelected($event, row.id);">
-                            <span class="form-check-sign"></span>
-                          </label> -->
-              </div>
-              <!-- </td>
-                      <td style="text-align: center; width: 20%;">{{ row.letter_no }}</td>
-                      <td style="text-align: center; width: 15%;">{{ row.letter_date }}</td>
-                      <td style="text-align: left; width: 20%;">{{ row.agreement_no}}<br>{{ row.client_name }}
-                      </td>
-                      <td style="text-align: center; width: 15%;">{{ row.letter_type }}</td>
-                      <td style="width: 15%;">{{ row.last_print_by }}</td>
-                      <td style="text-align: center; width: 15%;">{{ row.print_count }}</td>
-                      <td style="text-align: center;">
-                        <a class="btn btn-warning btn-link btn-icon btn-sm print" title="Print SP1"
-                          [hidden]="row.letter_type !== 'SP1'" (click)="btnPrintSP(row.letter_no)"><i
-                            class="fa fa-print"></i></a>
-                        <a class="btn btn-warning btn-link btn-icon btn-sm print" title="Print SP2"
-                          [hidden]="row.letter_type !== 'SP2'" (click)="btnPrintSP2(row.letter_no)"><i
-                            class="fa fa-print"></i></a>
-                        <a class="btn btn-warning btn-link btn-icon btn-sm print" title="Print SOMASI"
-                          [hidden]="row.letter_type !== 'SOMASI'" (click)="btnPrintSomasiPemenuhan(row.letter_no)"><i
-                            class="fa fa-print"></i></a> -->
-              <!-- <a class="btn btn-warning btn-link btn-icon btn-sm print" title="Print SP"
-                            (click)="btnMailMerge(row.letter_no, row.letter_type)"><i class="fa fa-print"></i></a> -->
-              <!-- <a class="btn btn-warning btn-link btn-icon btn-sm print" title="Print tanda Terima"
-                            [hidden]="isButton" (click)="btnPrint(row.letter_no)"><i class="fa fa-print"></i></a> -->
-              <!-- </td>
-                    </tr>
-                  </tbody>
-                </table> -->
-              <!--#endregion list view-->
-              <!-- </form> -->
+                    </div>
+                </div>
             </div>
-          </div>
-          <!-- </div> -->
-          <!--#endregion list view-->
-          <!-- </div>
-        <div class="card-footer "> -->
         </div>
         <!--endregion wizard-->
         <router-outlet></router-outlet>

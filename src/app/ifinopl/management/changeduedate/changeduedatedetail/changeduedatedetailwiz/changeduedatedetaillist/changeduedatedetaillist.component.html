@@ -69,13 +69,13 @@
                             <label class=" switch">
                                 <input [disabled]="row.change_status !== 'HOLD'" type="checkbox"
                                     [ngModel]="row.is_change"
-                                    (click)="btnChange(row.id, listduedatechangedetail.numberIndex+i, row.is_change_billing_date)">
+                                    (click)="btnChange(row.id, listduedatechangedetail.numberIndex+i, row.is_change)">
                                 <span class="slider round"></span>
                             </label>
                             <label class=" switch">
                                 <input [disabled]="row.change_status !== 'HOLD'" type="checkbox"
                                     [ngModel]="row.is_change_billing_date"
-                                    (click)="btnChangeBillingDate(row.id, listduedatechangedetail.numberIndex+i, row.is_change)">
+                                    (click)="btnChangeBillingDate(row.id, listduedatechangedetail.numberIndex+i, row.is_change_billing_date)">
                                 <span class="slider round"></span>
                             </label>
                         </td>

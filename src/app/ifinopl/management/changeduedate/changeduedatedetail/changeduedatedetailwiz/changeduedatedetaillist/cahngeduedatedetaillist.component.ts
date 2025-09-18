@@ -34,6 +34,7 @@ export class ChangeduedatedetaillistComponent extends BaseComponent implements O
     private APIRouteForGetRows: String = 'GetRows';
     private APIRouteForGetRow: String = 'GetRow';
     private APIRouteForUpdate: String = 'Update';
+    private APIRouteForUpdate2: String = 'Update2';
 
     private RoleAccessCode = 'R00020880000000A'; // role access 
 
@@ -173,7 +174,7 @@ export class ChangeduedatedetaillistComponent extends BaseComponent implements O
     //#endregion getrow data
 
     //#region btnChange
-    btnChange(id: any, i: any, p_is_change_billing_date: any) {
+    btnChange(id: any, i: any, p_is_change: any) {
         this.showSpinner = true;
         this.dataTamp = [];
 
@@ -195,8 +196,8 @@ export class ChangeduedatedetaillistComponent extends BaseComponent implements O
                 p_due_date_change_code: this.param,
                 p_new_due_date_day: this.dateFormatList(getNewDueDateDay[i]),
                 p_new_billing_date_day: this.dateFormatList(getNewBillingDateDay[i]),
-                p_is_change: '1',
-                p_is_change_billing_date: p_is_change_billing_date ? '1' : '0',
+                // p_is_change: '1',
+                p_is_change: p_is_change == '1' ? '0' : '1'
             }))
 
 
@@ -222,7 +223,7 @@ export class ChangeduedatedetaillistComponent extends BaseComponent implements O
     }
     //#endregion btnChange
     //#region btnChangeBilingDate
-    btnChangeBillingDate(id: any, i: any, is_change: any) {
+    btnChangeBillingDate(id: any, i: any, p_is_change_billing_date: any) {
         this.showSpinner = true;
         this.dataTamp = [];
 
@@ -245,12 +246,13 @@ export class ChangeduedatedetaillistComponent extends BaseComponent implements O
                 p_due_date_change_code: this.param,
                 p_new_due_date_day: this.dateFormatList(getNewDueDateDay[i]),
                 p_new_billing_date_day: this.dateFormatList(getNewBillingDateDay[i]),
-                p_is_change_billing_date: '1',
-                p_is_change: is_change ? '1' : '0',
+                // p_is_change_billing_date: '1',
+                p_is_change_billing_date: p_is_change_billing_date == '1' ? '0' : '1'
+
             }))
 
 
-        this.dalservice.Update(this.dataTamp, this.APIController, this.APIRouteForUpdate)
+        this.dalservice.Update(this.dataTamp, this.APIController, this.APIRouteForUpdate2)
             .subscribe(
                 res => {
                     const parse = JSON.parse(res);

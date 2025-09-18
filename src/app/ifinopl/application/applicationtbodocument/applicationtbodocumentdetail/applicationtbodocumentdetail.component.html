@@ -12,146 +12,146 @@
         </div>
         <div class="card-body ">
 
-        <form #tbodocumentForm="ngForm"
-            (ngSubmit)="onFormSubmit(tbodocumentForm.value, tbodocumentForm.valid)">
-          <!--#region button Back-->
-          <button [hidden]="model.status !== 'HOLD'" type="submit" class="btn btn-info btn-round"
-            data-role="R00024730000002C">Save</button>
-          <button [hidden]="model.status !== 'HOLD'" type="button" class="btn btn-success btn-round"
-            (click)="btnProceed(model.id)" data-role="R00024730000003O">Proceed</button>
-          <button [hidden]="model.status !== 'VERIFICATION'" type="button" class="btn btn-success btn-round"
-            (click)="btnPost(model.id)" data-role="R00024730000004O">Post</button>
-          <button [hidden]="model.status !== 'VERIFICATION'" type="button" class="btn btn-warning btn-round"
-            (click)="btnReturn(model.id)" data-role="R00024730000005R">Return</button>
-          <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
-          <!--#endregion button Back-->
+          <form #tbodocumentForm="ngForm" (ngSubmit)="onFormSubmit(tbodocumentForm.value, tbodocumentForm.valid)">
+            <!--#region button Back-->
+            <button [hidden]="model.status !== 'HOLD'" type="submit" class="btn btn-info btn-round"
+              data-role="R00024730000002C">Save</button>
+            <button [hidden]="model.status !== 'HOLD'" type="button" class="btn btn-success btn-round"
+              (click)="btnProceed(model.id)" data-role="R00024730000003O">Proceed</button>
+            <button [hidden]="model.status !== 'VERIFICATION'" type="button" class="btn btn-success btn-round"
+              (click)="btnPost(model.id)" data-role="R00024730000004O">Post</button>
+            <button [hidden]="model.status !== 'VERIFICATION'" type="button" class="btn btn-warning btn-round"
+              (click)="btnReturn(model.id)" data-role="R00024730000005R">Return</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button Back-->
 
-          <!--#region row-->
-          <div class="row">
-            <!-- #region id-->
-            <input hidden type="text" class="form-control" [ngModel]="this.param" name="p_id" readonly>
-            <input hidden type="text" class="form-control" [ngModel]="model.application_no" name="p_application_no"
-              readonly>
-            <!-- #endregion id-->
+            <!--#region row-->
+            <div class="row">
+              <!-- #region id-->
+              <input hidden type="text" class="form-control" [ngModel]="this.param" name="p_id" readonly>
+              <input hidden type="text" class="form-control" [ngModel]="model.application_no" name="p_application_no"
+                readonly>
+              <!-- #endregion id-->
 
-            <!--#region application_external_no -->
-            <!-- <div class="col-md-4">
+              <!--#region application_external_no -->
+              <!-- <div class="col-md-4">
               <div class="form-group">
                 <label>Application No</label>
                 <input type="text" class="form-control" [ngModel]="model.application_external_no"
                   name="p_application_external_no" readonly>
               </div>
             </div> -->
-            <!--#endregion application_external_no -->
+              <!--#endregion application_external_no -->
 
-            <!--#region client_name -->
-            <!-- <div class="col-md-4">
+              <!--#region client_name -->
+              <!-- <div class="col-md-4">
               <div class="form-group">
                 <label>Client Name</label>
                 <input type="text" class="form-control" [ngModel]="model.client_name" name="p_client_name" readonly>
               </div>
             </div> -->
-            <!--#endregion client_name -->
-            <!--#region branch_name -->
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Branch</label>
-                <input type="text" class="form-control" [ngModel]="model.branch_name" name="p_branch_name" readonly>
+              <!--#endregion client_name -->
+              <!--#region branch_name -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Branch</label>
+                  <input type="text" class="form-control" [ngModel]="model.branch_name" name="p_branch_name" readonly>
+                </div>
               </div>
-            </div>
-            <!--#endregion branch_name -->
+              <!--#endregion branch_name -->
 
-            <!--#region date-->
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="p_date" class="control-label">Date</label>
-                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
-                  [ngModel]="model.date" name="p_date" [options]="myDatePickerOptions" required #p_date="ngModel"
-                  #date="angular-mydatepicker" autocomplete="off" readonly />
+              <!--#region date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="p_date" class="control-label">Date</label>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.date" name="p_date" [options]="myDatePickerOptions" required #p_date="ngModel"
+                    #date="angular-mydatepicker" autocomplete="off" readonly />
+                </div>
               </div>
-            </div>
-            <!--#endregion date-->
+              <!--#endregion date-->
 
-            <!--#region status -->
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Status</label>
-                <input type="text" class="form-control" [ngModel]="model.status" name="p_status" readonly>
+              <!--#region status -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.status" name="p_status" readonly>
+                </div>
               </div>
+              <!--#endregion status -->
             </div>
-            <!--#endregion status -->
-          </div>
 
-          <div class="row">
-            <!--#region client_name -->
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Client Name</label>
-                <input type="text" class="form-control" [ngModel]="model.client_name" name="p_client_name" readonly>
+            <div class="row">
+              <!--#region client_name -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Client Name</label>
+                  <input type="text" class="form-control" [ngModel]="model.client_name" name="p_client_name" readonly>
+                </div>
               </div>
-            </div>
-            <!--#endregion client_name -->
+              <!--#endregion client_name -->
 
 
-            <!--#region row-->
-            <!--#region SysBranch code -->
-            <div class="col-md-4">
-              <div class="form-group">
-                <!-- <label>Branch</label>
+              <!--#region row-->
+              <!--#region SysBranch code -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <!-- <label>Branch</label>
                 <input type="text" class="form-control" [ngModel]="model.branch_name" name="p_branch_name" readonly> -->
-                <label>Application No</label>
-                <input type="text" class="form-control" [ngModel]="model.application_no" name="p_application_no"
-                  readonly>
+                  <label>Application No</label>
+                  <input type="text" class="form-control" [ngModel]="model.application_no" name="p_application_no"
+                    readonly>
+                </div>
               </div>
+              <!--#endregion SysBranch code -->
             </div>
-            <!--#endregion SysBranch code -->
-          </div>
-          <!--#endregion row-->
+            <!--#endregion row-->
 
-          <div class="row">
-            <!--#region transaction_name -->
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Transaction Name</label>
-                <input type="text" class="form-control" [ngModel]="model.transaction_name" name="p_transaction_name"
-                  readonly>
+            <div class="row">
+              <!--#region transaction_name -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Transaction Name</label>
+                  <input type="text" class="form-control" [ngModel]="model.transaction_name" name="p_transaction_name"
+                    readonly>
+                </div>
               </div>
-            </div>
-            <!--#endregion client_name -->
+              <!--#endregion client_name -->
 
-            <!--#region transaction_no -->
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Transaction No</label>
-                <input type="text" class="form-control" [ngModel]="model.transaction_no" name="p_transaction_no"
-                  readonly>
+              <!--#region transaction_no -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Transaction No</label>
+                  <input type="text" class="form-control" [ngModel]="model.transaction_no" name="p_transaction_no"
+                    readonly>
+                </div>
               </div>
-            </div>
-            <!--#endregion transaction_no -->
+              <!--#endregion transaction_no -->
 
-            <!--#region date-->
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="p_transaction_date" class="control-label">Transaction Date</label>
-                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
-                  [ngModel]="model.transaction_date" name="p_date" [options]="myDatePickerOptions" required
-                  #p_transaction_date="ngModel" #transaction_date="angular-mydatepicker" autocomplete="off" readonly />
+              <!--#region date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="p_transaction_date" class="control-label">Transaction Date</label>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.transaction_date" name="p_date" [options]="myDatePickerOptions" required
+                    #p_transaction_date="ngModel" #transaction_date="angular-mydatepicker" autocomplete="off"
+                    readonly />
+                </div>
               </div>
-            </div>
-            <!--#endregion date-->
+              <!--#endregion date-->
 
-            <!--#region remark-->
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="package_description" class="control-label">Remark *</label>
-                <textarea [readOnly]="model.status !=='HOLD'" type="text" class="form-control" [ngModel]="model.remark" name="p_remark" required
-                  #remark="ngModel" maxlength="4000"></textarea>
+              <!--#region remark-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="package_description" class="control-label">Remark *</label>
+                  <textarea [readOnly]="model.status !=='HOLD'" type="text" class="form-control"
+                    [ngModel]="model.remark" name="p_remark" required #remark="ngModel" maxlength="4000"></textarea>
+                </div>
               </div>
+              <!--#endregion remark-->
             </div>
-            <!--#endregion remark-->
-          </div>
-          <!--#endregion row-->
-        </form>
+            <!--#endregion row-->
+          </form>
           <!--#endregion form-->
 
           <span layout="row horizontal-divider">
@@ -169,7 +169,7 @@
                   <div class="fileinput fileinput-new text-center" data-provides="fileinput">
                     <div>
                       <a class="btn btn-primary btn-round btn-file custom-button-width" type="button"
-                      (click)="priviewFileDeliveryDetail(model.file_memo, model.file_path_memo)">
+                        (click)="priviewFileDeliveryDetail(model.file_memo, model.file_path_memo)">
                         <!-- (click)="priviewFile(model.file_memo, model.file_path_memo)"> -->
                         <span><i class="fa fa-eye"></i></span></a>
                       {{model.file_memo}}
@@ -266,7 +266,7 @@
                       <div>
                         <span>
                           <a class="btn btn-primary btn-round btn-file custom-button-width" type="button"
-                          (click)="priviewFileMasterContractDetail(model.main_contract_file_name, model.main_contract_file_path)">
+                            (click)="priviewFileMasterContractDetail(model.main_contract_file_name, model.main_contract_file_path)">
                             <!-- (click)="priviewFile(model.main_contract_file_name, model.main_contract_file_path)"> -->
                             <span><i class="fa fa-eye"></i></span></a>
                         </span>
@@ -320,8 +320,8 @@
                     <li class="nav-item">
                       <!-- <a class="nav-link" (click)="documentsswiz(model.application_no)" href="#documentdetail"
                         data-toggle="tab" role="tab" aria-controls="documentdetail" aria-selected="true"> -->
-                      <a class="nav-link" (click)="documentsswiz(model.application_no)" href="#documentdetail" data-toggle="tab" role="tab"
-                        aria-controls="documentdetail" aria-selected="true">
+                      <a class="nav-link" (click)="documentsswiz(model.application_no)" href="#documentdetail"
+                        data-toggle="tab" role="tab" aria-controls="documentdetail" aria-selected="true">
                         Document
                       </a>
                     </li>

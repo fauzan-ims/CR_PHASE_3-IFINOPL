@@ -80,9 +80,12 @@
                 <th>Branch</th>
                 <th>SP Date</th>
                 <th>SP / Generate Type</th>
-                <th>Agreement No</th>
-                <th>overdue Days</th>
-                <th>Installment No</th>
+                <th>Client Name</th>
+                <th>Overdue Days</th>
+                <th>Total Overdue Amount</th>
+                <th>Total Agreement</th>
+                <th>Total Asset</th>
+                <th>Total Monthly Rental Rounded Amount</th>
                 <th>Last Print By</th>
                 <th>Delivery Date / Status</th>
                 <th>Status</th>
@@ -92,16 +95,19 @@
               <tr *ngFor="let row of listhistory;let i=index ">
                 <td style="display: none;"></td>
                 <td style="text-align: center;">{{listhistory.numberIndex+i+1}}</td>
-                <td style="text-align: center; width: 15%;">{{row.letter_no}}</td>
+                <td style="text-align: center; width: 10%;">{{row.letter_no}}</td>
                 <td style="text-align: left; width: 10%;">{{row.branch_name}}</td>
                 <td style="text-align: center; width: 10%;">{{row.letter_date}}</td>
                 <td style="text-align: left; width: 5%;">{{row.letter_type}} <br>{{row.generate_type}}</td>
-                <td style="text-align: left; width: 20%;">{{row.agreement_no}}<br>{{row.client_name}}</td>
+                <td style="text-align: left; width: 15%;">{{row.client_name}}</td>
                 <td style="text-align: center; width: 5%;">{{row.overdue_days}}</td>
-                <td style="text-align: center; width: 5%;">{{row.installment_no}}</td>
-                <td style="text-align: center; width: 10%;">{{row.last_print_by}}</td>
-                <td style="text-align: center; width: 10%;">{{row.delivery_date}} <br> {{row.delivery_status}} </td>
-                <td style="text-align: center; width: 10%;">{{row.letter_status}}</td>
+                <td style="text-align: right; width: 10%;">{{row.total_overdue_amount}}</td>
+                <td style="text-align: center; width: 5%;">{{row.total_agreement_count}}</td>
+                <td style="text-align: center; width: 5%;">{{row.total_asset_count}}</td>
+                <td style="text-align: right; width: 10%;">{{row.total_monthly_rental_amount}}</td>
+                <td style="text-align: center; width: 5%;">{{row.last_print_by}}</td>
+                <td style="text-align: center; width: 5%;">{{row.delivery_date}} <br> {{row.delivery_status}} </td>
+                <td style="text-align: center; width: 5%;">{{row.letter_status}}</td>
               </tr>
             </tbody>
           </table>

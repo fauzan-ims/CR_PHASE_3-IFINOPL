@@ -256,12 +256,23 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
     const getNewBillingDateDay = $('[name="p_new_billing_date_day"]')
       .map(function () { return $(this).val(); }).get();
 
-    const getAssetNo = $('[name="p_asset_no"]')
+    const getAssetNo = $('[name="p_asset_no_row"]')
       .map(function () { return $(this).val(); }).get();
 
     const getBillingDateChangeCode = $('[name="p_due_date_change_code"]')
       .map(function () { return $(this).val(); }).get();
-      
+
+    const getBillDate = $('[name="p_billing_date"]')
+      .map(function () { return $(this).val(); }).get();
+
+    console.log(getID);
+    console.log(getInstallment);
+    console.log(getNewBillingDateDay);
+    console.log(getAssetNo);
+    console.log(getBillingDateChangeCode);
+    console.log(getBillDate);
+
+
     while (i < getID.length) {
 
       while (i < getInstallment.length) {
@@ -272,25 +283,30 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
 
             while (i < getBillingDateChangeCode.length) {
 
-              if (getAssetNo[i] == null) {
-                swal({
-                  title: 'Warning',
-                  text: 'Please fill in assets first.',
-                  buttonsStyling: false,
-                  confirmButtonClass: 'btn btn-danger',
-                  type: 'warning'
-                }).catch(swal.noop)
-                return;
+              while (i < getBillDate.length) {
+
+                if (getAssetNo[i] == null) {
+                  swal({
+                    title: 'Warning',
+                    text: 'Please fill in assets first.',
+                    buttonsStyling: false, 
+                    confirmButtonClass: 'btn btn-danger',
+                    type: 'warning'
+                  }).catch(swal.noop)
+                  return;
+                }
+                this.listinvoicedetail.push(this.JSToNumberFloats({
+                  p_due_date_change_code: getBillingDateChangeCode[i],
+                  p_installment_no: getInstallment[i],
+                  p_asset_no: getAssetNo[i],
+                  p_id: getInstallment[i],
+                  p_billing_date: getNewBillingDateDay[i] == '' ? getBillDate[i] : getNewBillingDateDay[i],
+                  // p_credit_note_code: this.creditnotecode,
+                  // p_invoice_no: this.model.invoice_no
+                }));
+                i++
               }
-              this.listinvoicedetail.push(this.JSToNumberFloats({
-                p_id: getInstallment[i],
-                new_billing_date_day: getNewBillingDateDay[i],
-                p_asset_no: getAssetNo[i],
-                p_due_date_change_code: getBillingDateChangeCode[i],
-                // p_credit_note_code: this.creditnotecode,
-                // p_invoice_no: this.model.invoice_no
-              }));
-              i++
+              i++;
             }
             i++;
           }

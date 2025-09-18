@@ -29,7 +29,7 @@ export class SpAmortizationManualdetailComponent extends BaseComponent implement
     private APIControllerMasterDeskcollResult: String = 'MasterDeskcollResult';
 
     private APIRouteForGetRows: String = 'GetRowsInvoiceDetailAgreement';
-    private APIRouteForGetRow: String = 'GetRowInvoiceDetail';
+    private APIRouteForGetRow: String = 'GetRowInvoiceAmort';
     private APIRouteForLookup: String = 'GetRowsForLookup';
     private APIRouteForGetRowsAgreement: String = 'GetRowsAgreement';
 

@@ -50,6 +50,7 @@ export class TboDoclistComponent extends BaseComponent implements OnInit {
   private APIRouteForUpdateIsValid: String = 'ExecSpForUpdateIsValid';
   private APIRouteForGetRow: String = 'GetRow';
   private APIRouteForUpdate: String = 'Update';
+  private APIRouteForUpdateTboDocumentDetail: String = 'UpdateForDetail';
 
   private RoleAccessCode = 'R00024730000001A'; // role access 
 
@@ -94,13 +95,13 @@ export class TboDoclistComponent extends BaseComponent implements OnInit {
           this.transactionName = parsedata.transaction_name;
           this.tempStatus = parsedata.status;
 
-          if (this.tempStatus === 'HOLD' || this.tempStatus === 'DONE') {
+          if (this.tempStatus === 'HOLD' || this.tempStatus === 'POST') {
             this.isHold = true
           } else {
             this.isHold = false
           }
 
-          if (this.tempStatus === 'VERIFICATION' || this.tempStatus === 'DONE' ) {
+          if (this.tempStatus === 'VERIFICATION' || this.tempStatus === 'POST' ) {
             this.isVerification = true
           } else {
             this.isVerification = false
@@ -477,7 +478,7 @@ export class TboDoclistComponent extends BaseComponent implements OnInit {
     }
 
     // Web service
-    this.dalservice.Update(this.dataTampPush, this.APIControllerTboDocument, this.APIRouteForUpdate)
+    this.dalservice.Update(this.dataTampPush, this.APIControllerTboDocument, this.APIRouteForUpdateTboDocumentDetail)
       .subscribe(
         res => {
           const parse = JSON.parse(res);

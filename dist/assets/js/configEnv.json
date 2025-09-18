@@ -33,7 +33,7 @@
         "urlReportAcc": "http://192.168.2.134/api/v5_rpt_api_acc/api/",
         "urlReportSvy": "http://192.168.2.134/api/v5_rpt_api_svy/api/",
         "urlReportScr": "http://192.168.2.134/api/v5_rpt_api_scor/api/",
-        "urlReportOpl": "http://192.168.2.134/api/v5_rpt_api_opl/api/",
+        "urlReportOpl": "http://localhost:61673/api/",
         "urlReportBase": "http://192.168.2.134/api/v5_rpt_api_base/api/",
         "urlReportAms": "http://192.168.2.134/api/v5_rpt_api_ams/api/",
         "urlReportBam": "http://192.168.2.134/api/v5_rpt_ifinbam_api/api/",

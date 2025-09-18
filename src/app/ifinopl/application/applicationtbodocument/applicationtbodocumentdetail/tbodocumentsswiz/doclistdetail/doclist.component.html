@@ -15,7 +15,7 @@
         </button>
         <button type="button" class="btn btn-info btn-round" (click)="btnOpenLD()">
           Lite DMS</button>
-        <button type="button" class="btn btn-danger btn-round" (click)="callGetrow()" id="TboDetail" hidden></button>
+        <button type="button" class="btn btn-danger btn-round" (click)="loadData()" id="TboDetail" hidden></button>
         <!--#endregion button submit-->
 
         <!--#region list view-->
@@ -60,7 +60,7 @@
               <td style="width: 10%;">
                 <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker value="{{row.promise_date}}"
                   name="p_promise_date" [options]="myDatePickerOptions" (click)="p_promise_date.toggleCalendar()"
-                  #p_promise_date="angular-mydatepicker" autocomplete="off" [disabled]="isVerification" />
+                  #p_promise_date="angular-mydatepicker" autocomplete="off" disabled />
               </td>
               <!-- <td style="width: 10%;">
                 <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker value="{{row.received_date}}"
@@ -69,13 +69,13 @@
               </td> -->
               <td style="width: 5%; text-align: center;">
                 <div class="form-check">
-                  <label class="form-check-label">
-                    <input [disabled]="isVerification" class="form-check-input" type="checkbox" name="p_is_received"
-                      [(ngModel)]="row.is_received">
-                    <span class="form-check-sign"></span>
-                  </label>
-                </div>
-              </td>
+                    <label class="form-check-label">
+                      <input [disabled]="isVerification" class="form-check-input" type="checkbox" name="p_is_received" [(ngModel)]="row.is_received">
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+              </td> 
+
               <!-- <td style="width: 35%;">
                 <input [hidden]="row.filename != '' || pageType !=null" type="file" (change)="onUpload($event, row.id)"
                   disabled />

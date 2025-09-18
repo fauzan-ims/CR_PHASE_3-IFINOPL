@@ -202,9 +202,10 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
           // mapper dbtoui
           Object.assign(this.model, parsedata);
           // end mapper dbtoui
-          if (this.model.delivery_status == 'DONE') {
+          if (this.model.delivery_status == 'DONE')
+          {
             this.isButton = true
-          } else {
+          }else{
             this.isButton = false
           }
           this.showSpinner = false;
@@ -292,37 +293,39 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
   //#region  form submit
   onFormSubmit(spdeliverysettlementForm: NgForm, isValid: boolean) {
     if (!isValid) {
-      swal({
-        title: 'Warning',
-        text: 'Please Fill a Mandatory Field OR Format Is Invalid',
-        buttonsStyling: false,
-        confirmButtonClass: 'btn btn-warning',
-        type: 'warning'
-      }).catch(swal.noop);
-      return;
+        swal({
+            title: 'Warning',
+            text: 'Please Fill a Mandatory Field OR Format Is Invalid',
+            buttonsStyling: false,
+            confirmButtonClass: 'btn btn-warning',
+            type: 'warning'
+        }).catch(swal.noop);
+        return;
+        } else {
+      this.showSpinner = true;
     }
 
     this.spdeliverysettlementData = this.JSToNumberFloats(spdeliverysettlementForm);
     const usersJson: any[] = Array.of(this.spdeliverysettlementData);
-    // call web service
-    this.dalservice.Update(usersJson, this.APIController, this.APIRouteForSave)
-      .subscribe(
-        res => {
-          this.showSpinner = false;
-          const parse = JSON.parse(res);
-          if (parse.result === 1) {
-            this.showNotification('bottom', 'right', 'success');
-            this.callGetrow();
-          } else {
+      // call web service
+      this.dalservice.Update(usersJson, this.APIController, this.APIRouteForSave)
+        .subscribe(
+          res => {
+            this.showSpinner = false;
+            const parse = JSON.parse(res);
+            if (parse.result === 1) {
+              this.showNotification('bottom', 'right', 'success');
+              this.callGetrow();
+            } else {
+              this.swalPopUpMsg(parse.data);
+            }
+          },
+          error => {
+            this.showSpinner = false;
+            const parse = JSON.parse(error);
             this.swalPopUpMsg(parse.data);
-          }
-        },
-        error => {
-          this.showSpinner = false;
-          const parse = JSON.parse(error);
-          this.swalPopUpMsg(parse.data);
 
-        });
+          });
   }
   // onFormSubmit(spdeliverysettlementForm: NgForm, isValid: boolean) {
   //   // validation form submit
@@ -1113,73 +1116,73 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
   //#endregion button delete image
 
   //#region Lookup Parking Location
-  btnLookupModalReason() {
-    $('#datatableLookupModalReason').DataTable().clear().destroy();
-    $('#datatableLookupModalReason').DataTable({
-      'pagingType': 'first_last_numbers',
-      'pageLength': 5,
-      'processing': true,
-      'serverSide': true,
-      responsive: true,
-      lengthChange: false, // hide lengthmenu
-      searching: true, // jika ingin hilangin search box nya maka false
-      ajax: (dtParameters: any, callback) => {
-        // param tambahan untuk getrows dynamic
-        dtParameters.paramTamp = [];
-        dtParameters.paramTamp.push({
-          // 'p_company_code': this.company_code,
-          'p_general_code': 'RSRJT'
+    btnLookupModalReason() {
+        $('#datatableLookupModalReason').DataTable().clear().destroy();
+        $('#datatableLookupModalReason').DataTable({
+            'pagingType': 'first_last_numbers',
+            'pageLength': 5,
+            'processing': true,
+            'serverSide': true,
+            responsive: true,
+            lengthChange: false, // hide lengthmenu
+            searching: true, // jika ingin hilangin search box nya maka false
+            ajax: (dtParameters: any, callback) => {
+                // param tambahan untuk getrows dynamic
+                dtParameters.paramTamp = [];
+                dtParameters.paramTamp.push({
+                    // 'p_company_code': this.company_code,
+                    'p_general_code': 'RSRJT'
+                });
+
+                // end param tambahan untuk getrows dynamic
+                this.dalservice.Getrows(dtParameters, this.APIControllerType, this.APIRouteLookup).subscribe(resp => {
+                    const parse = JSON.parse(resp);
+
+                    this.lookupReasonData = parse.data;
+                    if (parse.data != null) {
+                        this.lookupReasonData.numberIndex = dtParameters.start;
+                    }
+
+                    callback({
+                        draw: parse.draw,
+                        recordsTotal: parse.recordsTotal,
+                        recordsFiltered: parse.recordsFiltered,
+                        data: []
+                    });
+                }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
+            },
+            columnDefs: [{ orderable: false, width: '5%', targets: [0,4] }], // for disabled coloumn
+            language: {
+                search: '_INPUT_',
+                searchPlaceholder: 'Search records',
+                infoEmpty: '<p style="color:red;" > No Data Available !</p> '
+            },
+            searchDelay: 800 // pake ini supaya gak bug search
         });
+    }
 
-        // end param tambahan untuk getrows dynamic
-        this.dalservice.Getrows(dtParameters, this.APIControllerType, this.APIRouteLookup).subscribe(resp => {
-          const parse = JSON.parse(resp);
+    btnSelectRowModalReason(code: string, general_subcode_desc: string) {
+        this.model.reason_code = code;
+        this.model.reason_desc = general_subcode_desc;
+        $('#lookupModalReason').modal('hide');
+        // $('#datatable').DataTable().ajax.reload();
+        // this.callGetrow();
+    }
 
-          this.lookupReasonData = parse.data;
-          if (parse.data != null) {
-            this.lookupReasonData.numberIndex = dtParameters.start;
-          }
+    btnClearModalReason() {
+        this.model.reason_desc = undefined;
+        this.model.reason_code = undefined;
+        // $('#datatable').DataTable().ajax.reload();
+        // this.callGetrow();
+    }
+    //#endregion Lookup Parking Location
 
-          callback({
-            draw: parse.draw,
-            recordsTotal: parse.recordsTotal,
-            recordsFiltered: parse.recordsFiltered,
-            data: []
-          });
-        }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
-      },
-      columnDefs: [{ orderable: false, width: '5%', targets: [0, 4] }], // for disabled coloumn
-      language: {
-        search: '_INPUT_',
-        searchPlaceholder: 'Search records',
-        infoEmpty: '<p style="color:red;" > No Data Available !</p> '
-      },
-      searchDelay: 800 // pake ini supaya gak bug search
-    });
-  }
-
-  btnSelectRowModalReason(code: string, general_subcode_desc: string) {
-    this.model.reason_code = code;
-    this.model.reason_desc = general_subcode_desc;
-    $('#lookupModalReason').modal('hide');
-    // $('#datatable').DataTable().ajax.reload();
-    // this.callGetrow();
-  }
-
-  btnClearModalReason() {
-    this.model.reason_desc = undefined;
-    this.model.reason_code = undefined;
-    // $('#datatable').DataTable().ajax.reload();
-    // this.callGetrow();
-  }
-  //#endregion Lookup Parking Location
-
-  //#region ddl clientType
-  resultType(event: any) {
-    this.isFailed = this.model.result === 'Failed';
-    console.log(this.model.result)
-  }
-  //#endregion ddl clientType
+    //#region ddl clientType
+    resultType(event: any) {
+        this.isFailed = this.model.result === 'Failed';
+        console.log(this.model.result)
+    }
+    //#endregion ddl clientType
 
   //#region lookup Deliverycollector
   btnLookupDeliveryAddress() {
