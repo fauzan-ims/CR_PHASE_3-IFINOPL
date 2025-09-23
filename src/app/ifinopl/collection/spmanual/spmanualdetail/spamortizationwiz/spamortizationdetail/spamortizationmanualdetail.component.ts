@@ -28,7 +28,7 @@ export class SpAmortizationManualdetailComponent extends BaseComponent implement
     private APIController: String = 'WarningLetterDelivery';
     private APIControllerMasterDeskcollResult: String = 'MasterDeskcollResult';
 
-    private APIRouteForGetRows: String = 'GetRowsInvoiceDetailAgreement';
+    private APIRouteForGetRows: String = 'GetRowsForAmortInvoiceAgreement';
     private APIRouteForGetRow: String = 'GetRowInvoiceAmort';
     private APIRouteForLookup: String = 'GetRowsForLookup';
     private APIRouteForGetRowsAgreement: String = 'GetRowsAgreement';
@@ -110,7 +110,8 @@ export class SpAmortizationManualdetailComponent extends BaseComponent implement
     //#region button back
     btnBack() {
         // this.route.navigate(['/collection/subspdeliverylist/spdeliverydetail/' + this.param + '/spamortizationlist', this.param]);
-        this.route.navigate(['/collection/subspdeliverylist/spdeliverydetail/' + this.param,'spamortizationlist',this.param]);
+        this.route.navigate(['/collection/subspmanuallist/spmanualdetail/' + this.param + '/spamortizationlist', this.param]);
+        // this.route.navigate(['/collection/spmanual/spdeliverydetail/' + this.param,'spamortizationlist',this.param]);
         $('#datatableAmortizationList').DataTable().ajax.reload();
     }
     //#endregion button back

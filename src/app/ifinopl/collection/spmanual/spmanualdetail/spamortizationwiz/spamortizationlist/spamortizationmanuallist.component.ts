@@ -129,7 +129,7 @@ export class SpAmortizationManuallistComponent extends BaseComponent implements 
 
   //#region button edit
   btnEdit(codeEdit: string) {
-    this.route.navigate(['/collection/subspdeliverylist/spdeliverydetail/',this.param,'spamortizationdetail',this.param,codeEdit], { skipLocationChange: true });
+    this.route.navigate(['/collection/subspmanuallist/spmanualdetail/',this.param,'spamortizationdetail',this.param,codeEdit], { skipLocationChange: true });
   }
   //#endregion button edit
 

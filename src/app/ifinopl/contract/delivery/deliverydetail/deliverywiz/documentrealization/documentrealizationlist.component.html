@@ -41,7 +41,7 @@
               <td class="if-no-edit-btn" style="text-align: center;">{{listdataDoc.numberIndex+i+1}}</td>
               <td style="width: 40%;">{{row.document_name}} {{row.is_required}}</td>
               <td style="width: 10%;">
-                <input class="form-control" placeholder="dd/mm/yyyy"angular-mydatepicker [(ngModel)]="row.promise_date"name="p_promise_date"
+                <input class="form-control" placeholder="dd/mm/yyyy"angular-mydatepicker name="p_promise_date" value="{{row.promise_date}}"
                   [options]="myDatePickerOptions"(click)="p_promise_date.toggleCalendar()"#p_promise_date="angular-mydatepicker"
                   autocomplete="off"[disabled]="isDatepickerDisabled(row)" />
               </td>

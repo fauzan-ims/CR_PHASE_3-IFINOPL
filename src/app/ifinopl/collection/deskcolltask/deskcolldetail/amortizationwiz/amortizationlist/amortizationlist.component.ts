@@ -91,7 +91,7 @@ export class AmortizationlistComponent extends BaseComponent implements OnInit {
           this.showSpinner = false;
         }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
       },
-      columnDefs: [{ orderable: false, width: '5%', targets: [1, 10] }], // for disabled coloumn
+      columnDefs: [{ orderable: false, width: '5%', targets: [1, 11] }], // for disabled coloumn
       language: {
         search: '_INPUT_',
         searchPlaceholder: 'Search records',

@@ -37,11 +37,12 @@ export class SpmanualdetailComponent extends BaseComponent implements OnInit {
   private RoleAccessCode = 'R00020990000000A';
 
   private APIControllerSPManual: String = 'WarningLetter';
-  private APIControllerAgreement: String = 'AgreementMain';
+  private APIControllerClient: String = 'ClientMain';
   private APIRouteForUpdate: String = 'Update';
   private APIRouteForInsert: String = 'Insert';
   private APIRouteForGetRow: String = 'GetRow';
   private APIRouteGetRowsForAgreement: String = 'GetRowsForSPLookup';
+  private APIRouteGetRowsForLookup: String = 'GetRowsForLookup';
   private APIRouteForPost: String = 'ExecSpForPost';
   private APIRouteForCancel: String = 'ExecSpForCancel';
   private APIControllerSysBranch: String = 'sysbranch';
@@ -352,7 +353,7 @@ export class SpmanualdetailComponent extends BaseComponent implements OnInit {
   //#endregion lookup branch
 
   //#region Agreement Lookup
-  btnLookupAgreement() {
+  btnLookupClient() {
     $('#datatableLookupAgreement').DataTable().clear().destroy();
     $('#datatableLookupAgreement').DataTable({
       'pagingType': 'first_last_numbers',
@@ -371,7 +372,7 @@ export class SpmanualdetailComponent extends BaseComponent implements OnInit {
         });
 
 
-        this.dalservice.Getrows(dtParameters, this.APIControllerAgreement, this.APIRouteGetRowsForAgreement).subscribe(resp => {
+        this.dalservice.Getrows(dtParameters, this.APIControllerClient, this.APIRouteGetRowsForLookup).subscribe(resp => {
           const parse = JSON.parse(resp);
           this.lookupAgreement = parse.data;
           if (parse.data != null) {
@@ -398,12 +399,10 @@ export class SpmanualdetailComponent extends BaseComponent implements OnInit {
     });
   }
 
-  btnSelectRowAgreement(agreement_no: String, agreement_external_no: String, agreement_desc: String, client_no: String) {
-    this.model.agreement_no = agreement_no;
-    this.model.agreement_external_no = agreement_external_no;
+  btnSelectRowAgreement(agreement_desc: String, client_no: String) {
     this.model.client_name = agreement_desc;
     this.model.client_no = client_no;
-    $('#lookupModalAgreement').modal('hide');
+    $('#lookupModalClient').modal('hide');
   }
 
     //#region amortizationnwiz

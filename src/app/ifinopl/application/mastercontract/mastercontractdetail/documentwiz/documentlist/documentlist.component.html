@@ -40,12 +40,12 @@
               <td style="width: 10%;">
                 <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker value="{{row.promise_date}}"
                   name="p_promise_date" [options]="myDatePickerOptions" (click)="p_promise_date.toggleCalendar()"
-                  #p_promise_date="angular-mydatepicker" autocomplete="off" [disabled]="isDisable" />
+                  #p_promise_date="angular-mydatepicker" autocomplete="off" [disabled]="isDatepickerDisabled(row)" />
               </td>
               <td style="width: 5%; text-align: center;">
                 <div class="form-check">
                   <label class="form-check-label">
-                    <input [disabled]="isDisable" class="form-check-input" name="p_is_received" type="checkbox"
+                    <input [disabled]="isCheckboxDisabled(row)" class="form-check-input" name="p_is_received" type="checkbox"
                       [(ngModel)]="row.is_received">
                     <span class="form-check-sign"></span>
                   </label>

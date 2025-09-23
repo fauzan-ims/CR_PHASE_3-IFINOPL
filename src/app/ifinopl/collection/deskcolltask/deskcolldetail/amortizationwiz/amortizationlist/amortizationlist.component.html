@@ -20,10 +20,11 @@
               <th>Invoice Type</th>
               <th>Billing Date</th>
               <th>Billing Due Date</th>
-              <th>Invoice Amount</th>
+              <th>OS Invoice Amount</th>
               <th>OVD Days</th>
               <th>Status</th>
               <th>Paid Date</th>
+              <th>Promise Date</th>
               <th class="text-center">Action</th>
             </tr>
           </thead>
@@ -37,8 +38,9 @@
               <td style="text-align: center; width: 10%;">{{row.billing_due_date}}</td>
               <td style="text-align: right; width: 15%;">{{row.total_billing_amount | number : '1.2-2'}}</td>
               <td style="text-align: center; width: 10%;">{{row.ovd_days}}</td>
-              <td style="text-align: center; width: 15%;">{{row.invoice_status}}</td>
-              <td style="text-align: center; width: 10%;">{{row.invoice_due_date}}</td>
+              <td style="text-align: center; width: 9%;">{{row.invoice_status}}</td>
+              <td style="text-align: center; width: 8%;">{{row.invoice_due_date}}</td>
+              <td style="text-align: center; width: 8%;">{{row.promise_date}}</td>
               <td style="text-align: center;">
                 <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit" (click)="btnEdit(row.id)"><i
                     class="fa fa-edit"></i></a>

@@ -29,7 +29,7 @@ export class ObjectInfoEarlyterminationdetailComponent extends BaseComponent imp
   private APIController: String = 'EtMain';
   private APIControllerEtDetail: String = 'EtDetail';
   private APIControllerEtTransaction: String = 'EtTransaction';
-    private APIRouteForPriviewFile: String = 'Priview';
+  private APIRouteForPriviewFile: String = 'Priview';
 
   private APIRouteForGetRow: String = 'GetRow';
   private APIRouteForGetRows: String = 'GetRows';
@@ -196,7 +196,7 @@ export class ObjectInfoEarlyterminationdetailComponent extends BaseComponent imp
       searchDelay: 800 // pake ini supaya gak bug search
     }
   }
-
+  
   downloadFile(base64: string, fileName: string, extention: string) {
     var temp = 'data:application/' + extention + ';base64,'
       + encodeURIComponent(base64);
@@ -211,7 +211,7 @@ export class ObjectInfoEarlyterminationdetailComponent extends BaseComponent imp
   //#endregion button priview image
 
 
-    previewFile(row1, row2) {
+  previewFile(row1, row2) {
     const usersJson: any[] = Array.of();
 
     usersJson.push({

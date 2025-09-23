@@ -170,6 +170,19 @@ export class DocumentlistComponent extends BaseComponent implements OnInit {
   }
   //#endregion getrow data
 
+
+isCheckboxDisabled(row: any): boolean {
+  const statusDisabled = !(this.isValidate === '0');
+  const promiseDateFilled = !!row.promise_date; // true kalau ada date
+  return statusDisabled || promiseDateFilled;
+}
+
+isDatepickerDisabled(row: any): boolean {
+  const statusDisabled = !(this.isValidate === '0');
+  const receivedChecked = !!row.is_received; // true kalau dicentang
+  return statusDisabled || receivedChecked;
+}
+
   //#region load all data
   loadData() {
     this.dtOptions = {

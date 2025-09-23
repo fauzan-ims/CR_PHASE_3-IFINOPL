@@ -265,12 +265,12 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
     const getBillDate = $('[name="p_billing_date"]')
       .map(function () { return $(this).val(); }).get();
 
-    console.log(getID);
-    console.log(getInstallment);
-    console.log(getNewBillingDateDay);
-    console.log(getAssetNo);
-    console.log(getBillingDateChangeCode);
-    console.log(getBillDate);
+    // console.log(getID);
+    // console.log(getInstallment);
+    // console.log(getNewBillingDateDay);
+    // console.log(getAssetNo);
+    // console.log(getBillingDateChangeCode);
+    // console.log(getBillDate);
 
 
     while (i < getID.length) {
@@ -289,20 +289,39 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
                   swal({
                     title: 'Warning',
                     text: 'Please fill in assets first.',
-                    buttonsStyling: false, 
+                    buttonsStyling: false,
                     confirmButtonClass: 'btn btn-danger',
                     type: 'warning'
                   }).catch(swal.noop)
                   return;
                 }
+                // this.listinvoicedetail.push(this.JSToNumberFloats({
+                //   p_due_date_change_code: getBillingDateChangeCode[i],
+                //   p_installment_no: getInstallment[i],
+                //   p_asset_no: getAssetNo[i],
+                //   p_id: getInstallment[i],
+                //   p_billing_date: getNewBillingDateDay[i] == '' ? getBillDate[i] : getNewBillingDateDay[i],
+                //   // p_credit_note_code: this.creditnotecode,
+                //   // p_invoice_no: this.model.invoice_no
+                // }));
                 this.listinvoicedetail.push(this.JSToNumberFloats({
                   p_due_date_change_code: getBillingDateChangeCode[i],
                   p_installment_no: getInstallment[i],
                   p_asset_no: getAssetNo[i],
                   p_id: getInstallment[i],
-                  p_billing_date: getNewBillingDateDay[i] == '' ? getBillDate[i] : getNewBillingDateDay[i],
-                  // p_credit_note_code: this.creditnotecode,
-                  // p_invoice_no: this.model.invoice_no
+                  p_billing_date: (() => {
+                    let raw = getNewBillingDateDay[i] == '' ? getBillDate[i] : getNewBillingDateDay[i];
+
+                    // kalau dari angular-mydatepicker (object)
+                    if (raw && raw.singleDate && raw.singleDate.jsDate) {
+                      raw = raw.singleDate.jsDate;
+                    }
+
+                    const dateObj = new Date(raw);
+                    return !isNaN(dateObj.getTime())
+                      ? dateObj.toISOString().split('T')[0]  // yyyy-MM-dd
+                      : null;
+                  })()
                 }));
                 i++
               }

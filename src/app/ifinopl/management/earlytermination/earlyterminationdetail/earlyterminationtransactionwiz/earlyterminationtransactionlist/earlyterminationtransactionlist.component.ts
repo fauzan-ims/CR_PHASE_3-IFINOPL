@@ -288,6 +288,8 @@ export class EarlyterminationtransactionlistComponent extends BaseComponent impl
             recordsFiltered: parse.recordsFiltered,
             data: []
           });
+          
+
 
         }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
       },
