@@ -201,6 +201,15 @@ export class SpdeliverysettlementdetailComponent extends BaseComponent implement
 
           // mapper dbtoui
           Object.assign(this.model, parsedata);
+          //-------------------------------------------------------------------------------------------------------------------------------------
+          if (!this.model.result) {
+              this.model.result = 'Failed';
+            }
+
+            this.resultType(null);
+           //-------------------------------------------------------------------------------------------------------------------------------------
+           
+           
           // end mapper dbtoui
           if (this.model.delivery_status == 'DONE')
           {

@@ -495,32 +495,39 @@
               <!--#endregion result_remark-->
 
               <!--#region upload-->
-              <div class="col-md-4">
-                <label for="result_remark" class="control-label">File *</label>
-                <div class="form-group">
-                      <div class="fileinput fileinput-new text-center" data-provides="fileinput">
-                        <div [hidden]="!!model.file_name">
-                          <span class="btn btn-info btn-round btn-file"  [hidden]="model.delivery_status === 'DONE'">
-                            <input type="file" (change)="onUpload($event, model.code)" id="fileControl" />
-                            <span>Upload</span>
-                          </span>
-                          {{model.tempFile}}
-                        </div>
-                        <div [hidden]="model.file_name == '' || model.file_name == null">
-                          <!-- <div> {{model.file_name}}</div> -->
-                            <span>
-                            <a class="btn btn-danger btn-round btn-file " type="button" [hidden]="model.delivery_status === 'DONE'"
-                              (click)="deleteImage(model.file_name, model.path, model.code)">
-                              <span><i class="fa fa-trash"></i></span></a>
-                            <a class="btn btn-primary btn-round btn-file " type="button"
-                              (click)="priviewFile(model.file_name, model.path)">
-                              <span><i class="fa fa-eye"></i></span></a>
-                          </span>
-                          <div> {{model.file_name}}</div>
-                        </div>
-                      </div>
+               <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+              <div class="col-md-4" *ngIf="model.result === 'Accepted' || model.result === 'Failed'">
+              <label for="result_remark" class="control-label">File *</label>
+              <input type="hidden" name="file_name" [(ngModel)]="model.file_name" #file_name="ngModel" required />
+              <div class="form-group" [class.has-error]="file_name.invalid && spdeliverysettlementForm.submitted">
+                <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                  <div *ngIf="!model.file_name">
+                    <span class="btn btn-info btn-round btn-file">
+                      <input type="file" (change)="onUpload($event, model.code)" id="fileControl" />
+                      <span>Choose File</span>
+                    </span>
+                    {{ model.tempFile }}
                   </div>
+                  <div *ngIf="model.file_name">
+                    <span>
+                      <a class="btn btn-danger btn-round btn-file" type="button"
+                        (click)="deleteImage(model.file_name, model.path, model.code)">
+                        <span><i class="fa fa-trash"></i></span>
+                      </a>
+                      <a class="btn btn-primary btn-round btn-file" type="button"
+                        (click)="priviewFile(model.file_name, model.path)">
+                        <span><i class="fa fa-eye"></i></span>
+                      </a>
+                    </span>
+                    <div>{{ model.file_name }}</div>
+                  </div>
+                </div>
+                <small *ngIf="file_name.invalid && spdeliverysettlementForm.submitted" class="text-danger">
+                  File is required
+                </small>
               </div>
+            </div>
+             <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
               
               <!--#endregion upload-->
             </div>
