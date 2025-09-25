@@ -1,0 +1,356 @@
+<div class="main-content" style="overflow-y:scroll; overflow-x:hidden; height:100%;">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner region -->
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="card-header ">
+                <h4 class="card-title">Early Termination Info</h4>
+            </div>
+            <div class="card-body" name="header" id="headerId">
+                <!--#region row-->
+                <div class="row">
+                    <!--#region code-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Termination No</label>
+                            <input type="text" class="form-control" [ngModel]="model.code" maxlength="50" name="p_code"
+                                readonly>
+                        </div>
+                    </div>
+                    <!--#endregion code-->
+
+                    <!--#region branch name-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Branch Name</label>
+                            <input type="text" class="form-control" [ngModel]="model.branch_name" maxlength="50"
+                                name="p_branch_name" readonly>
+                        </div>
+                    </div>
+                    <!--#endregion branch name-->
+
+                    <!--#region Status-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="et_status" class="control-label">Status</label>
+                            <input type="text" class="form-control" [ngModel]="model.et_status" maxlength="10"
+                                name="p_et_status" readonly>
+                        </div>
+                    </div>
+                    <!--#endregion Status-->
+                </div>
+                <!--#endregion row-->
+
+                <!--#region row-->
+                <div class="row">
+                    <!--#region Agreement-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="agreement_external_no" class="control-label">Agreement</label>
+                            <input type="text" class="form-control" [ngModel]="model.agreement_external_no" maxlength="10"
+                                name="p_agreement_external_no" readonly>
+                        </div>
+                    </div>
+                    <!--#endregion Agreement-->
+
+                    <!--#region Client Name-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Client Name</label>
+                            <input readonly type="text" class="form-control" [ngModel]="model.client_name"
+                                name="p_client_name">
+                        </div>
+                    </div>
+                    <!--#endregion Client Name-->
+
+                    <!--#region et_amount-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                [ngModel]="model.et_amount | number : '1.2-2'" amount="p_et_amount" name="p_et_amount"
+                                readonly>
+                        </div>
+                    </div>
+                    <!--#endregion et_amount-->
+                </div>
+                <!--#endregion row-->
+
+                <!--#region row-->
+                <div class="row">
+                    <!--#region Date-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                                [ngModel]="model.et_date" name="p_et_date" [options]="myDatePickerOptions"
+                                #et_date="angular-mydatepicker" autocomplete="off" readonly />
+                        </div>
+                    </div>
+                    <!--#endregion Date-->
+
+                    <!--#region Exp Date-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Expired Date</label>
+                            <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                                [ngModel]="model.et_exp_date" name="p_et_exp_date" [options]="myDatePickerOptions"
+                                #et_exp_date="angular-mydatepicker" autocomplete="off" readonly />
+                        </div>
+                    </div>
+                    <!--#endregion Exp Date-->
+
+                    <!--#region Remarks-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="et_remarks" class="control-label">Remark</label>
+                            <textarea type="text" class="form-control" [ngModel]="model.et_remarks" maxlength="4000"
+                                name="p_et_remarks" readonly #et_remarks="ngModel"></textarea>
+                        </div>
+                    </div>
+                    <!--#endregion Remarks-->
+                </div>
+
+
+
+
+
+
+
+                <div class="row">
+              <!--#region paths-->
+              <div class="col-md-4" [hidden]="this.param == null">
+                <div class="form-group">
+                  <label [hidden]="model.et_status !== 'HOLD'">Upload
+                    File</label>
+                  <div class="row" style="margin-left: 30px;">
+                    <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                      <!-- <div [hidden]="this.tampHidden === true || model.et_status !== 'HOLD'">
+                        <span class="btn btn-info btn-round btn-file ">
+                          <input type="file" (change)="onUpload($event, model.code)" id="fileControl" />
+                          <span><i class="fa fa-check"></i></span>
+                        </span>
+                        {{tempFile}}
+                      </div> -->
+                      <div>
+                        <span>
+                          <!-- <a class="btn btn-danger btn-round btn-file "
+                            [hidden]="this.tampHidden !== true || this.tampHiddenforView" type="button"
+                            (click)="deleteImage(model.file_name,model.file_path)">
+                            <span><i class="fa fa-trash"></i></span></a> -->
+                          <br>
+                          <a class="btn btn-primary btn-round btn-file "
+                        
+                            type="button" (click)="previewFile(model.file_name, model.file_path)">
+                            <span><i class="fa fa-eye"></i></span></a>
+                        </span>
+                        <div> {{model.file_name}}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion paths-->
+
+              <!--#region reason-->
+              <!-- <div class="col-md-4" [hidden]="this.param == null">
+                <div class="form-group">
+                  <label for="reason" class="control-label">Reason</label>
+                  <textarea [disabled]="model.et_status != 'HOLD'" type="text" class="form-control"
+                    [ngModel]="model.reason" maxlength="4000" name="p_reason" #reason="ngModel"></textarea>
+                </div>
+              </div> -->
+              <!--#endregion reason-->
+
+               <!--#region credit_note_amount-->
+              <div class="col-md-4" [hidden]="this.param == null">
+                <div class="form-group">
+                  <label>Credit Note Amount</label>
+                  <input type="text" class="form-control col-md-6" style="text-align: right;"
+                    [ngModel]="model.credit_note_amount | number : '1.2-2'" amount="p_credit_note_amount"
+                    name="p_credit_note_amount" disabled>
+                </div>
+              </div>
+              <!--#endregion credit_note_amount-->
+
+              <!--#region refund_amount-->
+              <div class="col-md-4" [hidden]="this.param == null">
+                <div class="form-group">
+                  <label>Refund Amount</label>
+                  <input type="text" class="form-control col-md-6" style="text-align: right;"
+                    [ngModel]="model.refund_amount | number : '1.2-2'" amount="p_refund_amount" name="p_refund_amount"
+                    disabled>
+                </div>
+              </div>
+              <!--#endregion refund_amount-->
+            </div>
+                <!--#endregion row-->
+
+                <div class="row">
+              <!--#region look up to bank name-->
+              <!-- <div class="col-md-4" [hidden]="this.param == null || isBank"> -->
+              <div class="col-md-4" [hidden]="this.param == null || model.refund_amount == 0">
+                <div class="form-group">
+                  <label class="control-label labelmodule">Bank Name</label>
+                  <div class="col-md-12 buttons btn-lookup-margin">
+                    <span>
+                      <button [disabled]="model.et_status !== 'HOLD'"
+                        class="btn btn-icon btn-outline-default btn-round btn-md" type="button" data-toggle="modal"
+                        data-target="#lookupModalBank" href="#"><i class="fa fa-search-plus"
+                          ></i></button>
+                      {{model.bank_name}}
+                      <input type="hidden" class="form-control" [ngModel]="model.bank_code" name="p_bank_code"
+                         #bank_code="ngModel">
+                        <!-- [disabled]="this.isDate" #bank_code="ngModel"> -->
+                      <input type="hidden" class="form-control" [ngModel]="model.bank_name" name="p_bank_name"
+                        #bank_name="ngModel">
+                        <!-- #bank_name="ngModel" [disabled]="this.isDate"> -->
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!--#region bank_account_no -->
+              <!-- <div class="col-md-4" [hidden]="this.param == null || isBank"> -->
+              <div class="col-md-4" [hidden]="this.param == null || model.refund_amount == 0">
+                <div class="form-group">
+                  <label for="bank_account_no" class="control-label">Bank Account No</label>
+                  <input type="text" class="form-control" [ngModel]="model.bank_account_no" maxlength="50"
+                    name="p_bank_account_no" #bank_account_no="ngModel" [disabled]="model.et_status !== 'HOLD'">
+                </div>
+              </div>
+              <!--#endregion bank_account_no-->
+
+              <!--#region bank_account_name -->
+              <!-- <div class="col-md-4" [hidden]="this.param == null || isBank"> -->
+              <div class="col-md-4" [hidden]="this.param == null || model.refund_amount == 0">
+                <div class="form-group">
+                  <label for="bank_account_name" class="control-label">Bank Account Name</label>
+                  <input type="text" class="form-control" [ngModel]="model.bank_account_name" maxlength="250"
+                    name="p_bank_account_name" #bank_account_name="ngModel" [disabled]="model.et_status !== 'HOLD'">
+                </div>
+              </div>
+              <!--#endregion bank_account_name-->
+            </div>
+
+
+            </div>
+
+            <span layout="row horizontal-divider">
+                <hr flex />
+            </span>
+
+            <!-- #region asset list -->
+            <div class="card-header ">
+                <h4 class="card-title">Asset List</h4>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <!--#publicserviceaddres list view-->
+                        <table id="datatabledetail" datatable [dtOptions]="dtOptionsAsset"
+                            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Name </th>
+                                    <th>Plat/Chasis/Engine No</th>
+                                    <th>Outstanding Rental Amount</th>
+                                     <th>Approve To Sell</th>
+                                     <th>Pickup Address</th>
+                                    <th>PIC Customer Name</th>
+                                    <th>Monthly Rental Rounded Amount</th>
+                                    <th>Refund Amount</th>
+                                    <th>Credit Note Amount</th>
+                                    <th>Terminate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of listearlyterminationdetail;let i=index ">
+                                    <td style="display: none;"></td>
+                                    <td style="text-align: center;">{{listearlyterminationdetail.numberIndex+i+1}}</td>
+                                    <td class="if-no-edit-btn" style="width: 20%;">{{row.asset_name}}</td>
+                                    <td class="if-no-edit-btn" style="width: 15%;">{{row.fa_reff_no_01}} <br> {{row.fa_reff_no_02}} <br>
+                                     {{row.fa_reff_no_03}}</td>
+                                   <td style="width: 15%;text-align: right;">{{row.os_rental_amount | number : '1.2-2'}}</td>
+                                   <td class="if-no-edit-btn" style="text-align: center;">
+                                    <label class="switch">
+                                        <input [disabled]="row.et_status !== 'HOLD'" type="checkbox" [ngModel]="row.is_approve_to_sell"
+                                        (click)="btnApproveToSell(row.id)">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    </td>
+                                     <td class="if-no-edit-btn" style="width: 15%;">{{row.pickup_address}}</td>
+                                    <td class="if-no-edit-btn" style="width: 10%;">{{row.pickup_name}}</td>
+                                    <td class="if-no-edit-btn" style="width: 10%; text-align: right;">{{row.monthly_rental_rounded_amount | number : '1.2-2'}}</td>
+                                    <td style="width: 15%;text-align: right;">{{row.refund_amount | number : '1.2-2'}}</td>
+                                    <td style="width: 15%;text-align: right;">{{row.credit_amount | number : '1.2-2'}}</td>
+                                    <td class="if-no-edit-btn" style="text-align: center;">
+                                    <label class="switch">
+                                        <input [disabled]="row.et_status !== 'HOLD'" type="checkbox" [ngModel]="row.is_terminate"
+                                        (click)="btnTerminate(row.id)">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!--#endpublicserviceaddres list view-->
+                    </div>
+                </div>
+            </div>
+            <!-- #endregion asset list -->
+
+            <span layout="row horizontal-divider">
+                <hr flex />
+            </span>
+
+            <div class="card-header">
+                <h4 class="card-title">Transaction List</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <!--#earlyterminationtransaction list view-->
+                        <table id="datatableTransaction" datatable [dtOptions]="dtOptionsTransaction"
+                            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Transaction</th>
+                                    <th>Transaction Amount</th>
+                                    <th>Discount (%)</th>
+                                    <th>Discount Amount</th>
+                                    <th>Total Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of listearlyterminationtransaction; let i=index">
+                                    <td style="display: none;"><input type="hidden" value="{{row.id}}" name="p_id">
+                                    </td>
+                                    <td style="text-align: center;">
+                                        {{listearlyterminationtransaction.numberIndex+i+1}}</td>
+                                    <td style="width: 20%;">{{row.transaction_name}}</td>
+                                    <td style="width: 20%; text-align: right;">{{row.transaction_amount | number :'1.2-2'}}</td>
+                                    <td style="width: 20%; text-align: right;">{{row.disc_pct}}</td>
+                                    <td style="width: 20%; text-align: right;">{{row.disc_amount | number :'1.2-2'}}</td>
+                                    <td style="width: 20%; text-align: right;">{{row.total_amount | number :'1.2-2'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!--#earlyterminationtransaction list view-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

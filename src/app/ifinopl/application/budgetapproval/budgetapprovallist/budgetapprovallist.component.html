@@ -1,0 +1,75 @@
+<router-outlet></router-outlet>
+
+
+<div id="hideMainPanel" class="main-content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header">
+          <h4 class="card-title">Budget Approval List</h4>
+        </div>
+        <div class="card-body">
+          <!--#region button add-->
+          <div class="toolbar">
+            <!--#region budgetapprovalStatus-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Status</label>
+                <select class="form-control col-md-6" [ngModel]="this.tampbudgetapprovalStatus"
+                  (change)="budgetapprovalStatus($event)">
+                  <option value='ALL'>ALL</option>
+                  <option value='HOLD'>HOLD</option>
+                  <option value='POST'>POST</option>
+                  <option value='CANCEL'>CANCEL</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion budgetapprovalStatus-->
+          </div>
+          <!--#endregion button add-->
+
+          <!--#region list view-->
+          <table id="datatableBudgetapprovallist" datatable [dtOptions]="dtOptions"
+            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th style="display: none;"></th>
+                <th class="disabled-sorting">No</th>
+                <th>Application No</th>
+                <th>Marketing</th>
+                <th>Asset No</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th style="text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of listbudgetapproval;let i=index ">
+                <td style="display: none;"></td>
+                <td class="if-no-edit-btn" style="text-align: center;">{{listbudgetapproval.numberIndex+i+1}}</td>
+                <td style="width: 30%;">{{row.application_external_no}} <br> {{row.client_name}}</td>
+                <td style="width: 20%;">{{row.marketing_name}}</td>
+                <td style="width: 30%;">{{row.asset_no}} <br> {{row.asset_name}}</td>
+                <td style="width: 10%;text-align: center; ">{{row.date}}</td>
+                <td style="width: 10%;text-align: center;">{{row.status}}</td>
+                <td style="text-align: center;">
+                  <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit" (click)="btnEdit(row.code)">
+                    <i class="fa fa-edit"></i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--#endregion list view-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

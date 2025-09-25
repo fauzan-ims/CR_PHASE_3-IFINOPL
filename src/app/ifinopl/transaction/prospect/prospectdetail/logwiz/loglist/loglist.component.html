@@ -1,0 +1,36 @@
+<router-outlet></router-outlet>
+
+<div id="hideMainPanelWiz" class="main-content margin-wizard-content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="toolbar">
+      </div>
+
+      <!--#region list view-->
+      <table id="datatableLogWiz" datatable [dtOptions]="dtOptions"
+        class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th style="display: none;"></th>
+            <th class="disabled-sorting">No</th>
+            <th>Date</th>
+            <th>Reff No</th>
+            <th>Reff Name</th>
+            <th>Remark</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of listlog;let i=index ">
+            <td style="display: none;"></td>
+            <td style="text-align: center;">{{listlog.numberIndex+i+1}}</td>
+            <td class="if-no-edit-btn" style="width: 15%;text-align: center;">{{row.date}}</td>
+            <td style="width: 15%;text-align: center;">{{row.reff_no}}</td>
+            <td style="width: 15%;text-align: center;">{{row.reff_name}}</td>
+            <td style="width: 55%;">{{row.remark}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <!--#endregion list view-->
+    </div>
+  </div>
+</div>

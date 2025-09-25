@@ -1,0 +1,167 @@
+<router-outlet></router-outlet>
+
+
+<div id="hideMainPanel" class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header">
+          <h4 class="card-title">Maturity Request List</h4>
+        </div>
+        <div class="card-body">
+          <!--#region row-->
+          <div class="row">
+            <!--#region button Proceed-->
+            <div class="col-md-4">
+              <button class="btn btn-success btn-round" (click)="btnProceed()" data-role="R00020820002083O">
+                Proceed
+              </button>
+            </div>
+            <!--#endregion button Proceed-->
+
+            <!--#region lookup SysBranch code -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="labelmodule" (click)="btnClearLookupBranch()" style="cursor: pointer;"
+                  title="Clear">Branch</label>
+                <div class="col-md-12">
+                  <span>
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      (click)="btnLookupSysBranch()" data-toggle="modal" data-target="#lookupModalSysBranch" href="#"><i
+                        class="fa fa-search-plus"></i></button>
+                    {{branch_name}}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <!--#endregion lookup SysBranch code -->
+
+            <!--#region tampMaturityDays-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Maturity Days</label>
+                <input type="text" class="form-control col-md-3" [ngModel]="this.tampMaturityDays"
+                  name="p_tampMaturityDays" required #p_tampMaturityDays="ngModel" (change)="MaturityDays($event)"
+                  maxlength="4" pattern="{{NumberOnlyPattern}}">
+                <small *ngIf="p_tampMaturityDays.errors?.pattern && p_tampMaturityDays.touched" class="text-danger">
+                  Maturity Days is required and format should be <i>0-9</i>
+                </small>
+              </div>
+            </div>
+            <!--#endregion tampMaturityDays-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region list view-->
+          <table id="datatableContractmaturityrequestlist" datatable [dtOptions]="dtOptions"
+            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th class="disabled-sorting">No</th>
+                <th class="disabled-sorting">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" id="checkall" [(ngModel)]="selectedAll"
+                        (change)="selectAllTable();" />
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </th>
+                <th>Agreement No</th>
+                <th>Branch</th>
+                <th>Agreement Date</th>
+                <th>Agreement Status</th>
+                <th>Overdue Invoice</th>
+                <th>Outstanding Rental</th>
+                <th>Maturity Days</th>
+                <th>Maturity Date</th>
+                <th>Count Extend</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of listcontractmaturityrequest;let i=index ">
+                <td class="if-no-edit-btn" style="text-align: center;">{{listcontractmaturityrequest.numberIndex+i+1}}
+                </td>
+                <td class="disabled-sorting">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                        (change)="checkIfAllTableSelected($event, row.asset_no);">
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </td>
+                <td style="width: 25%;">{{row.agreement_external_no}} <br> {{row.client_name}}</td>
+                <td style="width: 10%;">{{row.branch_name}}</td>
+                <td style="width: 10%;text-align: center;">{{row.agreement_date}}</td>
+                <td style="width: 15%;">{{row.agreement_status}}</td>
+                <td style="width: 10%;text-align: right;">{{row.overdue_invice | number : '1.2-2'}}</td>
+                <td style="width: 10%;text-align: right;">{{row.outstanding_rental | number : '1.2-2'}}</td>
+                <td style="width: 5%;text-align: center;">{{row.maturity_days}}</td>
+                <td style="width: 10%;text-align: center;">{{row.maturity_date}}</td>
+                <td style="width: 5%;text-align: center;">{{row.count_extend}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <!--#endregion list view-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region modal lookup SysBranch code-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSysBranch"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupSysBranch" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Name</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupsysbranch;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupsysbranch.numberIndex+i+1}}</td>
+                  <td style="width: 20%; text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.name }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowSysBranch(row.code, row.name)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup SysBranch code-->

@@ -1,0 +1,94 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body ">
+          <!--#region row-->
+          <div class="row">
+            <!--#region Category-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Category</label>
+                <input readonly type="text" class="form-control" [ngModel]="model.electronic_category_desc"
+                  name="p_electronic_category_desc">
+              </div>
+            </div>
+            <!--#endregion Category-->
+
+            <!--#region Sub Category-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Sub Category</label>
+                <input readonly type="text" class="form-control" [ngModel]="model.electronic_subcategory_desc"
+                  name="p_electronic_subcategory_desc">
+              </div>
+            </div>
+            <!--#endregion Sub Category-->
+
+            <!--#region Merk-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Merk</label>
+                <input readonly type="text" class="form-control" [ngModel]="model.electronic_merk_desc"
+                  name="p_electronic_merk_desc">
+              </div>
+            </div>
+            <!--#endregion Merk-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region Model-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Model</label>
+                <input readonly type="text" class="form-control" [ngModel]="model.electronic_model_desc"
+                  name="p_electronic_model_desc">
+              </div>
+            </div>
+            <!--#endregion Model-->
+
+            <!--#region Unit-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Unit</label>
+                <input readonly type="text" class="form-control" [ngModel]="model.electronic_unit_desc"
+                  name="p_electronic_unit_desc">
+              </div>
+            </div>
+            <!--#endregion Unit-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region colour-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Colour</label>
+                <input readonly type="text" class="form-control" [ngModel]="model.colour"
+                  name="p_colour">
+              </div>
+            </div>
+            <!--#endregion colour-->
+            <!--#region remarks-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Remark</label>
+                <textarea type="text" class="form-control" [ngModel]="model.remarks" name="p_remarks" readonly></textarea>
+              </div>
+            </div>
+            <!--#endregion remarks-->
+          </div>
+          <!--#endregion row-->
+      </div>
+      <div class="card-footer ">
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<div class="main-content">
+  <!--#region wizard container-->
+  <div class="card">
+    <div class="nav-tabs-navigation">
+      <ul id="tabs1" class="nav nav-pills nav-justified" role="tablist">
+        <li id="tabapplicationLegalGuarantor" class="nav-item">
+          <a class="nav-link" (click)="guarantorwiz()" href="#guarantorlist" data-toggle="tab" role="tab"
+            aria-controls="guarantor" aria-selected="true">
+            Guarantor
+          </a>
+        </li>
+        <!-- <li id="tabapplicationLegalNotary" class="nav-item">
+        <a class="nav-link" (click)="notarywiz()" href="#notarylist" data-toggle="tab" role="tab" aria-controls="notary"
+        aria-selected="true">
+        Notary
+      </a>
+    </li> -->
+      </ul>
+    </div>
+  </div>
+
+  <router-outlet></router-outlet>
+  <!--#endregion wizard container-->
+</div>

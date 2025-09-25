@@ -1,0 +1,83 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body ">
+        <!--#region form-->
+        <form #creditprocesslistForm="ngForm"
+          (ngSubmit)="onFormSubmit(creditprocesslistForm.value, creditprocesslistForm.valid)">
+          <!--#region button submit-->
+          <button type="submit" class="btn btn-info btn-round" data-role="R00020690000023C">Save</button><br>
+          <!--#endregion button submit-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region reff_code -->
+            <input type="text" class="form-control" [ngModel]="this.param" name="p_reff_code" hidden>
+            <!--#endregion reff_code -->
+
+            <!--#region code -->
+            <input type="text" class="form-control" [ngModel]="model.code" name="p_code" hidden>
+            <input type="text" class="form-control" [ngModel]="model.code" name="p_code1" hidden>
+            <!--#endregion code -->
+
+            <!--#region flow_type -->
+            <input type="text" class="form-control" [ngModel]="model.flow_type" name="p_flow_type" hidden>
+            <!--#endregion flow_type -->
+
+            <!--#region employee_name -->
+            <input type="text" class="form-control" [ngModel]="model.employee_name" name="p_employee_name" hidden>
+            <!--#endregion employee_name -->
+
+            <!--#region radio button recommendation_status-->
+            <div class="col-md-4">
+              <label>Recommendation</label>
+              <div class="form-group col-md-12">
+                <div class="row">
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="radio" name="p_recommendation_status" value="RECOMMEND"
+                        [(ngModel)]="model.recommendation_status">RECOMMEND
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="radio" name="p_recommendation_status" value="NOT RECOMMEND"
+                        [(ngModel)]="model.recommendation_status">NOT RECOMMEND
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--#endregion radio button recommendation_status-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region cp_remarks-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="cp_remarks" class="control-label">Remark *</label>
+                <textarea type="text" class="form-control" [ngModel]="model.cp_remarks" name="p_cp_remarks" required
+                  #cp_remarks="ngModel"></textarea>
+                <small *ngIf="cp_remarks.errors?.required && cp_remarks.touched" class="text-danger">
+                  Remark is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion cp_remarks-->
+          </div>
+          <!--#endregion row-->
+        </form>
+        <!--#endregion form-->
+      </div>
+    </div>
+  </div>
+</div>

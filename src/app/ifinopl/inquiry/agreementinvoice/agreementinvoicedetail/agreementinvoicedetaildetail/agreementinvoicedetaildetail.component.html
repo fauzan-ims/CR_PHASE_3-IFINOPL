@@ -1,0 +1,151 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header ">
+          <h4 class="card-title">Detail Info </h4>
+        </div>
+        <div class="card-body ">
+
+          <!--#region button back-->
+          <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+          <!--#endregion button back-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region Agreement No-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Agreement No </label>
+                <input type="text" class="form-control" [ngModel]="model.agreement_no" name="p_agreement_no" readonly hidden>
+                <input type="text" class="form-control" [ngModel]="model.agreement_external_no" name="p_agreement_external_no" readonly>
+              </div>
+            </div>
+            <!--#endregion Agreement No-->
+            <!--#region Asset No-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Asset No </label>
+                <input type="text" class="form-control" [ngModel]="model.asset_no" name="p_asset_no" readonly>
+              </div>
+            </div>
+            <!--#endregion Asset No-->
+            <!--#region Asset Name-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Asset Name </label>
+                <input type="text" class="form-control" [ngModel]="model.asset_name" name="p_asset_name" readonly>
+              </div>
+            </div>
+            <!--#endregion Asset Name-->
+          </div>
+          <!--#region row -->
+          <!--#region row-->
+          <div class="row">
+            <!--#region Billing No-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Billing No </label>
+                <input type="text" class="form-control" [ngModel]="model.billing_no" name="p_billing_no" readonly>
+              </div>
+            </div>
+            <!--#endregion Billing No-->
+            <!--#region Description-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Description</label>
+                <input type="text" class="form-control" [ngModel]="model.description" name="p_description" readonly>
+              </div>
+            </div>
+            <!--#endregion Description-->
+            <!--#region Quantity-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Quantity </label>
+                <input type="text" class="form-control" [ngModel]="model.quantity" name="p_quantity" readonly>
+              </div>
+            </div>
+            <!--#endregion Quantity-->
+          </div>
+          <!--#region row -->
+          <!--#region row-->
+          <div class="row">
+            <!--#region Billing Amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Billing Amount </label>
+                <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.billing_amount | number : '1.2-2'" amount="billing_amount" name="p_billing_amount">
+              </div>
+            </div>
+            <!--#endregion Billing Amount-->
+            <!--#region Discount Amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Discount Amount </label>
+                <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.discount_amount | number : '1.2-2'" amount="discount_amount"
+                  name="p_discount_amount">
+              </div>
+            </div>
+            <!--#endregion Discount Amount-->
+            <!--#region PPN Amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>PPN Amount</label>
+                <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.ppn_amount | number : '1.2-2'" amount="ppn_amount" name="p_ppn_amount">
+              </div>
+            </div>
+            <!--#endregion PPN Amount-->
+          </div>
+          <!--#region row -->
+          <!--#region row-->
+          <div class="row">
+            <!--#region PPH Amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>PPH Amount</label>
+                <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.pph_amount | number : '1.2-2'" amount="pph_amount" name="p_pph_amount">
+              </div>
+            </div>
+            <!--#endregion PPH Amount-->
+            <!--#region PPH BM Amount-->
+            <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>PPH BM Amount</label>
+                <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.ppn_bm_amount | number : '1.2-2'" amount="ppn_bm_amount" name="p_ppn_bm_amount">
+              </div>
+            </div> -->
+            <!--#endregion PPH BM Amount-->
+            <!--#region Total Amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Total Amount</label>
+                <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.total_amount | number : '1.2-2'" amount="total_amount" name="p_total_amount">
+              </div>
+            </div>
+            <!--#endregion Total Amount-->
+          </div>
+          <!--#region row -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

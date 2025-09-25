@@ -1,0 +1,1170 @@
+<div class="main-content margin-wizard-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <!--#region watermark-->
+      <div class="watermark" hidden>
+        <h6>{{this.companyName}}</h6>
+        <h6>{{this.userName}}</h6>
+        <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+      </div>
+      <!--#endregion watermark-->
+
+      <div class="card-header ">
+        <h4 class="card-title">Asset Info</h4>
+      </div>
+      <div class="card-body ">
+
+        <!--#region button back-->
+        <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+        <button type="button" style='float: right;' class="btn btn-info btn-print-round btn-round custom-button-width"
+          (click)="btnPrintExpense()" data-role="R00020560012057P" [hidden]="param == null">Print
+          Expense</button>
+        <!--#endregion button back-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region p_agreement_no-->
+          <input type="text" class="form-control" [ngModel]="this.param" name="p_agreement_no" hidden>
+          <!--#endregion p_agreement_no-->
+
+          <!--#region asset_no-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Asset No</label>
+              <input type="text" class="form-control" [ngModel]="model.asset_no" maxlength="50" name="p_asset_no"
+                disabled>
+            </div>
+          </div>
+          <!--#endregion asset_no-->
+          <!--#region asset_type_name-->
+          <div class="col-md-4">
+            <label class="labelgsubcode">Asset Type</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                  type="button" data-target="#lookupModalAssetType" data-toggle="modal" href="#">
+                  <i class="fa fa-search-plus"></i></button> {{model.asset_type_name}}
+                <input id="applicationAssetTypeCode" type="text" hidden name="p_asset_type_name"
+                  [ngModel]="model.asset_type_name" #asset_type_name="ngModel" />
+              </div>
+            </div>
+          </div>
+          <!--#endregion asset_type_name-->
+          <!--#region transmisi-->
+          <div class="col-md-4" [hidden]="model.asset_type_code !== 'VHCL'">
+            <div class="form-group">
+              <label>Transmisi</label>
+              <select disabled class="form-control col-md-6" [ngModel]="model.transmisi" name="p_transmisi" required
+                #transmisi="ngModel">
+                <option value='AT'>AT</option>
+                <option value='MT'>MT</option>
+              </select>
+            </div>
+          </div>
+          <!--#endregion transmisi-->
+
+          <!--#region asset_name-->
+          <div class="col-md-4" hidden>
+            <div class="form-group">
+              <label for="asset_name" class="control-label">Name </label>
+              <input type="text" class="form-control" [ngModel]="model.asset_name" maxlength="250" name="p_asset_name"
+                required #asset_name="ngModel" readonly>
+            </div>
+          </div>
+          <!--#endregion asset_name-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region asset_year-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="asset_year" class="control-label">Asset Year </label>
+              <input type="text" class="form-control col-md-4" [ngModel]="model.asset_year" maxlength="4"
+                name="p_asset_year" #asset_year="ngModel" onKeyPress="if(this.value.length==4) return false;" min="0"
+                readonly>
+            </div>
+          </div>
+          <!--#endregion asset_year-->
+
+          <!--#region unit_source-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Unit Source</label>
+              <input type="text" class="form-control col-md-4" [ngModel]="model.unit_source" name="p_unit_source"
+                readonly #unit_source="ngModel" readonly>
+            </div>
+          </div>
+          <!--#endregion unit_source-->
+
+          <!--#region asset_condition -->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Asset Condition</label>
+              <input type="text" class="form-control col-md-4" [ngModel]="model.asset_condition"
+                name="p_asset_condition" readonly>
+            </div>
+          </div>
+          <!--#endregion asset_condition -->
+
+          <!--#region unit_desc-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Unit</label>
+              <input disabled type="text" class="form-control" [ngModel]="model.unit_desc" name="p_unit_desc"
+                #unit_desc="ngModel" readonly>
+            </div>
+          </div>
+          <!--#endregion unit_desc-->
+
+          <!--#region fa_name-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Fixed Asset</label>
+              <input disabled type="text" class="form-control" [ngModel]="model.fa_name" name="p_fa_name"
+                #fa_name="ngModel" readonly>
+            </div>
+          </div>
+          <!--#endregion fa_name-->
+
+          <!--#region fa_colourname-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Colour</label>
+              <input disabled type="text" class="form-control col-md-4" [ngModel]="model.colour" name="p_colour"
+                #colour="ngModel" readonly>
+            </div>
+          </div>
+          <!--#endregion colour-->
+
+          <!--#region check box is_otr-->
+          <div class="col-md-4" [hidden]="model.asset_type_code !== 'VHCL'">
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" [ngModel]="model.is_otr" name="p_is_otr" disabled>
+                  ON THE ROAD
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_otr-->
+
+          <!--#region bbn_description-->
+          <div class="col-md-4" [hidden]="this.model.asset_type_code !== 'VHCL'">
+            <div class="form-group">
+              <label>BBN</label>
+              <input readonly type="text" class="form-control" [ngModel]="model.bbn_description"
+                name="p_bbn_description">
+            </div>
+          </div>
+          <!--#endregion bbn_description-->
+
+          <!--#region plat_colour-->
+          <div class="col-md-4" [hidden]="this.model.asset_type_code !== 'VHCL'">
+            <div class="form-group">
+              <label>Plat Colour</label>
+              <input readonly type="text" class="form-control" [ngModel]="model.plat_colour" name="p_plat_colour">
+            </div>
+          </div>
+          <!--#endregion plat_colour-->
+
+          <!--#region check box is_bbn_client [disabled]="!this.isOTR"-->
+          <div class="col-md-4" [hidden]="model.asset_type_code !== 'VHCL'">
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" [ngModel]="model.is_bbn_client" name="p_is_bbn_client"
+                    disabled>
+                  BBN Client
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_bbn_client-->
+
+          <!--#region client_bbn_name-->
+          <div class="col-md-4" [hidden]="!this.isBBNClient">
+            <div class="form-group">
+              <label for="client_bbn_name" class="control-label">Client BBN Name</label>
+              <input type="text" class="form-control" [ngModel]="model.client_bbn_name" maxlength="250"
+                name="p_client_bbn_name" [required]="this.isBBNClient" #client_bbn_name="ngModel" readonly>
+            </div>
+          </div>
+          <!--#endregion colour-->
+
+          <!--#region client_bbn_address-->
+          <div class="col-md-4" [hidden]="!this.isBBNClient">
+            <div class="form-group">
+              <label for="package_description" class="control-label">Client BBN Address</label>
+              <textarea type="text" class="form-control" [ngModel]="model.client_bbn_address"
+                name="p_client_bbn_address" [required]="this.isBBNClient" #client_bbn_address="ngModel" maxlength="4000"
+                readonly></textarea>
+            </div>
+          </div>
+          <!--#endregion client_bbn_address-->
+
+          <!--#region radio button usage-->
+          <div class="col-md-4" [hidden]="this.model.asset_type_code !== 'VHCL'">
+            <label>Usage</label>
+            <div class="form-group" style="margin-left: 15px;">
+              <div class="row">
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input disabled class="form-check-input col-md-6" type="radio" name="p_usage" value="CITY"
+                      [(ngModel)]="model.usage">CITY USE
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input disabled class="form-check-input col-md-6" type="radio" name="p_usage" value="SITE"
+                      [(ngModel)]="model.usage">SITE
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion radio button usage-->
+
+          <!--#region start_miles-->
+          <div class="col-md-4" [hidden]="this.model.asset_type_code !== 'VHCL'">
+            <div class="form-group">
+              <label>Start KM</label>
+              <input readonly type="text" class="form-control" [ngModel]="model.start_miles" name="p_start_miles">
+            </div>
+          </div>
+          <!--#endregion start_miles-->
+
+          <!--#region monthly_miles-->
+          <div class="col-md-4" [hidden]="this.model.asset_type_code !== 'VHCL'">
+            <div class="form-group">
+              <label>Monthly KM</label>
+              <input readonly type="text" class="form-control" [ngModel]="model.monthly_miles" name="p_monthly_miles">
+            </div>
+          </div>
+          <!--#endregion monthly_miles-->
+
+          <!--#region email-->
+          <div class="col-md-4" [hidden]="this.model.asset_type_code !== 'VHCL'">
+            <div class="form-group">
+              <label for="email" class="control-label">Email</label>
+              <input type="email" class="form-control" [ngModel]="model.email" name="p_email" #email="ngModel" readonly>
+            </div>
+          </div>
+          <!--#endregion email-->
+
+          <!--#region check box is_auto_email-->
+          <div class="col-md-4" hidden>
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" [ngModel]="model.is_auto_email"
+                    name="p_is_auto_email">
+                  Email Billing Notification
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_auto_email-->
+
+          <!--#region remarks-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Remark</label>
+              <textarea disabled type="text" class="form-control" [ngModel]="model.remarks" maxlength="4000"
+                name="p_remarks" readonly></textarea>
+            </div>
+          </div>
+          <!--#endregion remarks-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="model.is_simulation === '1'">
+          <!--#region radio button billing_to-->
+          <div class="col-md-4" hidden>
+            <label>Billing To</label>
+            <div class="form-group" style="margin-left: 15px;">
+              <div class="row">
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input disabled class="form-check-input col-md-6" type="radio" name="p_billing_to" value="CLIENT"
+                      [(ngModel)]="model.billing_to">CLIENT
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input disabled class="form-check-input col-md-6" type="radio" name="p_billing_to" value="OTHER"
+                      [(ngModel)]="model.billing_to">OTHER
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion radio button billing_to-->
+
+          <!--#region billing_to_name-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label for="billing_to_name" class="control-label">Billing To Name </label>
+              <input readonly type="text" class="form-control" [ngModel]="model.billing_to_name"
+                name="p_billing_to_name" #billing_to_name="ngModel">
+            </div>
+          </div>
+          <!--#endregion billing_to_name-->
+
+          <!--#region billing_to_area_no + billing_to_phone_no-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label class="control-label">Billing To Phone No.</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <input readonly type="text" class="form-control" [ngModel]="model.billing_to_area_no"
+                    name="p_billing_to_area_no" #billing_to_area_no="ngModel" maxlength="4"
+                    pattern={{NumberOnlyPattern}}>
+                </div>
+                -
+                <div class="col-md-7">
+                  <input readonly type="text" class="form-control" [ngModel]="model.billing_to_phone_no"
+                    name="p_billing_to_phone_no" maxlength="15" #billing_to_phone_no="ngModel"
+                    pattern={{NumberOnlyPattern}}>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion billing_to_area_no + billing_to_phone_no-->
+
+          <!--#region billing_to_address-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="package_description" class="control-label">Billing To Address</label>
+              <textarea type="text" class="form-control" [ngModel]="model.billing_to_address"
+                name="p_billing_to_address" #billing_to_address="ngModel" readonly maxlength="4000"></textarea>
+            </div>
+          </div>
+          <!--#endregion billing_to_address-->
+        </div>
+
+        <!--#region radio button deliver_to-->
+        <div class="col-md-4" hidden>
+          <label>Deliver To</label>
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+
+            <div class="form-group" style="margin-left: 15px;">
+              <div class="row">
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input disabled class="form-check-input col-md-6" type="radio" name="p_deliver_to" value="CLIENT"
+                      [(ngModel)]="model.deliver_to">CLIENT
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input disabled class="form-check-input col-md-6" type="radio" name="p_deliver_to" value="OTHER"
+                      [(ngModel)]="model.deliver_to">OTHER
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion radio button deliver_to-->
+
+          <!--#region billing_type-->
+          <div class="col-md-4" hidden>
+            <div class="form-group">
+              <label for="billing_type_desc" class="control-label">Billing Type </label>
+              <input readonly type="text" class="form-control" [ngModel]="model.billing_type_desc"
+                name="p_billing_type_desc" #billing_type_desc="ngModel">
+            </div>
+          </div>
+          <!--#endregion billing_type-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region npwp_name-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label for="npwp_name" class="control-label">NPWP Name</label>
+              <input type="text" class="form-control" [ngModel]="model.npwp_name" maxlength="250" name="p_npwp_name"
+                #npwp_name="ngModel" readonly>
+            </div>
+          </div>
+          <!--#endregion npwp_name-->
+
+          <!--#region document_no-->
+          <div class="col-md-2" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label>
+                NPWP No
+              </label>
+              <input id="npwp" type="text" class="form-control" [(ngModel)]="this.model.billing_to_npwp"
+                name="p_billing_to_npwp" #p_billing_to_npwp="ngModel" readonly>
+            </div>
+          </div>
+          <!--#endregion document_no-->
+
+          <!--#region NITKU-->
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="client_nitku" class="control-label">NITKU</label>
+              <input type="text" class="form-control" [ngModel]="model.client_nitku" name="p_client_nitku"
+                #client_nitku="ngModel" readonly>
+            </div>
+          </div>
+          <!--#endregion NITKU-->
+
+          <!--#region npwp_address-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label for="package_description" class="control-label">NPWP Address</label>
+              <textarea type="text" class="form-control" [ngModel]="model.npwp_address" name="p_npwp_address"
+                #npwp_address="ngModel" readonly maxlength="4000"></textarea>
+            </div>
+          </div>
+          <!--#endregion npwp_address-->
+
+          <!--#region deliver_to_name-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label for="deliver_to_name" class="control-label">Deliver To Name </label>
+              <input readonly type="text" class="form-control" [ngModel]="model.deliver_to_name"
+                name="p_deliver_to_name" #deliver_to_name="ngModel">
+            </div>
+          </div>
+          <!--#endregion deliver_to_name-->
+          <!--#region deliver_to_area_no + deliver_to_phone_no-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label class="control-label">Deliver To Phone No.</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <input readonly type="text" class="form-control" [ngModel]="model.deliver_to_area_no"
+                    name="p_deliver_to_area_no" #deliver_to_area_no="ngModel" maxlength="4"
+                    pattern={{NumberOnlyPattern}}>
+                </div>
+                -
+                <div class="col-md-7">
+                  <input readonly type="text" class="form-control" [ngModel]="model.deliver_to_phone_no"
+                    name="p_deliver_to_phone_no" maxlength="15" #deliver_to_phone_no="ngModel"
+                    pattern={{NumberOnlyPattern}}>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion deliver_to_area_no + deliver_to_phone_no-->
+
+          <!--#region deliver_to_address-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label for="deliver_to_address" class="control-label">Deliver To Address</label>
+              <textarea readonly type="text" class="form-control" [ngModel]="model.deliver_to_address"
+                name="p_deliver_to_address" #deliver_to_address="ngModel" maxlength="4000"></textarea>
+            </div>
+          </div>
+          <!--#endregion deliver_to_address-->
+        </div>
+        <!--#endregion row-->
+
+        <!-- #region row -->
+        <div class="row" [hidden]="model.is_simulation === '1'">
+          <!--#region pickup_name-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label for="pickup_name" class="control-label">Pickup Name</label>
+              <input disabled type="text" class="form-control" [ngModel]="model.pickup_name" maxlength="250"
+                name="p_pickup_name" #pickup_name="ngModel">
+            </div>
+          </div>
+          <!--#endregion pickup_name-->
+
+          <!--#region pickup_phone_area_no + pickup_phone_no-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label class="control-label">Pickup Phone No</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <input readonly type="text" class="form-control" [ngModel]="model.pickup_phone_area_no"
+                    name="p_pickup_phone_area_no" #pickup_phone_area_no="ngModel" maxlength="4"
+                    pattern={{NumberOnlyPattern}}>
+                </div>
+                -
+                <div class="col-md-7">
+                  <input readonly type="text" class="form-control" [ngModel]="model.pickup_phone_no"
+                    name="p_pickup_phone_no" maxlength="15" #pickup_phone_no="ngModel" pattern={{NumberOnlyPattern}}>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion pickup_phone_area_no + pickup_phone_no-->
+
+          <!--#region pickup_address-->
+          <div class="col-md-4" [hidden]="model.is_simulation === '1'">
+            <div class="form-group">
+              <label for="package_description" class="control-label">Pickup Address</label>
+              <textarea disabled type="text" class="form-control" [ngModel]="model.pickup_address"
+                name="p_pickup_address" #pickup_address="ngModel" maxlength="4000"></textarea>
+            </div>
+          </div>
+          <!--#endregion pickup_address-->
+        </div>
+        <!-- #endregion row -->
+        <div class="row">
+        <!--#region billing_to_faktur_type-->
+          <div class="col-md-4">
+            <label class="labelgsubcode">Faktur Transaction Code</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                  type="button" data-target="#lookupModalFakturType" data-toggle="modal" href="#">
+                  <i class="fa fa-search-plus"></i></button> <b>{{model.billing_to_faktur_type}}</b>
+                <input type="text" hidden name="p_billing_to_faktur_type" [ngModel]="model.billing_to_faktur_type"
+                  #billing_to_faktur_type="ngModel" />
+              </div>
+            </div>
+          </div>
+          <!--#endregion billing_to_faktur_type-->
+          </div>
+        <!--#region row-->
+        <div class="row">
+          <!--#region radio button billing_mode-->
+          <!-- <div class="col-md-4">
+            <label>Billing Mode</label>
+            <div class="form-group" style="margin-left: 15px;">
+              <div class="row">
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input disabled class="form-check-input col-md-6" type="radio" name="p_billing_mode" value="NORMAL"
+                      [(ngModel)]="model.billing_mode">NORMAL
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input disabled class="form-check-input col-md-6" type="radio" name="p_billing_mode" value="BY DATE"
+                      [(ngModel)]="model.billing_mode">BY DATE
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input disabled class="form-check-input col-md-6" type="radio" name="p_billing_mode"
+                      value="BEFORE DUE" [(ngModel)]="model.billing_mode">BEFORE DUE
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div> -->
+          <!--#endregion radio button billing_mode-->
+
+          <!--#region billing_to_faktur_type-->
+          <!-- <div class="col-md-4">
+            <label class="labelgsubcode">Faktur Transaction Code</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                  type="button" data-target="#lookupModalFakturType" data-toggle="modal" href="#">
+                  <i class="fa fa-search-plus"></i></button> <b>{{model.billing_to_faktur_type}}</b>
+                <input type="text" hidden name="p_billing_to_faktur_type" [ngModel]="model.billing_to_faktur_type"
+                  #billing_to_faktur_type="ngModel" />
+              </div>
+            </div>
+          </div> -->
+          <!--#endregion billing_to_faktur_type-->
+
+          <!--#region billing_mode-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Billing Mode</label>
+                <select class="form-control col-md-6" disabled [ngModel]="model.billing_mode" name="p_billing_mode"
+                  (change)="billingMode($event)">
+                  <option value='NORMAL'>NORMAL</option>
+                  <option value='BY DATE'>DATE</option>
+                  <option value='BEFORE DUE'>BEFORE DUE</option>
+                  <option value='END MONTH'>END MONTH</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion billing_mode-->
+
+          <!--#region billing_mode_date-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="billing_mode_date" class="control-label">Date</label>
+              <input readonly type="text" class="form-control col-md-4" [ngModel]="model.billing_mode_date"
+                name="p_billing_mode_date" #billing_mode_date="ngModel" maxlength="4" pattern="{{NumberOnlyPattern}}">
+            </div>
+          </div>
+          <!--#endregion billing_mode_date-->
+
+          <!--#region radio button prorate-->
+            <div class="col-md-4">
+              <label>Prorate *</label>
+              <div class="form-group" style="margin-left: 15px;">
+                <div class="row">
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input disabled class="form-check-input col-md-6" type="radio" name="p_prorate" value="Yes"
+                        [(ngModel)]="model.prorate">Yes
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input disabled class="form-check-input col-md-6" type="radio" name="p_prorate" value="No"
+                        [(ngModel)]="model.prorate">No
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--#endregion radio button prorate-->          
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region otr_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>OTR Amount</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.otr_amount | number : '1.2-2'" amount="otr_amount" name="p_otr_amount" required
+                #otr_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion otr_amount-->
+
+          <!--#region market_value -->
+          <div class="col-md-4">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Unit Amount exc VAT</label>
+                  <input readonly type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.market_value | number : '1.2-2'" amount="market_value" name="p_market_value"
+                    required #market_value="ngModel">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Discount Amount</label>
+                  <input readonly type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.discount_amount | number : '1.2-2'" amount="discount_amount"
+                    name="p_discount_amount" required #discount_amount="ngModel">
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion market_value -->
+
+          <!--#region request_delivery_date-->
+          <div class="col-md-4" hidden>
+            <div class="form-group">
+              <label for="request_delivery_date" class="control-label">Estimate Delivery Date</label>
+              <input readonly type="text" class="form-control col-md-4" [ngModel]="model.request_delivery_date"
+                name="p_request_delivery_date" #request_delivery_date="ngModel" maxlength="4"
+                pattern="{{NumberOnlyPattern}}">
+            </div>
+          </div>
+          <!--#endregion request_delivery_date-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="this.params == null">
+          <!--#region karoseri_amount -->
+          <div class="col-md-4">
+            <div class="row">
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label>Karoseri Amount exc VAT</label>
+                  <input readonly type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.karoseri_amount | number : '1.2-2'" amount="karoseri_amount"
+                    name="p_karoseri_amount" #karoseri_amount="ngModel">
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label>Discount Amount</label>
+                  <input readonly type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.discount_karoseri_amount | number : '1.2-2'" amount="discount_karoseri_amount"
+                    name="p_discount_karoseri_amount" #discount_karoseri_amount="ngModel">
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion karoseri_amount -->
+
+          <!--#region accessories_amount -->
+          <div class="col-md-4" [hidden]="this.params == null">
+            <div class="row">
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label>Accessories Amount exc VAT</label>
+                  <input readonly type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.accessories_amount | number : '1.2-2'" amount="accessories_amount"
+                    name="p_accessories_amount" #accessories_amount="ngModel">
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label>Discount Amount</label>
+                  <input readonly type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.discount_accessories_amount | number : '1.2-2'"
+                    amount="discount_accessories_amount" name="p_discount_accessories_amount"
+                    #discount_accessories_amount="ngModel">
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion accessories_amount -->
+
+          <!--#region mobilization_amount-->
+          <div class="col-md-4">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Mobilization Amount</label>
+                  <input readonly type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.mobilization_amount | number : '1.2-2'" amount="mobilization_amount"
+                    name="p_mobilization_amount" #mobilization_amount="ngModel" #mobilization_amount="ngModel">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label style="cursor: pointer;" title="CLEAR">City</label>
+                  <div class="form-group">
+                    <button disabled class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                      type="button" data-toggle="modal" href="#">
+                      <i class="fa fa-search-plus"></i></button> {{model.mobilization_city_description}} -
+                    {{model.mobilization_province_description}}
+                    <input type="hidden" name="p_mobilization_province_code"
+                      [ngModel]="model.mobilization_province_code" #mobilization_province_code="ngModel">
+                    <input type="hidden" name="p_mobilization_province_description"
+                      [ngModel]="model.mobilization_province_description" #mobilization_province_description="ngModel">
+                    <input type="hidden" name="p_mobilization_city_code" [ngModel]="model.mobilization_city_code"
+                      #mobilization_city_code="ngModel">
+                    <input type="hidden" name="p_mobilization_city_description"
+                      [ngModel]="model.mobilization_city_description" #mobilization_city_description="ngModel">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion mobilization_amount-->
+        </div>
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region asset_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Asset Amount</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.asset_amount | number : '1.2-2'" amount="asset_amount" name="p_asset_amount"
+                #asset_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion asset_amount-->
+
+          <!--#region asset_interest_rate + asset_interest_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="control-label">Interest Rate %</label>
+              <div class="row">
+                <div class="col-md-5">
+                  <input readonly type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.asset_interest_rate | number : '1.6-6'" rate="asset_interest_rate"
+                    name="p_asset_interest_rate" required #asset_interest_rate="ngModel" maxlength="10">
+                </div>
+                <div class="col-md-5">
+                  <input readonly type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.asset_interest_amount | number : '1.2-2'" amount="asset_interest_amount"
+                    name="p_asset_interest_amount" maxlength="24" #asset_interest_amount="ngModel">
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion asset_interest_rate + asset_interest_amount-->
+          <!--#region asset_rv_pct + asset_rv_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="control-label">Residual Value</label>
+              <div class="row">
+                <div class="col-md-5">
+                  <input readonly type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.asset_rv_pct | number : '1.6-6'" rate="asset_rv_pct" name="p_asset_rv_pct"
+                    #asset_rv_pct="ngModel" maxlength="10">
+                </div>
+                <div class="col-md-5">
+                  <input readonly type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.asset_rv_amount | number : '1.2-2'" amount="asset_rv_amount"
+                    name="p_asset_rv_amount" maxlength="24" #asset_rv_amount="ngModel">
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion asset_rv_pct + asset_rv_amount-->
+        </div>
+        <!--#endregion row-->
+
+        <div class="row">
+          <!--#region pmt_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>PMT Amount</label>
+              <input type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.pmt_amount | number : '1.2-2'" amount="pmt_amount" name="p_pmt_amount" readonly>
+            </div>
+          </div>
+          <!--#endregion pmt_amount-->
+
+          <!--#region borrowing_interest_rate + borrowing_interest_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="control-label">Borrowing Rate %</label>
+              <div class="row">
+                <div class="col-md-5">
+                  <input disabled type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.borrowing_interest_rate | number : '1.6-6'" rate="borrowing_interest_rate"
+                    name="p_borrowing_interest_rate" #borrowing_interest_rate="ngModel" maxlength="10">
+                </div>
+                <div class="col-md-5">
+                  <input type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.borrowing_interest_amount | number : '1.2-2'" amount="borrowing_interest_amount"
+                    name="p_borrowing_interest_amount" maxlength="24" #borrowing_interest_amount="ngModel" readonly>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion borrowing_interest_rate + borrowing_interest_amount-->
+
+          <!--#region check box is_use_registration-->
+          <div class="col-md-4" hidden>
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" [ngModel]="model.is_use_registration"
+                    name="p_is_use_registration" disabled>
+                  Use Registration
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_use_registration-->
+
+          <!--#region check box is_use_replacement-->
+          <div class="col-md-4" hidden>
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" [ngModel]="model.is_use_replacement"
+                    name="p_is_use_replacement" disabled>
+                  Use Replacement
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_use_replacement-->
+
+          <!--#region check box is_use_maintenance-->
+          <div class="col-md-4" hidden>
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" [ngModel]="model.is_use_maintenance"
+                    name="p_is_use_maintenance" disabled>
+                  Use Maintenance
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_use_maintenance-->
+
+          <!--#region check box is_use_insurance-->
+          <div class="col-md-4" hidden>
+            <div class="form-check mt-3" style="margin-left: -20px;">
+              <div class="form-check">
+                <div class="row">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" [ngModel]="model.is_use_insurance"
+                      name="p_is_use_insurance" disabled>
+                    Use Insurance
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_use_insurance-->
+        </div>
+        <!-- #endregion row  -->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region budget_replacement_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Replacement Car</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.budget_replacement_amount | number : '1.2-2'" amount="budget_replacement_amount"
+                name="p_budget_replacement_amount" #budget_replacement_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion asset_amount-->
+
+          <!--#region budget_registration_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>STNK & KEUR</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.budget_registration_amount | number : '1.2-2'" amount="budget_registration_amount"
+                name="p_budget_registration_amount" #budget_registration_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion budget_registration_amount-->
+          <!--#region budget_maintenance_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Maintenance</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.budget_maintenance_amount | number : '1.2-2'" amount="budget_maintenance_amount"
+                name="p_budget_maintenance_amount" #budget_maintenance_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion budget_maintenance_amount-->
+          <!--#region budget_insurance_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Insurance</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.budget_insurance_amount | number : '1.2-2'" amount="budget_insurance_amount"
+                name="p_budget_insurance_amount" #budget_insurance_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion budget_insurance_amount-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="params == null">
+          <!--#region cogs_amount-->
+          <div class="col-md-4" hidden>
+            <div class="form-group">
+              <label>COGS</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.cogs_amount | number : '1.2-2'" amount="cogs_amount" name="p_cogs_amount"
+                #cogs_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion cogs_amount-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="params == null">
+          <!--#region monthly_total_budget-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Total Budget</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.monthly_total_budget | number : '1.2-2'" amount="monthly_total_budget"
+                name="p_monthly_total_budget" #monthly_total_budget="ngModel">
+            </div>
+          </div>
+          <!--#endregion monthly_total_budget-->
+
+          <!--#region additional_charge_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Margin Of TOP</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.additional_charge_amount | number : '1.2-2'" amount="additional_charge_amount"
+                name="p_additional_charge_amount">
+            </div>
+          </div>
+          <!--#endregion additional_charge_amount-->
+
+          <!--#region basic_lease_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Basic Lease</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.basic_lease_amount | number : '1.2-2'" amount="basic_lease_amount"
+                name="p_basic_lease_amount">
+            </div>
+          </div>
+          <!--#endregion basic_lease_amount-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="params == null">
+          <!--#region lease_round_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Rounding</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <input readonly type="text" class="form-control" style="text-align: center;"
+                    [ngModel]="model.lease_round_type" name="p_lease_round_type" #lease_round_type="ngModel">
+                </div>
+                -
+                <div class="col-md-6">
+                  <input readonly type="text" class="form-control" style="text-align: right;"
+                    [ngModel]="model.lease_round_amount | number : '1.2-2'" amount="lease_round_amount"
+                    name="p_lease_round_amount" #lease_round_amount="ngModel">
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion lease_round_amount-->
+
+          <!--#region lease_rounded_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Rental Rounded Amount</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.lease_rounded_amount | number : '1.2-2'" amount="lease_rounded_amount"
+                name="p_lease_rounded_amount" #lease_rounded_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion lease_rounded_amount-->
+
+          <!--#region bast_date-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="handover_bast_date" class="control-label">BAST Date</label>
+              <input readonly type="text" class="form-control col-md-6" [ngModel]="model.handover_bast_date"
+                name="p_handover_bast_date" placeholder="dd/mm/yyyy" #handover_bast_date="ngModel">
+            </div>
+          </div>
+          <!--#endregion bast_date-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="params == null">
+          <!--#region insurance_commission_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Insurance Commission Amount</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.insurance_commission_amount | number : '1.2-2'" amount="insurance_commission_amount"
+                name="p_insurance_commission_amount" #insurance_commission_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion insurance_commission_amount-->
+
+          <!--#region spaf_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>SPAF Amount</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.spaf_amount | number : '1.2-2'" amount="spaf_amount" name="p_spaf_amount"
+                #spaf_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion spaf_amount-->
+
+          <!--#region subvention_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Subvention Amount * </label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.subvention_amount | number : '1.2-2'" amount="subvention_amount"
+                name="p_subvention_amount" required #subvention_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion subvention_amount-->
+        </div>
+        <!--#endregion row-->
+
+        <!-- #region row  -->
+        <div class="row" [hidden]="params == null">
+          <!--#region average_asset_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Average Asset Amount</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.average_asset_amount | number : '1.2-2'" amount="average_asset_amount"
+                name="p_average_asset_amount" #average_asset_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion average_asset_amount-->
+
+          <!--#region yearly_profit_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Yearly Profit Amount</label>
+              <input readonly type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.yearly_profit_amount | number : '1.2-2'" amount="yearly_profit_amount"
+                name="p_yearly_profit_amount" #yearly_profit_amount="ngModel">
+            </div>
+          </div>
+          <!--#endregion yearly_profit_amount-->
+
+          <!--#region roa_pct-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>ROA (%)</label>
+              <input readonly type="text" class="form-control col-md-4" style="text-align: right;"
+                [ngModel]="model.roa_pct | number : '1.6-6'" amount="roa_pct" name="p_roa_pct" #roa_pct="ngModel">
+            </div>
+          </div>
+          <!--#endregion roa_pct-->
+        </div>
+        <!--#endregion row-->
+
+      </div>
+
+      <!--#region wizard container -->
+      <div class="nav-tabs-navigation">
+        <ul id="tabs1" class="nav nav-pills nav-justified" role="tablist">
+          <li id="tabagreementAmortization" class="nav-item">
+            <a class="nav-link" (click)="amortizationwiz()" href="#amortizationlist" data-toggle="tab" role="tab"
+              aria-controls="amortizationlist" aria-selected="true">
+              Amortization
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" (click)="replacementwiz()" href="#replacementlist" data-toggle="tab" role="tab"
+              aria-controls="replacementlist" aria-selected="true">
+              Replacement
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" (click)="obligationwiz()" href="#obligationlist" data-toggle="tab" role="tab"
+              aria-controls="obligationlist" aria-selected="true">
+              Obligation
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!--#endregion wizard container-->
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

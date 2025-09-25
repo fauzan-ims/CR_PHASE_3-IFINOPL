@@ -1,0 +1,204 @@
+<div class="main-content margin-wizard-content" style="margin-top: 20px;">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <!--#region form-->
+      <form #clientkycdetailinfoForm="ngForm"
+        (ngSubmit)="onFormSubmit(clientkycdetailinfoForm.value, clientkycdetailinfoForm.valid)">
+
+        <!--#region button save dan back-->
+        <button [hidden]="this.page === 'plafondstatus' || this.page === 'applicationstatus'" type="submit"
+          class="btn btn-info btn-round" data-role="R00022550192257C">Save</button>
+        <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+        <!--#endregion button save dan back-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region p_client_code-->
+          <input hidden type="text" [ngModel]="this.param" maxlength="50" name="p_client_code">
+          <!--#endregion p_client_code-->
+
+          <!--#region p_id-->
+          <input hidden type="text" [ngModel]="this.paramss" name="p_id">
+          <!--#endregion p_id-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region is_pep-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>PEP</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <select [disabled]="this.page === 'plafondstatus' || this.page === 'applicationstatus'"
+                    class="form-control" [ngModel]="model.is_pep" name="p_is_pep">
+                    <option value='0'>No</option>
+                    <option value='1'>Yes</option>
+                  </select>
+                </div>
+
+                <div class="col-md-8">
+                  <textarea [disabled]="this.page === 'plafondstatus' || this.page === 'applicationstatus'" type="text"
+                    class="form-control" [ngModel]="model.remarks_pep" name="p_remarks_pep"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion rounding is_pep-->
+
+          <!--#region is_slik-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>SLIK</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <select [disabled]="this.page === 'plafondstatus' || this.page === 'applicationstatus'"
+                    class="form-control" [ngModel]="model.is_slik" name="p_is_slik">
+                    <option value='0'>No</option>
+                    <option value='1'>Yes</option>
+                  </select>
+                </div>
+
+                <div class="col-md-8">
+                  <textarea [disabled]="this.page === 'plafondstatus' || this.page === 'applicationstatus'" type="text"
+                    class="form-control" [ngModel]="model.remarks_slik" name="p_remarks_slik"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion rounding is_slik-->
+
+          <!--#region is_dtto-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>DTTO</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <select [disabled]="this.page === 'plafondstatus' || this.page === 'applicationstatus'"
+                    class="form-control" [ngModel]="model.is_dtto" name="p_is_dtto">
+                    <option value='0'>No</option>
+                    <option value='1'>Yes</option>
+                  </select>
+                </div>
+
+                <div class="col-md-8">
+                  <textarea [disabled]="this.page === 'plafondstatus' || this.page === 'applicationstatus'" type="text"
+                    class="form-control" [ngModel]="model.remarks_dtto" name="p_remarks_dtto"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion rounding is_dtto-->
+
+          <!--#region is_proliferasi-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Proliferasi</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <select [disabled]="this.page === 'plafondstatus' || this.page === 'applicationstatus'"
+                    class="form-control" [ngModel]="model.is_proliferasi" name="p_is_proliferasi">
+                    <option value='0'>No</option>
+                    <option value='1'>Yes</option>
+                  </select>
+                </div>
+
+                <div class="col-md-8">
+                  <textarea [disabled]="this.page === 'plafondstatus' || this.page === 'applicationstatus'" type="text"
+                    class="form-control" [ngModel]="model.remarks_proliferasi" name="p_remarks_proliferasi"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion rounding is_proliferasi-->
+
+          <!--#region is_npwp-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>NPWP</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <select [disabled]="this.page === 'plafondstatus' || this.page === 'applicationstatus'"
+                    class="form-control" [ngModel]="model.is_npwp" name="p_is_npwp">
+                    <option value='0'>No</option>
+                    <option value='1'>Yes</option>
+                  </select>
+                </div>
+
+                <div class="col-md-8">
+                  <textarea [disabled]="this.page === 'plafondstatus' || this.page === 'applicationstatus'" type="text"
+                    class="form-control" [ngModel]="model.remarks_npwp" name="p_remarks_npwp"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion rounding is_npwp-->
+
+          <!--#region is_dukcapil-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>DUKCAPIL</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <select [disabled]="this.page === 'plafondstatus' || this.page === 'applicationstatus'"
+                    class="form-control" [ngModel]="model.is_dukcapil" name="p_is_dukcapil">
+                    <option value='0'>No</option>
+                    <option value='1'>Yes</option>
+                  </select>
+                </div>
+
+                <div class="col-md-8">
+                  <textarea [disabled]="this.page === 'plafondstatus' || this.page === 'applicationstatus'" type="text"
+                    class="form-control" [ngModel]="model.remarks_dukcapil" name="p_remarks_dukcapil"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion rounding is_dukcapil-->
+
+          <!--#region is_jurisdiction-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Jurisdiction</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <select [disabled]="this.page === 'plafondstatus' || this.page === 'applicationstatus'"
+                    class="form-control" [ngModel]="model.is_jurisdiction" name="p_is_jurisdiction">
+                    <option value='0'>No</option>
+                    <option value='1'>Yes</option>
+                  </select>
+                </div>
+
+                <div class="col-md-8">
+                  <textarea [disabled]="this.page === 'plafondstatus' || this.page === 'applicationstatus'" type="text"
+                    class="form-control" [ngModel]="model.remarks_jurisdiction"
+                    name="p_remarks_jurisdiction"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion rounding is_jurisdiction-->
+
+          <!--#region remarks-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Remark </label>
+              <textarea [disabled]="this.page === 'plafondstatus' || this.page === 'applicationstatus'" type="text"
+                class="form-control" [ngModel]="model.remarks" maxlength="4000" name="p_remarks"
+                #remarks="ngModel"></textarea>
+            </div>
+          </div>
+          <!--#endregion remarks-->
+        </div>
+        <!--#endregion row-->
+      </form>
+      <!--#endregion form-->
+    </div>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body ">
+        <!--#region form-->
+        <form #purchaseorderlistForm="ngForm"
+          (ngSubmit)="onFormSubmit(purchaseorderlistForm.value, purchaseorderlistForm.valid)">
+          <!--#region button submit-->
+          <button type="submit" class="btn btn-info btn-round" data-role="R00020690000021C">Save</button><br>
+          <!--#endregion button submit-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region reff_code -->
+            <input type="text" class="form-control" [ngModel]="this.param" name="p_reff_code" hidden>
+            <!--#endregion reff_code -->
+
+            <!--#region code -->
+            <input type="text" class="form-control" [ngModel]="model.code" name="p_code" hidden>
+            <input type="text" class="form-control" [ngModel]="model.code" name="p_code1" hidden>
+            <!--#endregion code -->
+
+            <!--#region flow_type -->
+            <input type="text" class="form-control" [ngModel]="model.flow_type" name="p_flow_type" hidden>
+            <!--#endregion flow_type -->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region po_remarks-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="po_remarks" class="control-label">Remark *</label>
+                <textarea type="text" class="form-control" [ngModel]="model.po_remarks" name="p_po_remarks" required
+                  #po_remarks="ngModel"></textarea>
+                <small *ngIf="po_remarks.errors?.required && po_remarks.touched" class="text-danger">
+                  Remark is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion po_remarks-->
+          </div>
+          <!--#endregion row-->
+        </form>
+        <!--#endregion form-->
+      </div>
+    </div>
+  </div>
+</div>

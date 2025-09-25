@@ -1,0 +1,147 @@
+<div class="main-content margin-wizard-content" style="margin-top: 20px;">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <!--#region scoringForm form-->
+      <form #checkingForm="ngForm" (ngSubmit)="onFormSubmit(checkingForm.value, checkingForm.valid)">
+
+        <!--#region button submit dan back-->
+        <button type="submit" class="btn btn-info btn-round" [hidden]="model.checking_status !== 'HOLD'"
+          data-role="R00002650000000C">Save</button>
+        <button type="button" class="btn btn-success btn-round"
+          [hidden]="model.checking_status !== 'HOLD' || params == null" (click)="btnProceed(model.code)"
+          data-role="R00002650000266O">Proceed</button>
+        <button type="button" class="btn btn-warning btn-round"
+          [hidden]="model.checking_status !== 'HOLD' || params == null" (click)="btnCancelChecking(model.code)"
+          data-role="R00002650000266R">Cancel</button>
+        <button type="button" class="btn btn-warning btn-round"
+          [hidden]="model.checking_status !== 'ON PROCESS' || model.checking_status === 'HOLD' || params == null"
+          (click)="btnCancel(model.code)" data-role="R00002650000266R">Cancel</button>
+        <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+        <!--#endregion button submit dan back-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region code-->
+          <div class="col-md-4">
+            <div [hidden]="model.code != null" class="row" style="margin-bottom: -15px; padding-top: 30px;">
+              <h1 class="col-md-4" style="font-size: 12px;">Checking No</h1>
+              <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                Generate-</h1>
+            </div>
+            <div [hidden]="model.code == null" class="form-group">
+              <label>Code</label>
+              <input type="text" class="form-control" [ngModel]="model.code" maxlength="50" name="p_code"
+                [readonly]="isReadOnly">
+            </div>
+          </div>
+          <!--#endregion code-->
+
+          <!--#region Prospect Code-->
+          <input type="text" [ngModel]="this.param" maxlength="50" name="p_prospect_code" hidden>
+          <!--#endregion Prospect Code-->
+
+          <!--#region checking_date-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="checking_date" class="control-label">Checking Date *</label>
+              <input [ngStyle]="getStyles(isStatus)" [readonly]="model.checking_status !== 'HOLD'"
+                class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                [ngModel]="model.checking_date" name="p_checking_date" [options]="myDatePickerOptions"
+                (click)="checking_date.toggleCalendar()" required #p_checking_date="ngModel"
+                #checking_date="angular-mydatepicker" autocomplete="off">
+              <small
+                *ngIf="(p_checking_date.errors?.required && p_checking_date.touched) || (p_checking_date.errors?.required && checkingForm.submitted)"
+                class="text-danger">
+                Checking Date is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion checking_date-->
+
+          <!--#region checking_status-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Status</label>
+              <input type="text" class="form-control" [ngModel]="model.checking_status" maxlength="10"
+                name="p_checking_status" readonly>
+            </div>
+          </div>
+          <!--#endregion checking_status-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region checking_object-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="checking_object" class="control-label">Object *</label>
+              <textarea type="text" class="form-control" name="p_checking_object" [ngModel]="model.checking_object"
+                #checking_object="ngModel"
+                [disabled]="model.checking_status == 'POST' || model.checking_status == 'CANCEL' || model.checking_status == 'ON PROCESS'"
+                readonly></textarea>
+            </div>
+          </div>
+          <!--#endregion checking_object-->
+
+          <!--#region checking remark-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="checking_remark" class="control-label">Remark *</label>
+              <textarea type="text" class="form-control" name="p_checking_remark" [ngModel]="model.checking_remark"
+                required
+                [disabled]="model.checking_status == 'POST' || model.checking_status == 'CANCEL' || model.checking_status == 'ON PROCESS'"
+                #checking_remark="ngModel"></textarea>
+              <small
+                *ngIf="(checking_remark.errors?.required && checking_remark.touched) || (checking_remark.errors?.required && checkingForm.submitted)"
+                class="text-danger">
+                Remark is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion checking remark-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <hr>
+        <br>
+        <div class="row">
+          <!--#region result_date-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="result_date" class="control-label">Result Date *</label>
+              <input [ngStyle]="getStyles(isReadOnly)" [disabled]="params == null" class="form-control col-md-6"
+                placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.result_date" name="p_result_date"
+                [options]="myDatePickerOptions" (click)="result_date.toggleCalendar()" #p_result_date="ngModel"
+                #result_date="angular-mydatepicker" autocomplete="off" readonly>
+              <small
+                *ngIf="(result_date.errors?.required && result_date.touched) || (result_date.errors?.required && checkingForm.submitted)"
+                class="text-danger">
+                Result Date is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion result_date-->
+
+          <!--#region result_remark-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="result_remark" class="control-label">Result Remark</label>
+              <textarea type="text" class="form-control" name="p_result_remark" [ngModel]="model.result_remark"
+                #result_remark="ngModel" [disabled]="model.checking_status == 'POST'" readonly></textarea>
+            </div>
+          </div>
+          <!--#endregion result_remark-->
+        </div>
+        <!--#endregion row-->
+      </form>
+      <!--#endregion form-->
+    </div>
+  </div>
+</div>

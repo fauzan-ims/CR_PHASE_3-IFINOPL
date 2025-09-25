@@ -1,0 +1,337 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header ">
+          <h5 class="card-title">Leads Info (Interface)</h5>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #prospectmainForm="ngForm" (ngSubmit)="onFormSubmit(prospectmainForm.value, prospectmainForm.valid)">
+
+            <!--#region button submit dan back-->
+            <button [hidden]="param == null || model.job_status !== 'FAILED'" type="button"
+              class="btn btn-success btn-round" (click)="btnPost()" data-role="R00003670000368U">Proceed</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button submit dan back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Client_code-->
+              <input type="text" class="form-control" [ngModel]="model.client_code" name="p_client_code" hidden>
+              <!--#endregion client_code-->
+
+              <!--#region prospect_no-->
+              <div class="col-md-4">
+                <div [hidden]="model.code != null" class="row" style="margin-bottom: -15px; padding-top: 30px;">
+                  <h1 class="col-md-4" style="font-size: 12px;">Prospect No</h1>
+                  <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                    Generate-</h1>
+                </div>
+                <div [hidden]="model.code == null" class="form-group">
+                  <label>Prospect No</label>
+                  <input type="text" class="form-control" [ngModel]="model.code" maxlength="50" name="p_code"
+                    [readonly]="isReadOnly">
+                </div>
+              </div>
+              <!--#endregion prospect_no-->
+
+              <!--#region lookup SysBranch code -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label labelmodule">Branch *</label>
+                  <div class="col-md-12 buttons btn-lookup-margin">
+                    <span>
+                      <button [disabled]="isReadOnly" class="btn btn-icon btn-outline-default btn-round btn-md"
+                        type="button" (click)="btnLookupSysBranch()" data-toggle="modal"
+                        data-target="#lookupModalSysBranch" href="#"><i class="fa fa-search-plus"></i></button>
+                      {{model.branch_name}}
+                      <input type="hidden" class="form-control" [ngModel]="model.branch_code" name="p_branch_code">
+                      <input type="hidden" class="form-control" [ngModel]="model.branch_name" name="p_branch_name"
+                        required #branch_name="ngModel">
+                    </span>
+                  </div>
+                  <small [hidden]="branch_name.valid || (branch_name.pristine && !prospectmainForm.submitted)"
+                    class="text-danger">
+                    Branch is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup SysBranch code -->
+
+              <!--#region prospect_status-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.prospect_status" maxlength="10"
+                    name="p_prospect_status" readonly>
+                </div>
+              </div>
+              <!--#endregion prospect_status-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region prospect_date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="prospect_date" class="control-label">Prospect Date *</label>
+                  <input disabled class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.prospect_date" name="p_prospect_date" [options]="myDatePickerOptions"
+                    (click)="prospect_date.toggleCalendar()" required #p_prospect_date="ngModel"
+                    #prospect_date="angular-mydatepicker" autocomplete="off">
+                  <small
+                    *ngIf="(p_prospect_date.errors?.required && p_prospect_date.touched) || (p_prospect_date.errors?.required && prospectmainForm.submitted)"
+                    class="text-danger">
+                    Prospect Date is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion prospect_date-->
+
+              <!--#region source-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Source</label>
+                  <input type="text" class="form-control" [ngModel]="model.source" maxlength="50" name="p_source"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion source-->
+
+              <!--#region job_status-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Job Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.job_status" maxlength="10"
+                    name="p_job_status" readonly>
+                </div>
+              </div>
+              <!--#endregion job_status-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region lookup marketing code-->
+              <div class="col-md-4">
+                <label>Marketing *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button [disabled]="isReadOnly" class="btn btn-icon btn-outline-default btn-round btn-md"
+                        type="button" (click)="btnLookupMarketing()" data-toggle="modal"
+                        data-target="#lookupModalMarketing" href="#"><i class="fa fa-search-plus"></i></button>
+                      {{model.name}}
+                    </span>
+                    <input type="text" [ngModel]="model.name" name="p_name" hidden required #name="ngModel">
+                    <input type="text" [ngModel]="model.marketing_code" maxlength="50" name="p_marketing_code" hidden>
+                  </div>
+                  <small [hidden]="name.valid || (name.pristine && !prospectmainForm.submitted)" class="text-danger">
+                    Marketing is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup marketing code -->
+
+              <!--#region client type-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Client Type </label>
+                  <select disabled class='form-control col-md-8' name="p_client_type" [(ngModel)]="model.client_type"
+                    (change)="PageClient($event)">
+                    <option value='PERSONAL'>PERSONAL</option>
+                    <option value='CORPORATE'>CORPORATE</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion client type-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region client_name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="package_description" class="control-label">Client Name *</label>
+                  <input disabled type="text" class="form-control" [ngModel]="model.client_name" name="p_client_name"
+                    required #client_name="ngModel">
+                  <small
+                    *ngIf="(client_name.errors?.required && client_name.touched) || (client_name.errors?.required && prospectmainForm.submitted)"
+                    class="text-danger">
+                    Client Name is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion client_name-->
+
+              <!--#region personal_id_no-->
+              <div class="col-md-4" [hidden]="model.client_type != 'PERSONAL'">
+                <div class="form-group">
+                  <label for="personal_id_no" class="control-label">ID. No *</label>
+                  <input readonly [disabled]="model.client_type != 'PERSONAL'" disabled type="text" class="form-control"
+                    [ngModel]="model.personal_id_no" name="p_personal_id_no" required #personal_id_no="ngModel"
+                    pattern="{{NumberOnlyPattern}}">
+                  <small
+                    *ngIf="(personal_id_no.errors?.required && personal_id_no.touched) || (personal_id_no.errors?.required && prospectmainForm.submitted)"
+                    class="text-danger">
+                    ID. No is required
+                  </small>
+                  <small *ngIf="personal_id_no.errors?.pattern && personal_id_no.touched" class="text-danger">
+                    ID. No is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion personal_id_no-->
+
+              <!--#region corporate_npwp_no-->
+              <div class="col-md-4" [hidden]="model.client_type != 'CORPORATE'">
+                <div class="form-group">
+                  <label for="package_description" class="control-label">NPWP No. *</label>
+                  <input readonly [disabled]="model.client_type != 'CORPORATE'" disabled type="text"
+                    class="form-control" [ngModel]="model.corporate_npwp_no" name="p_corporate_npwp_no" required
+                    #corporate_npwp_no="ngModel" pattern={{NpwpPattern}} (keydown)="onKeydownNpwp($event)"
+                    (paste)="onPasteNpwp($event)" (focus)="onFokusNpwp($event)" (blur)="onChangeNpwp($event)">
+                  <small
+                    *ngIf="(corporate_npwp_no.errors?.required && corporate_npwp_no.touched) || (corporate_npwp_no.errors?.required && prospectmainForm.submitted)"
+                    class="text-danger">
+                    NPWP No is required
+                  </small>
+                  <small *ngIf="corporate_npwp_no.errors?.pattern && corporate_npwp_no.touched" class="text-danger">
+                    NPWP No is required and format should be <i>00.000.000.0-000.000</i>.
+                  </small>
+                </div>
+              </div>
+              <!--#endregion corporate_npwp_no-->
+
+              <!--#region phone_area_no + phone_no-->
+              <div class="col-md-4">
+                <div class="form-group"
+                  [class.has-error]="phone_area_no.invalid && phone_area_no.touched || phone_no.invalid && phone_no.touched">
+                  <label for="phone_area_no && phone_no" class="control-label">Phone No. *</label>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <input disabled type="text" class="form-control" [ngModel]="model.phone_area_no"
+                        name="p_phone_area_no" required #phone_area_no="ngModel" maxlength="4"
+                        pattern={{NumberOnlyPattern}}>
+                    </div>
+                    -
+                    <div class="col-md-7">
+                      <input disabled type="text" class="form-control" [ngModel]="model.phone_no" name="p_phone_no"
+                        maxlength="15" required #phone_no="ngModel" pattern={{NumberOnlyPattern}}>
+                    </div>
+                  </div>
+                </div>
+                <small
+                  *ngIf="(phone_area_no.errors?.required && phone_area_no.touched || phone_no.errors?.required && phone_no.touched) || (phone_area_no.errors?.required && prospectmainForm.submitted)"
+                  class="text-danger">
+                  Phone No is required
+                </small>
+                <small
+                  *ngIf="phone_area_no.errors?.pattern && phone_area_no.touched || phone_no.errors?.pattern && phone_no.touched"
+                  class="text-danger">
+                  Phone No is required and format should be <i>0-9</i>.
+                </small>
+              </div>
+              <!--#endregion phone_area_no + phone_no-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region email-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="email" class="control-label">Email</label>
+                  <input type="email" disabled class="form-control" [ngModel]="model.email" name="p_email"
+                    #email="ngModel" pattern={{EmailPattern}}>
+                </div>
+                <small *ngIf="email.errors?.pattern && email.touched" class="text-danger">
+                  Email is required and format should be <i>john@doe.com</i>.
+                </small>
+              </div>
+              <!--#endregion email-->
+
+              <!--#region corporate_contact_person-->
+              <div class="col-md-4" [hidden]="model.client_type != 'CORPORATE'">
+                <div class="form-group">
+                  <label for="package_description" class="control-label">Contact Person</label>
+                  <input readonly [disabled]="model.client_type != 'CORPORATE'" type="text" class="form-control"
+                    [ngModel]="model.corporate_contact_person" name="p_corporate_contact_person"
+                    #corporate_contact_person="ngModel">
+                </div>
+              </div>
+              <!--#endregion corporate_contact_person-->
+
+              <!--#region personal_place_of_birth-->
+              <div class="col-md-4" [hidden]="model.client_type != 'PERSONAL'">
+                <div class="form-group">
+                  <label for="package_description" class="control-label">Place of Birth</label>
+                  <input readonly [disabled]="model.client_type != 'PERSONAL'" disabled type="text" class="form-control"
+                    [ngModel]="model.personal_place_of_birth" name="p_personal_place_of_birth"
+                    #personal_place_of_birth="ngModel">
+                </div>
+              </div>
+              <!--#endregion place_of_birth-->
+
+              <!--#region personal_date_of_birth-->
+              <div class="col-md-4" [hidden]="model.client_type != 'PERSONAL'">
+                <div class="form-group">
+                  <label for="personal_date_of_birth" class="control-label">Date of Birth</label>
+                  <input readonly [disabled]="model.client_type != 'PERSONAL'" disabled class="form-control col-md-6"
+                    placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.personal_date_of_birth"
+                    name="p_personal_date_of_birth" [options]="myDatePickerOptions"
+                    (click)="personal_date_of_birth.toggleCalendar()" #p_personal_date_of_birth="ngModel"
+                    #personal_date_of_birth="angular-mydatepicker" autocomplete="off">
+                </div>
+              </div>
+              <!--#endregion personal_date_of_birth-->
+
+              <!--#region address-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="address" class="control-label">Address</label>
+                  <textarea disabled type="text" class="form-control" [ngModel]="model.address" name="p_address"
+                    #address="ngModel"></textarea>
+                </div>
+              </div>
+              <!--#endregion address-->
+
+              <!--#region remark-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="remark" class="control-label">Remark *</label>
+                  <textarea disabled type="text" class="form-control" [ngModel]="model.remark" name="p_remark" required
+                    #remark="ngModel"></textarea>
+                  <small
+                    *ngIf="(remark.errors?.required && remark.touched) || (remark.errors?.required && prospectmainForm.submitted)"
+                    class="text-danger">
+                    Description is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion remark-->
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

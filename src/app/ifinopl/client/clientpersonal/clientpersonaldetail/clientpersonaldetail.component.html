@@ -1,0 +1,1233 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <div class="card-header ">
+          <h4 class="card-title">Client Info</h4>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #clientpersonaldetailForm="ngForm"
+            (ngSubmit)="onFormSubmit(clientpersonaldetailForm.value, clientpersonaldetailForm.valid)">
+
+            <!--#region button save dan back-->
+            <button [hidden]="this.plafond_status || model.plafond_status === 'banberjalan'" type="submit"
+              class="btn btn-info btn-round" data-role="R00022550022256C">Save</button>
+            <button [hidden]="param === null || this.model.is_validate === true" type="button"
+              class="btn btn-success btn-round" (click)="btnValidate(this.param)"
+              data-role="R00022550012256U">Validate</button>
+            <!-- <button [hidden]="param === null || this.model.status_slik_checking === 'OK'" type="button"
+              class="btn btn-info btn-round" (click)="btnValidate(this.param)" data-role="R0000025U">SLIK</button>
+            <button [hidden]="param === null || this.model.status_dukcapil_checking === 'OK'" type="button"
+              class="btn btn-info btn-round" (click)="btnValidate(this.param)" data-role="R0000025U">DUKCAPIL</button> -->
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <button id="clientDetail" type="button" class="btn btn-info btn-round" (click)="callGetrow()"
+              hidden></button>
+            <!--#endregion button save dan back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Client_code-->
+              <input type="text" class="form-control" [ngModel]="model.client_code" name="p_client_code" hidden>
+              <!--#endregion client_code-->
+
+              <!--#region Client_code-->
+              <input id="plafondStatus" type="text" class="form-control" [ngModel]="model.plafond_status"
+                name="p_plafond_status" hidden>
+              <!--#endregion client_code-->
+
+              <!--#region client_no-->
+              <div class="col-md-4">
+                <div [hidden]="model.client_no != null" class="row" style="margin-bottom: -15px; padding-top: 30px;">
+                  <h1 class="col-md-4" style="font-size: 12px;">Client No</h1>
+                  <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                    Generate-</h1>
+                </div>
+                <div [hidden]="model.client_no == null" class="form-group">
+                  <label>Client No</label>
+                  <input type="text" class="form-control" [ngModel]="model.client_no" name="p_client_no" id="clientNo"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion client_no-->
+
+              <!--#region corporate_status_code-->
+              <div class="col-md-4" [hidden]="!isType ">
+                <label for="p_corporate_status_code" class="control-label" class="labelgsubcode">Corporate Status
+                  *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="this.plafond_status"
+                      class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      (click)="btnLookupCorporateStatus()" data-target="#lookupModalCorporateStatus" data-toggle="modal"
+                      href="#">
+                      <i class="fa fa-search-plus"></i></button> {{model.corporate_status_desc}}
+                    <input [disabled]="!isType " type="hidden" name="p_corporate_status_code"
+                      [ngModel]="model.corporate_status_code" required #p_corporate_status_code="ngModel" />
+                  </div>
+                  <small
+                    *ngIf="p_corporate_status_code.errors?.required && p_corporate_status_code.touched || (p_corporate_status_code.errors?.required && clientpersonaldetailForm.submitted) "
+                    class="text-danger">
+                    Corporate Status is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion corporate_status_code-->
+
+              <!--#region radio button nationality_type_code-->
+              <div class="col-md-4" [hidden]="isType">
+                <label>Nationality Type</label>
+                <div class="form-group col-md-12">
+                  <div class="row">
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input [disabled]="this.plafond_status" class="form-check-input" type="radio"
+                          name="p_nationality_type_code" value="WNI" [(ngModel)]="model.nationality_type_code">WNI
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input [disabled]="this.plafond_status" class="form-check-input" type="radio"
+                          name="p_nationality_type_code" value="WNA" [(ngModel)]="model.nationality_type_code">WNA
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion radio button nationality_type_code-->
+
+              <!--#region is_validate-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input disabled class="form-check-input" type="checkbox" [ngModel]="model.is_validate"
+                        name="p_is_validate">
+                      Validated
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion is_validate-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region salutation_prefix_code-->
+              <div class="col-md-4" [hidden]="isType">
+                <label class="labelgsubcode" (click)="resteSalutationPrefix()" aria-disabled="this.plafond_status"
+                  [ngStyle]="getStyles2(this.plafond_status)" title="CLEAR">Salutation Prefix</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button [disabled]="this.plafond_status"
+                        class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        (click)="btnLookupSalutationPrefix()" data-target="#lookupModalSalutationPrefix"
+                        data-toggle="modal" href="#">
+                        <i class="fa fa-search-plus"></i></button> {{model.salutation_prefix_desc}}
+                      <input type="hidden" name="p_salutation_prefix_code" [ngModel]="model.salutation_prefix_code" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion salutation_prefix_code-->
+
+              <!--#region corporate_type_code-->
+              <div class="col-md-4" [hidden]="!isType ">
+                <label for="p_corporate_type_code" class="control-label" class="labelgsubcode">Corporate Type
+                  *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button [disabled]="this.plafond_status"
+                        class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        (click)="btnLookupCorporateType()" data-target="#lookupModalCorporateType" data-toggle="modal"
+                        href="#">
+                        <i class="fa fa-search-plus"></i></button> {{model.corporate_type_desc}}
+                      <input [disabled]="!isType " type="hidden" name="p_corporate_type_code"
+                        [ngModel]="model.corporate_type_code" required #p_corporate_type_code="ngModel" />
+                    </span>
+                  </div>
+                  <small
+                    *ngIf="p_corporate_type_code.errors?.required && p_corporate_type_code.touched || (p_corporate_type_code.errors?.required && clientpersonaldetailForm.submitted) "
+                    class="text-danger">
+                    Corporate Type is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion corporate_type_code-->
+
+              <!--#region full_name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="full_name" class="control-label">Full Name *</label>
+                  <input [disabled]="this.plafond_status" type="text" class="form-control" [ngModel]="model.full_name"
+                    maxlength="250" name="p_full_name" required #full_name="ngModel" pattern={{textonly}}>
+                </div>
+                <small
+                  *ngIf="(full_name.errors?.required && full_name.touched) || (full_name.errors?.required && clientpersonaldetailForm.submitted)"
+                  class="text-danger">
+                  Full Name is required
+                </small>
+                <small *ngIf="full_name.errors?.pattern && full_name.touched" class="text-danger">
+                  Full Name is required and format should be <i>(A-z or a-z)</i>.
+                </small>
+              </div>
+              <!--#endregion full_name-->
+
+              <!--#region est_date-->
+              <div class="col-md-4" [hidden]="!isType ">
+                <div class="form-group">
+                  <label for="p_est_date" class="control-label">Established Date *</label>
+                  <input [ngStyle]="getStyles(this.plafond_status)" class="form-control col-md-6"
+                    placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.est_date" name="p_est_date"
+                    [options]="myDatePickerOptions" (click)="est_date.toggleCalendar()" [required]="isType"
+                    #p_est_date="ngModel" #est_date="angular-mydatepicker" autocomplete="off"
+                    [readonly]="!isType  || this.plafond_status" />
+                  <small
+                    *ngIf="(p_est_date.errors?.required && p_est_date.touched) || (p_est_date.errors?.required && clientpersonaldetailForm.submitted)"
+                    class="text-danger">
+                    Established Date is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion est_date-->
+
+              <!--#region salutation_postfix_code-->
+              <div class="col-md-4" [hidden]="isType">
+                <label class="labelgsubcode" (click)="resteSalutationPostfix()"
+                  [ngStyle]="getStyles2(this.plafond_status)" title="CLEAR"
+                  aria-disabled="isType || this.plafond_status">Salutation Postfix</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button [disabled]="isType || this.plafond_status"
+                        class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        (click)="btnLookupSalutationPostfix()" data-target="#lookupModalSalutationPostfix"
+                        data-toggle="modal" href="#">
+                        <i class="fa fa-search-plus"></i></button> {{model.salutation_postfix_desc}}
+                      <input type="hidden" name="p_salutation_postfix_code" [ngModel]="model.salutation_postfix_code" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion salutation_postfix_code-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region business_line_code-->
+              <div class="col-md-4" [hidden]="!isType ">
+                <label for="p_business_line_code" class="control-label" class="labelgsubcode">Business Line *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button [disabled]="this.plafond_status"
+                        class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        (click)="btnLookupBusinessLine()" data-target="#lookupModalBusinessLine" data-toggle="modal"
+                        href="#">
+                        <i class="fa fa-search-plus"></i></button> {{model.business_line_desc}}
+                      <input [disabled]="!isType " type="hidden" name="p_business_line_code"
+                        [ngModel]="model.business_line_code" required #p_business_line_code="ngModel" />
+                    </span>
+                  </div>
+                  <small
+                    *ngIf="p_business_line_code.errors?.required && p_business_line_code.touched || (p_business_line_code.errors?.required && clientpersonaldetailForm.submitted) "
+                    class="text-danger">
+                    Business Line is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion business_line_code-->
+
+              <!--#region sub_business_line_code-->
+              <div class="col-md-4" [hidden]="!isType ">
+                <label for="p_sub_business_line_code" class="control-label" class="labelgsubcode">Sub Business Line
+                  *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button [disabled]="this.plafond_status"
+                        class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        (click)="btnLookupSubBusinessLine()" data-target="#lookupModalSubBusinessLine"
+                        data-toggle="modal" href="#">
+                        <i class="fa fa-search-plus"></i></button> {{model.sub_business_line_desc}}
+                      <input [disabled]="!isType " type="hidden" name="p_sub_business_line_code"
+                        [ngModel]="model.sub_business_line_code" required #p_sub_business_line_code="ngModel" />
+                    </span>
+                  </div>
+                  <small
+                    *ngIf="p_sub_business_line_code.errors?.required && p_sub_business_line_code.touched || (p_sub_business_line_code.errors?.required && clientpersonaldetailForm.submitted) "
+                    class="text-danger">
+                    Sub Business Line is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion sub_business_line_code-->
+
+              <!--#region business_experience_year-->
+              <div class="col-md-4" [hidden]="!isType ">
+                <div class="form-group">
+                  <label>Business Experience (Year)</label>
+                  <input disabled type="text" class="form-control col-md-2" [ngModel]="model.business_experience_year"
+                    name="p_business_experience_year">
+                </div>
+              </div>
+              <!--#endregion business_experience_year-->
+
+              <!--#region alias_name-->
+              <div class="col-md-4" [hidden]="isType">
+                <div class=" form-group">
+                  <label for="alias_name" class="control-label">Alias Name *</label>
+                  <input [disabled]="isType || this.plafond_status" type="text" class="form-control"
+                    [ngModel]="model.alias_name" maxlength="250" name="p_alias_name" required #alias_name="ngModel">
+                  <small
+                    *ngIf="(alias_name.errors?.required && alias_name.touched) || (alias_name.errors?.required && clientpersonaldetailForm.submitted)"
+                    class="text-danger">
+                    Alias Name is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion alias_name-->
+
+              <!--#region mother_maiden_name-->
+              <div class="col-md-4" [hidden]="isType">
+                <div class="form-group">
+                  <label for="mother_maiden_name" class="control-label">Mother Maiden Name *</label>
+                  <input [disabled]="isType || this.plafond_status" type="text" class="form-control"
+                    [ngModel]="model.mother_maiden_name" maxlength="250" name="p_mother_maiden_name" required
+                    #mother_maiden_name="ngModel">
+                  <small
+                    *ngIf="(mother_maiden_name.errors?.required && mother_maiden_name.touched) || (mother_maiden_name.errors?.required && clientpersonaldetailForm.submitted)"
+                    class="text-danger">
+                    Mother Maiden Name is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion mother_maiden_name-->
+
+              <!--#region gender_code-->
+              <div class="col-md-4" [hidden]="isType">
+                <label class="labelgsubcode">Gender *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button [disabled]="this.plafond_status"
+                        class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        (click)="btnLookupGender()" data-target="#lookupModalGender" data-toggle="modal" href="#">
+                        <i class="fa fa-search-plus"></i></button> {{model.gender_desc}}
+                      <input [disabled]="isType" type="hidden" name="p_gender_code" [ngModel]="model.gender_code"
+                        required #gender_code="ngModel" />
+                    </span>
+                  </div>
+                  <small
+                    *ngIf="gender_code.errors?.required && gender_code.touched || (gender_code.errors?.required && clientpersonaldetailForm.submitted) "
+                    class="text-danger">
+                    Gender is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion gender_code-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region place_of_birth-->
+              <div class="col-md-4" [hidden]="isType">
+                <div class="form-group">
+                  <label for="place_of_birth" class="control-label">Place of Birth *</label>
+                  <input [disabled]="isType || this.plafond_status" type="text" class="form-control"
+                    [ngModel]="model.place_of_birth" maxlength="250" name="p_place_of_birth" required
+                    #place_of_birth="ngModel">
+                  <small
+                    *ngIf="(place_of_birth.errors?.required && place_of_birth.touched) || (place_of_birth.errors?.required && clientpersonaldetailForm.submitted)"
+                    class="text-danger">
+                    Place of Birth is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion place_of_birth-->
+
+              <!--#region date_of_birth-->
+              <div class="col-md-4" [hidden]="isType">
+                <div class="form-group">
+                  <label for="p_date_of_birth" class="control-label">Date of Birth *</label>
+                  <input [ngStyle]="getStyles(this.plafond_status)" class="form-control col-md-6"
+                    placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.date_of_birth" name="p_date_of_birth"
+                    [options]="myDatePickerOptions" (click)="date_of_birth.toggleCalendar()" [required]="!isType"
+                    #p_date_of_birth="ngModel" #date_of_birth="angular-mydatepicker" autocomplete="off"
+                    [readonly]="isType || this.plafond_status" />
+                  <small
+                    *ngIf="(p_date_of_birth.errors?.required && p_date_of_birth.touched) || (p_date_of_birth.errors?.required && clientpersonaldetailForm.submitted)"
+                    class="text-danger">
+                    Date of Birth is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion date_of_birth-->
+
+              <!--#region religion_type_code-->
+              <div class="col-md-4" [hidden]="isType">
+                <label for="p_religion_type_code" class="control-label" class="labelgsubcode">Religion *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="this.plafond_status"
+                      class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      (click)="btnLookupReligion()" data-target="#lookupModalReligion" data-toggle="modal" href="#">
+                      <i class="fa fa-search-plus"></i></button> {{model.religion_type_desc}}
+                    <input [disabled]="isType" type="hidden" name="p_religion_type_code"
+                      [ngModel]="model.religion_type_code" required #p_religion_type_code="ngModel" />
+                  </div>
+                  <small
+                    *ngIf="p_religion_type_code.errors?.required && p_religion_type_code.touched || (p_religion_type_code.errors?.required && clientpersonaldetailForm.submitted) "
+                    class="text-danger">
+                    Religion is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion religion_type_code-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region area_mobile_no + mobile_no-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="area_mobile_no && mobile_no" class="control-label">Phone No. *</label>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <input [disabled]="this.plafond_status" type="text" class="form-control"
+                        [ngModel]="model.area_mobile_no" name="p_area_mobile_no" required #area_mobile_no="ngModel"
+                        maxlength="4" pattern={{NumberOnlyPattern}}>
+                    </div>
+                    -
+                    <div class="col-md-7">
+                      <input [disabled]="this.plafond_status" type="text" class="form-control"
+                        [ngModel]="model.mobile_no" name="p_mobile_no" maxlength="15" required #mobile_no="ngModel"
+                        pattern={{NumberOnlyPattern}}>
+                    </div>
+                  </div>
+                </div>
+                <small
+                  *ngIf="(area_mobile_no.errors?.required && area_mobile_no.touched || mobile_no.errors?.required && mobile_no.touched) || (area_mobile_no.errors?.required && clientpersonaldetailForm.submitted)"
+                  class="text-danger">
+                  Phone No is required
+                </small>
+                <small
+                  *ngIf="area_mobile_no.errors?.pattern && area_mobile_no.touched || mobile_no.errors?.pattern && mobile_no.touched"
+                  class="text-danger">
+                  Phone No is required and format should be <i>0-9</i>.
+                </small>
+              </div>
+              <!--#endregion area_mobile_no + mobile_no-->
+
+              <!--#region area fax no-->
+              <div class="col-md-4" [hidden]="!isType">
+                <div class="form-group">
+                  <label>Fax No.</label>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <input [disabled]="!isType || this.plafond_status" type="text"
+                        class="form-control area-code input-mini aid-primary-phone1-lbl" [ngModel]="model.area_fax_no"
+                        name="p_area_fax_no" #area_fax_no="ngModel" maxlength="4" pattern={{NumberOnlyPattern}}>
+                    </div>
+                    -
+                    <div class="col-md-7">
+                      <input [disabled]="!isType || this.plafond_status" type="text" class="form-control"
+                        [ngModel]="model.fax_no" name="p_fax_no" maxlength="15" #fax_no="ngModel"
+                        pattern={{NumberOnlyPattern}}>
+                    </div>
+                  </div>
+                </div>
+                <small
+                  *ngIf="area_fax_no.errors?.pattern && area_fax_no.touched || fax_no.errors?.pattern && fax_no.touched"
+                  class="text-danger">
+                  Fax No is required and format should be <i>0-9</i>.
+                </small>
+              </div>
+              <!--#endregion area fax no-->
+
+              <!--#region email-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="email" class="control-label">Email</label>
+                  <input [disabled]="this.plafond_status" type="email" class="form-control" [ngModel]="model.email"
+                    maxlength="50" name="p_email" #email="ngModel" pattern={{EmailPattern}}>
+                </div>
+                <small *ngIf="email.errors?.pattern && email.touched" class="text-danger">
+                  Email is required and format should be <i>john@doe.com</i>.
+                </small>
+              </div>
+              <!--#endregion email-->
+
+              <!--#region education_type_code-->
+              <div class="col-md-4" [hidden]="isType">
+                <label class="labelgsubcode" (click)="resetEducation()" [ngStyle]="getStyles2(this.plafond_status)"
+                  title="CLEAR">Education</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button [disabled]="this.plafond_status"
+                        class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        (click)="btnLookupEducation()" data-target="#lookupModalEducation" data-toggle="modal" href="#">
+                        <i class="fa fa-search-plus"></i></button> {{model.education_type_desc}}
+                      <input type="hidden" name="p_education_type_code" [ngModel]="model.education_type_code" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion education_type_code-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region marriage_type_code-->
+              <div class="col-md-4" [hidden]="isType">
+                <label for="p_marriage_type_code" class="control-label" class="labelgsubcode">Marital Status *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button [disabled]="this.plafond_status"
+                        class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        (click)="btnLookupMartial()" data-target="#lookupModalMartial" data-toggle="modal" href="#">
+                        <i class="fa fa-search-plus"></i></button> {{model.marriage_type_desc}}
+                      <input [disabled]="isType" type="hidden" name="p_marriage_type_code"
+                        [ngModel]="model.marriage_type_code" required #p_marriage_type_code="ngModel" />
+                    </span>
+                  </div>
+                  <small
+                    *ngIf="p_marriage_type_code.errors?.required && p_marriage_type_code.touched || (p_marriage_type_code.errors?.required && clientpersonaldetailForm.submitted) "
+                    class="text-danger">
+                    Marital Status is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion marriage_type_code-->
+
+              <!--#region dependent_count-->
+              <div class="col-md-4" [hidden]="isType">
+                <div class="form-group">
+                  <label for="dependent_count" class="control-label">No of Dependent *</label>
+                  <input [disabled]="isType || this.plafond_status" type="text" class="form-control col-md-2"
+                    [ngModel]="model.dependent_count" name="p_dependent_count" required #dependent_count="ngModel"
+                    pattern="{{NumberOnlyPattern}}" maxlength="2">
+                  <small
+                    *ngIf="(dependent_count.errors?.required && dependent_count.touched) || (dependent_count.errors?.required && clientpersonaldetailForm.submitted)"
+                    class="text-danger">
+                    No of Dependent is required
+                  </small>
+                  <small *ngIf="dependent_count.errors?.pattern && dependent_count.touched" class="text-danger">
+                    No of Dependent is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion dependent_count-->
+
+              <!--#region contact_person_name-->
+              <div class="col-md-4" [hidden]="!isType ">
+                <div class="form-group">
+                  <label for="contact_person_name" class="control-label">Contact Person Name *</label>
+                  <input [disabled]="!isType  || this.plafond_status" type="contact_person_name" class="form-control"
+                    [ngModel]="model.contact_person_name" name="p_contact_person_name" required
+                    #contact_person_name="ngModel">
+                </div>
+                <small
+                  *ngIf="(contact_person_name.errors?.required && contact_person_name.touched) || (contact_person_name.errors?.required && clientpersonaldetailForm.submitted)"
+                  class="text-danger">
+                  Contact Person Name is required
+                </small>
+              </div>
+              <!--#endregion contact_person_name-->
+
+              <!--#region contact_person_area_phone_no + contact_person_phone_no-->
+              <div class="col-md-4" [hidden]="!isType ">
+                <div class="form-group">
+                  <label for="contact_person_area_phone_no && contact_person_phone_no" class="control-label">Contact
+                    Person
+                    Phone No.
+                    *</label>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <input [disabled]="!isType  || this.plafond_status" type="text" class="form-control"
+                        [ngModel]="model.contact_person_area_phone_no" name="p_contact_person_area_phone_no" required
+                        #contact_person_area_phone_no="ngModel" onKeyPress="if(this.value.length==4) return false;"
+                        min="0" pattern={{NumberOnlyPattern}}>
+                    </div>
+                    -
+                    <div class="col-md-7">
+                      <input [disabled]="!isType  || this.plafond_status" type="text" class="form-control"
+                        [ngModel]="model.contact_person_phone_no" name="p_contact_person_phone_no" maxlength="15"
+                        required #contact_person_phone_no="ngModel" pattern={{NumberOnlyPattern}}>
+                    </div>
+                  </div>
+                </div>
+                <small
+                  *ngIf="(contact_person_area_phone_no.errors?.required && contact_person_area_phone_no.touched || contact_person_phone_no.errors?.required && contact_person_phone_no.touched) || (contact_person_area_phone_no.errors?.required && clientpersonaldetailForm.submitted)"
+                  class="text-danger">
+                  Contact Person No is required
+                </small>
+                <small
+                  *ngIf="contact_person_area_phone_no.errors?.pattern && contact_person_area_phone_no.touched || contact_person_phone_no.errors?.pattern && contact_person_phone_no.touched"
+                  class="text-danger">
+                  Contact Person No is required and format should be <i>0-9</i>.
+                </small>
+              </div>
+              <!--#endregion contact_person_area_phone_no + contact_person_phone_no-->
+
+              <!--#region website-->
+              <div class="col-md-4" [hidden]="!isType ">
+                <div class="form-group">
+                  <label for="website" class="control-label">Website</label>
+                  <input [disabled]="!isType  || this.plafond_status" type="website" class="form-control"
+                    [ngModel]="model.website" maxlength="50" name="p_website" #website="ngModel"
+                    pattern={{WebsitePattern}}>
+                </div>
+                <small *ngIf="website.errors?.pattern && website.touched" class="text-danger">
+                  Website is required and format should be <i>www.xyzcompany.com</i>.
+                </small>
+              </div>
+              <!--#endregion website-->
+
+              <!--#region client_group_code-->
+              <div class="col-md-4">
+                <label class="labelgsubcode" (click)="btnClearGroup()" [ngStyle]="getStyles2(this.plafond_status)"
+                  title="Clear">Group</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button [disabled]="this.plafond_status"
+                        class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        (click)="btnLookupGroup()" data-target="#lookupModalGroup" data-toggle="modal" href="#">
+                        <i class="fa fa-search-plus"></i></button> {{model.client_group_name}}
+                      <input type="hidden" name="p_client_group_code" [ngModel]="model.client_group_code"
+                        #client_group_code="ngModel" />
+                      <input type="hidden" name="p_client_group_name" [ngModel]="model.client_group_name"
+                        #client_group_name="ngModel" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion client_group_code-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row" [hidden]="this.param === null">
+              <!--#region is_red_flag-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input disabled class="form-check-input" type="checkbox" [ngModel]="model.is_red_flag"
+                        name="p_is_red_flag">
+                      Red Flag
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion is_red_flag-->
+
+              <!--#region watchlist_status-->
+              <div class="col-md-4" [hidden]="this.param === null">
+                <label>Watchlist Client</label>
+                <div class="form-group col-md-12">
+                  <div class="row">
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input disabled class="form-check-input" type="radio" name="p_watchlist_status" value="CLEAR"
+                          [(ngModel)]="model.watchlist_status">
+                        <span class="form-check-sign" style="color: #79f760;">CLEAR</span>
+                      </label>
+                    </div>
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input disabled class="form-check-input" type="radio" name="p_watchlist_status" value="WARNING"
+                          [(ngModel)]="model.watchlist_status">
+                        <span class="form-check-sign" style="color: #f7b060;">WARNING</span>
+                      </label>
+                    </div>
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input disabled class="form-check-input" type="radio" name="p_watchlist_status" value="NEGATIVE"
+                          [(ngModel)]="model.watchlist_status">
+                        <span class="form-check-sign" style="color: #ff8080;">NEGATIVE</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion watchlist_status-->
+
+              <!--#region status_slik_checking-->
+              <div class="col-md-4" [hidden]="isType">
+                <div class="form-group">
+                  <label>SLIK Checking Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.status_slik_checking"
+                    name="p_status_slik_checking" readonly>
+                </div>
+              </div>
+              <!--#endregion status_slik_checking-->
+
+              <!--#region status_dukcapil_checking-->
+              <div class="col-md-4" [hidden]="isType">
+                <div class="form-group">
+                  <label>Dukcapil Checking Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.status_dukcapil_checking"
+                    name="p_status_dukcapil_checking" readonly>
+                </div>
+              </div>
+              <!--#endregion status_dukcapil_checking-->
+            </div>
+            <!--#endregion row-->
+
+          </form>
+          <!--#endregion form-->
+        </div>
+
+        <!--#region wizard-->
+        <div class="wizard-custom-margin">
+          <!--#region wizard container -->
+          <div class="wizard-container">
+            <div class="card-wizard" style="opacity: 1 !important; min-height: 0px;" data-color="primary"
+              id="wizardProfile">
+              <div class="text-center">
+                <div class="wizard-navigation">
+                  <ul>
+                    <li class="nav-item">
+                      <a class="nav-link" (click)="addresswiz()" href="#addresslist" data-toggle="tab" role="tab"
+                        aria-controls="address" aria-selected="true">
+                        Address
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" (click)="assetwiz()" href="#assetlist" data-toggle="tab" role="tab"
+                        aria-controls="asset" aria-selected="true">
+                        Asset
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" (click)="clientbankwiz()" href="#clientbanklist" data-toggle="tab" role="tab"
+                        aria-controls="clientbank" aria-selected="true">
+                        Bank
+                      </a>
+                    </li>
+                    <li class="nav-item" id="personalFamily">
+                      <a class="nav-link" (click)="familywiz()" href="#familylist" data-toggle="tab" role="tab"
+                        aria-controls="family" aria-selected="true">
+                        Family
+                      </a>
+                    </li>
+                    <li class="nav-item" id="corporateShareholder">
+                      <a class="nav-link" (click)="shareholderwiz()" href="#shareholderlist" data-toggle="tab"
+                        role="tab" aria-controls="shareholder" aria-selected="true">
+                        Shareholder
+                      </a>
+                    </li>
+
+                    <li class="nav-item" id="personalWork">
+                      <a class="nav-link" (click)="workwiz()" href="#worklist" data-toggle="tab" role="tab"
+                        aria-controls="work" aria-selected="true">
+                        Work
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" (click)="referencewiz()" href="#referencelist" data-toggle="tab" role="tab"
+                        aria-controls="reference" aria-selected="true">
+                        Reference
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" (click)="clientkyc()" href="#clientkyclist" data-toggle="tab" role="tab"
+                        aria-controls="clientkyc" aria-selected="true">
+                        KYC
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" (click)="documentswiz()" href="#documentdetail" data-toggle="tab" role="tab"
+                        aria-controls="document" aria-selected="true">
+                        Document
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" (click)="logwiz()" href="#loglist" data-toggle="tab" role="tab"
+                        aria-controls="log" aria-selected="true">
+                        Log
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion wizard container-->
+        </div>
+        <!--endregion wizard-->
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region lookup Group-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalGroup" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupGroup" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Name</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupgroup;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupgroup.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.group_name }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowGroup(row.code, row.group_name)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Group-->
+
+<!--#region lookup SalutationPrefix-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSalutationPrefix"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupSalutationPrefix" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupsalutationprefix;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupsalutationprefix.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowSalutationPrefix(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup SalutationPrefix-->
+
+<!--#region lookup SalutationPostfix-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSalutationPostfix"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupSalutationPostfix" class="table table-striped table-bordered hover"
+              cellspacing="0" style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupsalutationpostfix;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupsalutationpostfix.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowSalutationPostfix(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup SalutationPostfix-->
+
+<!--#region lookup Gender-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalGender"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupGender" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupgender;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupgender.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowGender(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Gender-->
+
+<!--#region lookup Religion-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalReligion"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupReligion" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupreligion;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupreligion.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowReligion(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Religion-->
+
+<!--#region lookup Education-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalEducation"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupEducation" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupeducation;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupeducation.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowEducation(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Education-->
+
+<!--#region lookup Martial-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalMartial"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupMartial" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupmartial;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupmartial.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowMartial(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Martial-->
+
+<!--#region lookup CorporateStatus-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalCorporateStatus"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupCorporateStatus" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupcorporatestatus;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupcorporatestatus.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowCorporateStatus(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup CorporateStatus-->
+
+<!--#region lookup CorporateType-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalCorporateType"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupCorporateType" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupcorporatetype;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupcorporatetype.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowCorporateType(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup CorporateType-->
+
+<!--#region lookup BusinessLine-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalBusinessLine"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupBusinessLine" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupbusinessline;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupbusinessline.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowBusinessLine(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup BusinessLine-->
+
+<!--#region lookup SubBusinessLine-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSubBusinessLine"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupSubBusinessLine" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupsubbusinessline;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupsubbusinessline.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowSubBusinessLine(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup SubBusinessLine-->

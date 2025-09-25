@@ -1,0 +1,209 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header ">
+          <h4 class="card-title">Return Asset Info</h4>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #returnassetdetaildetailForm="ngForm"
+            (ngSubmit)="onFormSubmit(returnassetdetaildetailForm.value, returnassetdetaildetailForm.valid)">
+
+            <!--#region button save, proceed, cancel, back-->
+            <button type="submit" class="btn btn-info btn-round" data-role="R00020680002069C">Save</button>
+            <button type="button" class="btn btn-success btn-round" (click)="btnPost(this.param)"
+              data-role="R00020680002069O">Post</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button save, proceed, cancel, back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region asset_no -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Asset No</label>
+                  <input type="text" class="form-control" [ngModel]="model.asset_no" name="p_asset_no" readonly>
+                </div>
+              </div>
+              <!--#endregion asset_no -->
+
+              <!--#region asset_name -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Asset Name</label>
+                  <input type="text" class="form-control" [ngModel]="model.asset_name" name="p_asset_name" readonly>
+                </div>
+              </div>
+              <!--#endregion asset_name -->
+
+              <!--#region asset_year -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Asset Year</label>
+                  <input type="text" class="form-control col-md-4" [ngModel]="model.asset_year" name="p_asset_year"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion asset_year -->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region unit_source-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Unit Source</label>
+                  <input type="text" class="form-control col-md-4" [ngModel]="model.unit_source" name="p_unit_source"
+                    readonly #unit_source="ngModel" readonly>
+                </div>
+              </div>
+              <!--#endregion unit_source-->
+
+              <!--#region asset_condition -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Asset Condition</label>
+                  <input type="text" class="form-control col-md-4" [ngModel]="model.asset_condition"
+                    name="p_asset_condition" readonly>
+                </div>
+              </div>
+              <!--#endregion asset_condition -->
+
+              <!--#region periode -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Periode</label>
+                  <input type="text" class="form-control col-md-4" [ngModel]="model.periode" name="p_periode" readonly>
+                </div>
+              </div>
+              <!--#endregion periode -->
+
+              <!--#region handover_bast_date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>BAST Date</label>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.handover_bast_date" name="p_handover_bast_date" [options]="myDatePickerOptions"
+                    #p_handover_bast_date="ngModel" #handover_bast_date="angular-mydatepicker" autocomplete="off"
+                    readonly />
+                </div>
+              </div>
+              <!--#endregion handover_bast_date-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region deliver_to_name -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Deliver To Name</label>
+                  <input type="text" class="form-control" [ngModel]="model.deliver_to_name" name="p_deliver_to_name"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion deliver_to_name -->
+
+              <!--#region deliver_to_area_no + deliver_to_phone_no-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Phone No.</label>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <input readonly type="text" class="form-control" [ngModel]="model.deliver_to_area_no"
+                        name="p_deliver_to_area_no" #deliver_to_area_no="ngModel" maxlength="4">
+                    </div>
+                    -
+                    <div class="col-md-7">
+                      <input readonly type="text" class="form-control" [ngModel]="model.deliver_to_phone_no"
+                        name="p_deliver_to_phone_no" maxlength="15" #deliver_to_phone_no="ngModel">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion deliver_to_area_no + deliver_to_phone_no-->
+
+              <!--#region deliver_to_address-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="package_description" class="control-label">Deliver To Address</label>
+                  <textarea type="text" class="form-control" [ngModel]="model.deliver_to_address"
+                    name="p_deliver_to_address" required #deliver_to_address="ngModel" maxlength="4000"
+                    readonly></textarea>
+                </div>
+              </div>
+              <!--#endregion deliver_to_address-->
+            </div>
+            <!--#endregion row-->
+
+            <span layout="row horizontal-divider">
+              <hr flex />
+            </span>
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region return_status -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Return Status</label>
+                  <input type="text" class="form-control col-md-4" [ngModel]="model.return_status"
+                    name="p_return_status" readonly>
+                </div>
+              </div>
+              <!--#endregion return_status -->
+
+              <!--#region return_date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Return Date *</label>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.return_date" name="p_return_date" [options]="myDatePickerOptions"
+                    (click)="return_date.toggleCalendar()" required #p_return_date="ngModel"
+                    #return_date="angular-mydatepicker" autocomplete="off" (dateChanged)="return_date($event)" />
+                  <small
+                    *ngIf="(p_return_date.errors?.required && p_return_date.touched) || (p_return_date.errors?.required && returnassetdetaildetailForm.submitted)"
+                    class="text-danger">
+                    Return Date is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion return_date-->
+
+              <!--#region return_remark-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Remark *</label>
+                  <textarea class="form-control" [ngModel]="model.return_remark" name="p_return_remark" required
+                    #return_remark="ngModel" maxlength="4000"></textarea>
+                  <small
+                    *ngIf="(return_remark.errors?.required && return_remark.touched) || (return_remark.errors?.required && returnassetdetaildetailForm.submitted)"
+                    class="text-danger">
+                    Remark is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion return_remark-->
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

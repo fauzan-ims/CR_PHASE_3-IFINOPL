@@ -1,0 +1,139 @@
+<div class="main-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner region -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card ">
+                <!--#region watermark-->
+                <div class="watermark" hidden>
+                    <h6>{{this.companyName}}</h6>
+                    <h6>{{this.userName}}</h6>
+                    <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+                </div>
+                <!--#endregion watermark-->
+
+                <div class="card-header ">
+                    <h4 class="card-title">Document Contract Info</h4>
+                </div>
+                <div class="card-body ">
+                    <!--#region form-->
+                    <form #appcontractForm="ngForm"
+                        (ngSubmit)="onFormSubmit(appcontractForm.value, appcontractForm.valid)">
+                        <!--#region button submit dan back-->
+                        <button type="save" class="btn btn-info btn-round" data-role="R00016790021680C">Save</button>
+                        <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+                        <!--#endregion button submit dan back-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region code-->
+                            <input type="text" [ngModel]="model.code" name="p_code" hidden>
+                            <!--#endregion code-->
+
+                            <!--#region description-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="description" class="control-label">Description *</label>
+                                    <input type="text" class="form-control" [ngModel]="model.description"
+                                        maxlength="250" required #description="ngModel" name="p_description">
+                                    <small
+                                        *ngIf="(description.errors?.required && description.touched) || (description.errors?.required && appcontractForm.submitted)"
+                                        class="text-danger">
+                                        Description is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion description-->
+
+                            <!--#region document_type-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Type *</label>
+                                    <select class='form-control col-md-4' [ngModel]="model.document_type"
+                                        name="p_document_type" (change)="documentType($event)">
+                                        <option value="DOC">DOC</option>
+                                        <option value="PDF">PDF</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--#endregion document_type-->
+
+                            <!--#region Template Name-->
+                            <div class="col-md-4" [hidden]="model.document_type !== 'DOC'">
+                                <div class="form-group">
+                                    <label for="template_name" class="control-label">Template Name *</label>
+                                    <input [disabled]="model.document_type !== 'DOC'" type="text" class="form-control"
+                                        [ngModel]="model.template_name" maxlength="250" required
+                                        #template_name="ngModel" name="p_template_name">
+                                    <small
+                                        *ngIf="(template_name.errors?.required && template_name.touched) || (template_name.errors?.required && appcontractForm.submitted)"
+                                        class="text-danger">
+                                        Template Name is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion Template Name-->
+
+                            <!--#region RPT Name-->
+                            <div class="col-md-4" [hidden]="model.document_type !== 'PDF'">
+                                <div class="form-group">
+                                    <label for="rpt_name" class="control-label">RPT Name *</label>
+                                    <input [disabled]="model.document_type !== 'PDF'" type="text" class="form-control"
+                                        [ngModel]="model.rpt_name" maxlength="250" required #rpt_name="ngModel"
+                                        name="p_rpt_name">
+                                    <small
+                                        *ngIf="(rpt_name.errors?.required && rpt_name.touched) || (rpt_name.errors?.required && appcontractForm.submitted)"
+                                        class="text-danger">
+                                        RPT Name is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion RPT Name-->
+                        </div>
+                        <!--#endregion row-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region SP Name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="sp_name" class="control-label">SP Name *</label>
+                                    <input type="text" class="form-control" [ngModel]="model.sp_name" maxlength="250"
+                                        required #sp_name="ngModel" name="p_sp_name">
+                                    <small
+                                        *ngIf="(sp_name.errors?.required && sp_name.touched) || (sp_name.errors?.required && appcontractForm.submitted)"
+                                        class="text-danger">
+                                        SP Name is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion SP Name-->
+
+                            <!--#region Table Name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="table_name" class="control-label">Table Name *</label>
+                                    <input type="text" class="form-control" [ngModel]="model.table_name" maxlength="250"
+                                        required #table_name="ngModel" name="p_table_name">
+                                    <small
+                                        *ngIf="(table_name.errors?.required && table_name.touched) || (table_name.errors?.required && appcontractForm.submitted)"
+                                        class="text-danger">
+                                        Table Name is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion Table Name-->
+                        </div>
+                        <!--#endregion row-->
+                    </form>
+                    <!--#end region form-->
+                </div>
+                <div class="card-footer ">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

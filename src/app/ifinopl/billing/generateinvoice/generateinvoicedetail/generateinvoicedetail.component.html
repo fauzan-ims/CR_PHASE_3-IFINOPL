@@ -1,0 +1,471 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header ">
+          <h4 class="card-title">Generate Invoice Info</h4>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #generateinvoiceForm="ngForm"
+            (ngSubmit)="onFormSubmit(generateinvoiceForm.value, generateinvoiceForm.valid)">
+
+            <!--#region button submit dan back-->
+            <button [hidden]="model.status !== 'HOLD'" type="submit" class="btn btn-info btn-round"
+              data-role="R00020580022059C">Save</button>
+            <button [hidden]="this.param === null || model.status !== 'HOLD'" type="button"
+              class="btn btn-success btn-round" (click)="btnPost(model.code)" data-role="R00020580002059O">Post</button>
+            <button [hidden]="this.param === null || model.status !== 'HOLD'" type="button"
+              class="btn btn-warning btn-round" (click)="btnCancel(this.param)"
+              data-role="R00020580002059R">Cancel</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button submit dan back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region code-->
+              <div class="col-md-4">
+                <div [hidden]="model.code != null" class="row" style="margin-bottom: -15px; padding-top: 30px;">
+                  <h1 class="col-md-4" style="font-size: 12px;">Code</h1>
+                  <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                    Generate-</h1>
+                </div>
+                <div [hidden]="model.code == null" class="form-group">
+                  <label>Code</label>
+                  <input type="text" class="form-control" [ngModel]="model.code" name="p_code" readonly>
+                </div>
+              </div>
+              <!--#endregion code-->
+
+              <!--#region lookup Branch -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="labelmodule">Branch *</label>
+                  <div class="col-md-12">
+                    <button [disabled]="model.status != 'HOLD'"
+                      class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      (click)="btnLookupBranch()" data-toggle="modal" data-target="#lookupModalBranch" href="#"><i
+                        class="fa fa-search-plus"></i></button>
+                    {{model.branch_name}}
+                    <input type="text" [ngModel]="model.branch_name" name="p_branch_name" hidden required
+                      #branch_name="ngModel">
+                    <input type="text" [ngModel]="model.branch_code" name="p_branch_code" hidden required
+                      #branch_code="ngModel">
+                  </div>
+                  <small
+                    *ngIf="(branch_code.errors?.required && branch_code.touched) || (branch_code.errors?.required && generateinvoiceForm.submitted)"
+                    class="text-danger">
+                    Branch is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup Branch -->
+
+              <!--#region status-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.status" name="p_status" readonly>
+                </div>
+              </div>
+              <!--#endregion status-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Client -->
+              <div class="col-md-4">
+                <label for="client_no" class="control-label" (click)="btnClearClient()"
+                  [ngStyle]="getStyles2(model.status != 'HOLD')" title="Clear">Client
+                </label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button [disabled]="model.status != 'HOLD'"
+                        class="btn btn-icon btn-outline-default btn-round btn-md col-md-4" type="button"
+                        (click)="btnLookupClient()" data-target="#lookupModalClient" data-toggle="modal" href="#">
+                        <i class="fa fa-search-plus"></i></button> {{model.client_name}}
+                      <input type="hidden" name="p_client_no" [ngModel]="model.client_no" #client_no="ngModel" />
+                      <input type="hidden" name="p_client_name" [ngModel]="model.client_name" #client_name="ngModel" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion Client-->
+
+              <!--#region Agreement -->
+              <div class="col-md-4">
+                <label for="client_no" class="control-label" (click)="btnClearAgreement()"
+                  [ngStyle]="getStyles2(model.status != 'HOLD')" title="Clear">Agreement No
+                </label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="model.status != 'HOLD'"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupAgreement()" data-target="#lookupModalAgreement" data-toggle="modal" href="#">
+                      <i class="fa fa-search-plus"></i></button> {{model.agreement_external_no}}
+                    <input type="hidden" name="p_agreement_no" [ngModel]="model.agreement_no" #agreement_no="ngModel">
+                  </div>
+                </div>
+              </div>
+              <!--#endregion Agrement name-->
+
+              <!--#region Asset -->
+              <div class="col-md-4">
+                <label for="client_no" class="control-label" (click)="btnClearAsset()"
+                  [ngStyle]="getStyles2(model.status != 'HOLD')" title="Clear">Asset
+                </label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="model.status != 'HOLD'"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button" (click)="btnLookupAsset()"
+                      data-target="#lookupModalAsset" data-toggle="modal" href="#">
+                      <i class="fa fa-search-plus"></i></button> {{model.asset_name}}
+                    <input type="hidden" name="p_asset_no" [ngModel]="model.asset_no" #asset_no="ngModel">
+                    <input type="hidden" name="p_asset_name" [ngModel]="model.asset_name" #asset_no="ngModel">
+                  </div>
+                </div>
+              </div>
+              <!--#endregion Asset-->
+
+              <!--#region Date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="p_date" class="control-label">Date *</label>
+                  <input [ngStyle]="getStyles(isReadOnly)" [readonly]="isReadOnly" class="form-control col-md-6"
+                    placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.date" name="p_date"
+                    [options]="myDatePickerOptions" (click)="date.toggleCalendar()" required #p_date="ngModel"
+                    #date="angular-mydatepicker" autocomplete="off" />
+                  <small
+                    *ngIf="(p_date.errors?.required && p_date.touched) || (p_date.errors?.required && generateinvoiceForm.submitted)"
+                    class="text-danger">
+                    Date is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Date-->
+
+              <!--#region Ass Off Date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="p_as_off_date" class="control-label">As Of Date *</label>
+                  <input [ngStyle]="getStyles(isReadOnly)" [readonly]="isReadOnly" class="form-control col-md-6"
+                    placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.as_off_date" name="p_as_off_date"
+                    [options]="myDatePickerOptions" (click)="as_off_date.toggleCalendar()" required
+                    #p_as_off_date="ngModel" #as_off_date="angular-mydatepicker" autocomplete="off" />
+                  <small
+                    *ngIf="(p_as_off_date.errors?.required && p_as_off_date.touched) || (p_as_off_date.errors?.required && generateinvoiceForm.submitted)"
+                    class="text-danger">
+                    Ass Of Date is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Ass Off Date-->
+
+              <!--#region application_remarks-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="remark" class="control-label">Remark *</label>
+                  <textarea [disabled]="model.status != 'HOLD'" type="text" class="form-control"
+                    [ngModel]="model.remark" name="p_remark" required #remark="ngModel" maxlength="4000"></textarea>
+                  <small
+                    *ngIf="(remark.errors?.required && remark.touched) || (remark.errors?.required && generateinvoiceForm.submitted)"
+                    class="text-danger">
+                    Remark is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion application_remarks-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region application_remarks-->
+              <div class="col-md-4" hidden>
+                <div class="form-group">
+                  <label for="remark" class="control-label">Remark *</label>
+                  <textarea [disabled]="model.status != 'HOLD'" type="text" class="form-control"
+                    [ngModel]="model.remark" name="p_remark" #remark="ngModel" maxlength="4000"></textarea>
+                  <small
+                    *ngIf="(remark.errors?.required && remark.touched) || (remark.errors?.required && generateinvoiceForm.submitted)"
+                    class="text-danger">
+                    Remark is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion application_remarks-->
+
+              <!--#region Client No-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <input type="text" hidden class="form-control" [ngModel]="model.client_no" name="p_client_no">
+                </div>
+              </div>
+              <!--#endregion Client No-->
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+        </div>
+
+        <div *ngIf="param != null">
+          <!--#region list view-->
+          <span layout="row horizontal-divider">
+            <hr flex />
+          </span>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card-header">
+                <h4 class="card-title">Detail List</h4>
+              </div>
+              <div class="card-body">
+                <div class="toolbar">
+                  <!--#region button delete-->
+                  <button [hidden]="model.status !== 'HOLD'" class="btn btn-danger btn-round" (click)="btnDeleteAll()"
+                    data-role="R00020580002059D">
+                    Delete
+                  </button>
+                  <!--#endregion button delete-->
+                </div>
+
+                <!--#region list view -->
+                <table id="dataGenerateInvoiceDetail" datatable [dtOptions]="dtOptions"
+                  class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                  <thead>
+                    <tr>
+                      <th class="disabled-sorting">No</th>
+                      <th class="disabled-sorting">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" id="checkalltable"
+                              [(ngModel)]="selectedAllTable" (change)="selectAllTable();" />
+                            <span class="form-check-sign"></span>
+                          </label>
+                        </div>
+                      </th>
+                      <th>Agreement No</th>
+                      <th>Asset No</th>
+                      <th>Due Date</th>
+                      <th>Rental Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of listgenerateinvoicedetail;let i=index ">
+                      <td class="if-no-edit-btn" style="text-align: center;">
+                        {{listgenerateinvoicedetail.numberIndex+i+1}}</td>
+                      <td class="disabled-sorting">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                              (change)="checkIfAllTableSelected($event, row.id);">
+                            <span class="form-check-sign"></span>
+                          </label>
+                        </div>
+                      </td>
+                      <td style="width: 30%;text-align: left;">{{row.agreement_external_no}}<br>{{row.client_name}}</td>
+                      <td style="width: 35%;text-align: left;">{{row.asset_no}}<br>{{row.asset_name}}</td>
+                      <td style="width: 15%;text-align: center;">{{row.due_date}}</td>
+                      <td style="width: 20%;text-align: right;">{{row.rental_amount | number:'1.2-2'}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!--#endregion list view-->
+              </div>
+            </div>
+          </div>
+          <!--#endregion list view-->
+        </div>
+        <div class="card-footer ">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region lookup Branch-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalBranch"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12" style="width: 100%">
+            <table id="datatableLookupBranch" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupbranch;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupbranch.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.name }}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowBranch(row.code, row.name)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup lookupBranch-->
+
+<!--#region lookup Agreement-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalAgreement"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupAgreement" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Agreement No</th>
+                  <th>Client Name</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupagreement;let i=index ">
+                  <td style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">
+                    {{lookupagreement.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{row.agreement_external_no}}</td>
+                  <td style="width: 80%;text-align: left;">{{row.client_name}}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowAgreement(row.agreement_no, row.agreement_external_no)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Agreement-->
+
+<!--#region lookup Asset-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalAsset" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupAsset" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Asset No</th>
+                  <th>Asset Name</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupasset;let i=index ">
+                  <td style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">
+                    {{lookupasset.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{row.asset_no}}</td>
+                  <td style="width: 80%;text-align: left;">{{row.asset_name}}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowAsset(row.asset_no, row.asset_name)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Asset-->
+
+<!--#region lookup Client-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalClient"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupClient" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Client No</th>
+                  <th>Client Name</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupclient;let i=index ">
+                  <td style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupclient.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.client_no }}</td>
+                  <td style="width: 80%;">{{ row.client_name}}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowClient(row.client_no, row.client_name)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Client-->

@@ -1,0 +1,1180 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header ">
+          <h4 class="card-title">Document Contract Group Info</h4>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #appgroupForm="ngForm" (ngSubmit)="onFormSubmit(appgroupForm.value, appgroupForm.valid)">
+
+            <!--#region button submit dan back-->
+            <button type="submit" class="btn btn-info btn-round" data-role="R00016800021681C">Save</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button submit dan back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region code-->
+              <input type="text" [ngModel]="model.code" name="p_code" hidden>
+              <!--#endregion code-->
+
+              <!--#region description-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="description" class="control-label">Description *</label>
+                  <textarea type="text" class="form-control" [ngModel]="model.description" maxlength="4000" required
+                    #description="ngModel" name="p_description"></textarea>
+                  <small
+                    *ngIf="(description.errors?.required && description.touched) || (description.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Description is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion description-->
+
+              <!--#region contract_type-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Flow Type</label>
+                  <select class="form-control col-md-6" [(ngModel)]="model.contract_type" name="p_contract_type"
+                    disabled>
+                    <option value='DCAPPLICATION'>APPLICATION</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion rounding contract_type-->
+
+              <!--#region dim_count-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Dim Count </label>
+                  <select class="form-control col-md-3" [(ngModel)]="model.dim_count" name="p_dim_count"
+                    (change)="dimensionCount($event)">
+                    <option value='0'>0</option>
+                    <option value='1'>1</option>
+                    <option value='2'>2</option>
+                    <option value='3'>3</option>
+                    <option value='4'>4</option>
+                    <option value='5'>5</option>
+                    <option value='6'>6</option>
+                    <option value='7'>7</option>
+                    <option value='8'>8</option>
+                    <option value='9'>9</option>
+                    <option value='10'>10</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion dim_count-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region check box is active-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" [ngModel]="model.is_active" name="p_is_active">
+                      Active
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion check box is active-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Dimension 1-->
+              <div class="col-md-4">
+                <label>Dimension 1 *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimension1()" data-target="#lookupModalDimension" data-toggle="modal" href="#"
+                      [disabled]="appgroupForm.value.p_dim_count  < 1">
+                      <i class="fa fa-search-plus"></i></button><a>{{model.dimension1_name}}</a>
+                    <input type="hidden" [disabled]="appgroupForm.value.p_dim_count  < 1" name="p_dim_1"
+                      [ngModel]="model.dim_1" required #dim_1="ngModel">
+                  </div>
+                </div>
+                <small
+                  *ngIf="dim_1.errors?.required && dim_1.touched || (dim_1.errors?.required && appgroupForm.submitted)"
+                  class="text-danger">
+                  Dimension 1 is required
+                </small>
+              </div>
+              <!--#endregion Dimension 1-->
+
+              <!--#region operator 1-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Operator 1</label>
+                  <select class='form-control col-md-6' name="p_operator_1" [ngModel]="model.operator_1"
+                    [disabled]="appgroupForm.value.p_dim_count  < 1" (change)="operator1($event)">
+                    <option value='EQUAL'>EQUAL</option>
+                    <option value='MORE THAN'>MORE THAN</option>
+                    <option value='LESS THAN'>LESS THAN</option>
+                    <option value='BETWEEN'>BETWEEN</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion operator 1-->
+
+              <!--#region lookup value from 1-->
+              <div class="col-md-2">
+                <label>Value From *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="appgroupForm.value.p_dim_count  < 1"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimensionValue(1, 'from')" data-toggle="modal"
+                      data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_from_1" maxlength="50"
+                      name="p_dim_value_from_1" [disabled]="appgroupForm.value.p_dim_count  < 1" required
+                      #dim_value_from_1="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_from_1.errors?.required && dim_value_from_1.touched || (dim_value_from_1.errors?.required && appgroupForm.submitted) "
+                    class="text-danger">
+                    Value From is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value from 1-->
+
+              <!--#region lookup value to 1-->
+              <div class="col-md-2">
+                <label>Value To *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button [disabled]="appgroupForm.value.p_dim_count  < 1 || model.operator_1 !== 'BETWEEN'"
+                        class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                        (click)="btnLookupDimensionValue(1, 'to')" data-toggle="modal"
+                        data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    </span>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_to_1" maxlength="50"
+                      name="p_dim_value_to_1"
+                      [disabled]="appgroupForm.value.p_dim_count  < 1 || model.operator_1 !== 'BETWEEN'" required
+                      #dim_value_to_1="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_to_1.errors?.required && dim_value_to_1.touched || (dim_value_to_1.errors?.required && appgroupForm.submitted) "
+                    class="text-danger">
+                    Value To is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value to 1-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Dimension 2-->
+              <div class="col-md-4">
+                <label>Dimension 2 *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimension2()" data-target="#lookupModalDimension" data-toggle="modal" href="#"
+                      [disabled]="appgroupForm.value.p_dim_count  < 2">
+                      <i class="fa fa-search-plus"></i></button><a>{{model.dimension2_name}}</a>
+                    <input type="hidden" [disabled]="appgroupForm.value.p_dim_count  < 2" name="p_dim_2"
+                      [ngModel]="model.dim_2" required #dim_2="ngModel">
+                  </div>
+                </div>
+                <small
+                  *ngIf="dim_2.errors?.required && dim_2.touched || (dim_2.errors?.required && appgroupForm.submitted)"
+                  class="text-danger">
+                  Dimension 2 is required
+                </small>
+              </div>
+              <!--#endregion Dimension 2-->
+
+              <!--#region operator 2-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Operator 2</label>
+                  <select class='form-control col-md-6' name="p_operator_2" [ngModel]="model.operator_2"
+                    [disabled]="appgroupForm.value.p_dim_count  < 2" (change)="operator2($event)">
+                    <option value='EQUAL'>EQUAL</option>
+                    <option value='MORE THAN'>MORE THAN</option>
+                    <option value='LESS THAN'>LESS THAN</option>
+                    <option value='BETWEEN'>BETWEEN</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion operator 2-->
+
+              <!--#region lookup value from 2-->
+              <div class="col-md-2">
+                <label>Value From *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="appgroupForm.value.p_dim_count  < 2"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimensionValue(2, 'from')" data-toggle="modal"
+                      data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_from_2" maxlength="50"
+                      name="p_dim_value_from_2" [disabled]="appgroupForm.value.p_dim_count  < 2" required
+                      #dim_value_from_2="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_from_2.errors?.required && dim_value_from_2.touched || (dim_value_from_2.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Value From is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value from 2-->
+
+              <!--#region lookup value to 2-->
+              <div class="col-md-2">
+                <label>Value To *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="appgroupForm.value.p_dim_count  < 2 || model.operator_2 !== 'BETWEEN'"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimensionValue(2, 'to')" data-toggle="modal"
+                      data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_to_2" maxlength="50"
+                      name="p_dim_value_to_2"
+                      [disabled]="appgroupForm.value.p_dim_count  < 2 || model.operator_2 !== 'BETWEEN'" required
+                      #dim_value_to_2="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_to_2.errors?.required && dim_value_to_2.touched || (dim_value_to_2.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Value To is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value to 2-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Dimension 3-->
+              <div class="col-md-4">
+                <label>Dimension 3 *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimension3()" data-target="#lookupModalDimension" data-toggle="modal" href="#"
+                      [disabled]="appgroupForm.value.p_dim_count  < 3">
+                      <i class="fa fa-search-plus"></i></button><a>{{model.dimension3_name}}</a>
+                    <input type="hidden" [disabled]="appgroupForm.value.p_dim_count  < 3" name="p_dim_3"
+                      [ngModel]="model.dim_3" required #dim_3="ngModel">
+                  </div>
+                </div>
+                <small
+                  *ngIf="dim_3.errors?.required && dim_3.touched || (dim_3.errors?.required && appgroupForm.submitted)"
+                  class="text-danger">
+                  Dimension 3 is required
+                </small>
+              </div>
+              <!--#endregion Dimension 3-->
+
+              <!--#region operator 3-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Operator 3</label>
+                  <select class='form-control col-md-6' name="p_operator_3" [ngModel]="model.operator_3"
+                    [disabled]="appgroupForm.value.p_dim_count  < 3" (change)="operator3($event)">
+                    <option value='EQUAL'>EQUAL</option>
+                    <option value='MORE THAN'>MORE THAN</option>
+                    <option value='LESS THAN'>LESS THAN</option>
+                    <option value='BETWEEN'>BETWEEN</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion operator 3-->
+
+              <!--#region lookup value from 3-->
+              <div class="col-md-2">
+                <label>Value From *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="appgroupForm.value.p_dim_count  < 3"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimensionValue(3, 'from')" data-toggle="modal"
+                      data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_from_3" maxlength="50"
+                      name="p_dim_value_from_3" [disabled]="appgroupForm.value.p_dim_count  < 3" required
+                      #dim_value_from_3="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_from_3.errors?.required && dim_value_from_3.touched || (dim_value_from_3.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Value From is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value from 3-->
+
+              <!--#region lookup value to 3-->
+              <div class="col-md-2">
+                <label>Value To *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="appgroupForm.value.p_dim_count  < 3 || model.operator_3 !== 'BETWEEN'"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimensionValue(3, 'to')" data-toggle="modal"
+                      data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_to_3" maxlength="50"
+                      name="p_dim_value_to_3"
+                      [disabled]="appgroupForm.value.p_dim_count  < 3 || model.operator_3 !== 'BETWEEN'" required
+                      #dim_value_to_3="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_to_3.errors?.required && dim_value_to_3.touched || (dim_value_to_3.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Value To is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value to 3-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class=" row">
+              <!--#region Dimension 4-->
+              <div class="col-md-4">
+                <label>Dimension 4 *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimension4()" data-target="#lookupModalDimension" data-toggle="modal" href="#"
+                      [disabled]="appgroupForm.value.p_dim_count  < 4">
+                      <i class="fa fa-search-plus"></i></button><a>{{model.dimension4_name}}</a>
+                    <input type="hidden" [disabled]="appgroupForm.value.p_dim_count  < 4" name="p_dim_4"
+                      [ngModel]="model.dim_4" required #dim_4="ngModel">
+                  </div>
+                </div>
+                <small
+                  *ngIf="dim_4.errors?.required && dim_4.touched || (dim_4.errors?.required && appgroupForm.submitted)"
+                  class="text-danger">
+                  Dimension 4 is required
+                </small>
+              </div>
+              <!--#endregion Dimension 4-->
+
+              <!--#region operator 4-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Operator 4</label>
+                  <select class='form-control col-md-6' name="p_operator_4" [ngModel]="model.operator_4"
+                    [disabled]="appgroupForm.value.p_dim_count  < 4" (change)="operator4($event)">
+                    <option value='EQUAL'>EQUAL</option>
+                    <option value='MORE THAN'>MORE THAN</option>
+                    <option value='LESS THAN'>LESS THAN</option>
+                    <option value='BETWEEN'>BETWEEN</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion operator 4-->
+
+              <!--#region lookup value from 4-->
+              <div class="col-md-2">
+                <label>Value From *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="appgroupForm.value.p_dim_count  < 4"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimensionValue(4, 'from')" data-toggle="modal"
+                      data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_from_4" maxlength="50"
+                      name="p_dim_value_from_4" [disabled]="appgroupForm.value.p_dim_count  < 4" required
+                      #dim_value_from_4="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_from_4.errors?.required && dim_value_from_4.touched || (dim_value_from_4.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Value From is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value from 4-->
+
+              <!--#region lookup value to 4-->
+              <div class="col-md-2">
+                <label>Value To *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="appgroupForm.value.p_dim_count  < 4 || model.operator_4 !== 'BETWEEN'"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimensionValue(4, 'to')" data-toggle="modal"
+                      data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_to_4" maxlength="50"
+                      name="p_dim_value_to_4"
+                      [disabled]="appgroupForm.value.p_dim_count  < 4 || model.operator_4 !== 'BETWEEN'" required
+                      #dim_value_to_4="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_to_4.errors?.required && dim_value_to_4.touched || (dim_value_to_4.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Value To is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value to 4-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Dimension 5-->
+              <div class="col-md-4">
+                <label>Dimension 5 *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimension5()" data-target="#lookupModalDimension" data-toggle="modal" href="#"
+                      [disabled]="appgroupForm.value.p_dim_count  < 5">
+                      <i class="fa fa-search-plus"></i></button><a>{{model.dimension5_name}}</a>
+                    <input type="hidden" [disabled]="appgroupForm.value.p_dim_count  < 5" name="p_dim_5"
+                      [ngModel]="model.dim_5" required #dim_5="ngModel">
+                  </div>
+                </div>
+                <small
+                  *ngIf="dim_5.errors?.required && dim_5.touched || (dim_5.errors?.required && appgroupForm.submitted)"
+                  class="text-danger">
+                  Dimension 5 is required
+                </small>
+              </div>
+              <!--#endregion Dimension 5-->
+
+              <!--#region operator 5-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Operator 5</label>
+                  <select class='form-control col-md-6' name="p_operator_5" [ngModel]="model.operator_5"
+                    [disabled]="appgroupForm.value.p_dim_count  < 5" (change)="operator5($event)">
+                    <option value='EQUAL'>EQUAL</option>
+                    <option value='MORE THAN'>MORE THAN</option>
+                    <option value='LESS THAN'>LESS THAN</option>
+                    <option value='BETWEEN'>BETWEEN</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion operator 5-->
+
+              <!--#region lookup value from 5-->
+              <div class="col-md-2">
+                <label>Value From *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="appgroupForm.value.p_dim_count  < 5"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimensionValue(5, 'from')" data-toggle="modal"
+                      data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_from_5" maxlength="50"
+                      name="p_dim_value_from_5" [disabled]="appgroupForm.value.p_dim_count  < 5" required
+                      #dim_value_from_5="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_from_5.errors?.required && dim_value_from_5.touched || (dim_value_from_5.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Value From is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value from 5-->
+
+              <!--#region lookup value to 5-->
+              <div class="col-md-2">
+                <label>Value To *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="appgroupForm.value.p_dim_count  < 5 || model.operator_5 !== 'BETWEEN'"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimensionValue(5, 'to')" data-toggle="modal"
+                      data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_to_5" maxlength="50"
+                      name="p_dim_value_to_5"
+                      [disabled]="appgroupForm.value.p_dim_count  < 5 || model.operator_5 !== 'BETWEEN'" required
+                      #dim_value_to_5="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_to_5.errors?.required && dim_value_to_5.touched || (dim_value_to_5.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Value To is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value to 5-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Dimension 6-->
+              <div class="col-md-4">
+                <label>Dimension 6 *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimension6()" data-target="#lookupModalDimension" data-toggle="modal" href="#"
+                      [disabled]="appgroupForm.value.p_dim_count  < 6">
+                      <i class="fa fa-search-plus"></i></button><a>{{model.dimension6_name}}</a>
+                    <input type="hidden" [disabled]="appgroupForm.value.p_dim_count  < 6" name="p_dim_6"
+                      [ngModel]="model.dim_6" required #dim_6="ngModel">
+                  </div>
+                </div>
+                <small
+                  *ngIf="dim_6.errors?.required && dim_6.touched || (dim_6.errors?.required && appgroupForm.submitted)"
+                  class="text-danger">
+                  Dimension 6 is required
+                </small>
+              </div>
+              <!--#endregion Dimension 6-->
+
+              <!--#region operator 6-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Operator 6</label>
+                  <select class='form-control col-md-6' name="p_operator_6" [ngModel]="model.operator_6"
+                    [disabled]="appgroupForm.value.p_dim_count  < 6" (change)="operator6($event)">
+                    <option value='EQUAL'>EQUAL</option>
+                    <option value='MORE THAN'>MORE THAN</option>
+                    <option value='LESS THAN'>LESS THAN</option>
+                    <option value='BETWEEN'>BETWEEN</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion operator 6-->
+
+              <!--#region lookup value from 6-->
+              <div class="col-md-2">
+                <label>Value From *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="appgroupForm.value.p_dim_count  < 6"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimensionValue(6, 'from')" data-toggle="modal"
+                      data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_from_6" maxlength="50"
+                      name="p_dim_value_from_6" [disabled]="appgroupForm.value.p_dim_count  < 6" required
+                      #dim_value_from_6="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_from_6.errors?.required && dim_value_from_6.touched || (dim_value_from_6.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Value From is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value from 6-->
+
+              <!--#region lookup value to 6-->
+              <div class="col-md-2">
+                <label>Value To *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="appgroupForm.value.p_dim_count  < 6 || model.operator_6 !== 'BETWEEN'"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimensionValue(6, 'to')" data-toggle="modal"
+                      data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_to_6" maxlength="50"
+                      name="p_dim_value_to_6"
+                      [disabled]="appgroupForm.value.p_dim_count  < 6 || model.operator_6 !== 'BETWEEN'" required
+                      #dim_value_to_6="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_to_6.errors?.required && dim_value_to_6.touched || (dim_value_to_6.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Value To is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value to 6-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Dimension 7-->
+              <div class="col-md-4">
+                <label>Dimension 7 *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimension7()" data-target="#lookupModalDimension" data-toggle="modal" href="#"
+                      [disabled]="appgroupForm.value.p_dim_count  < 7">
+                      <i class="fa fa-search-plus"></i></button><a>{{model.dimension7_name}}</a>
+                    <input type="hidden" [disabled]="appgroupForm.value.p_dim_count  < 7" name="p_dim_7"
+                      [ngModel]="model.dim_7" required #dim_7="ngModel">
+                  </div>
+                </div>
+                <small
+                  *ngIf="dim_7.errors?.required && dim_7.touched || (dim_7.errors?.required && appgroupForm.submitted)"
+                  class="text-danger">
+                  Dimension 7 is required
+                </small>
+              </div>
+              <!--#endregion Dimension 7-->
+
+              <!--#region operator 7-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Operator 7</label>
+                  <select class='form-control col-md-6' name="p_operator_7" [ngModel]="model.operator_7"
+                    [disabled]="appgroupForm.value.p_dim_count  < 7" (change)="operator7($event)">
+                    <option value='EQUAL'>EQUAL</option>
+                    <option value='MORE THAN'>MORE THAN</option>
+                    <option value='LESS THAN'>LESS THAN</option>
+                    <option value='BETWEEN'>BETWEEN</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion operator 7-->
+
+              <!--#region lookup value from 7-->
+              <div class="col-md-2">
+                <label>Value From *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="appgroupForm.value.p_dim_count  < 7"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimensionValue(7, 'from')" data-toggle="modal"
+                      data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_from_7" maxlength="50"
+                      name="p_dim_value_from_7" [disabled]="appgroupForm.value.p_dim_count  < 7" required
+                      #dim_value_from_7="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_from_7.errors?.required && dim_value_from_7.touched || (dim_value_from_7.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Value From is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value from 7-->
+
+              <!--#region lookup value to 7-->
+              <div class="col-md-2">
+                <label>Value To *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="appgroupForm.value.p_dim_count  < 7 || model.operator_7 !== 'BETWEEN'"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimensionValue(7, 'to')" data-toggle="modal"
+                      data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_to_7" maxlength="50"
+                      name="p_dim_value_to_7"
+                      [disabled]="appgroupForm.value.p_dim_count  < 7 || model.operator_7 !== 'BETWEEN'" required
+                      #dim_value_to_7="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_to_7.errors?.required && dim_value_to_7.touched || (dim_value_to_7.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Value To is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value to 7-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Dimension 8-->
+              <div class="col-md-4">
+                <label>Dimension 8 *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimension8()" data-target="#lookupModalDimension" data-toggle="modal" href="#"
+                      [disabled]="appgroupForm.value.p_dim_count  < 8">
+                      <i class="fa fa-search-plus"></i></button><a>{{model.dimension8_name}}</a>
+                    <input type="hidden" [disabled]="appgroupForm.value.p_dim_count  < 8" name="p_dim_8"
+                      [ngModel]="model.dim_8" required #dim_8="ngModel">
+                  </div>
+                </div>
+                <small
+                  *ngIf="dim_8.errors?.required && dim_8.touched || (dim_8.errors?.required && appgroupForm.submitted)"
+                  class="text-danger">
+                  Dimension 8 is required
+                </small>
+              </div>
+              <!--#endregion Dimension 8-->
+
+              <!--#region operator 8-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Operator 8</label>
+                  <select class='form-control col-md-6' name="p_operator_8" [ngModel]="model.operator_8"
+                    [disabled]="appgroupForm.value.p_dim_count  < 8" (change)="operator8($event)">
+                    <option value='EQUAL'>EQUAL</option>
+                    <option value='MORE THAN'>MORE THAN</option>
+                    <option value='LESS THAN'>LESS THAN</option>
+                    <option value='BETWEEN'>BETWEEN</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion operator 8-->
+
+              <!--#region lookup value from 8-->
+              <div class="col-md-2">
+                <label>Value From *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="appgroupForm.value.p_dim_count  < 8"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimensionValue(8, 'from')" data-toggle="modal"
+                      data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_from_8" maxlength="50"
+                      name="p_dim_value_from_8" [disabled]="appgroupForm.value.p_dim_count  < 8" required
+                      #dim_value_from_8="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_from_8.errors?.required && dim_value_from_8.touched || (dim_value_from_8.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Value From is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value from 8-->
+
+              <!--#region lookup value to 8-->
+              <div class="col-md-2">
+                <label>Value To *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="appgroupForm.value.p_dim_count  < 8 || model.operator_8 !== 'BETWEEN'"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimensionValue(8, 'to')" data-toggle="modal"
+                      data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_to_8" maxlength="50"
+                      name="p_dim_value_to_8"
+                      [disabled]="appgroupForm.value.p_dim_count  < 8 || model.operator_8 !== 'BETWEEN'" required
+                      #dim_value_to_8="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_to_8.errors?.required && dim_value_to_8.touched || (dim_value_to_8.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Value To is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value to 8-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Dimension 9-->
+              <div class="col-md-4">
+                <label>Dimension 9 *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimension9()" data-target="#lookupModalDimension" data-toggle="modal" href="#"
+                      [disabled]="appgroupForm.value.p_dim_count  < 9">
+                      <i class="fa fa-search-plus"></i></button><a>{{model.dimension9_name}}</a>
+                    <input type="hidden" [disabled]="appgroupForm.value.p_dim_count  < 9" name="p_dim_9"
+                      [ngModel]="model.dim_9" required #dim_9="ngModel">
+                  </div>
+                </div>
+                <small
+                  *ngIf="dim_9.errors?.required && dim_9.touched || (dim_9.errors?.required && appgroupForm.submitted)"
+                  class="text-danger">
+                  Dimension 9 is required
+                </small>
+              </div>
+              <!--#endregion Dimension 9-->
+
+              <!--#region operator 9-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Operator 9</label>
+                  <select class='form-control col-md-6' name="p_operator_9" [ngModel]="model.operator_9"
+                    [disabled]="appgroupForm.value.p_dim_count  < 9" (change)="operator9($event)">
+                    <option value='EQUAL'>EQUAL</option>
+                    <option value='MORE THAN'>MORE THAN</option>
+                    <option value='LESS THAN'>LESS THAN</option>
+                    <option value='BETWEEN'>BETWEEN</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion operator 9-->
+
+              <!--#region lookup value from 9-->
+              <div class="col-md-2">
+                <label>Value From *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="appgroupForm.value.p_dim_count  < 9"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimensionValue(9, 'from')" data-toggle="modal"
+                      data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_from_9" maxlength="50"
+                      name="p_dim_value_from_9" [disabled]="appgroupForm.value.p_dim_count  < 9" required
+                      #dim_value_from_9="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_from_9.errors?.required && dim_value_from_9.touched || (dim_value_from_9.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Value From is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value from 9-->
+
+              <!--#region lookup value to 9-->
+              <div class="col-md-2">
+                <label>Value To *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="appgroupForm.value.p_dim_count  < 9 || model.operator_9 !== 'BETWEEN'"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimensionValue(9, 'to')" data-toggle="modal"
+                      data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_to_9" maxlength="50"
+                      name="p_dim_value_to_9"
+                      [disabled]="appgroupForm.value.p_dim_count  < 9 || model.operator_9 !== 'BETWEEN'" required
+                      #dim_value_to_9="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_to_9.errors?.required && dim_value_to_9.touched || (dim_value_to_9.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Value To is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value to 9-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Dimension 10-->
+              <div class="col-md-4">
+                <label>Dimension 10 *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimension10()" data-target="#lookupModalDimension" data-toggle="modal" href="#"
+                      [disabled]="appgroupForm.value.p_dim_count  < 10">
+                      <i class="fa fa-search-plus"></i></button><a>{{model.dimension10_name}}</a>
+                    <input type="hidden" [disabled]="appgroupForm.value.p_dim_count  < 10" name="p_dim_10"
+                      [ngModel]="model.dim_10" required #dim_10="ngModel">
+                  </div>
+                </div>
+                <small
+                  *ngIf="dim_10.errors?.required && dim_10.touched || (dim_10.errors?.required && appgroupForm.submitted)"
+                  class="text-danger">
+                  Dimension 10 is required
+                </small>
+              </div>
+              <!--#endregion Dimension 10-->
+
+              <!--#region operator 10-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Operator 10</label>
+                  <select class='form-control col-md-6' name="p_operator_10" [ngModel]="model.operator_10"
+                    [disabled]="appgroupForm.value.p_dim_count  < 10" (change)="operator10($event)">
+                    <option value='EQUAL'>EQUAL</option>
+                    <option value='MORE THAN'>MORE THAN</option>
+                    <option value='LESS THAN'>LESS THAN</option>
+                    <option value='BETWEEN'>BETWEEN</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion operator 10-->
+
+              <!--#region lookup value from 10-->
+              <div class="col-md-2">
+                <label>Value From *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button [disabled]="appgroupForm.value.p_dim_count  < 10"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupDimensionValue(10, 'from')" data-toggle="modal"
+                      data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    <input type="text" class="form-control" maxlength="50" [ngModel]="model.dim_value_from_10"
+                      name="p_dim_value_from_10" [disabled]="appgroupForm.value.p_dim_count  < 10" required
+                      #dim_value_from_10="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_from_10.errors?.required && dim_value_from_10.touched || (dim_value_from_10.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Value From is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value from 10-->
+
+              <!--#region lookup value to 10-->
+              <div class="col-md-2">
+                <label>Value To *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <span>
+                      <button [disabled]="appgroupForm.value.p_dim_count  < 10 || model.operator_10 !== 'BETWEEN'"
+                        class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                        (click)="btnLookupDimensionValue(10, 'to')" data-toggle="modal"
+                        data-target="#lookupModalDimensionValue" href="#"><i class="fa fa-search-plus"></i></button>
+                    </span>
+                    <input type="text" class="form-control" [ngModel]="model.dim_value_to_10" maxlength="50"
+                      name="p_dim_value_to_10"
+                      [disabled]="appgroupForm.value.p_dim_count  < 10 || model.operator_10 !== 'BETWEEN'" required
+                      #dim_value_to_10="ngModel">
+                  </div>
+                  <small
+                    *ngIf="dim_value_to_10.errors?.required && dim_value_to_10.touched || (dim_value_to_10.errors?.required && appgroupForm.submitted)"
+                    class="text-danger">
+                    Value To is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup value to 10-->
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+        </div>
+
+        <div *ngIf="param != null">
+          <!--#region list view-->
+          <span layout="row horizontal-divider">
+            <hr flex />
+          </span>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card-header">
+                <h4 class="card-title">Document Contract Group Detail List</h4>
+              </div>
+              <div class="card-body">
+                <div class="toolbar">
+                  <!--#region button add-->
+                  <button class="btn btn-info btn-round" type="button" (click)="btnLookupDoc()"
+                    data-target="#lookupModalDoc" data-toggle="modal" href="#" data-role="R00016800031681C">
+                    Add</button>
+                  <button class="btn btn-danger btn-round" (click)="btnDeleteAll()" data-role="R00016800001681D">
+                    Delete
+                  </button>
+                  <!--#endregion button add, delete-->
+                </div>
+
+                <!--#region list view-->
+                <table id="datatableAppGroupDetail" datatable [dtOptions]="dtOptions"
+                  class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                  <thead>
+                    <tr>
+                      <th class="disabled-sorting">No</th>
+                      <th class="disabled-sorting checkbox-fix-padding">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" id="checkall" [(ngModel)]="selectedAllTable"
+                              (change)="selectAllTable();" />
+                            <span class="form-check-sign"></span>
+                          </label>
+                        </div>
+                      </th>
+                      <th>Document Contract</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of listappgroup;let i=index ">
+                      <td class="if-no-edit-btn" style="text-align: center;">{{listappgroup.numberIndex+i+1}}</td>
+                      <td class="disabled-sorting checkbox-fix-padding if-no-edit-btn">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                              (change)="checkIfAllTableSelected($event, row.id, row.document_contract_group_code);">
+                            <span class="form-check-sign"></span>
+                          </label>
+                        </div>
+                      </td>
+                      <td class="if-no-edit-btn">{{ row.document_name }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!--#endregion list view-->
+              </div>
+            </div>
+          </div>
+          <!--#endregion list view-->
+        </div>
+        <div class="card-footer ">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region lookup Doc-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalDoc" style="margin-top: -65px">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <!--#region button add-->
+            <button class="btn btn-info btn-round" (click)="btnSelectAllLookup()" role="P001" id="button">
+              add
+            </button>
+            <!--#endregion button add--->
+            <table id="datatableLookupDoc" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th class="disabled-sorting">No</th>
+                  <th class="disabled-sorting checkbox-fix-padding">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="checkallLookup"
+                          [(ngModel)]="selectedAllLookup" (change)="selectAllLookup();" />
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th>Type</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupdoc;let i=index ">
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupdoc.numberIndex+i+1}}</td>
+                  <td class="disabled-sorting checkbox-fix-padding if-no-edit-btn">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="row.selectedLookup"
+                          (change)="checkIfAllLookupSelected($event, row.code);">
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </td>
+                  <td style="width: 20%; text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{ row.document_type }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Doc-->
+
+<!--#region modal lookup dimension value-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalDimensionValue"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupDimensionValue" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupdimensionvalue;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupdimensionvalue.numberIndex+i+1}}</td>
+                  <td style="width: 20%; text-align: center;">{{ row.dimension_value }}</td>
+                  <td style="width: 80%;">{{ row.dimension_description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowDimensionValue(row.dimension_value, row.dimension_description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup dimension value-->
+
+<!--#region lookup dimension -->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalDimension"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableDimension" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Dimension Name</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupdimension;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupdimension.numberIndex+i+1}}</td>
+                  <td style="width: 20%; text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td style="text-align: center;">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowDimension(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup dimension -->

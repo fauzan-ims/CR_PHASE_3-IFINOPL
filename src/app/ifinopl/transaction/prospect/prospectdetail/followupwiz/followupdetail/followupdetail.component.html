@@ -1,0 +1,280 @@
+<div class="main-content margin-wizard-content" style="margin-top: 20px;">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <!--#region scoringForm form-->
+      <form #followupForm="ngForm" (ngSubmit)="onFormSubmit(followupForm.value, followupForm.valid)">
+
+        <!--#region followupForm button submit dan back-->
+        <button [hidden]="isDate" type="submit" ng-disabled="followupForm.$invalid" class="btn btn-info btn-round"
+          data-role="R00002650000000C">Save</button>
+        <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+        <!--#endregion followupForm button submit dan back-->
+
+        <!--#region followup row-->
+        <div class="row">
+          <!--#region id-->
+          <input hidden type="text" [ngModel]="this.params" name="p_id">
+          <!--#endregion id-->
+
+          <!--#region Prospect Code-->
+          <input type="text" [ngModel]="this.param" maxlength="50" name="p_prospect_code" hidden>
+          <!--#endregion Prospect Code-->
+
+          <!--#region followup_date-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="followup_date" class="control-label">Date</label>
+              <input [ngStyle]="getStyles(isReadOnly)" [disabled]="params == null" [readonly]="params != null || isDate"
+                class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                [ngModel]="model.followup_date" name="p_followup_date" [options]="myDatePickerOptions"
+                (click)="followup_date.toggleCalendar()" #p_followup_date="ngModel"
+                #followup_date="angular-mydatepicker" autocomplete="off" readonly>
+              <small
+                *ngIf="(followup_date.errors?.required && followup_date.touched) || (followup_date.errors?.required && followupForm.submitted)"
+                class="text-danger">
+                Date is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion followup_date-->
+
+          <!--#region lookup general subcode-->
+          <div class="col-md-4">
+            <label class="labelgsubcode">Status *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <span>
+                  <button [disabled]="isDate"
+                    class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    (click)="btnLookupGeneralSubcode()" data-target="#lookupModalGeneralSubcode" data-toggle="modal"
+                    href="#">
+                    <i class="fa fa-search-plus"></i></button> {{model.description}}
+                  <input type="hidden" name="p_followup_status" [ngModel]="model.followup_status" required
+                    #followup_status="ngModel">
+                </span>
+                <small [hidden]="followup_status.valid || (followup_status.pristine && !followupForm.submitted)"
+                  class="text-danger">
+                  Status is required
+                </small>
+              </div>
+            </div>
+          </div>
+          <!--#endregion lookup general subcode-->
+
+          <!--#region followup_action-->
+          <div class="col-md-4">
+            <label class="labelgsubcode">Action *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <span>
+                  <button [disabled]="isDate"
+                    class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    (click)="btnLookupAction()" data-target="#lookupModalAction" data-toggle="modal" href="#">
+                    <i class="fa fa-search-plus"></i></button> {{model.followup_action_name}}
+                  <input type="hidden" name="p_followup_action" [ngModel]="model.followup_action" required
+                    #followup_action="ngModel">
+                </span>
+                <small [hidden]="followup_action.valid || (followup_action.pristine && !followupForm.submitted)"
+                  class="text-danger">
+                  Action is required
+                </small>
+              </div>
+            </div>
+          </div>
+          <!--#endregion followup_action-->
+        </div>
+        <!--#endregion followup row-->
+
+        <!--#region followup row-->
+        <div class="row">
+          <!--#region followup_next_action-->
+          <div class="col-md-4">
+            <label class="labelgsubcode">Next Action *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <span>
+                  <button [disabled]="isDate"
+                    class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    (click)="btnLookupNextAction()" data-target="#lookupModalNextAction" data-toggle="modal" href="#">
+                    <i class="fa fa-search-plus"></i></button> {{model.followup_next_action_name}}
+                  <input type="hidden" name="p_followup_next_action" [ngModel]="model.followup_next_action" required
+                    #followup_next_action="ngModel">
+                </span>
+                <small
+                  [hidden]="followup_next_action.valid || (followup_next_action.pristine && !followupForm.submitted)"
+                  class="text-danger">
+                  Next Action is required
+                </small>
+              </div>
+            </div>
+          </div>
+          <!--#endregion followup_next_action-->
+
+          <!--#region next action date-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="followup_next_action_date" class="control-label">Next Date</label>
+              <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                [ngModel]="model.followup_next_action_date" name="p_followup_next_action_date"
+                [options]="myDatePickerOptions" (click)="followup_next_action_date.toggleCalendar()"
+                #p_followup_next_action_date="ngModel" #followup_next_action_date="angular-mydatepicker"
+                autocomplete="off">
+            </div>
+          </div>
+          <!--#endregion next action date-->
+
+          <!--#region followup_result-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="followup_result" class="control-label">Result *</label>
+              <textarea type="text" class="form-control" name="p_followup_result" [ngModel]="model.followup_result"
+                [readonly]="isDate" required #followup_result="ngModel"></textarea>
+              <small
+                *ngIf="(followup_result.errors?.required && followup_result.touched) || (followup_result.errors?.required && followupForm.submitted)"
+                class="text-danger">
+                Result is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion followup_result-->
+        </div>
+        <!--#endregion followup row-->
+      </form>
+      <!--#endregion form-->
+    </div>
+  </div>
+</div>
+
+<!--#region modal lookup general subcode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalGeneralSubcode"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupGeneralSubcode" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupgeneralsubcode;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupgeneralsubcode.numberIndex+i+1}}</td>
+                  <td style="width: 20%; text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowGeneralSubcode(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup general subcode-->
+
+<!--#region modal lookup general subcode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalAction"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupAction" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupaction;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupaction.numberIndex+i+1}}</td>
+                  <td style="width: 20%; text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowAction(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup general subcode-->
+
+<!--#region modal lookup general subcode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalNextAction"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupNextAction" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupnextaction;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupnextaction.numberIndex+i+1}}</td>
+                  <td style="width: 20%; text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowNextAction(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup general subcode-->

@@ -1,0 +1,514 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+        <div class="card-header ">
+          <h4 class="card-title">Change Due Date Info</h4>
+        </div>
+        <div class="card-body" name="header" id="headerId">
+          <!--#region changeduedateDetail form-->
+          <form #changeduedateForm="ngForm" (ngSubmit)="onFormSubmit(changeduedateForm.value, changeduedateForm.valid)">
+
+            <!--#region button submit dan back-->
+            <button type="submit" [hidden]="model.change_status != 'HOLD'" class="btn btn-info btn-round"
+              data-role="R00007180000719C">Save</button>
+            <button type="button" [hidden]="this.param == null || model.change_status != 'HOLD'"
+              class="btn btn-success btn-round" (click)="btnProceed(model.code)"
+              data-role="R00007180000719O">Proceed</button>
+            <button type="button" [hidden]="this.param == null || model.change_status != 'HOLD'"
+              class="btn btn-warning btn-round" (click)="btnCancel(model.code)"
+              data-role="R00007180000719R">Cancel</button>
+            <!-- <button type="button" [hidden]="this.param == null || model.change_status != 'ON PROCESS'"
+              class="btn btn-warning btn-round" (click)="btnRevert(model.code)"
+              data-role="R00007180000719U">Revert</button> -->
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+
+            <button id="restructureTerminationDetail" type="button" class="btn btn-danger btn-round"
+              (click)="this.callGetrow()" hidden></button>
+
+            <button [hidden]="this.param === null || model.change_status === 'CANCEL'" type="button"
+              style='float: right;' class="btn btn-success btn-round custom-button-width" (click)="btnViewApproval()"
+              data-toggle="modal" data-target="#lookupModalApproval" href="#">
+              View Approval
+            </button>
+
+            <button [hidden]="this.param === null || model.change_status !== 'HOLD'" type="button" style='float: right;'
+              class="btn btn-info btn-round custom-button-width"
+              (click)="btnPrintPersetujuan(model.code,model.rpt_code,model.report_name)" data-role="R00023870000002P">
+              Print Lembar Persetujuan
+            </button>
+
+            <button [hidden]="this.param === null || model.change_status !== 'APPROVE'" type="button"
+              style='float: right;' class="btn btn-info btn-round custom-button-width"
+              (click)="btnPrint(model.code,model.rpt_code,model.report_name)" data-role="R00023870000003P">
+              Print Adjustment Duedate
+            </button>
+
+            <!--#endregion button submit dan back-->
+
+            <!--#region changeduedate detail row-->
+            <div class="row">
+              <!--#region code-->
+              <div class="col-md-4">
+                <div [hidden]="model.code != null" class="row" style="margin-bottom: -15px; padding-top: 30px;">
+                  <h1 class="col-md-4" style="font-size: 12px;">Transaction No</h1>
+                  <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                    Generate-</h1>
+                </div>
+                <div [hidden]="model.code == null" class="form-group">
+                  <label>Transaction No</label>
+                  <input type="text" class="form-control" [ngModel]="model.code" maxlength="50" name="p_code" readonly>
+                </div>
+              </div>
+              <!--#endregion code-->
+
+              <!--#region changeduedate Branch Code-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="p_branch_code" class="control-label" class="labelmodule">Branch *</label>
+                  <div class="col-md-12">
+                    <button [disabled]="this.param != null || model.change_status != 'HOLD'"
+                      class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupBranch()" data-toggle="modal" data-target="#lookupModalBranch" href="#"><i
+                        class="fa fa-search-plus"></i></button>
+                    {{model.branch_name}}
+                    <input [readonly]="this.param != null || model.change_status != 'HOLD'" type="hidden"
+                      class="form-control" [ngModel]="model.branch_code" name="p_branch_code" required
+                      #p_branch_code="ngModel">
+                    <input [readonly]="this.param != null || model.change_status != 'HOLD'" type="hidden"
+                      class="form-control" [ngModel]="model.branch_name" name="p_branch_name" required
+                      #p_branch_name="ngModel">
+                  </div>
+                  <small
+                    *ngIf="p_branch_code.errors?.required && p_branch_code.touched || (p_branch_code.errors?.required && changeduedateForm.submitted) "
+                    class="text-danger">
+                    Branch is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion changeduedate Branch Code-->
+
+              <!--#region Order Change Status-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="change_status" class="control-label">Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.change_status" maxlength="10"
+                    name="p_change_status" readonly>
+                </div>
+              </div>
+              <!--#endregion Change Status-->
+            </div>
+            <!--#endregion changeduedate detail row-->
+
+            <!--#region changeduedate detail row-->
+            <div class="row">
+              <!--#region Agreement -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="p_agreement_no" class="control-label">Agreement No *</label>
+                  <div class="col-md-12">
+                    <button [disabled]="this.param != null || model.change_status != 'HOLD'"
+                      class="btn btn-icon btn-outline-default btn-round btn-md col-md-4" type="button"
+                      (click)="btnLookupAgreement()" data-target="#lookupModalAgreement" data-toggle="modal" href="#">
+                      <i class="fa fa-search-plus"></i></button> {{model.agreement_external_no}}
+                    <input [readonly]="this.param != null || model.change_status != 'HOLD'" type="hidden"
+                      name="p_agreement_no" [ngModel]="model.agreement_no" required #p_agreement_no="ngModel" />
+                  </div>
+                  <small
+                    *ngIf="p_agreement_no.errors?.required && p_agreement_no.touched || (p_agreement_no.errors?.required && changeduedateForm.submitted) "
+                    class="text-danger">
+                    Agreement No is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Agrement name-->
+
+              <!--#region Client Name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Client Name</label>
+                  <input type="text" class="form-control" [ngModel]="model.client_name" name="p_client_name" readonly>
+                </div>
+              </div>
+              <!--#endregion Client Name-->
+            </div>
+            <!--#endregion changeduedate detail row-->
+
+            <!--#region changeduedate detail row-->
+            <div class="row">
+              <!--#region billing_type-->
+              <div class="col-md-4">
+                <label class="labelgsubcode">Billing Type *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <!-- <button [disabled]="this.pageType != null || model.count_asset > 0" -->
+                    <button [disabled]="model.count_asset > 0"
+                      class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                      (click)="btnLookupBillingType()" data-target="#lookupModalBillingType" data-toggle="modal"
+                      href="#">
+                      <i class="fa fa-search-plus"></i></button> {{model.billing_type}}
+                    <input required type="hidden" name="p_billing_type" [ngModel]="model.billing_type"
+                      #billing_type="ngModel" />
+                  </div>
+                  <small
+                    *ngIf="(billing_type.errors?.required && billing_type.touched) || (billing_type.errors?.required && changeduedateForm.submitted)"
+                    class="text-danger">
+                    Billing Type is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion billing_type-->
+
+              <!--#region billing_mode-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Billing Mode</label>
+                  <!-- <select class="form-control col-md-6" name="p_billing_mode" [ngModel]="model.billing_mode" (change)="PageStatus($event)"> -->
+                  <select class="form-control col-md-6" name="p_billing_mode" [(ngModel)]="model.billing_mode">
+                    <option value="NORMAL">Normal</option>
+                    <option value="BEFORE DUE">Before Due</option>
+                    <option value="DATE">Date</option>
+                    <option value="END MONTH">End Month</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion rounding billing_mode-->
+
+              <!--#region Date-->
+              <div class="col-md-4" [hidden]="model.billing_mode !== 'BEFORE DUE' && model.billing_mode !== 'DATE'">
+                <div class="form-group">
+                  <label>Date</label>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.date" name="p_date" [options]="myDatePickerOptions"
+                    #change_exp_date="angular-mydatepicker" autocomplete="off" readonly />
+
+                </div>
+              </div>
+              <!--#endregion Date-->
+
+              
+              <!--#region is_prorate-->
+              <div class="col-md-4">
+                <label>Prorate *</label>
+                <div class="form-group col-md-12">
+                  <div class="row">
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="p_is_prorate" value="Yes"
+                          [ngModel]="model.is_prorate">Yes
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="p_is_prorate" value="No"
+                          [ngModel]="model.is_prorate">No
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion is_prorate-->
+            </div>
+            <!--#endregion changeduedate detail row-->
+
+
+            <!--#region changeduedate detail row-->
+            <div class="row">
+              <!--#region Change Date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="p_change_date" class="control-label">Date *</label>
+                  <input [ngStyle]="getStyles(isReadOnly)" class="form-control col-md-6" placeholder="dd/mm/yyyy"
+                    angular-mydatepicker [ngModel]="model.change_date" name="p_change_date"
+                    [options]="myDatePickerOptions" (click)="change_date.toggleCalendar()" required
+                    #p_change_date="ngModel" #change_date="angular-mydatepicker" autocomplete="off"
+                    [readonly]="model.change_status != 'HOLD'" />
+
+                  <input class=" form-control col-md-6" angular-mydatepicker [ngModel]="model.change_date"
+                    name="p_change_date2" [options]="myDatePickerOptions" #change_date2="angular-mydatepicker"
+                    autocomplete="off" hidden />
+                  <small
+                    *ngIf="p_change_date.errors?.required && p_change_date.touched || (p_change_date.errors?.required && changeduedateForm.submitted) "
+                    class="text-danger">
+                    Date is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Change Date-->
+
+              <!--#region Change Exp Date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Expired Date</label>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.change_exp_date" name="p_change_exp_date" [options]="myDatePickerOptions"
+                    #change_exp_date="angular-mydatepicker" autocomplete="off" readonly />
+
+                </div>
+              </div>
+              <!--#endregion Change Exp Date-->
+
+              <!--#region Change Remark-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="change_remarks" class="control-label">Remark *</label>
+                  <textarea [disabled]="model.change_status != 'HOLD'" type="text" class="form-control"
+                    [ngModel]="model.change_remarks" maxlength="4000" name="p_change_remarks" required
+                    #change_remarks="ngModel"></textarea>
+                  <small
+                    *ngIf="change_remarks.errors?.required && change_remarks.touched || (change_remarks.errors?.required && changeduedateForm.submitted) "
+                    class="text-danger">
+                    Remark is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Change remark-->
+            </div>
+            <!--#endregion changeduedate detail row-->
+
+          </form>
+          <!--#endregion changeduedate detail form-->
+        </div>
+
+        <!--#region wizard-->
+        <div class="wizard-custom-margin" [hidden]="param == null">
+          <!--#region wizard container -->
+          <div class="wizard-container">
+            <div class="card-wizard" style="opacity: 1 !important; min-height: 0px;" data-color="primary"
+              id="wizardProfile">
+              <div class="text-center">
+                <div class="wizard-navigation">
+                  <ul>
+                    <li class="nav-item">
+                      <a class="nav-link" (click)="changeduedateassetwiz()" href="#changeduedateassetlist"
+                        data-toggle="tab" role="tab" aria-controls="changeduedateassetlist" aria-selected="true">
+                        Asset
+                      </a>
+                    </li>
+                    <!-- <li class="nav-item">
+                      <a class="nav-link" (click)="changeduedateinformationwiz()" href="#changeduedateinformationlist"
+                        data-toggle="tab" role="tab" aria-controls="changeduedateinformationlist" aria-selected="true">
+                        Information
+                      </a>
+                    </li> -->
+                    <!-- <li class="nav-item">
+                      <a class="nav-link" (click)="changeduedatetransactionwiz()" href="#changeduedatetransactionlist"
+                        data-toggle="tab" role="tab" aria-controls="changeduedatetransactionlist" aria-selected="true">
+                        Transaction
+                      </a>
+                    </li> -->
+                    <!-- <li class="nav-item">
+                      <a class="nav-link" (click)="changeduedateagreementamortizationhistorywiz()"
+                        href="#changeduedateagreementamortizationhistorylist" data-toggle="tab" role="tab"
+                        aria-controls="changeduedateagreementamortizationhistorylist" aria-selected="true">
+                        Amortization
+                      </a>
+                    </li> -->
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion wizard container-->
+        </div>
+        <!--endregion wizard-->
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<!--#region lookup Approval-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalApproval"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+
+            <table id="datatableLookupApproval" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Employee</th>
+                  <th>Position</th>
+                  <th>Level</th>
+                  <th>Result</th>
+                  <th>Remark</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupapproval;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupapproval.numberIndex+i+1}}</td>
+                  <td class="if-no-edit-btn" style="width: 30%;text-align: left;">
+                    {{row.emp_name}} {{row.is_mandatory_level}}</td>
+                  <td style="width: 20%;text-align: left;">{{row.emp_position_name}}</td>
+                  <td style="width: 5%;text-align: center;">{{row.approval_level}}</td>
+                  <td style="width: 15%;text-align: center;">
+                    {{row.result_status}}<br>
+                    {{row.result_date}}
+                  </td>
+                  <td style="width: 30%;">{{row.result_remarks}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Approval-->
+
+<!--#region lookup Branch-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalBranch"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+
+            <table id="datatableLookupBranch" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Name</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupbranch;let i=index">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupbranch.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.name }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowBranch(row.code, row.name)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Branch-->
+
+<!--#region lookup Agreement-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalAgreement"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupAgreement" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Agreement No</th>
+                  <th>Client Name</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupagreement;let i=index">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupagreement.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.agreement_external_no }}</td>
+                  <td style="width: 80%;">{{ row.client_name}}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowAgreement(row.agreement_no, row.agreement_external_no, row.client_name, row.billing_type, row.billing_mode, row.prorate)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Agreement-->
+
+<!--#region lookup BillingType-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalBillingType"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupBillingType" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupbillingtype;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupbillingtype.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowBillingType(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup BillingType-->

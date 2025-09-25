@@ -1,0 +1,527 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header ">
+          <h4 class="card-title">Master Contract Info</h4>
+
+          <h5 [hidden]="model.is_valid !== '1'" style="color: green;float: right;"><b>Validate</b>
+          </h5>
+          <h5 [hidden]="model.is_valid !== '0'" style="color: red;float: right;"><b>Not
+              Validate</b></h5>
+        </div>
+        <div class="card-body ">
+          <!-- #region fprm -->
+          <form #applicationextentionForm="ngForm"
+            (ngSubmit)="onFormSubmit(applicationextentionForm.value, applicationextentionForm.valid)">
+            <!--#region button-->
+            <button [hidden]="this.model.agreement_exists === '1'" type="submit"
+              class="btn btn-info btn-round custom-button-width" data-role="R00022360002241C">
+              <span [hidden]="this.model.main_contract_status !=='EXISTING'">Save</span>
+              <span [hidden]="this.model.main_contract_status !=='NEW'">Generate
+                Contract No</span>
+            </button>
+            <button [hidden]="this.model.agreement_exists === '1' || model.is_valid !== '0'" type="button"
+              class="btn btn-success btn-round" (click)="validate()" data-role="R00022360002242U">Validate</button>
+            <button [hidden]="this.model.agreement_exists === '1' || model.is_valid !== '1'" type="button"
+              class="btn btn-danger btn-round custom-button-width" (click)="validate()" data-role="R00022360002242U">Not
+              Validate</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <button hidden id="MasterContractReload" type="button" (click)="reloadAppExtentio()"></button>
+            <!--#endregion button-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region application_no-->
+              <input type="text" [ngModel]="this.param" name="p_application_no" hidden>
+              <!--#endregion application_no-->
+
+              <!--#region application_external_no-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Application No</label>
+                  <input type="text" class="form-control" [ngModel]="model.application_external_no"
+                    name="p_application_external_no" readonly>
+                </div>
+              </div>
+              <!--#endregion application_external_no-->
+
+              <!--#region application_status-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Application Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.application_status"
+                    name="p_application_status" readonly>
+                </div>
+              </div>
+              <!--#endregion application_status-->
+
+              <!--#region level_status-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Workflow Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.level_status" name="p_level_status" readonly>
+                </div>
+              </div>
+              <!--#endregion level_status-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region branch_name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Branch</label>
+                  <input type="text" class="form-control" [ngModel]="model.branch_name" name="p_branch_name" readonly>
+                </div>
+              </div>
+              <!--#endregion branch_name-->
+
+              <!--#region branch_region_name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Region</label>
+                  <input type="text" class="form-control" [ngModel]="model.branch_region_name"
+                    name="p_branch_region_name" readonly>
+                </div>
+              </div>
+              <!--#endregion branch_region_name-->
+
+              <!--#region marketing_name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Marketing</label>
+                  <input type="text" class="form-control" [ngModel]="model.marketing_name" name="p_marketing_name"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion marketing_name-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region application_date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Application Date</label>
+                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    [ngModel]="model.application_date" name="p_application_date" [options]="myDatePickerOptions"
+                    #p_application_date="ngModel" #application_date="angular-mydatepicker" autocomplete="off"
+                    readonly />
+                </div>
+              </div>
+              <!--#endregion application_date-->
+
+              <!--#region client_name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Client</label>
+                  <input type="text" class="form-control" [ngModel]="model.client_name" name="p_client_name" readonly>
+                  <input type="text" class="form-control" [ngModel]="model.client_no" name="p_client_no" hidden>
+                </div>
+              </div>
+              <!--#endregion client_name-->
+
+              <!--#region facility_desc-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Facility</label>
+                  <input type="text" class="form-control" [ngModel]="model.facility_desc" name="p_facility_desc"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion facility_desc-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region currency_code-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Currency</label>
+                  <input type="text" class="form-control" [ngModel]="model.currency_code" name="p_currency_code"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion currency_code-->
+
+              <!--#region rental_amount-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Rental Amount</label>
+                  <input type="text" class="form-control col-md-6" style="text-align: right;"
+                    [ngModel]="model.rental_amount | number : '1.2-2'" amount="rental_amount" name="p_rental_amount"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion rental_amount-->
+
+              <!--#region application_remarks-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="package_description" class="control-label">Remark</label>
+                  <textarea readonly type="text" class="form-control" [ngModel]="model.application_remarks"
+                    name="p_application_remarks"></textarea>
+                </div>
+              </div>
+              <!--#endregion application_remarks-->
+            </div>
+            <!--#endregion row-->
+
+            <span layout="row horizontal-divider">
+              <hr flex />
+            </span>
+
+            <!-- #region row -->
+            <div class="row">
+              <!--#region radio button main_contract_status-->
+
+              <input type="text" class="form-control" [ngModel]="model.id" name="p_id" hidden>
+
+              <div class="col-md-4">
+                <label>Main Contract Status</label>
+                <div class="form-group" style="margin-left: 15px;">
+                  <fieldset [disabled]="this.model.agreement_exists === '1'">
+                    <div class="row">
+                      <div class="form-check-radio form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input col-md-6" type="radio" name="p_main_contract_status"
+                            value="NEW" [(ngModel)]="model.main_contract_status"
+                            (change)="mainContractStatus($event)">NEW
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                      <div class="form-check-radio form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input col-md-6" type="radio" name="p_main_contract_status"
+                            value="EXISTING" [(ngModel)]="model.main_contract_status"
+                            (change)="mainContractStatus($event)">EXISTING
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+              <!--#endregion radio button main_contract_status-->
+
+              <!--#region main_contract_date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="p_main_contract_date" class="control-label">Main Contract Date *</label>
+                  <fieldset [disabled]="this.model.agreement_exists === '1'">
+                    <input [ngStyle]="getStyles(this.model.main_contract_status === 'EXISTING')"
+                      class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                      [ngModel]="model.main_contract_date" name="p_main_contract_date" [options]="myDatePickerOptions"
+                      (click)="main_contract_date.toggleCalendar()"
+                      [required]="this.model.main_contract_status !== 'EXISTING'" #p_main_contract_date="ngModel"
+                      #main_contract_date="angular-mydatepicker" autocomplete="off"
+                      [readonly]="this.model.main_contract_status === 'EXISTING'" />
+                  </fieldset>
+                  <small
+                    *ngIf="(p_main_contract_date.errors?.required && p_main_contract_date.touched) || (p_main_contract_date.errors?.required && applicationextentionForm.submitted)"
+                    class="text-danger">
+                    Main Contract Date is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion main_contract_date-->
+
+              <!--#region main_contract_no-->
+              <div class="col-md-4" [hidden]="model.main_contract_status !== 'EXISTING'">
+                <label style="cursor: pointer;" title="CLEAR">Main Contract No *</label>
+                <div class="form-group">
+                  <fieldset [disabled]="this.model.agreement_exists === '1'">
+                    <div class="col-md-12">
+                      <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        (click)="btnLookupMainContractNo()" data-target="#lookupModalMainContractNo" data-toggle="modal"
+                        href="#">
+                        <i class="fa fa-search-plus"></i></button> {{model.main_contract_no}}
+                      <input type="hidden" name="p_main_contract_no" [ngModel]="model.main_contract_no"
+                        [required]="model.main_contract_status === 'EXISTING'" #main_contract_no="ngModel">
+                    </div>
+                  </fieldset>
+                  <small
+                    *ngIf="(main_contract_no.errors?.required && main_contract_no.touched) || (main_contract_no.errors?.required && applicationextentionForm.submitted)"
+                    class="text-danger">
+                    Main Contract No is required
+                  </small>
+                </div>
+              </div>
+
+              <div class="col-md-4" [hidden]="model.main_contract_status !== 'NEW'">
+                <div [hidden]="model.main_contract_no != null" class="row"
+                  style="margin-bottom: -15px; padding-top: 30px;">
+                  <h1 class="col-md-4" style="font-size: 12px;">Main Contract No</h1>
+                  <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                    Generate-</h1>
+                </div>
+                <div [hidden]="model.main_contract_no == null" class="form-group">
+                  <label>Main Contract No *</label>
+                  <input type="text" class="form-control" placeholder="Enter Code" [ngModel]="model.main_contract_no"
+                    name="p_main_contract_no" readonly>
+                </div>
+              </div>
+              <!--#endregion main_contract_no-->
+
+              <!--#region file_path -->
+              <div class="col-md-4" [hidden]="this.id == null">
+                <div class="form-group">
+                  <label>Main Contract File</label>
+                  <div class="row" style="margin-left: 30px;">
+                    <fieldset [disabled]="this.model.agreement_exists === '1'">
+                      <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                        <div>
+                          <span class="btn btn-info btn-round btn-file "
+                            [hidden]="this.tampHidden === false || model.main_contract_status === 'EXISTING'">
+                            <input type="file" (change)="onUpload($event, model.id)" id="fileControl" />
+                            <span>Upload</span>
+                            <!-- {{tempFile}} -->
+                          </span>
+                        </div>
+                        <div [hidden]="this.tampHidden !== false">
+                          <span>
+                            <a [hidden]="this.model.agreement_exists === '1'"
+                              class="btn btn-danger btn-round btn-file custom-button-width" type="button"
+                              (click)="deleteImage(model.main_contract_file_name, model.main_contract_file_path)"
+                              [hidden]="model.main_contract_status === 'EXISTING'">
+                              <span><i class="fa fa-trash"></i></span></a>
+                            <a class="btn btn-primary btn-round btn-file custom-button-width" type="button"
+                              (click)="priviewFile(model.main_contract_file_name, model.main_contract_file_path)">
+                              <span><i class="fa fa-eye"></i></span></a>
+                          </span>
+                          <div> {{model.main_contract_file_name}}</div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion file_path-->
+
+              <!-- <div class="col-md-4" [hidden]="this.model.main_contract_status !== 'EXISTING'"> -->
+              <div class="col-md-4">
+                <label>Contract Standart</label>
+                <div class="form-group" style="margin-left: 15px;">
+                  <fieldset
+                    [disabled]="this.model.agreement_exists === '1' || this.model.main_contract_status === 'EXISTING'">
+                    <div class="row">
+                      <div class="form-check-radio form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input col-md-6" type="radio" name="p_is_standart" value="1"
+                            [(ngModel)]="model.is_standart" (change)="contractStandartStatus($event)">Standart
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                      <div class="form-check-radio form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input col-md-6" type="radio" name="p_is_standart" value="0"
+                            [(ngModel)]="model.is_standart" (change)="contractStandartStatus($event)">Non
+                          Standart
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+
+              <!--#region file_path -->
+              <div class="col-md-4"
+                [hidden]="this.contractNo === '' || this.contractNo == undefined || this.model.is_standart === '1' || this.model.main_contract_status==='EXISTING' || this.id == null">
+                <div class="form-group">
+                  <label>Memo File</label>
+                  <div class="row" style="margin-left: 30px;">
+                    <fieldset [disabled]="this.model.agreement_exists === '1'">
+                      <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                        <div>
+                          <span class="btn btn-info btn-round btn-file custom-button-width"
+                            [hidden]="this.tampHiddenMemo === false">
+                            <input type="file" (change)="onUploadMemo($event, model.id)" id="fileControlMemo" />
+                            <span>Upload</span>
+                            <!-- {{tempFileMemo}} -->
+                          </span>
+                        </div>
+                        <div [hidden]="this.tampHiddenMemo !== false">
+                          <span>
+                            <a [hidden]="this.model.agreement_exists === '1'"
+                              class="btn btn-danger btn-round btn-file custom-button-width" type="button"
+                              (click)="deleteFileMemo(model.memo_file_name, model.memo_file_path)">
+                              <span><i class="fa fa-trash"></i> </span></a>
+                            <a class="btn btn-primary btn-round btn-file custom-button-width" type="button"
+                              (click)="priviewFileMemo(model.memo_file_name, model.memo_file_path)">
+                              <span><i class="fa fa-eye"></i></span> </a>
+                          </span>
+                          <div> {{model.memo_file_name}}</div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion file_path-->
+
+              <!--#region remarks-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="remarks" class="control-label">Remarks *</label>
+                  <fieldset [disabled]="this.model.agreement_exists === '1'">
+                    <textarea [readonly]="this.model.main_contract_status === 'EXISTING'" type="text"
+                      class="form-control" [ngModel]="model.remarks" maxlength="4000" name="p_remarks" required
+                      #remarks="ngModel"></textarea>
+                  </fieldset>
+                  <small
+                    *ngIf="(remarks.errors?.required && remarks.touched) || (remarks.errors?.required && applicationextentionForm.submitted)"
+                    class="text-danger">
+                    Remarks is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion remarks-->
+            </div>
+            <!-- #endregion row -->
+          </form>
+          <!-- #endregion fprm -->
+        </div>
+
+        <!--#region wizard-->
+        <div class="wizard-custom-margin" [hidden]="this.contractNo === '' || this.contractNo == undefined">
+          <!--#region wizard container -->
+          <div class="wizard-container">
+            <div class="card-wizard" style="opacity: 1 !important; min-height: 0px; margin-bottom: -40px;"
+              data-color="primary" id="wizardProfile">
+              <div class="text-center">
+                <div class="wizard-navigation">
+                  <ul>
+                    <li id="tabMasterContractTC" class="nav-item">
+                      <a class="nav-link" (click)="tcwiz()" href="#tclist" data-toggle="tab" role="tab"
+                        aria-controls="doc" aria-selected="true">
+                        Term & Condition
+                      </a>
+                    </li>
+                    <li id="tabMasterContractCharges" class="nav-item">
+                      <a class="nav-link" (click)="chargeswiz()" href="#chargeslist" data-toggle="tab" role="tab"
+                        aria-controls="charges" aria-selected="true">
+                        Charges
+                      </a>
+                    </li>
+                    <li id="tabMasterContractDocument" class="nav-item">
+                      <a class="nav-link" (click)="documentwiz()" href="#documentlist" data-toggle="tab" role="tab"
+                        aria-controls="doc" aria-selected="true">
+                        Document
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion wizard container-->
+        </div>
+        <!--endregion wizard-->
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region modal lookup mainContractNo-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalMainContractNo"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupMainContractNo" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Main Contract No</th>
+                  <th>Remarks</th>
+                  <th>Standart</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupmaincontractno;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupmaincontractno.numberIndex+i+1}}</td>
+                  <td style="width: 30%;">
+                    <a (click)="btnLookupMainContractTc(row.main_contract_no)" data-target="#lookupModalMainContractTc"
+                      data-toggle="modal" href="#">{{ row.main_contract_no }}</a>
+                  </td>
+                  <td style="width: 60%;">{{ row.remarks }}</td>
+                  <td style="width: 10%;">{{ row.is_standart }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectMainContract(row.main_contract_no, row.remarks)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup mainContractNo-->
+
+<!--#region modal lookup MainContractTc-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalMainContractTc"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Term & Condition</h4>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupMainContractTc" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupMainContractTc;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupMainContractTc.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup MainContractTc-->

@@ -1,0 +1,179 @@
+<router-outlet></router-outlet>
+
+
+<div id="hideMainPanel" class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <!--#region watermark-->
+                <div class="watermark" hidden>
+                    <h6>{{this.companyName}}</h6>
+                    <h6>{{this.userName}}</h6>
+                    <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+                </div>
+                <!--#endregion watermark-->
+
+                <div class="card-header">
+                    <h4 class="card-title">Agreement List</h4>
+                </div>
+                <div class="card-body">
+                    <!--#region row-->
+                    <div class="row">
+                        <!--#region Agreement -->
+                        <div class="col-md-4">
+                            <label for="client_no" class="control-label" (click)="btnClearAgreement()"
+                                style="cursor: pointer;" title="Clear">Agreement No
+                            </label>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                                        (click)="btnLookupAgreement()" data-target="#lookupModalAgreement"
+                                        data-toggle="modal" href="#">
+                                        <i class="fa fa-search-plus"></i></button> {{this.client_name}}
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion Agrement name-->
+
+                        <!--#region Asset -->
+                        <div class="col-md-4">
+                            <label for="client_no" class="control-label" (click)="btnClearAsset()"
+                                style="cursor: pointer;" title="Clear">Asset No
+                            </label>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                                        (click)="btnLookupAsset()" data-target="#lookupModalAsset" data-toggle="modal"
+                                        href="#">
+                                        <i class="fa fa-search-plus"></i></button> {{this.asset_name}}
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion Asset-->
+                    </div>
+                    <!--#endregion row-->
+
+                    <!--#region list view-->
+                    <table id="datatablechangebilling" datatable [dtOptions]="dtOptions"
+                        class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="disabled-sorting">No</th>
+                                <th style="display: none;"></th>
+                                <th>Agreement No</th>
+                                <th>Asset No</th>
+                                <th>Due Date</th>
+                                <th>Rental Amount</th>
+                                <th style="text-align: center;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let row of listagreement;let i=index">
+                                <td style="text-align: center;">{{listagreement.numberIndex+i+1}}</td>
+                                <td style="display: none;"></td>
+                                <td style="text-align: left; width: 30%;">{{row.agreement_external_no}} <br> {{row.client_name}}
+                                </td>
+                                <td style="text-align: left; width: 30%;">{{row.asset_no}} <br> {{row.asset_name}}</td>
+                                <td style="text-align: center; width: 20%;">{{row.due_date}}</td>
+                                <td style="text-align: right; width: 20%;">{{row.lease_rounded_amount | number :
+                                    '1.2-2'}}</td>
+                                <td class="text-center">
+                                    <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit"
+                                        (click)="btnEdit(row.agreement_no, row.asset_no)"><i class="fa fa-edit"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!--#endregion list view-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--#region lookup Agreement-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalAgreement"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupAgreement" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Agreement No</th>
+                                    <th>Client Name</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupagreement;let i=index ">
+                                    <td style="display: none;"></td>
+                                    <td class="if-no-edit-btn" style="text-align: center;">
+                                        {{lookupagreement.numberIndex+i+1}}</td>
+                                    <td style="width: 20%;text-align: center;">{{row.agreement_external_no}}</td>
+                                    <td style="width: 80%;text-align: left;">{{row.client_name}}</td>
+                                    <td class="text-right">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowAgreement(row.agreement_no, row.client_name, row.agreement_external_no)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion lookup Agreement-->
+
+<!--#region lookup Asset-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalAsset" style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body" style="overflow:hidden;">
+          <div class="col-md-12">
+            <div class="card-body col-md-12">
+              <table id="datatableLookupAsset" class="table table-striped table-bordered hover" cellspacing="0"
+                style="min-width: 100%;">
+                <thead>
+                  <tr>
+                    <th style="display: none;"></th>
+                    <th class="disabled-sorting">No</th>
+                    <th>Asset No</th>
+                    <th>Asset Name</th>
+                    <th style="text-align: center;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of lookupasset;let i=index ">
+                    <td style="display: none;"></td>
+                    <td class="if-no-edit-btn" style="text-align: center;">
+                      {{lookupasset.numberIndex+i+1}}</td>
+                    <td style="width: 20%;text-align: center;">{{row.asset_no}}</td>
+                    <td style="width: 80%;text-align: left;">{{row.asset_name}}</td>
+                    <td class="text-right">
+                      <button class="btn btn-outline-default btn-round"
+                        (click)="btnSelectRowAsset(row.asset_no, row.asset_name)">Select</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--#endregion lookup Asset-->

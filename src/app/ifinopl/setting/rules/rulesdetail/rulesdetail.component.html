@@ -1,0 +1,135 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header ">
+          <h4 class="card-title">Rule Info</h4>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #rulesForm="ngForm" (ngSubmit)="onFormSubmit(rulesForm.value, rulesForm.valid)">
+
+            <!--#region button save dan back-->
+            <button type="submit" class="btn btn-info btn-round" data-role="R00016920021693C">Save</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button save dan back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Code-->
+              <input type="text" class="form-control" [ngModel]="model.code" name="p_code" hidden>
+              <!--#endregion code-->
+
+              <!--#region description-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="description" class="control-label">Description *</label>
+                  <textarea type="text" class="form-control" [ngModel]="model.description" name="p_description" required
+                    #description="ngModel" maxlength="4000"></textarea>
+                  <small
+                    *ngIf="description.errors?.required && description.touched || (description.errors?.required && rulesForm.submitted) "
+                    class="text-danger">
+                    Description is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion description-->
+
+              <!--#region type-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Type</label>
+                  <select class="form-control col-md-6" [ngModel]="model.type" name="p_type">
+                    <option value='APPLICATION'>APPLICATION</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion type-->
+
+              <!--#region Function Name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="function_name" class="control-label">Function Name *</label>
+                  <input type="text" class="form-control" [ngModel]="model.function_name" name="p_function_name"
+                    required #function_name="ngModel" maxlength="250">
+                  <small
+                    *ngIf="function_name.errors?.required && function_name.touched || (function_name.errors?.required && rulesForm.submitted) "
+                    class="text-danger">
+                    Function Name is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Function Name-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region is_active-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" [ngModel]="model.is_active" name="p_is_active">
+                      Active
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion is_active-->
+
+              <!--#region is_fn_override-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" [ngModel]="model.is_fn_override"
+                        name="p_is_fn_override" (change)="fnOverride($event)"> Override
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion is_fn_override-->
+
+              <!--#region fn_override_name-->
+              <div class="col-md-4" [hidden]="model.is_fn_override != true">
+                <div class="form-group">
+                  <label for="fn_override_name" class="control-label">Override Function Name *</label>
+                  <input [disabled]="model.is_fn_override != true" type="text" class="form-control"
+                    [ngModel]="model.fn_override_name" maxlength="250" name="p_fn_override_name" required
+                    #fn_override_name="ngModel">
+                  <small
+                    *ngIf="fn_override_name.errors?.required && fn_override_name.touched || (fn_override_name.errors?.required && rulesForm.submitted) "
+                    class="text-danger">
+                    Override Function Name is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion fn_override_name-->
+
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+        </div>
+        <div class="card-footer ">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

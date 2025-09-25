@@ -1,0 +1,160 @@
+<div class="main-content mt-5">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body ">
+        <!--#region form-->
+        <form #creditanalystlistForm="ngForm"
+          (ngSubmit)="onFormSubmit(creditanalystlistForm.value, creditanalystlistForm.valid)">
+          <!--#region button submit-->
+          <button type="submit" class="btn btn-info btn-round" data-role="R00019890001990C">Save</button><br>
+          <!--#endregion button submit-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region reff_code -->
+            <input type="text" class="form-control" [ngModel]="this.param" name="p_reff_code" hidden>
+            <!--#endregion reff_code -->
+
+            <!--#region code -->
+            <input type="text" class="form-control" [ngModel]="model.code" name="p_code" hidden>
+            <input type="text" class="form-control" [ngModel]="model.code" name="p_code1" hidden>
+            <!--#endregion code -->
+
+            <!--#region flow_type -->
+            <input type="text" class="form-control" [ngModel]="model.flow_type" name="p_flow_type" hidden>
+            <!--#endregion flow_type -->
+
+            <!--#region employee_name -->
+            <input type="text" class="form-control" [ngModel]="model.employee_name" name="p_employee_name" hidden>
+            <!--#endregion employee_name -->
+
+            <!--#region radio button recommendation_status-->
+            <div class="col-md-4">
+              <label>Recommendation</label>
+              <div class="form-group col-md-12">
+                <div class="row">
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input disabled class="form-check-input" type="radio" name="p_recommendation_status"
+                        value="RECOMMEND" [(ngModel)]="model.recommendation_status">RECOMMEND
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                  <div class="form-check-radio form-check-inline">
+                    <label class="form-check-label">
+                      <input disabled class="form-check-input" type="radio" name="p_recommendation_status"
+                        value="NOT RECOMMEND" [(ngModel)]="model.recommendation_status">NOT RECOMMEND
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--#endregion radio button recommendation_status-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region ca_capacity-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="ca_capacity" class="control-label">Capacity *</label>
+                <textarea disabled type="text" class="form-control" [ngModel]="model.ca_capacity" name="p_ca_capacity"
+                  required #ca_capacity="ngModel" maxlength="4000"></textarea>
+                <small
+                  *ngIf="(ca_capacity.errors?.required && ca_capacity.touched) || (ca_capacity.errors?.required && creditanalystlistForm.submitted)"
+                  class="text-danger">
+                  Capacity is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion ca_capacity-->
+
+            <!--#region ca_capital-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="ca_capital" class="control-label">Capital *</label>
+                <textarea disabled type="text" class="form-control" [ngModel]="model.ca_capital" name="p_ca_capital"
+                  required #ca_capital="ngModel" maxlength="4000"></textarea>
+                <small
+                  *ngIf="(ca_capital.errors?.required && ca_capital.touched) || (ca_capital.errors?.required && creditanalystlistForm.submitted)"
+                  class="text-danger">
+                  Capital is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion ca_capital-->
+
+            <!--#region ca_condition-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="ca_condition" class="control-label">Condition *</label>
+                <textarea disabled type="text" class="form-control" [ngModel]="model.ca_condition" name="p_ca_condition"
+                  required #ca_condition="ngModel" maxlength="4000"></textarea>
+                <small
+                  *ngIf="(ca_condition.errors?.required && ca_condition.touched) || (ca_condition.errors?.required && creditanalystlistForm.submitted)"
+                  class="text-danger">
+                  Condition is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion ca_condition-->
+
+            <!--#region ca_collateral-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="ca_collateral" class="control-label">Collateral *</label>
+                <textarea disabled type="text" class="form-control" [ngModel]="model.ca_collateral"
+                  name="p_ca_collateral" required #ca_collateral="ngModel" maxlength="4000"></textarea>
+                <small
+                  *ngIf="(ca_collateral.errors?.required && ca_collateral.touched) || (ca_collateral.errors?.required && creditanalystlistForm.submitted)"
+                  class="text-danger">
+                  Collateral is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion ca_collateral-->
+
+            <!--#region ca_constraints-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="ca_constraints" class="control-label">Constraints *</label>
+                <textarea disabled type="text" class="form-control" [ngModel]="model.ca_constraints"
+                  name="p_ca_constraints" required #ca_constraints="ngModel" maxlength="4000"></textarea>
+                <small
+                  *ngIf="(ca_constraints.errors?.required && ca_constraints.touched) || (ca_constraints.errors?.required && creditanalystlistForm.submitted)"
+                  class="text-danger">
+                  Constraints is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion ca_constraints-->
+
+            <!--#region ca_remarks-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="ca_remarks" class="control-label">Remark *</label>
+                <textarea disabled type="text" class="form-control" [ngModel]="model.ca_remarks" name="p_ca_remarks"
+                  required #ca_remarks="ngModel"></textarea>
+                <small
+                  *ngIf="(ca_remarks.errors?.required && ca_remarks.touched) || (ca_remarks.errors?.required && creditanalystlistForm.submitted)"
+                  class="text-danger">
+                  Remark is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion ca_remarks-->
+          </div>
+          <!--#endregion row-->
+        </form>
+        <!--#endregion form-->
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,125 @@
+<div class="main-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner region -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card ">
+                <!--#region watermark-->
+                <div class="watermark" hidden>
+                    <h6>{{this.companyName}}</h6>
+                    <h6>{{this.userName}}</h6>
+                    <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+                </div>
+                <!--#endregion watermark-->
+
+                <div class="card-header ">
+                    <h4 class="card-title">Amortize Deferred Info</h4>
+                </div>
+                <div class="card-body ">
+
+                    <!--#region button back-->
+                    <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+                    <!--#endregion button back-->
+
+                    <!--#region row-->
+                    <div class="row">
+                        <!--#region p_agreement_no-->
+                        <input type="text" class="form-control" [ngModel]="this.param" name="p_agreement_no" hidden>
+                        <!--#endregion p_agreement_no-->
+
+                        <!--#region asset_no-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Asset No</label>
+                                <input type="text" class="form-control" [ngModel]="model.asset_no" maxlength="50"
+                                    name="p_asset_no" disabled>
+                            </div>
+                        </div>
+                        <!--#endregion asset_no-->
+
+                        <!--#region asset_name-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="asset_name" class="control-label">Asset Name </label>
+                                <input type="text" class="form-control" [ngModel]="model.asset_name" name="p_asset_name"
+                                    readonly>
+                            </div>
+                        </div>
+                        <!--#endregion asset_name-->
+                        <!--#region transaction_date-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="transaction_date" class="control-label">Transaction Date</label>
+                                <input readonly type="text" class="form-control" [ngModel]="model.transaction_date"
+                                    name="p_transaction_date" placeholder="dd/mm/yyyy" #transaction_date="ngModel">
+                            </div>
+                        </div>
+                        <!--#endregion transaction_date-->
+                    </div>
+                    <!--#endregion row-->
+
+                    <!--#region row-->
+                    <div class="row">
+                        <!--#region installment_no-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Installment No</label>
+                                <input disabled type="text" class="form-control col-md-4"
+                                    [ngModel]="model.installment_no" name="p_installment_no" #installment_no="ngModel"
+                                    maxlength="4" pattern="{{NumberOnlyPattern}}">
+                            </div>
+                        </div>
+                        <!--#endregion installment_no-->
+
+                        <!--#region invoice_no-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="invoice_no" class="control-label">Invoice No </label>
+                                <input readonly type="text" class="form-control" [ngModel]="model.invoice_no"
+                                    name="p_invoice_no" #invoice_no="ngModel">
+                            </div>
+                        </div>
+                        <!--#endregion invoice_no-->
+
+                        <!--#region income_amount-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="income_amount" class="control-label">Income Amount</label>
+                                <input readonly type="text" class="form-control" [ngModel]="model.income_amount"
+                                    name="p_income_amount" #income_amount="ngModel">
+                            </div>
+                        </div>
+                        <!--#endregion income_amount-->
+                    </div>
+                    <!--#endregion row-->
+
+                    <!--#region row-->
+                    <div class="row">
+                        <!--#region reff_no-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="reff_no" class="control-label">Reff No</label>
+                                <input readonly type="text" class="form-control" [ngModel]="model.reff_no"
+                                    name="p_reff_no" #reff_no="ngModel">
+                            </div>
+                        </div>
+                        <!--#endregion reff_no-->
+
+                        <!--#region reff_name-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="reff_name" class="control-label">Reff Name</label>
+                                <textarea readonly type="text" class="form-control" [ngModel]="model.reff_name"
+                                    name="p_reff_name" required #reff_name="ngModel" maxlength="4000"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <!--#endregion row-->
+                </div>
+                <!--endregion wizard-->
+            </div>
+        </div>
+    </div>

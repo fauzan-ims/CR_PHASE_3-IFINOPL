@@ -1,0 +1,161 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body ">
+        <!--#region form-->
+        <form #scoringrequestdetailForm="ngForm"
+          (ngSubmit)="onFormSubmit(scoringrequestdetailForm.value, scoringrequestdetailForm.valid)">
+
+          <!--#region button save dan back-->
+          <!-- [hidden]="this.isStatus != false || this.pageType != null" -->
+          <button hidden type="submit" class="btn btn-info btn-round" data-role="R00019890001990C">Save</button>
+          <!-- [hidden]="this.isStatus != false || this.params == null || this.pageType != null" -->
+          <button hidden type="button" class="btn btn-success btn-round" (click)="btnProceed(model.code)"
+            data-role="R00013820001383O">Proceed</button>
+          <!-- [hidden]="this.isCancel != false || this.params == null || this.pageType != null" -->
+          <button hidden type="button" class="btn btn-warning btn-round" (click)="btnCancel(model.code)"
+            data-role="R00013820001383R">Cancel</button>
+          <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+          <!--#endregion button save dan back-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region p_application_no-->
+            <input type="text" class="form-control" [ngModel]="this.param" name="p_application_no" hidden>
+            <!--#endregion p_application_no-->
+
+            <!--#region Code-->
+            <div class="col-md-4">
+              <div [hidden]="model.code != null" class="row" style="margin-bottom: -15px; padding-top: 30px;">
+                <h1 class="col-md-4" style="font-size: 12px;">Scoring Request No</h1>
+                <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                  Generate-</h1>
+              </div>
+              <div [hidden]="model.code == null" class="form-group">
+                <label>Scoring Request No</label>
+                <input type="text" class="form-control" [ngModel]="model.code" name="p_code" readonly>
+              </div>
+            </div>
+            <!--#endregion code-->
+
+            <!--#region scoring_date-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_scoring_date" class="control-label">Date *</label>
+                <input [ngStyle]="getStyles(this.isStatus != false || pageType !=null)" class="form-control col-md-6"
+                  placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.scoring_date" name="p_scoring_date"
+                  [options]="myDatePickerOptions" (click)="scoring_date.toggleCalendar()" required
+                  #p_scoring_date="ngModel" #scoring_date="angular-mydatepicker" autocomplete="off"
+                  [readonly]="this.isStatus != false || pageType !=null" />
+                <small
+                  *ngIf="(p_scoring_date.errors?.required && p_scoring_date.touched) || (p_scoring_date.errors?.required && scoringrequestdetailForm.submitted)"
+                  class="text-danger">
+                  Date is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion scoring_date-->
+
+            <!--#region scoring_status-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Status</label>
+                <input type="text" class="form-control" [ngModel]="model.scoring_status" name="p_scoring_status"
+                  readonly>
+              </div>
+            </div>
+            <!--#endregion scoring_status-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region scoring_remarks-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="scoring_remarks" class="control-label">Remark *</label>
+                <textarea [disabled]="this.isStatus != false || pageType !=null" type="text" class="form-control"
+                  [ngModel]="model.scoring_remarks" name="p_scoring_remarks" required
+                  #scoring_remarks="ngModel"></textarea>
+                <small
+                  *ngIf="(scoring_remarks.errors?.required && scoring_remarks.touched) || (scoring_remarks.errors?.required && scoringrequestdetailForm.submitted)"
+                  class="text-danger">
+                  Remark is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion scoring_remarks-->
+
+            <!--#region scoring_object-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Object Description</label>
+                <textarea readonly type="text" class="form-control" [ngModel]="model.scoring_object"
+                  name="p_scoring_object"></textarea>
+              </div>
+            </div>
+            <!--#endregion scoring_object-->
+          </div>
+          <!--#endregion row-->
+
+          <span layout="row horizontal-divider">
+            <hr flex />
+          </span>
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region scoring_result_date-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Result Date</label>
+                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                  [ngModel]="model.scoring_result_date" name="p_scoring_result_date" [options]="myDatePickerOptions"
+                  (click)="scoring_result_date.toggleCalendar()" #p_scoring_result_date="ngModel"
+                  #scoring_result_date="angular-mydatepicker" autocomplete="off" readonly />
+              </div>
+            </div>
+            <!--#endregion scoring_result_date-->
+
+            <!--#region scoring_result_amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Result Scoring</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.scoring_result_amount | number : '1.2-2'" amount="scoring_result_amount"
+                  name="p_scoring_result_amount" readonly>
+              </div>
+            </div>
+            <!--#endregion scoring_result_amount-->
+
+            <!--#region scoring_result_grade-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Result Grade</label>
+                <input type="text" class="form-control col-md-6" [ngModel]="model.scoring_result_grade"
+                  name="p_scoring_result_grade" readonly>
+              </div>
+            </div>
+            <!--#endregion scoring_result_grade-->
+
+            <!--#region scoring_result_remarks-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Result Remark </label>
+                <textarea type="text" class="form-control" [ngModel]="model.scoring_result_remarks"
+                  name="p_scoring_result_remarks" readonly></textarea>
+              </div>
+            </div>
+            <!--#endregion scoring_result_remarks-->
+          </div>
+          <!--#endregion row-->
+        </form>
+        <!--#endregion form-->
+      </div>
+    </div>
+  </div>
+</div>

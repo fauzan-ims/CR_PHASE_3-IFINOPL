@@ -1,0 +1,263 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <div class="card-header ">
+          <h4 class="card-title">Asset Delivery Info</h4>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #deliverydetailForm="ngForm"
+            (ngSubmit)="onFormSubmit(deliverydetailForm.value, deliverydetailForm.valid)">
+
+            <!--#region button save, proceed, cancel, back-->
+            <button type="submit" class="btn btn-info btn-round" data-role="R00020670002068C"
+              [hidden]="model.delivery_status !== 'ON PROCESS'">Save</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button save, proceed, cancel, back-->
+
+            <!--#region row-->
+            <div class="row">
+              <input hidden type="text" class="form-control" [ngModel]="this.params" name="p_id" readonly>
+
+              <!--#region agreement_external_no -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Agreement No</label>
+                  <input type="text" class="form-control" [ngModel]="model.agreement_external_no"
+                    name="p_agreement_external_no" readonly>
+                </div>
+              </div>
+              <!--#endregion agreement_external_no -->
+
+              <!--#region client_name -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Client Name</label>
+                  <input type="text" class="form-control" [ngModel]="model.client_name" name="p_client_name" readonly>
+                </div>
+              </div>
+              <!--#endregion client_name -->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region asset_no -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Asset No</label>
+                  <input type="text" class="form-control" [ngModel]="model.asset_no" name="p_asset_no" readonly>
+                </div>
+              </div>
+              <!--#endregion asset_no -->
+
+              <!--#region asset_name -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Asset Name</label>
+                  <input type="text" class="form-control" [ngModel]="model.asset_name" name="p_asset_name" readonly>
+                </div>
+              </div>
+              <!--#endregion asset_name -->
+
+              <!--#region asset_year -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Asset Year</label>
+                  <input type="text" class="form-control col-md-4" [ngModel]="model.asset_year" name="p_asset_year"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion asset_year -->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region unit_source-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Unit Source</label>
+                  <input type="text" class="form-control col-md-4" [ngModel]="model.unit_source" name="p_unit_source"
+                    readonly #unit_source="ngModel" readonly>
+                </div>
+              </div>
+              <!--#endregion unit_source-->
+
+              <!--#region asset_condition -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Asset Condition</label>
+                  <input type="text" class="form-control col-md-4" [ngModel]="model.asset_condition"
+                    name="p_asset_condition" readonly>
+                </div>
+              </div>
+              <!--#endregion asset_condition -->
+
+              <!--#region fa_code -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Fa Code</label>
+                  <input type="text" class="form-control" [ngModel]="model.fa_code" name="p_fa_code" readonly>
+                </div>
+              </div>
+              <!--#endregion fa_code -->
+
+              <!--#region fa_name -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Fa Name</label>
+                  <input type="text" class="form-control" [ngModel]="model.fa_name" name="p_fa_name" readonly>
+                </div>
+              </div>
+              <!--#endregion fa_name -->
+            </div>
+            <!--#endregion row-->
+
+            <span layout="row horizontal-divider">
+              <hr flex />
+            </span>
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region delivery_status -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Delivery Status</label>
+                  <input type="text" class="form-control col-md-4" [ngModel]="model.delivery_status"
+                    name="p_delivery_status" readonly>
+                </div>
+              </div>
+              <!--#endregion delivery_status -->
+
+              <!--#region delivery_date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Delivery Date *</label>
+                  <input [ngStyle]="getStyles(model.delivery_status !== 'ON PROCESS')" class="form-control col-md-6"
+                    placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.delivery_date" name="p_delivery_date"
+                    [options]="myDatePickerOptions" (click)="delivery_date.toggleCalendar()" required
+                    #p_delivery_date="ngModel" #delivery_date="angular-mydatepicker" autocomplete="off"
+                    (dateChanged)="delivery_date($event)" [readonly]="model.delivery_status !== 'ON PROCESS'" />
+                  <small
+                    *ngIf="(p_delivery_date.errors?.required && p_delivery_date.touched) || (p_delivery_date.errors?.required && deliverydetailForm.submitted)"
+                    class="text-danger">
+                    Delivery Date is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion delivery_date-->
+
+              <!--#region delivery_remark-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Remark *</label>
+                  <textarea class="form-control" [ngModel]="model.delivery_remark" name="p_delivery_remark" required
+                    #delivery_remark="ngModel" maxlength="4000"
+                    [readonly]="model.delivery_status !== 'ON PROCESS'"></textarea>
+                  <small
+                    *ngIf="(delivery_remark.errors?.required && delivery_remark.touched) || (delivery_remark.errors?.required && deliverydetailForm.submitted)"
+                    class="text-danger">
+                    Remark is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion delivery_remark-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region receiver_name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Receiver Name *</label>
+                  <input class="form-control" [ngModel]="model.receiver_name" name="p_receiver_name" required
+                    #receiver_name="ngModel" maxlength="250" [readonly]="model.delivery_status !== 'ON PROCESS'" />
+                  <small
+                    *ngIf="(receiver_name.errors?.required && receiver_name.touched) || (receiver_name.errors?.required && deliverydetailForm.submitted)"
+                    class="text-danger">
+                    Receiver Name is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion receiver_name-->
+
+              <!--#region file name <i class="fa fa-check">-->
+              <div class="col-md-4">
+                <div class="form-group row">
+                  <label>Document *</label>
+                  <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                    <div [hidden]="this.tampHidden == true || model.delivery_status !== 'ON PROCESS'">
+                      <span class="btn btn-info btn-round btn-file">
+                        <input type="file" (change)="onUpload($event, this.params)" id="fileControl" />
+                        <span>UPLOAD</span>
+                      </span>
+                      {{tempFile}}
+                    </div>
+                    <div [hidden]="this.tampHidden == false || model.delivery_status !== 'ON PROCESS'">
+                      <span>
+                        <a [hidden]="model.delivery_status !== 'HOLD'" class="btn btn-danger btn-round btn-file "
+                          type="button" (click)="deleteImage(model.file_name, model.file_path)">
+                          <span><i class="fa fa-trash"></i></span></a>
+                        <a class="btn btn-primary btn-round btn-file " type="button"
+                          (click)="previewFile(model.file_name, model.file_path)">
+                          <span><i class="fa fa-eye"></i></span></a>
+                      </span>
+                      <div>{{model.file_name}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion file name-->
+
+              <!--#region unit_condition-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Unit Condition *</label>
+                  <textarea class="form-control" [ngModel]="model.unit_condition" name="p_unit_condition" required
+                    #unit_condition="ngModel" maxlength="4000"
+                    [readonly]="model.delivery_status !== 'ON PROCESS'"></textarea>
+                  <small
+                    *ngIf="(unit_condition.errors?.required && unit_condition.touched) || (unit_condition.errors?.required && deliverydetailForm.submitted)"
+                    class="text-danger">
+                    Unit Condition is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion unit_condition-->
+
+              <!--#region first_installment_date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>First Installment Date *</label>
+                  <input [ngStyle]="getStyles(model.delivery_status !== 'ON PROCESS')" class="form-control col-md-6"
+                    placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.first_installment_date"
+                    name="p_first_installment_date" [options]="myDatePickerOptions"
+                    (click)="first_installment_date.toggleCalendar()" required #p_first_installment_date="ngModel"
+                    #first_installment_date="angular-mydatepicker" autocomplete="off"
+                    (dateChanged)="first_installment_date($event)"
+                    [readonly]="model.delivery_status !== 'ON PROCESS'" />
+                  <small
+                    *ngIf="(p_first_installment_date.errors?.required && p_first_installment_date.touched) || (p_first_installment_date.errors?.required && deliverydetailForm.submitted)"
+                    class="text-danger">
+                    First Installment Date is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion first_installment_date-->
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

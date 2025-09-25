@@ -1,0 +1,353 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header ">
+          <h4 class="card-title">Application PDC Register Info</h4>
+        </div>
+        <div class="card-body ">
+          <!--#region button Back-->
+          <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+          <!--#endregion button Back-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region application_no-->
+            <input type="text" [ngModel]="this.param" name="p_application_no" hidden>
+            <!--#endregion application_no-->
+
+            <!--#region application_external_no-->
+            <div class="col-md-4">
+              <div [hidden]="model.application_external_no != null" class="row"
+                style="margin-bottom: -15px; padding-top: 30px;">
+                <h1 class="col-md-4" style="font-size: 12px;">Application No</h1>
+                <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                  Generate-</h1>
+              </div>
+              <div [hidden]="model.application_external_no == null" class="form-group">
+                <label>Application No</label>
+                <input type="text" class="form-control" [ngModel]="model.application_external_no"
+                  name="p_application_external_no" [readonly]="isReadOnly">
+              </div>
+            </div>
+            <!--#endregion application_external_no-->
+
+            <!--#region application_status-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Application Status</label>
+                <input type="text" class="form-control" [ngModel]="model.application_status" name="p_application_status"
+                  readonly>
+              </div>
+            </div>
+            <!--#endregion application_status-->
+
+            <!--#region level_status-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Workflow Status</label>
+                <input type="text" class="form-control" [ngModel]="model.level_status" name="p_level_status" readonly>
+              </div>
+            </div>
+            <!--#endregion level_status-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region branch_name-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Branch</label>
+                <input type="text" class="form-control" [ngModel]="model.branch_name" name="p_branch_name" readonly>
+              </div>
+            </div>
+            <!--#endregion branch_name-->
+
+            <!--#region branch_region_name-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Region</label>
+                <input type="text" class="form-control" [ngModel]="model.branch_region_name" name="p_branch_region_name"
+                  readonly>
+              </div>
+            </div>
+            <!--#endregion branch_region_name-->
+
+            <!--#region marketing_name-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Marketing</label>
+                <input type="text" class="form-control" [ngModel]="model.marketing_name" name="p_marketing_name"
+                  readonly>
+              </div>
+            </div>
+            <!--#endregion marketing_name-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region application_date-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Application Date</label>
+                <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                  [ngModel]="model.application_date" name="p_application_date" [options]="myDatePickerOptions"
+                  (click)="application_date.toggleCalendar()" #p_application_date="ngModel"
+                  #application_date="angular-mydatepicker" autocomplete="off" readonly />
+              </div>
+            </div>
+            <!--#endregion application_date-->
+
+            <!--#region buyback_type-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Buyback Type</label>
+                <select disabled class="form-control col-md-8" [ngModel]="model.buyback_type" name="p_buyback_type">
+                  <option value='NG'>NOT GUARANTED</option>
+                  <option value='BG'>BUYBACK GUARANTED</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion buyback_type-->
+
+            <!--#region sales_location_desc-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Sales Location</label>
+                <input type="text" class="form-control" [ngModel]="model.sales_location_desc"
+                  name="p_sales_location_desc" readonly>
+              </div>
+            </div>
+            <!--#endregion sales_location_desc-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region plafond_group_name-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Plafond</label>
+                <input type="text" class="form-control" [ngModel]="model.plafond_group_name" name="p_plafond_group_name"
+                  readonly>
+              </div>
+            </div>
+            <!--#endregion plafond_group_name-->
+
+            <!--#region plafond_facility_name-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Plafond Facility</label>
+                <input type="text" class="form-control" [ngModel]="model.plafond_facility_name"
+                  name="p_plafond_facility_name" readonly>
+              </div>
+            </div>
+            <!--#endregion plafond_facility_name-->
+
+            <!--#region package_name-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Package</label>
+                <input type="text" class="form-control" [ngModel]="model.package_name" name="p_package_name" readonly>
+              </div>
+            </div>
+            <!--#endregion package_name-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region vendor_name-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Vendor</label>
+                <input type="text" class="form-control" [ngModel]="model.vendor_name" name="p_vendor_name" readonly>
+              </div>
+            </div>
+            <!--#endregion vendor_name-->
+
+            <!--#region agent_name-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Agent</label>
+                <input type="text" class="form-control" [ngModel]="model.agent_name" name="p_agent_name" readonly>
+              </div>
+            </div>
+            <!--#endregion agent_name-->
+
+            <!--#region client_name-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Client</label>
+                <input type="text" class="form-control" [ngModel]="model.client_name" name="p_client_name" readonly>
+              </div>
+            </div>
+            <!--#endregion client_name-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region facility_desc-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Facility</label>
+                <input type="text" class="form-control" [ngModel]="model.facility_desc" name="p_facility_desc" readonly>
+              </div>
+            </div>
+            <!--#endregion facility_desc-->
+
+            <!--#region purpose_loan_desc-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Purpose Loan</label>
+                <input type="text" class="form-control" [ngModel]="model.purpose_loan_desc" name="p_purpose_loan_desc"
+                  readonly>
+              </div>
+            </div>
+            <!--#endregion purpose_loan_desc-->
+
+            <!--#region purpose_loan_detail_desc-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Purpose Loan Detail</label>
+                <input type="text" class="form-control" [ngModel]="model.purpose_loan_detail_desc"
+                  name="p_purpose_loan_detail_desc" readonly>
+              </div>
+            </div>
+            <!--#endregion purpose_loan_detail_desc-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region currency_code-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Currency</label>
+                <input type="text" class="form-control" [ngModel]="model.currency_code" name="p_currency_code" readonly>
+              </div>
+            </div>
+            <!--#endregion currency_code-->
+
+            <!--#region asset_value-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Total Asset Value</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.asset_value | number : '1.2-2'" amount="asset_value" name="p_asset_value" readonly>
+              </div>
+            </div>
+            <!--#endregion asset_value-->
+
+            <!--#region dp_amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Total DP Amount</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.dp_amount | number : '1.2-2'" amount="dp_amount" name="p_dp_amount" readonly>
+              </div>
+            </div>
+            <!--#endregion dp_amount-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region loan_amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Total Loan Amount</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.loan_amount | number : '1.2-2'" amount="loan_amount" name="p_loan_amount" readonly>
+              </div>
+            </div>
+            <!--#endregion loan_amount-->
+
+            <!--#region capitalize_amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Total Capitalize Amount</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.capitalize_amount | number : '1.2-2'" amount="capitalize_amount"
+                  name="p_capitalize_amount" readonly>
+              </div>
+            </div>
+            <!--#endregion capitalize_amount-->
+
+            <!--#region financing_amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Financing Amount</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.financing_amount | number : '1.2-2'" amount="financing_amount"
+                  name="p_financing_amount" readonly>
+              </div>
+            </div>
+            <!--#endregion financing_amount-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region application_remarks-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="package_description" class="control-label">Remark *</label>
+                <textarea readonly type="text" class="form-control" [ngModel]="model.application_remarks"
+                  name="p_application_remarks"></textarea>
+              </div>
+            </div>
+            <!--#endregion application_remarks-->
+          </div>
+          <!--#endregion row-->
+        </div>
+        <!--#region wizard-->
+        <div class="wizard-custom-margin" [hidden]="param == null">
+          <!--#region wizard container -->
+          <div class="wizard-container">
+            <div class="card-wizard" style="opacity: 1 !important; min-height: 0px;" data-color="primary"
+              id="wizardProfile">
+              <div class="text-center">
+                <div class="wizard-navigation">
+                  <ul>
+                    <li class="nav-item">
+                      <a class="nav-link" (click)="pdcregisterdetailwiz()" href="#pdcregisterdetaillist"
+                        data-toggle="tab" role="tab" aria-controls="pdcregisterdetail" aria-selected="true">
+                        PDC List
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" (click)="amortizationwiz()" href="#amortizationpdclist" data-toggle="tab"
+                        role="tab" aria-controls="amortization" aria-selected="true">
+                        Amortization
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion wizard container-->
+        </div>
+        <!--endregion wizard-->
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<div class="main-content mt-5">
+  <!--#region wizard container-->
+  <div class="card">
+    <div class="nav-tabs-navigation">
+      <ul id="tabs1" class="nav nav-pills nav-justified" role="tablist">
+        <li id="tabapplicationScoring" class="nav-item">
+          <a class="nav-link" (click)="scoringrequestwiz()" href="#scoringrequestlist" data-toggle="tab" role="tab"
+            aria-controls="scoringrequest" aria-selected="true">
+            Scoring Request
+          </a>
+        </li>
+        <li id="tabapplicationSurvey" class="nav-item">
+          <a class="nav-link" (click)="surveyrequestwiz()" href="#surveyrequestdetail" data-toggle="tab" role="tab"
+            aria-controls="surveyrequest" aria-selected="true">
+            Survey Request
+          </a>
+        </li>
+        <li id="tabapplicationFinancialAnalysis" class="nav-item">
+          <a class="nav-link" (click)="financialanalysiswiz()" href="#financialanalysislist" data-toggle="tab"
+            role="tab" aria-controls="financialanalysis" aria-selected="true">
+            Financial Analysis
+          </a>
+        </li>
+        <li id="tabapplicationfinancialrecapitulation" class="nav-item">
+          <a class="nav-link" data-toggle="tab" (click)="financialrecapitulationwiz()"
+            href="#financialrecapitulationlist" role="tab" aria-expanded="true">Financial & Recapitulation
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <router-outlet></router-outlet>
+  <!--#endregion wizard container-->
+</div>

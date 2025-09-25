@@ -1,0 +1,463 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header ">
+          <h4 class="card-title">SP Manual Info</h4>
+        </div>
+        <div class="card-body ">
+
+          <!--#region form-->
+          <form #spmanualForm="ngForm" (ngSubmit)="onFormSubmit(spmanualForm.value, spmanualForm.valid)">
+
+            <!--#region button submit dan back-->
+            <button type="submit" class="btn btn-info btn-round" [hidden]="isButton"
+              data-role="R00020990022100C">Save</button>
+            <button [hidden]="model.code == null || isButton" type="button" data-role="R00020990002100O"
+              class="btn btn-success btn-round" (click)="btnPost(model.code)">Post</button>
+
+            <button [hidden]="model.code == null || isButton" type="button" data-role="R00020990002100R"
+              class="btn btn-warning btn-round" (click)="btnCancel(model.code)">Cancel</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+
+            <!--#endregion button submit dan back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region letter no-->
+              <div class="col-md-4">
+                <div [hidden]="model.code != null" class="row" style="margin-bottom: -15px; padding-top: 30px;">
+                  <h1 class="col-md-4" style="font-size: 12px;">SP No</h1>
+                  <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                    Generate-</h1>
+                </div>
+                <div [hidden]="model.code == null" class="form-group">
+                  <label>SP No </label>
+                  <input type="text" class="form-control" [ngModel]="model.letter_no" name="p_letter_no"
+                    [readonly]="isReadOnly">
+                  <input type="text" hidden class="form-control" [ngModel]="model.code" name="p_code"
+                    [readonly]="isReadOnly">
+                </div>
+              </div>
+              <!--#endregion letter no-->
+
+              <!--#region lookup Branch Code -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="branch_code" class="control-label labelmodule">Branch *</label>
+                  <div class="col-md-12 buttons">
+                    <span>
+                      <button [disabled]="isReadOnly"
+                        class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        (click)="btnLookupBranch()" data-toggle="modal" data-target="#lookupModalSysBranch" href="#"><i
+                          class="fa fa-search-plus"></i></button>
+                      {{model.branch_name}}
+                      <input type="hidden" class="form-control" [ngModel]="model.branch_code" name="p_branch_code">
+                      <input type="hidden" class="form-control" [ngModel]="model.branch_name" name="p_branch_name"
+                        required #branch_name="ngModel">
+                    </span>
+                  </div>
+                  <small [hidden]="branch_name.valid || (branch_name.pristine && !spmanualForm.submitted)"
+                    class="text-danger">
+                    Branch is required
+                  </small>
+                </div>
+              </div>
+              <!--#region lookup Branch Code -->
+
+              <!--#region Status-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="letter_status" class="control-label">Status </label>
+                  <input readonly type="text" class="form-control" [ngModel]="model.letter_status"
+                    name="p_letter_status" readonly>
+                </div>
+              </div>
+              <!--#endregion Status-->
+            </div>
+            <!-- endregion row -->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Letter Date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="letter_date" class="control-label">SP Date *</label>
+                  <input [ngStyle]="getStyles(isButton)" class="form-control col-md-6" placeholder="dd/mm/yyyy"
+                    angular-mydatepicker [ngModel]="model.letter_date" name="p_letter_date"
+                    [options]="myDatePickerOptions" (click)="letter_date.toggleCalendar()" required
+                    #p_letter_date="ngModel" #letter_date="angular-mydatepicker" autocomplete="off"
+                    [readonly]="isButton" />
+                  <small
+                    *ngIf="(p_letter_date.errors?.required && p_letter_date.touched) || (p_letter_date.errors?.required && spmanualForm.submitted)"
+                    class="text-danger">
+                    SP Date is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Letter Date-->
+
+              <!--#region lookup client -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="branch_code" class="control-label labelmodule">Client Name *</label>
+                  <div class="col-md-12 buttons">
+                    <span>
+                      <button [disabled]="isReadOnly"
+                        class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                        (click)="btnLookupClient()" data-target="#lookupModalClient" data-toggle="modal" href="#">
+                        <i class="fa fa-search-plus"></i></button>
+                      {{model.client_name}}
+                      <input type="hidden" class="form-control" [ngModel]="model.client_no" name="p_client_no"
+                        #client_no="ngModel">
+                      <input type="hidden" name="p_client_name" [ngModel]="model.client_name" required
+                        #client_name="ngModel">
+                    </span>
+                  </div>
+                  <small [hidden]="client_name.valid || (client_name.pristine && !spmanualForm.submitted)"
+                    class="text-danger">
+                    Client Name is required
+                  </small>
+                </div>
+              </div>
+              <!--#region lookup Agreement -->
+
+              <!--#region Client Name-->
+              <!-- <div class="col-md-4">
+                <div class="form-group">
+                  <label for="client_name" class="control-label">Client Name</label>
+                  <input readonly type="text" class="form-control" [ngModel]="model.client_name" name="p_client_name"
+                    readonly>
+                </div>
+              </div> -->
+              <!--#endregion Client Name-->
+              <!--#region Client No-->
+              <!-- <div class="col-md-4" [hidden]="true">
+                <div class="form-group">
+                  <label for="client_no" class="control-label">Client Name</label>
+                  <input readonly type="text" class="form-control" [ngModel]="model.client_no" name="p_client_no"
+                    readonly>
+                </div>
+              </div> -->
+              <!--#endregion Client No-->
+              <!-- </div> -->
+              <!-- endregion row -->
+
+              <!--#region row-->
+              <!-- <div class="row"> -->
+              <!--#region Letter Type-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Type</label>
+                  <select class="form-control col-md-6" name="p_letter_type" [ngModel]="model.letter_type"
+                    [disabled]="isReadOnly">
+                    <option value="SP1">SP1</option>
+                    <option value="SP2">SP2</option>
+                    <option value="SOMASI">SOMASI</option>
+                  </select>
+                </div>
+              </div>
+              <!--#endregion Letter Type-->
+            </div>
+            <!-- endregion row -->
+
+            <!--#region row-->
+            <!-- <div class="row" [hidden]="this.param === null"> -->
+            <div class="row">
+              <!--#region Overdue Installment Amount-->
+              <!-- <div class="col-md-4">
+                <div class="form-group">
+                  <label>Overdue Installment Amount </label>
+                  <input readonly type="text" style="text-align:right" class="form-control col-md-6"
+                    [ngModel]="model.overdue_installment_amount | number : '1.2-2'" name="p_overdue_installment_amount">
+                </div>
+              </div> -->
+              <!--#endregion Overdue Installment Amount-->
+
+              <!--#endregion Outstanding Installment Amount-->
+            <!-- </div> -->
+            <!-- endregion row -->
+
+            <!--#region row-->
+            <!-- <div class="row" [hidden]="this.param === null"> -->
+              <!--#region Overdue Days-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="overdue_days" class="control-label">Overdue days </label>
+                  <div class="col-md-4" style="margin-left: -15px;">
+                    <input type="text" style="text-align:right" class="form-control" [ngModel]="model.overdue_days"
+                      name="p_overdue_days" readonly #overdue_days="ngModel">
+                  </div>
+                </div>
+              </div>
+              <!--#endregion Overdue Days-->
+
+              <!--#region Overdue Penalty Amount-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Total Overdue Amount </label>
+                  <input readonly type="text" style="text-align:right" class="form-control col-md-6"
+                    [ngModel]="model.total_overdue_amount | number : '1.2-2'" name="p_total_overdue_amount">
+                </div>
+              </div>
+              <!--#endregion Overdue Penalty Amount-->
+
+              <!--#region Installment No-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="total_agreement" class="control-label">Total Agreeement </label>
+                  <div class="col-md-4" style="margin-left: -15px;">
+                    <input type="text" style="text-align:right" class="form-control" [ngModel]="model.total_agreement"
+                      name="p_total_agreement" readonly #total_agreement="ngModel">
+                  </div>
+                </div>
+              </div>
+              <!--#endregion Installment No-->
+
+
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <!-- <div class="row" [hidden]="this.param === null"> -->
+            <div class="row">
+              <!--#region Installment No-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="total_asset" class="control-label">Total Asset </label>
+                  <div class="col-md-4" style="margin-left: -15px;">
+                    <input type="text" style="text-align:right" class="form-control" [ngModel]="model.total_asset"
+                      name="p_total_asset" readonly #total_asset="ngModel">
+                  </div>
+                </div>
+              </div>
+              <!--#endregion Installment No-->
+
+              <!--#region Installment Amount-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="total_rental_amount" class="control-label">Total Monthly Rental Amount </label>
+                  <input readonly type="text" style="text-align:right" class="form-control col-md-6"
+                    [ngModel]="model.total_rental_amount | number : '1.2-2'" name="p_total_rental_amount">
+                </div>
+              </div>
+              <!--#endregion Installment Amount-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <!-- <div class="row" [hidden]="this.param === null"> -->
+            <div class="row">
+              <!--#region Print Count-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="print_count" class="control-label"> </label>
+                  <div class="col-md-4" style="margin-left: -15px;">
+                    <input type="text" style="text-align:right" class="form-control" [ngModel]="model.print_count"
+                      name="p_print_count" hidden>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion Print Count-->
+
+              <!--#region Max Print Count-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="max_print_count" class="control-label"> </label>
+                  <div class="col-md-4" style="margin-left: -15px;">
+                    <input type="text" style="text-align:right" class="form-control" [ngModel]="model.max_print_count"
+                      name="p_max_print_count" hidden>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion Max Print Count-->
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+        </div>
+        <div class="card-footer ">
+        </div>
+        <!--#region wizard-->
+        <div class="wizard-custom-margin">
+          <!--#region wizard container -->
+          <div class="wizard-container">
+            <div class="card-wizard" style="opacity: 1 !important; min-height: 0px;" data-color="primary"
+              id="wizardProfile2">
+              <div class="text-center">
+                <div class="wizard-navigation" [hidden]="this.param == null">
+                  <ul>
+                    <li class="nav-item">
+                      <a class="nav-link" (click)="amortizationnwiz()" href="#amortizationnlist" data-toggle="tab"
+                        role="tab" aria-controls="amortizationnlist" aria-selected="true">
+                        Invoice
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <!-- </th>
+                      <th>SP No</th>
+                      <th>SP Date</th>
+                      <th>Agreement No</th>
+                      <th>SP Type</th>
+                      <th>Last Print By</th>
+                      <th>Print Count</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of listspdeliverydetail;let i=index ">
+                      <td style="text-align: center;">{{listspdeliverydetail.numberIndex+i+1}}</td>
+                      <td class="disabled-sorting">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                              [disabled]="model.code == null || isButton"
+                              (change)="checkIfAllTableSelected($event, row.id);">
+                            <span class="form-check-sign"></span>
+                          </label> -->
+              </div>
+              <!-- </td>
+                      <td style="text-align: center; width: 20%;">{{ row.letter_no }}</td>
+                      <td style="text-align: center; width: 15%;">{{ row.letter_date }}</td>
+                      <td style="text-align: left; width: 20%;">{{ row.agreement_no}}<br>{{ row.client_name }}
+                      </td>
+                      <td style="text-align: center; width: 15%;">{{ row.letter_type }}</td>
+                      <td style="width: 15%;">{{ row.last_print_by }}</td>
+                      <td style="text-align: center; width: 15%;">{{ row.print_count }}</td>
+                      <td style="text-align: center;">
+                        <a class="btn btn-warning btn-link btn-icon btn-sm print" title="Print SP1"
+                          [hidden]="row.letter_type !== 'SP1'" (click)="btnPrintSP(row.letter_no)"><i
+                            class="fa fa-print"></i></a>
+                        <a class="btn btn-warning btn-link btn-icon btn-sm print" title="Print SP2"
+                          [hidden]="row.letter_type !== 'SP2'" (click)="btnPrintSP2(row.letter_no)"><i
+                            class="fa fa-print"></i></a>
+                        <a class="btn btn-warning btn-link btn-icon btn-sm print" title="Print SOMASI"
+                          [hidden]="row.letter_type !== 'SOMASI'" (click)="btnPrintSomasiPemenuhan(row.letter_no)"><i
+                            class="fa fa-print"></i></a> -->
+              <!-- <a class="btn btn-warning btn-link btn-icon btn-sm print" title="Print SP"
+                            (click)="btnMailMerge(row.letter_no, row.letter_type)"><i class="fa fa-print"></i></a> -->
+              <!-- <a class="btn btn-warning btn-link btn-icon btn-sm print" title="Print tanda Terima"
+                            [hidden]="isButton" (click)="btnPrint(row.letter_no)"><i class="fa fa-print"></i></a> -->
+              <!-- </td>
+                    </tr>
+                  </tbody>
+                </table> -->
+              <!--#endregion list view-->
+              <!-- </form> -->
+            </div>
+          </div>
+          <!-- </div> -->
+          <!--#endregion list view-->
+          <!-- </div>
+        <div class="card-footer "> -->
+        </div>
+        <!--endregion wizard-->
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region modal lookup Branch-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSysBranch"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+
+            <table id="datatableLookupBranch" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th style="width: 20%;">Code</th>
+                  <th style="width: 80%;">Name</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupbranch;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupbranch.numberIndex+i+1}}</td>
+                  <td style="text-align: center; width: 20%;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.name }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowBranch(row.code, row.name)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup Branch-->
+
+<!--#region lookup Agreement -->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalClient"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+
+            <table id="datatableLookupAgreement" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th style="width: 25%;">Client No</th>
+                  <th style="width: 75%;">Client Name</th>
+                  <!-- <th style="display: none;">Client No</th> -->
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupAgreement;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupAgreement.numberIndex+i+1}}</td>
+                  <td>{{ row.client_no}}</td>
+                  <td>{{ row.client_name}}</td>
+                  <!-- <td style="display: none;">{{ row.client_no}}</td> -->
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowAgreement(row.client_name, row.client_no)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup Agreement -->

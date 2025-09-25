@@ -1,0 +1,222 @@
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import 'rxjs/add/operator/map'
+import { Router, ActivatedRoute } from '@angular/router';
+import { DataTableDirective } from 'angular-datatables';
+import { BaseComponent } from '../../../../../../../base.component';
+import { DALService } from '../../../../../../../DALservice.service';
+import swal from 'sweetalert2';
+
+@Component({
+  moduleId: module.id,
+  selector: 'app-root',
+  templateUrl: './agreementassetlist.component.html'
+})
+
+export class AgreementassetlistComponent extends BaseComponent implements OnInit {
+  // get param from url
+  param = this.getRouteparam.snapshot.paramMap.get('id');
+  params = this.getRouteparam.snapshot.paramMap.get('id2');
+
+  // variable
+  public listasset: any = [];
+  private dataTamp: any = [];
+  public total_lease_amount: any = 0;
+  public current_total_lease_amount: any = 0;
+
+  private APIController: String = 'AgreementAsset';
+  private APIControllerApplicationMain: String = 'AgreementMain';
+
+  private APIRouteForGetRows: String = 'GetRows';
+  private APIRouteForGetRow: String = 'GetRow';
+  private APIRouteForDelete: String = 'DELETE';
+
+  private RoleAccessCode = 'R00022400000000A'; // role access 
+
+  // checklist
+  public selectedAll: any;
+  private checkedList: any = [];
+
+  // spinner
+  showSpinner: Boolean = false;
+  // end
+
+  // ini buat datatables
+  @ViewChild(DataTableDirective)
+  dtElement: DataTableDirective;
+  dtOptions: DataTables.Settings = {};
+
+  constructor(private dalservice: DALService,
+    public getRouteparam: ActivatedRoute,
+    public route: Router,
+    private _elementRef: ElementRef
+  ) { super(); }
+
+  ngOnInit() {
+    this.callGetRole(this.userId, this._elementRef, this.dalservice, this.RoleAccessCode, this.route);
+    this.compoSide('', this._elementRef, this.route);
+    this.callGetrow();
+    this.loadData();
+  }
+
+  //#region getrow data
+  callGetrow() {
+
+    this.dataTamp = [{
+      'p_agreement_no': this.param
+    }];
+
+    this.dalservice.Getrow(this.dataTamp, this.APIControllerApplicationMain, this.APIRouteForGetRow)
+      .subscribe(
+        res => {
+          const parse = JSON.parse(res);
+          const parsedata = parse.data[0];
+          this.total_lease_amount = parsedata.total_lease_amount;
+          this.current_total_lease_amount = parsedata.current_total_lease_amount;
+          this.showSpinner = false;
+        },
+        error => {
+          this.showSpinner = false;
+          const parse = JSON.parse(error);
+          this.swalPopUpMsg(parse.data);
+        });
+  }
+  //#endregion getrow data
+
+  //#region load all data
+  loadData() {
+    this.dtOptions = {
+      'pagingType': 'first_last_numbers',
+      'pageLength': 10,
+      'processing': true,
+      'serverSide': true,
+      responsive: true,
+      lengthChange: false, // hide lengthmenu
+      searching: true, // jika ingin hilangin search box nya maka false
+      ajax: (dtParameters: any, callback) => {
+
+        dtParameters.paramTamp = [];
+        dtParameters.paramTamp.push({
+          'p_agreement_no': this.param
+        })
+
+        this.dalservice.Getrows(dtParameters, this.APIController, this.APIRouteForGetRows).subscribe(resp => {
+          const parse = JSON.parse(resp)
+          this.listasset = parse.data;
+
+          if (parse.data != null) {
+            this.listasset.numberIndex = dtParameters.start;
+          }
+
+          // if use checkAll use this
+          $('#checkall').prop('checked', false);
+          // end checkall
+
+          callback({
+            draw: parse.draw,
+            recordsTotal: parse.recordsTotal,
+            recordsFiltered: parse.recordsFiltered,
+            data: []
+          });
+        }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
+      },
+      columnDefs: [{ orderable: false, width: '5%', targets: [0, 1, 8] }], // for disabled coloumn
+      language: {
+        search: '_INPUT_',
+        searchPlaceholder: 'Search records',
+        infoEmpty: '<p style="color:red;" > No Data Available !</p> '
+      },
+      searchDelay: 800 // pake ini supaya gak bug search
+    }
+
+  }
+  //#endregion load all data
+
+  //#region button edit
+  btnEdit(codeEdit: string) {
+    this.route.navigate(['/inquiry/subagreementlist/agreementdetail/' + this.param + '/agreementassetlist/' + this.param + '/agreementassetdetail/', this.param, codeEdit], { skipLocationChange: true });
+  }
+  //#endregion button edit
+
+  //#region checkbox all table
+  btnDeleteAll() {
+    this.checkedList = [];
+    for (let i = 0; i < this.listasset.length; i++) {
+      if (this.listasset[i].selected) {
+        this.checkedList.push(this.listasset[i].asset_no);
+      }
+    }
+
+    // jika tidak di checklist
+    if (this.checkedList.length === 0) {
+      swal({
+        title: this._listdialogconf,
+        buttonsStyling: false,
+        confirmButtonClass: 'btn btn-danger'
+      }).catch(swal.noop)
+      return
+    }
+
+    swal({
+      allowOutsideClick: false,
+      title: 'Are you sure?',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonClass: 'btn btn-success',
+      cancelButtonClass: 'btn btn-danger',
+      confirmButtonText: 'Yes',
+      buttonsStyling: false
+    }).then((result) => {
+      this.showSpinner = true;
+      if (result.value) {
+        let th = this;
+        var J = 0;
+        (function loopDeleteApplicationAssetBudget() {
+          if (J < th.checkedList.length) {
+            th.dataTamp = [{
+              'p_asset_no': th.checkedList[J]
+            }];
+            th.dalservice.Delete(th.dataTamp, th.APIController, th.APIRouteForDelete)
+              .subscribe(
+                res => {
+                  const parse = JSON.parse(res);
+                  if (parse.result === 1) {
+                    if (th.checkedList.length == J + 1) {
+                      $('#applicationDetail').click();
+                      th.showNotification('bottom', 'right', 'success');
+                      $('#datatableApplicationAsset').DataTable().ajax.reload();
+                      th.showSpinner = false;
+                    } else {
+                      J++;
+                      loopDeleteApplicationAssetBudget();
+                    }
+                  } else {
+                    th.swalPopUpMsg(parse.data);
+                    th.showSpinner = false;
+                  }
+                },
+                error => {
+                  const parse = JSON.parse(error);
+                  th.swalPopUpMsg(parse.data);
+                  th.showSpinner = false;
+                });
+          }
+        })();
+      } else {
+        this.showSpinner = false;
+      }
+    });
+  }
+
+  selectAllTable() {
+    for (let i = 0; i < this.listasset.length; i++) {
+      this.listasset[i].selected = this.selectedAll;
+    }
+  }
+
+  checkIfAllTableSelected() {
+    this.selectedAll = this.listasset.every(function (item: any) {
+      return item.selected === true;
+    })
+  }
+  //#endregion checkbox all table
+}

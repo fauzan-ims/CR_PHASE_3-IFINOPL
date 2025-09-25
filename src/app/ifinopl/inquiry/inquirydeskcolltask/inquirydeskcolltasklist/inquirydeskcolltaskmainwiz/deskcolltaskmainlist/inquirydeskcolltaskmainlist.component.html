@@ -1,0 +1,74 @@
+<router-outlet></router-outlet>
+<!-- spinner region -->
+<div class="panel-container-spinner" *ngIf="showSpinner">
+  <app-spinner class="spinner-container"></app-spinner>
+</div>
+<!-- end spinner region -->
+<div id="hideMainPanelWiz" class="main-content margin-wizard-content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body">
+        <!-- region row -->
+        <div class="row">
+          <!--#region Status-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Status</label>
+              <select class='form-control col-md-6' [ngModel]="this.tampStatus" (change)="PageStatus($event)">
+                <option value='ALL'>ALL</option>
+                <option value='NEW'>NEW</option>
+                <option value='HOLD'>HOLD</option>
+                <option value='POST'>POST</option>
+              </select>
+            </div>
+          </div>
+          <!--#endregion rounding Status-->
+        </div>
+        <!-- endregion row -->
+        <div class="toolbar">
+        </div>
+        <!--#Deskcolltask list view-->
+        <table id="datatableDeskCollTaskMainList" datatable [dtOptions]="dtOptions"
+          class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th style="display: none;"></th>
+              <th class="disabled-sorting">No</th>
+              <th> Client Name</th>
+              <th> Task Date</th>
+              <th> Marketing Name</th>
+              <th> Section Head Marketing Name</th>
+              <th> Posting Date</th>
+              <th> Promise Date</th>
+              <th> Status</th>
+              <!-- <th> Due Date</th>
+              <th> Overdue Period</th>
+              <th> Overdue Days</th>
+              <th> Installment Amount</th>
+              <th> Status</th> -->
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of listdeskcolltaskmain;let i=index ">
+              <td style="display: none;"></td>
+              <td style="text-align: center;">{{listdeskcolltaskmain.numberIndex+i+1}}</td>
+              <td style="text-align: left; width: 20%;">{{row.client_name}}</td>
+              <td style="text-align: center; width: 10%;">{{row.task_date}}</td>
+              <td style="text-align: left; width: 20%;">{{row.marketing_name}}</td>
+              <td style="text-align: left; width: 20%;">{{row.section_head}}</td>
+              <td style="text-align: center; width: 10%;">{{row.posting_date}}</td>
+              <td style="text-align: center; width: 10%;">{{row.promise_date}}</td>
+              <td style="text-align: center; width: 10%;">{{row.desk_status}}</td>
+              <td style="text-align: center;">
+                <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit" (click)="btnEdit(row.id)"><i
+                    class="fa fa-edit"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!--#end Deskcolltask list view-->
+      </div>
+    </div>
+  </div>
+</div>

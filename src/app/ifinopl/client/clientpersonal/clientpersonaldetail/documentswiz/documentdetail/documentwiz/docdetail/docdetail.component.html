@@ -1,0 +1,192 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <!--#region form-->
+      <form #documentdetailForm="ngForm" (ngSubmit)="onFormSubmit(documentdetailForm.value, documentdetailForm.valid)">
+
+        <!--#region button save dan back-->
+        <button [hidden]="this.plafondStatus || model.is_existing_client === '1'" type="submit"
+          class="btn btn-info btn-round" data-role="R00022550172256C">Save</button>
+        <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+        <!--#endregion button save dan back-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region p_client_code-->
+          <input type="text" [ngModel]="this.param" maxlength="50" name="p_client_code" hidden>
+          <!--#endregion p_client_code-->
+
+          <!--#region p_id-->
+          <input hidden type="text" [ngModel]="this.params" name="p_id">
+          <!--#endregion p_id-->
+
+          <!--#region doc_type_code-->
+          <div class="col-md-4">
+            <label for="p_doc_type_code" class="control-label" class="labelgsubcode">Document Type *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <span>
+                  <button [disabled]="this.plafondStatus || model.is_existing_client === '1'"
+                    class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    (click)="btnLookupDocumentType()" data-target="#lookupModalDocumentType" data-toggle="modal"
+                    href="#">
+                    <i class="fa fa-search-plus"></i></button> {{model.doc_type_desc}}
+                  <input type="hidden" name="p_doc_type_code" [ngModel]="model.doc_type_code" required
+                    #p_doc_type_code="ngModel" />
+                </span>
+              </div>
+              <small
+                *ngIf="p_doc_type_code.errors?.required && p_doc_type_code.touched || (p_doc_type_code.errors?.required && documentdetailForm.submitted) "
+                class="text-danger">
+                Document Type is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion doc_type_code-->
+
+          <!--#region document_no-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Document No *</label>
+              <input [hidden]="model.doc_type_code === 'TAXID'"
+                [disabled]="this.plafondStatus || model.is_existing_client === '1' || model.doc_type_code === 'TAXID'"
+                [readonly]="model.is_editable === '0'" type="text" class="form-control" [ngModel]="model.document_no"
+                name="p_document_no" required #document_no="ngModel">
+
+              <input [hidden]="model.doc_type_code !== 'TAXID'"
+                [disabled]="this.plafondStatus || model.is_existing_client === '1' || model.doc_type_code !== 'TAXID'"
+                [readonly]="model.is_editable === '0'" type="text" class="form-control"
+                [ngModel]="model.document_no_taxid" name="p_document_no_taxid" required #document_no_taxid="ngModel"
+                pattern={{NpwpPattern}} id="npwp" (keydown)="onKeydownNpwp($event)" (paste)="onPasteNpwp($event)"
+                (focus)="onFokusNpwp($event)" (blur)="onChangeNpwp($event)">
+
+              <small
+                *ngIf="(document_no.errors?.required && document_no.touched) || (document_no.errors?.required && documentdetailForm.submitted)"
+                class="text-danger">
+                Document No is required
+              </small>
+              <small *ngIf="document_no_taxid.errors?.pattern && document_no_taxid.touched" class="text-danger">
+                Document No is required and format should be <i>00.000.000.0-000.000</i>
+              </small>
+            </div>
+          </div>
+          <!--#endregion document_no-->
+
+          <!--#region Doc_status-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Document Status</label>
+              <select [disabled]="this.plafondStatus || model.is_existing_client === '1'" class="form-control col-md-6"
+                [ngModel]="model.doc_status" name="p_doc_status">
+                <option value='EXIST'>EXIST</option>
+                <option value='ONPROGRESS'>ON PROGRESS</option>
+              </select>
+            </div>
+          </div>
+          <!--#endregion Doc_status-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region eff_date-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="eff_date" class="control-label">Effective Date *</label>
+              <input [ngStyle]="getStyles(this.plafondStatus)" class="form-control col-md-6" placeholder="dd/mm/yyyy"
+                angular-mydatepicker [ngModel]="model.eff_date" name="p_eff_date" [options]="myDatePickerOptions"
+                (click)="eff_date.toggleCalendar()" required #p_eff_date="ngModel" #eff_date="angular-mydatepicker"
+                autocomplete="off" [readonly]="this.plafondStatus || model.is_existing_client === '1'" />
+              <small
+                *ngIf="(p_eff_date.errors?.required && p_eff_date.touched) || (p_eff_date.errors?.required && documentdetailForm.submitted)"
+                class="text-danger">
+                Effective Date is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion eff_date-->
+
+          <!--#region exp_date-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="exp_date" class="control-label">Expired Date *</label>
+              <input [ngStyle]="getStyles(this.plafondStatus)" class="form-control col-md-6" placeholder="dd/mm/yyyy"
+                angular-mydatepicker [ngModel]="model.exp_date" name="p_exp_date" [options]="myDatePickerOptions"
+                (click)="exp_date.toggleCalendar()" required #p_exp_date="ngModel" #exp_date="angular-mydatepicker"
+                autocomplete="off" [readonly]="this.plafondStatus || model.is_existing_client === '1'" />
+              <small
+                *ngIf="(p_exp_date.errors?.required && p_exp_date.touched) || (p_exp_date.errors?.required && documentdetailForm.submitted)"
+                class="text-danger">
+                Expired Date is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion exp_date-->
+
+          <!--#region check box is_default-->
+          <div class="col-md-4">
+            <div class="form-check mt-3" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input [disabled]="this.plafondStatus || model.is_existing_client === '1'" class="form-check-input"
+                    type="checkbox" [ngModel]="model.is_default" name="p_is_default">
+                  Default
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_default-->
+        </div>
+        <!--#endregion row-->
+      </form>
+      <!--#endregion form-->
+    </div>
+  </div>
+</div>
+
+<!--#region lookup DocumentType-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalDocumentType"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupDocumentType" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupdocumenttype;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupdocumenttype.numberIndex+i+1}}</td>
+                  <td style="width: 100%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowDocumentType(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup DocumentType-->

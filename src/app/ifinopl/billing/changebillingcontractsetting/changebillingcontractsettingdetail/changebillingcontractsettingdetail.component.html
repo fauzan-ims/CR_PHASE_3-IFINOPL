@@ -1,0 +1,559 @@
+<div class="main-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner region -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card ">
+                <!--#region watermark-->
+                <div class="watermark" hidden>
+                    <h6>{{this.companyName}}</h6>
+                    <h6>{{this.userName}}</h6>
+                    <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+                </div>
+                <!--#endregion watermark-->
+
+                <div class="card-header ">
+                    <h4 class="card-title">Agreement Info</h4>
+                </div>
+                <div class="card-body ">
+                    <!--#region form-->
+                    <form #changeBillingSettingForm="ngForm"
+                        (ngSubmit)="onFormSubmit(changeBillingSettingForm.value, changeBillingSettingForm.valid)">
+
+                        <!--#region button submit dan back-->
+                        <button type="submit" class="btn btn-info btn-round" data-role="R00023880000002C">Save</button>
+                        <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+                        <!--#endregion button submit dan back-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region agreement_no-->
+                            <input type="text" class="form-control" [ngModel]="model.agreement_no" name="p_agreement_no"
+                                readonly hidden>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Agreement No</label>
+                                    <input type="text" class="form-control" [ngModel]="model.agreement_external_no"
+                                        name="p_agreement_external_no" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion agreement_no-->
+
+                            <!--#region client_name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Client Name</label>
+                                    <input type="text" class="form-control" [ngModel]="model.client_name"
+                                        name="p_client_name" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion client_name-->
+
+                            <!--#region Asset No-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="asset_no" class="control-label">Asset No</label>
+                                    <input type="text" readonly class="form-control" [ngModel]="model.asset_no"
+                                        name="p_asset_no">
+                                </div>
+                            </div>
+                            <!--#endregion Asset No-->
+                        </div>
+                        <!--#endregion row-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region Asset Name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="asset_name" class="control-label">Asset Name</label>
+                                    <input type="text" readonly class="form-control" [ngModel]="model.asset_name"
+                                        name="p_asset_name">
+                                </div>
+                            </div>
+                            <!--#endregion Asset Name-->
+
+                            <!--#region due_date-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="due_date" class="control-label">Due Date</label>
+                                    <input readonly type="text" class="form-control col-md-4" [ngModel]="model.due_date"
+                                        name="p_due_date" #due_date="ngModel">
+                                </div>
+                            </div>
+                            <!--#endregion due_date-->
+
+                            <!--#region lease_rounded_amount-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Rental Amount</label>
+                                    <input type="text" class="form-control col-md-6" style="text-align: right;"
+                                        [ngModel]="model.lease_rounded_amount | number : '1.2-2'"
+                                        amount="lease_rounded_amount" name="p_lease_rounded_amount" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion lease_rounded_amount-->
+                        </div>
+                        <!--#endregion row-->
+
+                        <!-- #region row -->
+                        <div class="row">
+                            <!--#region Fix Asset No-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="fa_code" class="control-label">Fix Asset No</label>
+                                    <input type="text" readonly class="form-control" [ngModel]="model.fa_code"
+                                        name="p_fa_code">
+                                </div>
+                            </div>
+                            <!--#endregion Fix Asset No-->
+
+                            <!--#region Fix Asset Name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="fa_name" class="control-label">Fix Asset Name</label>
+                                    <input type="text" readonly class="form-control" [ngModel]="model.fa_name"
+                                        name="p_fa_name">
+                                </div>
+                            </div>
+                            <!--#endregion Fix Asset Name-->
+
+                            <!--#region Plat No-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="fa_reff_no_01" class="control-label">Plat No</label>
+                                    <input type="text" readonly class="form-control col-md-6"
+                                        [ngModel]="model.fa_reff_no_01" name="p_fa_reff_no_01">
+                                </div>
+                            </div>
+                            <!--#endregion Plat No-->
+                        </div>
+                        <!-- #endregion row -->
+
+                        <!-- #region row  -->
+                        <div class="row">
+                            <!--#region Chasis No-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="fa_reff_no_02" class="control-label">Chasis No</label>
+                                    <input type="text" readonly class="form-control" [ngModel]="model.fa_reff_no_02"
+                                        name="p_fa_reff_no_02">
+                                </div>
+                            </div>
+                            <!--#endregion Chasis No-->
+
+                            <!--#region Engine No-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="fa_reff_no_03" class="control-label">Engine No</label>
+                                    <input type="text" readonly class="form-control" [ngModel]="model.fa_reff_no_03"
+                                        name="p_fa_reff_no_03">
+                                </div>
+                            </div>
+                            <!--#endregion Engine No-->
+                        </div>
+                        <!-- #endregion row  -->
+
+                        <!-- #region row -->
+                        <div class="row">
+                            <!--#region billing_to_faktur_type-->
+                            <div class="col-md-4">
+                                <label class="labelgsubcode">Faktur Transaction Code *</label>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <button
+                                            class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                                            type="button" (click)="btnLookupFakturType()"
+                                            data-target="#lookupModalFakturType" data-toggle="modal" href="#">
+                                            <i class="fa fa-search-plus"></i></button>
+                                        <b>{{model.billing_to_faktur_type}}</b>
+                                        <input type="text" hidden name="p_billing_to_faktur_type"
+                                            [ngModel]="model.billing_to_faktur_type" required
+                                            #billing_to_faktur_type="ngModel" />
+                                    </div>
+                                    <small
+                                        *ngIf="(billing_to_faktur_type.errors?.required && billing_to_faktur_type.touched) || (billing_to_faktur_type.errors?.required && changeBillingSettingForm.submitted)"
+                                        class="text-danger">
+                                        Faktur Transaction Code is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion billing_to_faktur_type-->
+
+                            <!--#region check box is_auto_email-->
+                            <div class="col-md-4">
+                                <div class="form-check mt-3" style="margin-left: -35px;">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox"
+                                                [ngModel]="model.is_auto_email" name="p_is_auto_email">
+                                            Email Billing Notification
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion check box is_auto_email-->
+
+                            <!--#region email-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="email" class="control-label">Email *</label>
+                                    <input type="email" class="form-control" [ngModel]="model.email" name="p_email"
+                                        #email="ngModel" pattern={{EmailPattern}} required>
+                                </div>
+                                <small
+                                    *ngIf="(email.errors?.required && email.touched) || (email.errors?.required && changeBillingSettingForm.submitted)"
+                                    class="text-danger">
+                                    Faktur Type is required
+                                </small>
+                                <small *ngIf="email.errors?.pattern && email.touched" class="text-danger">
+                                    Email is required and format should be <i>john@doe.com</i>.
+                                </small>
+                            </div>
+                            <!--#endregion email-->
+
+                            <!--#region check box is_invoice_deduct_pph-->
+                            <div class="col-md-4">
+                                <div class="form-check mt-3" style="margin-left: -35px;">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox"
+                                                [ngModel]="model.is_invoice_deduct_pph" name="p_is_invoice_deduct_pph">
+                                            Invoice Deduct PPH
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion check box is_invoice_deduct_pph-->
+
+                            <!--#region check box is_receipt_deduct_pph-->
+                            <div class="col-md-4">
+                                <div class="form-check mt-3" style="margin-left: -35px;">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox"
+                                                [ngModel]="model.is_receipt_deduct_pph" name="p_is_receipt_deduct_pph">
+                                            Receipt Deduct PPH
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion check box is_receipt_deduct_pph-->
+                        </div>
+                        <!--#endregion row-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region billing_to_name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="billing_to_name" class="control-label">Billing To Name *</label>
+                                    <input type="text" class="form-control" [ngModel]="model.billing_to_name"
+                                        maxlength="250" name="p_billing_to_name" required #billing_to_name="ngModel">
+                                    <small
+                                        *ngIf="(billing_to_name.errors?.required && billing_to_name.touched) || (billing_to_name.errors?.required && changeBillingSettingForm.submitted)"
+                                        class="text-danger">
+                                        Billing To Name is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion billing_to_name-->
+
+                            <!--#region billing_to_area_no + billing_to_phone_no-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Billing To Phone No.
+                                        *</label>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" [ngModel]="model.billing_to_area_no"
+                                                name="p_billing_to_area_no" required #billing_to_area_no="ngModel"
+                                                maxlength="4" pattern={{NumberOnlyPattern}}>
+                                        </div>
+                                        -
+                                        <div class="col-md-7">
+                                            <input type="text" class="form-control"
+                                                [ngModel]="model.billing_to_phone_no" name="p_billing_to_phone_no"
+                                                maxlength="15" required #billing_to_phone_no="ngModel"
+                                                pattern={{NumberOnlyPattern}}>
+                                        </div>
+                                    </div>
+                                </div>
+                                <small
+                                    *ngIf="(billing_to_area_no.errors?.required && billing_to_area_no.touched || billing_to_phone_no.errors?.required && billing_to_phone_no.touched || billing_to_area_no.errors?.pattern && billing_to_area_no.touched || billing_to_phone_no.errors?.pattern && billing_to_phone_no.touched)|| (billing_to_area_no.errors?.required && billing_to_phone_no.errors?.required && changeBillingSettingForm.submitted)"
+                                    class="text-danger">
+                                    Billing To Phone No is required and format should be <i>0-9</i>.
+                                </small>
+                            </div>
+                            <!--#endregion billing_to_area_no + billing_to_phone_no-->
+
+                            <!--#region billing_to_address-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Billing To Address *</label>
+                                    <textarea type="text" class="form-control" [ngModel]="model.billing_to_address"
+                                        name="p_billing_to_address" required #billing_to_address="ngModel"
+                                        maxlength="4000"></textarea>
+                                    <small
+                                        *ngIf="(billing_to_address.errors?.required && billing_to_address.touched) || (billing_to_address.errors?.required && changeBillingSettingForm.submitted)"
+                                        class="text-danger">
+                                        Billing To Address is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion billing_to_address-->
+
+                             <!--#region document_no-->
+                             <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>
+                                        NPWP No *
+                                    </label>
+                                    <input type="text" class="form-control" [ngModel]="model.billing_to_npwp"
+                                        maxlength="16" name="p_billing_to_npwp" required #billing_to_npwp="ngModel" pattern={{NumberOnlyPattern}}>
+                                    <small
+                                        *ngIf="(billing_to_npwp.errors?.required && billing_to_npwp.touched) || ( billing_to_npwp.errors?.required && changeBillingSettingForm.submitted)"
+                                        class="text-danger">NPWP No is required
+                                    </small>
+                                    <small
+                                        *ngIf="(billing_to_npwp.errors?.pattern && billing_to_npwp.touched || billing_to_npwp.errors?.pattern && changeBillingSettingForm.submitted)"
+                                        class="text-danger">
+                                        NPWP No format should be <i>0-9</i>.
+                                    </small>                    
+                                </div>
+                            </div>
+                            <!--#endregion document_no-->
+
+                            <!--#region NITKU-->
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                <label for="client_nitku" class="control-label">NITKU *</label>
+                                <input type="text" class="form-control" [ngModel]="model.client_nitku" name="p_client_nitku"
+                                    #client_nitku="ngModel"pattern={{NumberOnlyPattern}} required maxlength="6">
+                                    <small
+                                        *ngIf="(client_nitku.errors?.required && client_nitku.touched) || ( client_nitku.errors?.required && changeBillingSettingForm.submitted)"
+                                        class="text-danger">NITKU is required
+                                    </small>
+                                    <small
+                                        *ngIf="(client_nitku.errors?.pattern && client_nitku.touched || client_nitku.errors?.pattern && changeBillingSettingForm.submitted)"
+                                        class="text-danger">
+                                        NITKU format should be <i>0-9</i>.
+                                    </small>                    
+                                </div>
+                            </div>
+                            <!--#endregion NITKU-->
+
+                            <!--#region npwp_name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>NPWP Name *</label>
+                                    <input type="text" class="form-control" [ngModel]="model.npwp_name" maxlength="250"
+                                        name="p_npwp_name" required #npwp_name="ngModel">
+                                    <small
+                                        *ngIf="(npwp_name.errors?.required && npwp_name.touched) || (npwp_name.errors?.required && changeBillingSettingForm.submitted)"
+                                        class="text-danger">
+                                        NPWP Name is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion npwp_name-->
+
+                            <!--#region npwp_address-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>NPWP Address *</label>
+                                    <textarea type="text" class="form-control" [ngModel]="model.npwp_address"
+                                        name="p_npwp_address" required #npwp_address="ngModel"
+                                        maxlength="4000"></textarea>
+                                    <small
+                                        *ngIf="(npwp_address.errors?.required && npwp_address.touched) || (npwp_address.errors?.required && changeBillingSettingForm.submitted)"
+                                        class="text-danger">
+                                        NPWP Address is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion npwp_address-->
+                        </div>
+                        <!--#endregion row-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region deliver_to_name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="deliver_to_name" class="control-label">Deliver To Name *</label>
+                                    <input type="text" class="form-control" [ngModel]="model.deliver_to_name"
+                                        maxlength="250" name="p_deliver_to_name" required #deliver_to_name="ngModel">
+                                    <small
+                                        *ngIf="(deliver_to_name.errors?.required && deliver_to_name.touched) || (deliver_to_name.errors?.required && changeBillingSettingForm.submitted)"
+                                        class="text-danger">
+                                        Deliver To Name is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion deliver_to_name-->
+
+                            <!--#region deliver_to_area_no + deliver_to_phone_no-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Deliver To Phone No.
+                                        *</label>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" [ngModel]="model.deliver_to_area_no"
+                                                name="p_deliver_to_area_no" required #deliver_to_area_no="ngModel"
+                                                maxlength="4" pattern={{NumberOnlyPattern}}>
+                                        </div>
+                                        -
+                                        <div class="col-md-7">
+                                            <input type="text" class="form-control"
+                                                [ngModel]="model.deliver_to_phone_no" name="p_deliver_to_phone_no"
+                                                maxlength="15" required #deliver_to_phone_no="ngModel"
+                                                pattern={{NumberOnlyPattern}}>
+                                        </div>
+                                    </div>
+                                </div>
+                                <small
+                                    *ngIf="(deliver_to_area_no.errors?.required && deliver_to_area_no.touched || deliver_to_phone_no.errors?.required && deliver_to_phone_no.touched || deliver_to_area_no.errors?.pattern && deliver_to_area_no.touched || deliver_to_phone_no.errors?.pattern && deliver_to_phone_no.touched)|| (deliver_to_area_no.errors?.required && deliver_to_phone_no.errors?.required && changeBillingSettingForm.submitted)"
+                                    class="text-danger">
+                                    Deliver To Phone No is required and format should be <i>0-9</i>.
+                                </small>
+                            </div>
+                            <!--#endregion deliver_to_area_no + deliver_to_phone_no-->
+
+                            <!--#region deliver_to_address-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Deliver To Address *</label>
+                                    <textarea type="text" class="form-control" [ngModel]="model.deliver_to_address"
+                                        name="p_deliver_to_address" required #deliver_to_address="ngModel"
+                                        maxlength="4000"></textarea>
+                                    <small
+                                        *ngIf="(deliver_to_address.errors?.required && deliver_to_address.touched) || (deliver_to_address.errors?.required && changeBillingSettingForm.submitted)"
+                                        class="text-danger">
+                                        Deliver To Address is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion deliver_to_address-->
+                        </div>
+                        <!--#endregion row-->
+
+                        <!-- #region row -->
+                        <div class="row">
+                            <!--#region pickup_name-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="pickup_name" class="control-label">Pickup Name *</label>
+                                    <input type="text" class="form-control" [ngModel]="model.pickup_name"
+                                        maxlength="250" name="p_pickup_name" required #pickup_name="ngModel">
+                                    <small
+                                        *ngIf="(pickup_name.errors?.required && pickup_name.touched) || (pickup_name.errors?.required && changeBillingSettingForm.submitted)"
+                                        class="text-danger">
+                                        Pickup Name is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion pickup_name-->
+
+                            <!--#region pickup_phone_area_no + pickup_phone_no-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Pickup Phone No.
+                                        *</label>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control"
+                                                [ngModel]="model.pickup_phone_area_no" name="p_pickup_phone_area_no"
+                                                required #pickup_phone_area_no="ngModel" maxlength="4"
+                                                pattern={{NumberOnlyPattern}}>
+                                        </div>
+                                        -
+                                        <div class="col-md-7">
+                                            <input type="text" class="form-control" [ngModel]="model.pickup_phone_no"
+                                                name="p_pickup_phone_no" maxlength="15" required
+                                                #pickup_phone_no="ngModel" pattern={{NumberOnlyPattern}}>
+                                        </div>
+                                    </div>
+                                </div>
+                                <small
+                                    *ngIf="(pickup_phone_area_no.errors?.required && pickup_phone_area_no.touched || pickup_phone_no.errors?.required && pickup_phone_no.touched || pickup_phone_area_no.errors?.pattern && pickup_phone_area_no.touched || pickup_phone_no.errors?.pattern && pickup_phone_no.touched)|| (pickup_phone_area_no.errors?.required && pickup_phone_no.errors?.required && changeBillingSettingForm.submitted)"
+                                    class="text-danger">
+                                    Pickup Phone No is required and format should be <i>0-9</i>.
+                                </small>
+                            </div>
+                            <!--#endregion pickup_phone_area_no + pickup_phone_no-->
+
+                            <!--#region pickup_address-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Pickup Address *</label>
+                                    <textarea type="text" class="form-control" [ngModel]="model.pickup_address"
+                                        name="p_pickup_address" required #pickup_address="ngModel"
+                                        maxlength="4000"></textarea>
+                                    <small
+                                        *ngIf="(pickup_address.errors?.required && pickup_address.touched) || (pickup_address.errors?.required && changeBillingSettingForm.submitted)"
+                                        class="text-danger">
+                                        Pickup Address is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion pickup_address-->
+                        </div>
+                        <!-- #endregion row -->
+                    </form>
+                    <!--#endregion form-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--#region modal lookup FakturType-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalFakturType"
+    style="margin-top: -65px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" style="overflow:hidden;">
+                <div class="col-md-12">
+                    <div class="card-body col-md-12">
+                        <table id="datatableLookupFakturType" class="table table-striped table-bordered hover"
+                            cellspacing="0" style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;"></th>
+                                    <th class="disabled-sorting">No</th>
+                                    <th>Description</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of lookupfakturtype;let i=index ">
+                                    <td class="if-no-edit-btn" style="display: none;"></td>
+                                    <td class="if-no-edit-btn" style="text-align: center;">
+                                        {{lookupfakturtype.numberIndex+i+1}}</td>
+                                    <td style="width: 100%;">{{ row.description }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-outline-default btn-round"
+                                            (click)="btnSelectRowFakturType(row.code, row.description)">Select</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion modal lookup FakturType-->

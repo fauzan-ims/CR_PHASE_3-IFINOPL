@@ -1,0 +1,286 @@
+<div class="main-content margin-wizard-content" style="margin-top: 20px;">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <!--#region form-->
+      <form #bankbookdetailForm="ngForm" (ngSubmit)="onFormSubmit(bankbookdetailForm.value, bankbookdetailForm.valid)">
+
+        <!--#region button save dan back-->
+        <button [hidden]="plafond_status !== 'HOLD'" type="submit" class="btn btn-info btn-round"
+          data-role="R00022550092256C">Save</button>
+        <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+        <!--#endregion button save dan back-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region p_client_code-->
+          <input type="text" [ngModel]="this.param" maxlength="50" name="p_client_code" hidden>
+          <!--#endregion p_client_code-->
+
+          <!--#region p_client_code-->
+          <input type="text" [ngModel]="this.paramss" maxlength="50" name="p_client_bank_code" hidden>
+          <!--#endregion p_client_code-->
+
+          <!--#region p_id-->
+          <input hidden type="text" [ngModel]="this.paramsss" name="p_id">
+          <!--#endregion p_id-->
+
+          <!--#region periode_year/periode_month-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="periode_year" class="control-label">Month - Year *</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <!-- <label>Document Status</label> -->
+                    <select [disabled]="plafond_status !== 'HOLD'" class="form-control" [ngModel]="model.periode_month"
+                      name="p_periode_month">
+                      <option value='01'>Jannuary</option>
+                      <option value='02'>February</option>
+                      <option value='03'>March</option>
+                      <option value='04'>April</option>
+                      <option value='05'>May</option>
+                      <option value='06'>June</option>
+                      <option value='07'>July</option>
+                      <option value='08'>August</option>
+                      <option value='09'>September</option>
+                      <option value='10'>October</option>
+                      <option value='11'>November</option>
+                      <option value='12'>December</option>
+                    </select>
+                  </div>
+                </div>
+                -
+                <div class="col-md-7">
+                  <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control col-md-6"
+                    [ngModel]="model.periode_year" name="p_periode_year" required #periode_year="ngModel" maxlength="4"
+                    minlength="4" pattern="{{NumberOnlyPattern}}">
+                </div>
+              </div>
+              <small
+                *ngIf="(periode_year.errors?.required && periode_year.touched) || (periode_year.errors?.required && bankbookdetailForm.submitted)"
+                class="text-danger">
+                Year is required
+              </small>
+              <small *ngIf="periode_year.errors?.pattern && periode_year.touched" class="text-danger">
+                Year is required and format should be <i>0-9</i>
+              </small>
+            </div>
+          </div>
+          <!--#endregion periode_year/periode_month-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region opening_balance_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="opening_balance_amount" class="control-label">Opening Balance Amount *</label>
+              <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control col-md-6"
+                style="text-align: right;" [ngModel]="model.opening_balance_amount | number : '1.2-2'" maxlength="24"
+                amount="opening_balance_amount" name="p_opening_balance_amount" required
+                #opening_balance_amount="ngModel">
+              <small
+                *ngIf="(opening_balance_amount.errors?.required && opening_balance_amount.touched) || (opening_balance_amount.errors?.required && bankbookdetailForm.submitted)"
+                class="text-danger">
+                Opening Balance Amount is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion opening_balance_amount-->
+
+          <!--#region freq_debet_mutation-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="freq_debet_mutation" class="control-label">Frequency Debit Mutation *</label>
+              <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control col-md-2"
+                [ngModel]="model.freq_debet_mutation" name="p_freq_debet_mutation" required
+                #freq_debet_mutation="ngModel" pattern="{{NumberOnlyPattern}}">
+              <small
+                *ngIf="(freq_debet_mutation.errors?.required && freq_debet_mutation.touched) || (freq_debet_mutation.errors?.required && bankbookdetailForm.submitted)"
+                class="text-danger">
+                Frequency Debit Mutation is required
+              </small>
+              <small *ngIf="freq_debet_mutation.errors?.pattern && freq_debet_mutation.touched" class="text-danger">
+                Frequency Debit Mutation is required and format should be <i>0-9</i>
+              </small>
+            </div>
+          </div>
+          <!--#endregion freq_debet_mutation-->
+
+          <!--#region highest_balance_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="highest_balance_amount" class="control-label">Highest Balance Amount *</label>
+              <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control col-md-6"
+                style="text-align: right;" [ngModel]="model.highest_balance_amount | number : '1.2-2'" maxlength="24"
+                amount="highest_balance_amount" name="p_highest_balance_amount" required
+                #highest_balance_amount="ngModel">
+              <small
+                *ngIf="(highest_balance_amount.errors?.required && highest_balance_amount.touched) || (highest_balance_amount.errors?.required && bankbookdetailForm.submitted)"
+                class="text-danger">
+                Highest Balance Amount is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion highest_balance_amount-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region total_db_mutation_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="total_db_mutation_amount" class="control-label">Total Debit Mutation Amount *</label>
+              <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control col-md-6"
+                style="text-align: right;" [ngModel]="model.total_db_mutation_amount | number : '1.2-2'" maxlength="24"
+                amount="total_db_mutation_amount" name="p_total_db_mutation_amount" required
+                #total_db_mutation_amount="ngModel">
+              <small
+                *ngIf="(total_db_mutation_amount.errors?.required && total_db_mutation_amount.touched) || (total_db_mutation_amount.errors?.required && bankbookdetailForm.submitted)"
+                class="text-danger">
+                Total Debit Mutation Amount is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion total_db_mutation_amount-->
+
+          <!--#region freq_credit_mutation-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="freq_credit_mutation" class="control-label">Frequency Credit Mutation *</label>
+              <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control col-md-2"
+                [ngModel]="model.freq_credit_mutation" name="p_freq_credit_mutation" required
+                #freq_credit_mutation="ngModel" pattern="{{NumberOnlyPattern}}">
+              <small
+                *ngIf="(freq_credit_mutation.errors?.required && freq_credit_mutation.touched) || (freq_credit_mutation.errors?.required && bankbookdetailForm.submitted)"
+                class="text-danger">
+                Frequency Credit Mutation is required
+              </small>
+              <small *ngIf="freq_credit_mutation.errors?.pattern && freq_credit_mutation.touched" class="text-danger">
+                Frequency Credit Mutation is required and format should be <i>0-9</i>
+              </small>
+            </div>
+          </div>
+          <!--#endregion freq_credit_mutation-->
+
+          <!--#region average_balance_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="average_balance_amount" class="control-label">Average Balance Amount *</label>
+              <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control col-md-6"
+                style="text-align: right;" [ngModel]="model.average_balance_amount | number : '1.2-2'" maxlength="24"
+                amount="average_balance_amount" name="p_average_balance_amount" required
+                #average_balance_amount="ngModel">
+              <small
+                *ngIf="(average_balance_amount.errors?.required && average_balance_amount.touched) || (average_balance_amount.errors?.required && bankbookdetailForm.submitted)"
+                class="text-danger">
+                Average Balance Amount is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion average_balance_amount-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region total_cr_mutation_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="total_cr_mutation_amount" class="control-label">Total Credit Mutation Amout *</label>
+              <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control col-md-6"
+                style="text-align: right;" [ngModel]="model.total_cr_mutation_amount | number : '1.2-2'" maxlength="24"
+                amount="total_cr_mutation_amount" name="p_total_cr_mutation_amount" required
+                #total_cr_mutation_amount="ngModel">
+              <small
+                *ngIf="(total_cr_mutation_amount.errors?.required && total_cr_mutation_amount.touched) || (total_cr_mutation_amount.errors?.required && bankbookdetailForm.submitted)"
+                class="text-danger">
+                Total Credit Mutation Amout is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion total_cr_mutation_amount-->
+
+          <!--#region average_db_mutation_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="average_db_mutation_amount" class="control-label">Average Debit Mutation Amount *</label>
+              <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control col-md-6"
+                style="text-align: right;" [ngModel]="model.average_db_mutation_amount | number : '1.2-2'"
+                maxlength="24" amount="average_db_mutation_amount" name="p_average_db_mutation_amount" required
+                #average_db_mutation_amount="ngModel">
+              <small
+                *ngIf="(average_db_mutation_amount.errors?.required && average_db_mutation_amount.touched) || (average_db_mutation_amount.errors?.required && bankbookdetailForm.submitted)"
+                class="text-danger">
+                Average Debit Mutation Amount is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion average_db_mutation_amount-->
+
+          <!--#region lowest_balance_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="lowest_balance_amount" class="control-label">Lowest Balance Amount *</label>
+              <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control col-md-6"
+                style="text-align: right;" [ngModel]="model.lowest_balance_amount | number : '1.2-2'" maxlength="24"
+                amount="lowest_balance_amount" name="p_lowest_balance_amount" required #lowest_balance_amount="ngModel">
+              <small
+                *ngIf="(lowest_balance_amount.errors?.required && lowest_balance_amount.touched) || (lowest_balance_amount.errors?.required && bankbookdetailForm.submitted)"
+                class="text-danger">
+                Lowest Balance Amount is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion lowest_balance_amount-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region ending_balance_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ending_balance_amount" class="control-label">Ending Balance Amount *</label>
+              <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control col-md-6"
+                style="text-align: right;" [ngModel]="model.ending_balance_amount | number : '1.2-2'" maxlength="24"
+                amount="ending_balance_amount" name="p_ending_balance_amount" required #ending_balance_amount="ngModel">
+              <small
+                *ngIf="(ending_balance_amount.errors?.required && ending_balance_amount.touched) || (ending_balance_amount.errors?.required && bankbookdetailForm.submitted)"
+                class="text-danger">
+                Ending Balance Amount is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion ending_balance_amount-->
+
+          <!--#region average_cr_mutation_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="average_cr_mutation_amount" class="control-label">Average Credit Mutation Amount *</label>
+              <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control col-md-6"
+                style="text-align: right;" [ngModel]="model.average_cr_mutation_amount | number : '1.2-2'"
+                maxlength="24" amount="average_cr_mutation_amount" name="p_average_cr_mutation_amount" required
+                #average_cr_mutation_amount="ngModel">
+              <small
+                *ngIf="(average_cr_mutation_amount.errors?.required && average_cr_mutation_amount.touched) || (average_cr_mutation_amount.errors?.required && bankbookdetailForm.submitted)"
+                class="text-danger">
+                Average Credit Mutation Amount is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion average_cr_mutation_amount-->
+        </div>
+        <!--#endregion row-->
+      </form>
+      <!--#endregion form-->
+    </div>
+  </div>
+</div>

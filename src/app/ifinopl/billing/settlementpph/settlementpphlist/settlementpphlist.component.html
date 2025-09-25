@@ -1,0 +1,169 @@
+<router-outlet></router-outlet>
+
+
+<div id="hideMainPanel" class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header">
+          <h4 class="card-title">Withholding Settlement Invoice List</h4>
+        </div>
+        <div class="card-body">
+          <!--#region button add-->
+          <div class="toolbar">
+            <button type="button" class="btn btn-info btn-round" (click)="btnSave()"
+              data-role="R00020590002060C">Save</button>
+            <button class="btn btn-info btn-round custom-button-width" (click)="btnDownload()"
+              data-role="R00020590002060P">
+              Download Template
+            </button>
+            <span class="btn btn-info btn-round btn-file custom-button-width" data-role="R00020590022060C">
+              <input id="fileControl" type="file" accept=".pdf, .xls, .xlsx" (change)="onUploadReader($event)">
+              <span>Upload Excel</span>
+            </span>
+            <button type="button" class="btn btn-success btn-round" (click)="btnProceed()"
+              data-role="R00020590002060O">POST</button>
+          </div>
+          <!--#endregion button add-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region SettlementStatus-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Settlement Status</label>
+                <select class="form-control col-md-4" [ngModel]="this.tampSettlementStatus"
+                  (change)="SettlementStatus($event)">
+                  <option value='ALL'>ALL</option>
+                  <option value='HOLD'>HOLD</option>
+                  <option value='POST'>POST</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion SettlementStatus-->
+
+            <!--#region overdueDays-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Overdue</label>
+                <select class="form-control col-md-4" [ngModel]="this.tampoverdueDays" (change)="overdueDays($event)">
+                  <option value='ALL'>ALL</option>
+                  <option value='LESS THAN 1'>LESS THAN 1</option>
+                  <option value='1-30'>1-30</option>
+                  <option value='31-60'>31-60</option>
+                  <option value='61-90'>61-90</option>
+                  <option value='MORE THAN 90'>MORE THAN 90</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion overdueDays-->
+          </div>
+          <!--#endregion row-->
+          <br>
+          <!--#region list view-->
+          <table id="datatableSettlementPphList" datatable [dtOptions]="dtOptions"
+            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th class="disabled-sorting">No</th>
+                <th class="disabled-sorting">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" id="checkalltable" [(ngModel)]="selectedAll"
+                        (change)="selectAll();" />
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </th>
+                <th>Invoice No / Invoice Due Date</th>
+                <th>Faktur No / Description</th>
+                <th>Npwp No / Name</th>
+                <th>PPH Amount</th>
+                <th>File Name</th>
+                <th class="disabled-sorting"></th>
+                <th>Payment Reff No</th>
+                <th>Payment Reff Date</th>
+                <th>Settlement Status</th>
+                <th>Aging Days</th>
+                <!-- <th style="text-align: center;">Action</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of listsettlementpph;let i=index ">
+                <td class="if-no-edit-btn" style="text-align: center;">
+                  {{listsettlementpph.numberIndex+i+1}}</td>
+                <td class="disabled-sorting if-no-edit-btn">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected" name="p_check_box"
+                        (change)="checkIfAllTableSelected($event, row.invoice_no);">
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </td>
+                <input type="hidden" value="{{row.invoice_no}}" name="p_invoice_no">
+                <input type="hidden" value="{{row.id}}" name="p_id">
+                <td style="width: 10%;text-align: left;">
+                  {{row.invoice_external_no}}<br>{{row.invoice_date}}
+                </td>
+                <td style="width: 15%;text-align: left;">{{row.faktur_no}}
+                  <br> {{row.invoice_name}}
+                </td>
+                <td style="width: 15%;">{{row.billing_to_npwp}} <br>
+                  {{row.npwp_name}}</td>
+                <td style="width: 10%;text-align: right;">
+                  {{row.currency_code}}<br>{{row.total_amount | number:'1.2-2'}}
+                </td>
+                <td style="width: 15%;">
+                  <input [hidden]="row.file_name !== ''" type="file" (change)="onUpload($event, row.invoice_no)" />
+                  <a>{{row.file_name}}</a>
+                </td>
+                <td style="text-align: center;" class="disabled-sorting if-no-edit-btn">
+                  <span>
+                    <a [hidden]="row.file_name == null || row.file_name == ''"
+                      (click)="priviewFile(row.file_name, row.file_path)" style="cursor: pointer;">
+                      <span></span>Preview</a> <br>
+                    <a [hidden]="row.file_name == null || row.file_name == '' || row.settlement_status === 'POST'"
+                      (click)="deleteImage(row.invoice_no,row.file_name,row.file_path)" style="cursor: pointer;">
+                      <span></span>Remove</a>
+                  </span>
+                </td>
+                <td style="width: 15%;">
+                  <input id="payment_reff_no" class="form-control" type="text" value="{{row.payment_reff_no}}"
+                    name="p_payment_reff_no" [readonly]="row.settlement_status === 'POST'">
+
+                </td>
+                <td style="width: 15%;">
+                  <input class="form-control" placeholder="dd/mm/yyyy" angular-mydatepicker
+                    value="{{row.payment_reff_date}}" name="p_payment_reff_date" [options]="myDatePickerOptions"
+                    (click)="p_payment_reff_date.toggleCalendar()" #p_payment_reff_date="angular-mydatepicker"
+                    autocomplete="off" [readonly]="row.settlement_status === 'POST'" />
+                </td>
+                <td style="width: 10%;text-align: center;">
+                  {{row.settlement_status}}
+                </td>
+                <td style="width: 5%;text-align: center;"><span [ngStyle]="{'backgroundColor': row.color}"
+                    style="color: black;padding: 10px; border-radius: 5px;font-weight: bold;">{{row.aging_days}}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--#endregion list view-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,182 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <!--#region watermark-->
+        <div class="watermark" hidden>
+          <h6>{{this.companyName}}</h6>
+          <h6>{{this.userName}}</h6>
+          <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+        </div>
+        <!--#endregion watermark-->
+
+        <div class="card-header ">
+          <h5 class="card-title">EOD Info</h5>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #eodForm="ngForm" (ngSubmit)="onFormSubmit(eodForm.value, eodForm.valid)">
+
+            <!--#region button submit dan back-->
+            <button type="submit" class="btn btn-info btn-round" data-role="R0000038U">Save</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button submit dan back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region code-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="code" class="control-label">Code *</label>
+                  <input type="text" class="form-control" [ngModel]="model.code" name="p_code" [readonly]="isReadOnly"
+                    required #code="ngModel">
+                  <small *ngIf="code.errors?.required && code.touched" class="text-danger">
+                    Code is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion code-->
+
+              <!--#region description-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="description" class="control-label">Description *</label>
+                  <textarea type="text" class="form-control" [ngModel]="model.description" name="p_description" required
+                    #description="ngModel"></textarea>
+                  <small *ngIf="description.errors?.required && description.touched" class="text-danger">
+                    Description is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion description-->
+
+              <!--#region type-->
+              <div class="col-md-4">
+                <label>Nationality Type</label>
+                <div class="form-group col-md-12">
+                  <div class="row">
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="p_type" value="IN"
+                          [(ngModel)]="model.type">IN
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="p_type" value="OUT"
+                          [(ngModel)]="model.type">OUT
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="p_type" value="PULL"
+                          [(ngModel)]="model.type">PULL
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion type-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region sp_name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="sp_name" class="control-label">Sp Name *</label>
+                  <input type="text" class="form-control" [ngModel]="model.sp_name" name="p_sp_name" required
+                    #sp_name="ngModel">
+                  <small *ngIf="sp_name.errors?.required && sp_name.touched" class="text-danger">
+                    Sp Name is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion sp_name-->
+
+              <!--#region order_no-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="order_no" class="control-label">Order No *</label>
+                  <input type="text" class="form-control col-md-2" [ngModel]="model.order_no" name="p_order_no" required
+                    #order_no="ngModel" pattern="{{NumberOnlyPattern}}">
+                  <small *ngIf="order_no.errors?.required && order_no.touched" class="text-danger">
+                    Order No is required
+                  </small>
+                  <small *ngIf="order_no.errors?.pattern && order_no.touched" class="text-danger">
+                    Order No is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion order_no-->
+
+              <!--#region when_error-->
+              <div class="col-md-4">
+                <label>When Error</label>
+                <div class="form-group col-md-12">
+                  <div class="row">
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="p_when_error" value="NEXT"
+                          [(ngModel)]="model.when_error">NEXT
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                    <div class="form-check-radio form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="p_when_error" value="STOP"
+                          [(ngModel)]="model.when_error">STOP
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion type-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region last_id-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Last ID</label>
+                  <input type="text" class="form-control col-md-2" [ngModel]="model.last_id" name="p_last_id" readonly>
+                </div>
+              </div>
+              <!--#endregion last_id-->
+
+              <!--#region is_active-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" [ngModel]="model.is_active" name="p_is_active">
+                      Active
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion status_slik_checking-->
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+        </div>
+        <div class="card-footer ">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,743 @@
+<div class="main-content margin-wizard-content" style="margin-top: 20px;">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <!--#region scoringForm form-->
+      <form #offerForm="ngForm" (ngSubmit)="onFormSubmit(offerForm.value, offerForm.valid)">
+
+        <!--#region offerForm button submit dan back-->
+        <button [hidden]="isDate" type="submit" ng-disabled="offerForm.$invalid" class="btn btn-info btn-round"
+          data-role="R00002640000265C">Save</button>
+        <!--#endregion offerForm button submit dan back-->
+
+        <!--#region followup row-->
+        <div class="row">
+          <!--#region id-->
+          <input hidden type="text" [ngModel]="model.code" name="p_code">
+          <!--#endregion id-->
+
+          <!--#region Prospect Code-->
+          <input type="text" [ngModel]="this.param" maxlength="50" name="p_prospect_code" hidden>
+          <!--#endregion Prospect Code-->
+
+          <!--#region followup_date-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="followup_date" class="control-label">Date</label>
+              <input [ngStyle]="getStyles(isReadOnly)" [disabled]="params != null || isDate"
+                class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                [ngModel]="model.followup_date" name="p_followup_date" [options]="myDatePickerOptions"
+                (click)="followup_date.toggleCalendar()" #p_followup_date="ngModel"
+                #followup_date="angular-mydatepicker" autocomplete="off" readonly>
+              <small
+                *ngIf="(followup_date.errors?.required && followup_date.touched) || (followup_date.errors?.required && offerForm.submitted)"
+                class="text-danger">
+                Date is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion followup_date-->
+
+          <!--#region lookup general subcode-->
+          <div class="col-md-4">
+            <label class="labelgsubcode">Status *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <span>
+                  <button [disabled]="isDate"
+                    class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    (click)="btnLookupGeneralSubcode()" data-target="#lookupModalGeneralSubcode" data-toggle="modal"
+                    href="#">
+                    <i class="fa fa-search-plus"></i></button> {{model.description}}
+                  <input type="hidden" name="p_followup_status" [ngModel]="model.followup_status" required
+                    #followup_status="ngModel">
+                  <small [hidden]="followup_status.valid || (followup_status.pristine && !offerForm.submitted)"
+                    class="text-danger">
+                    Status is required
+                  </small>
+                </span>
+              </div>
+            </div>
+          </div>
+          <!--#endregion lookup general subcode-->
+
+          <!--#region followup_action-->
+          <div class="col-md-4">
+            <label class="labelgsubcode">Action *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <span>
+                  <button [disabled]="isDate"
+                    class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    (click)="btnLookupAction()" data-target="#lookupModalAction" data-toggle="modal" href="#">
+                    <i class="fa fa-search-plus"></i></button> {{model.followup_action_name}}
+                  <input type="hidden" name="p_followup_action" [ngModel]="model.followup_action" required
+                    #followup_action="ngModel">
+                  <small [hidden]="followup_action.valid || (followup_action.pristine && !offerForm.submitted)"
+                    class="text-danger">
+                    Action is required
+                  </small>
+                </span>
+              </div>
+            </div>
+          </div>
+          <!--#endregion followup_action-->
+        </div>
+        <!--#endregion followup row-->
+
+        <!--#region row-->
+        <div class="row">
+          <!--#region followup_next_action-->
+          <div class="col-md-4">
+            <label class="labelgsubcode">Next Action *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <span>
+                  <button [disabled]="isDate"
+                    class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    (click)="btnLookupNextAction()" data-target="#lookupModalNextAction" data-toggle="modal" href="#">
+                    <i class="fa fa-search-plus"></i></button> {{model.followup_next_action_name}}
+                  <input type="hidden" name="p_followup_next_action" [ngModel]="model.followup_next_action" required
+                    #followup_next_action="ngModel">
+                </span>
+                <small [hidden]="followup_next_action.valid || (followup_next_action.pristine && !offerForm.submitted)"
+                  class="text-danger">
+                  Next Action is required
+                </small>
+              </div>
+            </div>
+          </div>
+          <!--#endregion followup_next_action-->
+
+          <!--#region next action date-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="followup_next_action_date" class="control-label">Next Date</label>
+              <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                [ngModel]="model.followup_next_action_date" name="p_followup_next_action_date"
+                [options]="myDatePickerOptions" (click)="followup_next_action_date.toggleCalendar()"
+                #p_followup_next_action_date="ngModel" #followup_next_action_date="angular-mydatepicker"
+                autocomplete="off">
+            </div>
+          </div>
+          <!--#endregion next action date-->
+
+          <!--#region followup_result-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="followup_result" class="control-label">Result *</label>
+              <textarea type="text" class="form-control" maxlength="4000" name="p_followup_result" [ngModel]="model.followup_result"
+                [readonly]="isDate" required #followup_result="ngModel"></textarea>
+              <small
+                *ngIf="(followup_result.errors?.required && followup_result.touched) || (followup_result.errors?.required && offerForm.submitted)"
+                class="text-danger">
+                Result is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion followup_result-->
+
+          <!--#region check box is_using_simulation-->
+          <div class="col-md-4">
+            <div class="form-check mt-4" style="margin-left: -35px;">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="model.is_using_simulation"
+                    name="p_is_using_simulation">
+                  Use Simmulation
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!--#endregion check box is_using_simulation-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="!model.is_using_simulation">
+          <!--#region object_type-->
+          <div class="col-md-4">
+            <label class="labelgsubcode">Type *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <span>
+                  <button [disabled]="isType"
+                    class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    (click)="btnLookupObjectType()" data-target="#lookupModalObjectType" data-toggle="modal" href="#">
+                    <i class="fa fa-search-plus"></i></button> {{model.object_type_name}}
+                  <input type="hidden" name="p_object_type" [ngModel]="model.object_type" required
+                    #object_type="ngModel" [disabled]="!model.is_using_simulation">
+                </span>
+              </div>
+            </div>
+          </div>
+          <!--#endregion object_type-->
+
+          <!--#region object_name-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="object_name" class="control-label">Object *</label>
+              <textarea type="text" class="form-control" [ngModel]="model.object_name" maxlength="4000"
+                name="p_object_name" required #object_name="ngModel" [disabled]="!model.is_using_simulation"></textarea>
+              <small
+                *ngIf="(object_name.errors?.required && object_name.touched) || (object_name.errors?.required && offerForm.submitted)"
+                class="text-danger">
+                Object is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion object_name-->
+
+          <!--#region simulation_remark-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="simulation_remark" class="control-label">Simmulation Remark *</label>
+              <textarea type="text" class="form-control" [ngModel]="model.simulation_remark" maxlength="4000"
+                name="p_simulation_remark" required #simulation_remark="ngModel"
+                [disabled]="!model.is_using_simulation"></textarea>
+              <small
+                *ngIf="(simulation_remark.errors?.required && simulation_remark.touched) || (simulation_remark.errors?.required && offerForm.submitted)"
+                class="text-danger">
+                Simmulation Remark is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion simulation_remark-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="!model.is_using_simulation">
+          <!--#region tenor-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="tenor" class="control-label">Tenor (Month) *</label>
+              <input type="text" style="text-align:right" class="form-control col-md-3" [ngModel]="model.tenor"
+                name="p_tenor" required #tenor="ngModel" maxlength="4" pattern="{{NumberOnlyPattern}}"
+                (change)="Tenor($event)" [disabled]="!model.is_using_simulation">
+              <small
+                *ngIf="(tenor.errors?.required && tenor.touched) || (tenor.errors?.required && offerForm.submitted)"
+                class="text-danger">
+                Tenor is required
+              </small>
+              <small *ngIf="tenor.errors?.pattern && tenor.touched" class="text-danger">
+                Tenor is required and format should be <i>0-9</i>
+              </small>
+            </div>
+          </div>
+          <!--#endregion tenor-->
+
+          <!--#region interest rate type-->
+          <div class="col-md-4">
+            <label>Interest Rate Type *</label>
+            <div class="form-group col-md-12">
+              <div class="row">
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="radio" name="p_interest_rate_type" value="FLAT"
+                      [(ngModel)]="model.interest_rate_type" [disabled]="!model.is_using_simulation">FLAT
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="radio" name="p_interest_rate_type" value="EFFECTIVE"
+                      [(ngModel)]="model.interest_rate_type" [disabled]="!model.is_using_simulation">EFFECTIVE
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion interest rate type-->
+
+          <!--#region flat rate -->
+          <div class="col-md-4" [hidden]="model.interest_rate_type != 'FLAT'">
+            <div class="form-group">
+              <label for="flat_rate" class="control-label">Flat Rate *</label>
+              <input [readonly]="model.interest_rate_type != 'FLAT'" [required]="model.interest_rate_type === 'FLAT'"
+                type="text" style="text-align:right" class="form-control col-md-6"
+                [ngModel]="model.flat_rate | number : '1.6-6'" name="p_flat_rate" #flat_rate="ngModel" maxlength="10"
+                maxlength="10" rate="flat_rate">
+              <small
+                *ngIf="(flat_rate.errors?.required && flat_rate.touched) || (flat_rate.errors?.required && offerForm.submitted)"
+                class="text-danger">
+                Flat Rate is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion flat rate -->
+
+          <!--#region eff rate //| number : '1.6-6'-->
+          <div class="col-md-4" [hidden]="model.interest_rate_type != 'EFFECTIVE'">
+            <div class="form-group">
+              <label for="eff_rate" class="control-label">Eff Rate (%) *</label>
+              <input [readonly]="model.interest_rate_type != 'EFFECTIVE'"
+                [required]="model.interest_rate_type === 'EFFECTIVE'" type="text" style="text-align:right"
+                class="form-control col-md-6" [ngModel]="model.eff_rate | number : '1.6-6'" name="p_eff_rate"
+                #eff_rate="ngModel" maxlength="10" rate="eff_rate">
+              <small
+                *ngIf="(eff_rate.errors?.required && eff_rate.touched) || (eff_rate.errors?.required && offerForm.submitted)"
+                class="text-danger">
+                Eff Rate is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion eff rate -->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="!model.is_using_simulation">
+          <!--#region asset value amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="asset_value_amount" class="control-label">Asset Value *</label>
+              <input [disabled]="!model.is_using_simulation" type="text" class="form-control col-md-6"
+                style="text-align: right;" [ngModel]="model.asset_value_amount | number : '1.2-2'" maxlength="24"
+                maxlength="24" amount="asset_value_amount" name="p_asset_value_amount" required #asset_value_amount="ngModel"
+                (change)="assetValue($event)">
+              <small
+                *ngIf="(asset_value_amount.errors?.required && asset_value_amount.touched) || (asset_value_amount.errors?.required && offerForm.submitted)"
+                class="text-danger">
+                Asset Value is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion asset value amount-->
+
+          <!--#region dp pct-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="dp_pct" class="control-label">DP (%) *</label>
+              <input [disabled]="!model.is_using_simulation" type="text" class="form-control col-md-6"
+                style="text-align: right;" [ngModel]="model.dp_pct | number : '1.6-6'" maxlength="10" rate="dp_pct"
+                name="p_dp_pct" required #dp_pct="ngModel" (change)="dpPct($event)">
+              <small
+                *ngIf="(dp_pct.errors?.required && dp_pct.touched) || (dp_pct.errors?.required && offerForm.submitted)"
+                class="text-danger">
+                DP (%) is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion dp pct-->
+
+          <!--#region dp_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="dp_amount" class="control-label">DP Amount *</label>
+              <input [disabled]="!model.is_using_simulation" type="text" class="form-control col-md-6"
+                style="text-align: right;" [ngModel]="model.dp_amount | number : '1.2-2'" maxlength="24"
+                maxlength="24" amount="dp_amount" name="p_dp_amount" required #dp_amount="ngModel" (change)="dpAmount($event)">
+              <small
+                *ngIf="(dp_amount.errors?.required && dp_amount.touched) || (dp_amount.errors?.required && offerForm.submitted)"
+                class="text-danger">
+                DP Amount is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion dp_amount-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="!model.is_using_simulation">
+          <!--#region financing amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Financing Amount</label>
+              <input type="text" [disabled]="!model.is_using_simulation" class="form-control col-md-6"
+                style="text-align: right;" [ngModel]="model.financing_amount | number : '1.2-2'" maxlength="24"
+                maxlength="24" amount="financing_amount" name="p_financing_amount" readonly>
+            </div>
+          </div>
+          <!--#endregion financing amount-->
+
+          <!--#region first payment type-->
+          <div class="col-md-4">
+            <label>First Payment Type *</label>
+            <div class="form-group col-md-12">
+              <div class="row">
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="radio" name="p_first_payment_type" value="ADV"
+                      [(ngModel)]="model.first_payment_type">ADVANCE
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+                <div class="form-check-radio form-check-inline">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="radio" name="p_first_payment_type" value="ARR"
+                      [(ngModel)]="model.first_payment_type">ARREAR
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion first payment type-->
+
+          <!--#region payment_schedule_type_code-->
+          <div class="col-md-4">
+            <label class="labelgsubcode">Payment Schedule Type *</label>
+            <div class="form-group">
+              <div class="col-md-12">
+                <span>
+                  <button class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    (click)="btnLookupPaymentType()" data-target="#lookupModalPaymentType" data-toggle="modal" href="#">
+                    <i class="fa fa-search-plus"></i></button> {{model.payment_schedule_type_name}}
+                  <input type="hidden" [disabled]="!model.is_using_simulation" name="p_payment_schedule_type_code"
+                    [ngModel]="model.payment_schedule_type_code" required #payment_schedule_type_code="ngModel" />
+                </span>
+              </div>
+            </div>
+          </div>
+          <!--#endregion payment_schedule_type_code-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="!model.is_using_simulation">
+          <!--#region admin amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="admin_amount" class="control-label">Admin Amount</label>
+              <input type="text" [disabled]="!model.is_using_simulation" style="text-align:right" maxlength="24"
+                maxlength="24" amount="admin_amount" class="form-control col-md-6" [ngModel]="model.admin_amount | number : '1.2-2'"
+                name="p_admin_amount" #admin_amount="ngModel" (change)="AdminAmount($event)">
+            </div>
+          </div>
+          <!--#endregion admin amount-->
+
+          <!--#region provision amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="provision_amount" class="control-label">Provision Amount</label>
+              <input type="text" [disabled]="!model.is_using_simulation" style="text-align:right" maxlength="24"
+                maxlength="24" amount="provision_amount" class="form-control col-md-6"
+                [ngModel]="model.provision_amount | number : '1.2-2'" name="p_provision_amount"
+                #provision_amount="ngModel" (change)="ProvisionAmount($event)">
+            </div>
+          </div>
+          <!--#endregion provision amount-->
+
+          <!--#region first date-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="first_date" class="control-label">First Date</label>
+              <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                [ngModel]="model.first_date" name="p_first_date" [options]="myDatePickerOptions"
+                (click)="first_date.toggleCalendar()" #p_first_date="ngModel" #first_date="angular-mydatepicker"
+                autocomplete="off">
+            </div>
+          </div>
+          <!--#endregion first date-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="!model.is_using_simulation">
+          <!--#region insurance amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="insurance_amount" class="control-label">Insurance Amount</label>
+              <input type="text" [disabled]="!model.is_using_simulation" style="text-align:right" maxlength="24"
+                maxlength="24" amount="insurance_amount" class="form-control col-md-6"
+                [ngModel]="model.insurance_amount | number : '1.2-2'" name="p_insurance_amount"
+                #insurance_amount="ngModel" (change)="InsuranceAmount($event)">
+            </div>
+          </div>
+          <!--#endregion insurance amount-->
+
+          <!--#region other fee amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="other_fee_amount" class="control-label">Other Fee Amount</label>
+              <input type="text" [disabled]="!model.is_using_simulation" style="text-align:right" maxlength="24"
+                maxlength="24" amount="other_fee_amount" class="form-control col-md-6"
+                [ngModel]="model.other_fee_amount | number : '1.2-2'" name="p_other_fee_amount"
+                #other_fee_amount="ngModel" (change)="OtherFeeAmount($event)">
+            </div>
+          </div>
+          <!--#endregion other fee amount-->
+
+          <!--#region last date-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="last_date" class="control-label">Last Date</label>
+              <input [ngStyle]="getStyles(isReadOnly)" class="form-control col-md-6" placeholder="dd/mm/yyyy"
+                angular-mydatepicker [ngModel]="model.last_date" name="p_last_date" [options]="myDatePickerOptions"
+                (click)="last_date.toggleCalendar()" #p_last_date="ngModel" #last_date="angular-mydatepicker"
+                autocomplete="off" readonly>
+              <small
+                *ngIf="(last_date.errors?.required && last_date.touched) || (last_date.errors?.required && offerForm.submitted)"
+                class="text-danger">
+                Last Date is required
+              </small>
+            </div>
+          </div>
+          <!--#endregion last date-->
+        </div>
+        <!--#endregion row-->
+
+        <!--#region row-->
+        <div class="row" [hidden]="!model.is_using_simulation">
+          <!--#region tdp amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Total Fee</label>
+              <input type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.tdp_amount | number : '1.2-2'" maxlength="24" amount="tdp_amount"
+                (change)="tdpAmount($event)" name="p_tdp_amount" readonly>
+            </div>
+          </div>
+          <!--#endregion tdp amount-->
+
+          <!--#region installment amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Installment Amount</label>
+              <input type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.installment_amount | number : '1.2-2'" maxlength="24" amount="installment_amount"
+                (change)="installmentAmount($event)" name="p_installment_amount" disabled>
+            </div>
+          </div>
+          <!--#endregion installment amount-->
+
+          <!--#region total_amount-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>TDP Amount</label>
+              <input type="text" class="form-control col-md-6" style="text-align: right;"
+                [ngModel]="model.total_amount | number : '1.2-2'" name="p_total_amount" amount="total_amount"
+                (change)="totalAmount($event)" disabled>
+            </div>
+          </div>
+          <!--#endregion total_amount-->
+        </div>
+        <!--#endregion row-->
+      </form>
+      <!--#endregion form-->
+    </div>
+  </div>
+</div>
+
+<!--#region modal lookup general subcode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalGeneralSubcode"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupGeneralSubcode" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupgeneralsubcode;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupgeneralsubcode.numberIndex+i+1}}</td>
+                  <td style="width: 20%; text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowGeneralSubcode(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup general subcode-->
+
+<!--#region modal lookup general subcode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalObjectType"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupObjectType" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupobjecttype;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupobjecttype.numberIndex+i+1}}</td>
+                  <td style="width: 20%; text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowObjectType(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup general subcode-->
+
+<!--#region modal lookup general subcode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalAction"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupAction" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupaction;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupaction.numberIndex+i+1}}</td>
+                  <td style="width: 20%; text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowAction(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup general subcode-->
+
+<!--#region modal lookup general subcode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalNextAction"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupNextAction" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupnextaction;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupnextaction.numberIndex+i+1}}</td>
+                  <td style="width: 20%; text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowNextAction(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup general subcode-->
+
+<!--#region modal lookup general subcode-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalPaymentType"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupPaymentType" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookuppaymenttype;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookuppaymenttype.numberIndex+i+1}}</td>
+                  <td style="width: 20%; text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowPaymentType(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup general subcode-->

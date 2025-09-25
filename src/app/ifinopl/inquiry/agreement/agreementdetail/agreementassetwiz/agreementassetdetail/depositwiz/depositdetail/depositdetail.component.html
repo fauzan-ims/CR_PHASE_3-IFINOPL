@@ -1,0 +1,111 @@
+<div class="main-content margin-wizard-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+      <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner region -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card-body ">
+  
+          <!--#region button back-->
+          <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+          <!--#endregion button back-->
+  
+          <!--#region row-->
+          <div class="row">
+            <!--#region collateral_no-->
+            <!-- <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="code" class="control-label">Code </label>
+                    <input type="text" class="form-control" [ngModel]="model.code" name="p_code"
+                      #code="ngModel" readonly>
+                  </div>
+                </div> -->
+  
+            <!--#endregion code-->
+  
+            <!--#region deposit_type-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="deposit_type" class="control-label">Deposit Type </label>
+                <input type="text" class="form-control" [ngModel]="model.deposit_type" name="p_deposit_type"
+                  #deposit_type="ngModel" readonly>
+              </div>
+            </div>
+            <!--#endregion deposit_type-->
+  
+            <!--#region deposit_currency_code-->
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="deposit_currency_code" class="control-label">Currency Code </label>
+                <input type="text" class="form-control" [ngModel]="model.deposit_currency_code"
+                  name="p_deposit_currency_code" [readonly]="isReadOnly" #collateral_type_name="ngModel" readonly>
+              </div>
+            </div>
+            <!--#endregion collateral_type_desc-->
+  
+  
+            <!--#region deposit_amount-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="deposit_amount" class="control-label">Deposit Amount</label>
+                <input type="text" class="form-control col-md-6" style="text-align: right;"
+                  [ngModel]="model.deposit_amount | number : '1.2-2'" name="p_deposit_amount" #deposit_amount="ngModel"
+                  pattern="{{NumberOnlyPattern}}" readonly>
+              </div>
+            </div>
+            <!--#endregion deposit_amount-->
+          </div>
+          <!--#endregion row-->
+  
+        </div>
+  
+        <div *ngIf="param != null">
+          <!--#region list view-->
+          <span layout="row horizontal-divider">
+            <hr flex />
+          </span>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card-header">
+                <h5>Deposit History</h5>
+              </div>
+              <div class="card-body">
+  
+                <!--#region list view-->
+                <table id="datatableAgreementDepositDetail" datatable [dtOptions]="dtOptions"
+                  class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                  <thead>
+                    <tr>
+                      <th class="disabled-sorting">No</th>
+                      <th style="display: none;"></th>
+                      <th>Transaction Date</th>
+                      <th>Amount</th>
+                      <th>Reff No</th>
+                      <th>Reff Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of listhistory;let i=index">
+                      <td style="display: none;"></td>
+                      <td style="text-align: center;">{{listhistory.numberIndex+i+1}}</td>
+                      <td style="width: 20%;text-align: center;" class='if-no-edit-btn'>{{row.transaction_date}}</td>
+                      <td style="width: 25%;text-align: right;">{{row.orig_amount | number : '1.2-2'}}</td>
+                      <td style="width: 25%;text-align: left;">{{row.source_reff_code}}</td>
+                      <td style="width: 30%;text-align: left;">{{row.source_reff_name}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!--#endregion list view-->
+              </div>
+            </div>
+          </div>
+          <!--#endregion list view-->
+        </div>
+  
+        <div class="card-footer ">
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,263 @@
+<div class="main-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner region -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card ">
+                <!--#region watermark-->
+                <div class="watermark" hidden>
+                    <h6>{{this.companyName}}</h6>
+                    <h6>{{this.userName}}</h6>
+                    <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+                </div>
+                <!--#endregion watermark-->
+
+                <div class="card-header ">
+                    <h4 class="card-title">Contract Info</h4>
+                </div>
+                <div class="card-body ">
+                    <!--#region form-->
+                    <form #contractmaturitydetailForm="ngForm"
+                        (ngSubmit)="onFormSubmit(contractmaturitydetailForm.value, contractmaturitydetailForm.valid)">
+                        <input hidden type="text" class="form-control" [ngModel]="model.code" name="p_code" readonly>
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region agreement_no -->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Agreement No</label>
+                                    <input type="text" class="form-control" [ngModel]="model.agreement_no"
+                                        name="p_agreement_no" hidden>
+                                    <input type="text" class="form-control" [ngModel]="model.agreement_external_no"
+                                        name="p_agreement_external_no" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion agreement_no -->
+
+                            <!--#region client_name -->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Client</label>
+                                    <input type="text" class="form-control" [ngModel]="model.client_name"
+                                        name="p_client_name" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion client_name -->
+
+                            <!--#region status -->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <input type="text" class="form-control" [ngModel]="model.status" name="p_status"
+                                        readonly>
+                                </div>
+                            </div>
+                            <!--#endregion status -->
+                        </div>
+                        <!--#endregion row-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region branch_name -->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Branch</label>
+                                    <input type="text" class="form-control" [ngModel]="model.branch_name"
+                                        name="p_branch_name" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion branch_name -->
+
+                            <!--#region date-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="p_date" class="control-label">Date</label>
+                                    <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
+                                        [ngModel]="model.date" name="p_date" [options]="myDatePickerOptions" required
+                                        #p_date="ngModel" #date="angular-mydatepicker" autocomplete="off"
+                                        (click)="date.toggleCalendar()" readonly />
+                                </div>
+                            </div>
+                            <!--#endregion date-->
+
+                            <!--#region remark-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="p_remark" class="control-label">Remark</label>
+                                    <textarea type="text" class="form-control" [ngModel]="model.remark" name="p_remark"
+                                        readonly #remark="ngModel" maxlength="4000"></textarea>
+                                </div>
+                            </div>
+                            <!--#endregion remark-->
+
+                            <!--#region file_path <i class="fa fa-check">-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>File</label>
+                                    <div class="row" style="margin-left: 30px;">
+                                        <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                                            <div [hidden]="this.tampHidden !== false">
+                                                <span>
+                                                    <a class="btn btn-primary btn-round btn-file custom-button-width"
+                                                        type="button"
+                                                        (click)="priviewFile(model.file_name, model.file_paths)">
+                                                        <span><i class="fa fa-eye"></i></span></a>
+                                                </span>
+                                                <div> {{model.file_name}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion file_path-->
+                        </div>
+                        <!--#endregion row-->
+                        <span layout="row horizontal-divider">
+                            <hr flex />
+                        </span>
+
+                        <!--#region row-->
+                        <div class="row mt-2">
+                            <!--#region result-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="p_result" class="control-label">Result</label>
+                                    <select disabled class="form-control col-md-6" name="p_result" #result="ngModel"
+                                        [ngModel]="model.result">
+                                        <option value='STOP'>STOP</option>
+                                        <option value='CONTINUE'>CONTINUE RENTAL</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--#endregion result-->
+
+                            <!--#region old_billing_type_desc -->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Old Billing Type</label>
+                                    <input type="text" class="form-control col-md-6"
+                                        [ngModel]="model.old_billing_type_desc" name="p_old_billing_type_desc"
+                                        #old_billing_type_desc="ngModel" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion old_billing_type_desc -->
+
+                            <!--#region new_billing_type-->
+                            <div class="col-md-4">
+                                <label class="labelgsubcode">New Billing Type</label>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <button disabled
+                                            class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin"
+                                            type="button" data-target="#lookupModalBillingType" data-toggle="modal"
+                                            href="#">
+                                            <i class="fa fa-search-plus"></i></button> {{model.new_billing_type_desc}}
+                                        <input required type="hidden" name="p_new_billing_type"
+                                            [ngModel]="model.new_billing_type" #new_billing_type="ngModel" />
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion new_billing_type-->
+
+                            <!--#region additional_periode -->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Additional Periode (Month) </label>
+                                    <input type="text" class="form-control col-md-2"
+                                        [ngModel]="model.additional_periode" name="p_additional_periode"
+                                        pattern="{{NumberOnlyPattern}}" #additional_periode="ngModel" readonly>
+                                </div>
+                            </div>
+                            <!--#endregion additional_periode -->
+
+                            <!--#region pickup_date-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="p_pickup_date" class="control-label">Estimate Pickup Date </label>
+                                    <input [ngStyle]="getStyles(true)" class="form-control col-md-6"
+                                        placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.pickup_date"
+                                        name="p_pickup_date" [options]="myDatePickerOptions" #p_pickup_date="ngModel"
+                                        #pickup_date="angular-mydatepicker" autocomplete="off"
+                                        (click)="pickup_date.toggleCalendar()" readonly />
+                                </div>
+                            </div>
+                            <!--#endregion date-->
+                        </div>
+                        <!--#endregion row-->
+                    </form>
+                    <!--#endregion form-->
+                    <span layout="row horizontal-divider">
+                        <hr flex />
+                    </span>
+                    <!--#region list view-->
+                    <div class="row">
+                        <span layout="row horizontal-divider">
+                            <hr flex />
+                        </span>
+                        <div class="col-md-12">
+                            <div class="card-header">
+                                <h4 class="card-title">Asset List</h4>
+                            </div>
+                            <div class="card-body">
+
+                                <!--#region list view-->
+                                <table id="datatableApplicationAsset" datatable [dtOptions]="dtOptions"
+                                    class="table table-striped table-bordered row-border hover" cellspacing="0"
+                                    width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th style="display: none;"></th>
+                                            <th class="disabled-sorting">No</th>
+                                            <th>Asset No</th>
+                                            <th>Maturity Date</th>
+                                            <th>Overdue Invoice</th>
+                                            <th>Outstanding Rental</th>
+                                            <th>Continue</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let row of listapplicationasset;let i=index ">
+                                            <td class="if-no-edit-btn" style="display: none;">
+                                                <input hidden name="p_id_detail" [ngModel]="row.id">
+                                            </td>
+                                            <td class="if-no-edit-btn" style="text-align: center;">
+                                                {{listapplicationasset.numberIndex+i+1}}
+                                            </td>
+                                            <td style="width: 35%;">{{row.asset_no}} <br> {{row.asset_name}} <br>
+                                                {{row.plat_no}} <br>
+                                                {{row.chassis_no}} <br>
+                                                {{row.engine_no}}</td>
+                                            <td style="width: 25%; text-align: center;">{{row.maturity_date}} </td>
+
+                                            <td style="width: 20%;text-align: right;">{{row.overdue_invice | number :
+                                                '1.2-2'}}</td>
+                                            <td style="width: 20%;text-align: right;">{{row.outstanding_rental | number
+                                                : '1.2-2'}}</td>
+                                            <td class="if-no-edit-btn" style="text-align: center;">
+                                                <label class="switch">
+                                                    <input disabled type="checkbox" [ngModel]="row.result"
+                                                        (click)="btnContinue(row.id)">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit"
+                                                    (click)="btnEdit(row.id)"><i class="fa fa-edit"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!--#endregion list view-->
+                            </div>
+                        </div>
+                    </div>
+                    <!--#endregion list view-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

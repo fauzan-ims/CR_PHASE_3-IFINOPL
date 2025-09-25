@@ -1,0 +1,433 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <div class="card-header ">
+          <h4 class="card-title">Unit Info</h4>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #unitForm="ngForm" (ngSubmit)="onFormSubmit(unitForm.value, unitForm.valid)">
+            <!--#region button submit dan back-->
+            <button type="save" class="btn btn-info btn-round" data-role="R00020040002005C">Save</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button submit dan back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region code -->
+              <input type="text" class="form-control" [ngModel]="model.code" maxlength="50" name="p_code" hidden>
+              <!--#endregion code -->
+
+              <!--#region description-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="description" class="control-label">Description *</label>
+                  <textarea type="text" class="form-control" maxlength="250" [ngModel]="model.description" required
+                    #description="ngModel" name="p_description"></textarea>
+                  <small
+                    *ngIf="(description.errors?.required && description.touched) || (description.errors?.required && unitForm.submitted)"
+                    class="text-danger">
+                    Description is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion description-->
+
+              <!--#region Vehicle Name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Vehicle Name</label>
+                  <textarea type="text" class="form-control" [ngModel]="model.vehicle_name" maxlength="250"
+                    name="p_vehicle_name" readonly></textarea>
+                </div>
+              </div>
+              <!--#endregion Vehicle Name-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Lookup Category-->
+              <div class="col-md-4">
+                <label>Category *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupCategory()" data-toggle="modal" data-target="#lookupModalCategory" href="#"><i
+                        class="fa fa-search-plus"></i></button>
+                    {{model.vehicle_category_name}}
+                    <input type="hidden" class="form-control" [ngModel]="model.vehicle_category_code"
+                      name="p_vehicle_category_code" required #vehicle_category_code="ngModel">
+                  </div>
+                  <small
+                    *ngIf="vehicle_category_code.errors?.required && vehicle_category_code.touched || (vehicle_category_code.errors?.required && unitForm.submitted)"
+                    class="text-danger">
+                    Category is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Lookup Category-->
+
+              <!--#region Lookup Sub-->
+              <div class="col-md-4">
+                <label>Subcategory * </label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupSub()" data-toggle="modal" data-target="#lookupModalSub" href="#"><i
+                        class="fa fa-search-plus"></i></button>
+                    {{model.vehicle_subcategory_name}}
+                    <input type="hidden" class="form-control" [ngModel]="model.vehicle_subcategory_code"
+                      name="p_vehicle_subcategory_code" required #vehicle_subcategory_code="ngModel">
+                  </div>
+                  <small
+                    *ngIf="vehicle_subcategory_code.errors?.required && vehicle_subcategory_code.touched || (vehicle_subcategory_code.errors?.required && unitForm.submitted)"
+                    class="text-danger">
+                    Subcategory is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Lookup Sub-->
+
+              <!--#region Lookup Merk-->
+              <div class="col-md-4">
+                <label>Merk * </label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupMerk()" data-toggle="modal" data-target="#lookupModalMerk" href="#"><i
+                        class="fa fa-search-plus"></i></button>
+                    {{model.vehicle_merk_name}}
+                    <input type="hidden" class="form-control" [ngModel]="model.vehicle_merk_code"
+                      name="p_vehicle_merk_code" required #vehicle_merk_code="ngModel">
+                  </div>
+                  <small
+                    *ngIf="vehicle_merk_code.errors?.required && vehicle_merk_code.touched || (vehicle_merk_code.errors?.required && unitForm.submitted)"
+                    class="text-danger">
+                    Merk is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Lookup Merk-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Lookup Model-->
+              <div class="col-md-4">
+                <label>Model * </label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupModel()" data-toggle="modal" data-target="#lookupModalModel" href="#"><i
+                        class="fa fa-search-plus"></i></button>
+                    {{model.vehicle_model_name}}
+                    <input type="hidden" class="form-control" [ngModel]="model.vehicle_model_code"
+                      name="p_vehicle_model_code" required #vehicle_model_code="ngModel">
+                  </div>
+                  <small
+                    *ngIf="vehicle_model_code.errors?.required && vehicle_model_code.touched || (vehicle_model_code.errors?.required && unitForm.submitted)"
+                    class="text-danger">
+                    Model is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Lookup Model-->
+
+              <!--#region Lookup Type-->
+              <div class="col-md-4">
+                <label>Type *</label>
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <button class="btn btn-icon btn-outline-default btn-round btn-md" type="button"
+                      (click)="btnLookupType()" data-toggle="modal" data-target="#lookupModalType" href="#"><i
+                        class="fa fa-search-plus"></i></button>
+                    {{model.vehicle_type_name}}
+                    <input type="hidden" class="form-control" [ngModel]="model.vehicle_type_code"
+                      name="p_vehicle_type_code" required #vehicle_type_code="ngModel">
+                  </div>
+                  <small
+                    *ngIf="vehicle_type_code.errors?.required && vehicle_type_code.touched || (vehicle_type_code.errors?.required && unitForm.submitted)"
+                    class="text-danger">
+                    Type is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Lookup Type-->
+
+              <!--#region is_active-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" [ngModel]="model.is_active" name="p_is_active">
+                      Active
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion is_active-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region is karoseri-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" [ngModel]="model.is_karoseri"
+                        name="p_is_karoseri">
+                      Karoseri
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion is karoseri-->
+
+              <!--#region is cbu-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" [ngModel]="model.is_cbu" name="p_is_cbu">
+                      CBU
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion is cbu-->
+            </div>
+            <!--#endregion row-->
+
+          </form>
+          <!--#endregion form-->
+        </div>
+        <div class="card-footer ">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region lookup Type-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalType" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12" style="width: 100%">
+            <table id="datatableLookupType" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupType;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupType.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowType(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup lookupType-->
+
+<!--#region lookup Merk-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalMerk" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12" style="width: 100%">
+            <table id="datatableLookupMerk" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupMerk;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupMerk.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowMerk(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup lookupMerk-->
+
+<!--#region lookup Sub-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSub" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12" style="width: 100%">
+            <table id="datatableLookupSub" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupSub;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupSub.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowSub(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup lookupSub-->
+
+<!--#region lookup Category-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalCategory"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12" style="width: 100%">
+            <table id="datatableLookupCategory" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupCategory;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupCategory.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowCategory(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup lookupCategory-->
+
+<!--#region lookup Model-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalModel" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12" style="width: 100%">
+            <table id="datatableLookupModel" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupModel;let i=index ">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td class="if-no-edit-btn" style="text-align: center;">{{lookupModel.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowModel(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup lookupModel-->

@@ -1,0 +1,79 @@
+<div class="main-content">
+    <!-- spinner region -->
+    <div class="panel-container-spinner" *ngIf="showSpinner">
+        <app-spinner class="spinner-container"></app-spinner>
+    </div>
+    <!-- end spinner region -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card ">
+                <div class="card-header ">
+                    <h4 class="card-title">Merk Info</h4>
+                </div>
+                <div class="card-body ">
+                    <!--#region form-->
+                    <form #categoryForm="ngForm" (ngSubmit)="onFormSubmit(categoryForm.value, categoryForm.valid)">
+                        <!--#region button submit dan back-->
+                        <button type="save" class="btn btn-info btn-round" data-role="R00020160002017C">Save</button>
+                        <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+                        <!--#endregion button submit dan back-->
+
+                        <!--#region row-->
+                        <div class="row">
+                            <!--#region code-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="code" class="control-label">Code *</label>
+                                    <input type="text" class="form-control" [ngModel]="model.code" name="p_code"
+                                        [readonly]="isReadOnly" required #code="ngModel" maxlength="10">
+                                    <small
+                                        *ngIf="(code.errors?.required && code.touched) || (code.errors?.required && categoryForm.submitted)"
+                                        class="text-danger">
+                                        Code is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion code-->
+
+                            <!--#region description-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="description" class="control-label">Description *</label>
+                                    <input type="text" class="form-control" maxlength="250"
+                                        [ngModel]="model.description" required #description="ngModel"
+                                        name="p_description">
+                                    <small
+                                        *ngIf="(description.errors?.required && description.touched) || (description.errors?.required && categoryForm.submitted)"
+                                        class="text-danger">
+                                        Description is required
+                                    </small>
+                                </div>
+                            </div>
+                            <!--#endregion description-->
+
+                            <!--#region is_active-->
+                            <div class="col-md-4">
+                                <div class="form-check mt-3" style="margin-left: -35px;">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" [ngModel]="model.is_active"
+                                                name="p_is_active">
+                                            Active
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#endregion is_active-->
+                        </div>
+                        <!--#endregion row-->
+
+                    </form>
+                    <!--#end region form-->
+                </div>
+                <div class="card-footer ">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

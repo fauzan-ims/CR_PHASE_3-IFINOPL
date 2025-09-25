@@ -1,0 +1,323 @@
+<div class="main-content margin-wizard-content" style="margin-top: 20px;">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-body ">
+        <!--#region form-->
+        <form #clientbankdetailForm="ngForm"
+          (ngSubmit)="onFormSubmit(clientbankdetailForm.value, clientbankdetailForm.valid)">
+
+          <!--#region button submit dan back-->
+          <button [hidden]="plafond_status !== 'HOLD'" type="save" class="btn btn-info btn-round"
+            data-role="R00022550082256C">Save</button>
+          <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+          <!--#endregion button submit dan back-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region p_client_code-->
+            <input type="text" [ngModel]="this.param" maxlength="50" name="p_client_code" hidden>
+            <!--#endregion p_client_code-->
+
+            <!--#region p_id-->
+            <input hidden type="text" [ngModel]="this.paramss" name="p_code">
+            <!--#endregion p_id-->
+
+            <!--#region Lookup Bank-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_bank_code" class="control-label" class="labelmodule">Bank *</label>
+                <div class="col-md-12 buttons">
+                  <button [disabled]="plafond_status !== 'HOLD'"
+                    class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    (click)="btnLookupBank()" data-target="#lookupModalBank" data-toggle="modal" href="#">
+                    <i class="fa fa-search-plus"></i></button> {{model.bank_name}}
+                  <input type="hidden" name="p_bank_name" [ngModel]="model.bank_name" required #p_bank_name="ngModel">
+                  <input type="hidden" name="p_bank_code" [ngModel]="model.bank_code" required #p_bank_code="ngModel">
+                </div>
+                <small
+                  *ngIf="p_bank_code.errors?.required && p_bank_code.touched || (p_bank_code.errors?.required && clientbankdetailForm.submitted) "
+                  class="text-danger">
+                  Bank is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion Lookup Bank-->
+
+            <!--#region Lookup currency-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="p_currency_code" class="control-label" class="labelmodule">Currency *</label>
+                <div class="col-md-12 buttons">
+                  <button [disabled]="plafond_status !== 'HOLD'"
+                    class="btn btn-icon btn-outline-default btn-round btn-md btn-lookup-margin" type="button"
+                    (click)="btnLookupCurrency()" data-target="#lookupModalCurrency" data-toggle="modal" href="#">
+                    <i class="fa fa-search-plus"></i></button> {{model.currency_code}}
+                  <input type="hidden" name="p_currency_code" [ngModel]="model.currency_code" required
+                    #p_currency_code="ngModel" />
+                </div>
+                <small
+                  *ngIf="p_currency_code.errors?.required && p_currency_code.touched || (p_currency_code.errors?.required && clientbankdetailForm.submitted) "
+                  class="text-danger">
+                  Currency is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion Lookup currency-->
+
+            <!--#region bank_branch-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="bank_branch" class="control-label" class="labelmodule">Bank Branch *</label>
+                <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control"
+                  [ngModel]="model.bank_branch" required maxlength="250" name="p_bank_branch" #bank_branch="ngModel">
+              </div>
+              <small
+              *ngIf="bank_branch.errors?.required && bank_branch.touched || (bank_branch.errors?.required && clientbankdetailForm.submitted) "
+              class="text-danger">
+              Bank Branch is required
+            </small>
+            </div>
+           
+            <!--#endregion bank_branch-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region Bank Account No-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="bank_account_no" class="control-label">Bank Account No *</label>
+                <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control"
+                  [ngModel]="model.bank_account_no" maxlength="50" name="p_bank_account_no" required
+                  #bank_account_no="ngModel" pattern={{NumberOnlyPattern}}>
+                <small
+                  *ngIf="(bank_account_no.errors?.required && bank_account_no.touched) || (bank_account_no.errors?.required && clientbankdetailForm.submitted)"
+                  class="text-danger">
+                  Bank Account No is required
+                </small>
+                <small *ngIf="bank_account_no.errors?.pattern && bank_account_no.touched" class="text-danger">
+                  Bank Account No is required and format should be <i>0-9</i>.
+                </small>
+              </div>
+            </div>
+            <!--#endregion Bank Account No-->
+
+            <!--#region Bank Account Name-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="bank_account_name" class="control-label">Bank Account Name *</label>
+                <input [disabled]="plafond_status !== 'HOLD'" type="text" class="form-control"
+                  [ngModel]="model.bank_account_name" maxlength="250" name="p_bank_account_name" required
+                  #bank_account_name="ngModel">
+                <small
+                  *ngIf="(bank_account_name.errors?.required && bank_account_name.touched) || (bank_account_name.errors?.required && clientbankdetailForm.submitted)"
+                  class="text-danger">
+                  Bank Account Name is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion Bank Account Name-->
+
+            <!--#region check box is_default-->
+            <div class="col-md-4">
+              <div class="form-check mt-3" style="margin-left: -35px;">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input [disabled]="plafond_status !== 'HOLD'" class="form-check-input" type="checkbox"
+                      [ngModel]="model.is_default" name="p_is_default">
+                    Default
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <!--#endregion check box is_default-->
+
+            <!--#region check box is_auto_debet_bank-->
+            <div class="col-md-4">
+              <div class="form-check mt-3" style="margin-left: -35px;">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input [disabled]="plafond_status !== 'HOLD'" class="form-check-input" type="checkbox"
+                      [ngModel]="model.is_auto_debet_bank" name="p_is_auto_debet_bank">
+                    Auto Debet Bank
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <!--#endregion check box is_auto_debet_bank-->
+          </div>
+          <!--#endregion row-->
+        </form>
+        <!--#endregion form-->
+      </div>
+      <div *ngIf="paramss != null">
+        <!--#region list view-->
+        <span layout="row horizontal-divider">
+          <hr flex />
+        </span>
+        <div class="row">
+          <div class="col-md-12">
+            <div>
+              <h4 class="card-title">Bank Book List</h4>
+            </div>
+            <div class="card-body">
+              <div class="toolbar">
+                <!--#region button add, delete-->
+                <button [hidden]="plafond_status !== 'HOLD'" class="btn btn-info btn-round" (click)="btnAdd()"
+                  data-role="R00022550102256C">
+                  Add
+                </button>
+                <button [hidden]="plafond_status !== 'HOLD'" class="btn btn-danger btn-round" (click)="btnDeleteAll()"
+                  data-role="R00022550042256D">
+                  Delete
+                </button>
+                <!--#endregion button add, delete-->
+              </div>
+
+              <!--#region list view-->
+              <table id="datatableClientBankBook" datatable [dtOptions]="dtOptions"
+                class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                <thead>
+                  <tr>
+                    <th class="disabled-sorting">No</th>
+                    <th class="disabled-sorting" [hidden]="plafond_status !== 'HOLD'">
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" id="checkall" [(ngModel)]="selectedAll"
+                            (change)="selectAllTable();" />
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                    </th>
+                    <th>Year</th>
+                    <th>Month</th>
+                    <th>Opening Balance Amount</th>
+                    <th>Ending Balance Amount</th>
+                    <th style="text-align: center;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of listbankbook;let i=index ">
+                    <td style="text-align: center;">{{listbankbook.numberIndex+i+1}}</td>
+                    <td class="disabled-sorting if-no-edit-btn" [hidden]="plafond_status !== 'HOLD'">
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                            (change)="checkIfAllTableSelected($event, row.id);">
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                    </td>
+                    <td style="width: 10%;text-align: center;">{{row.periode_year}}</td>
+                    <td style="width: 10%;text-align: center;">{{row.periode_month}}</td>
+                    <td style="width: 40%;text-align: right;">{{row.opening_balance_amount | number : '1.2-2'}}</td>
+                    <td style="width: 40%;text-align: right;">{{row.ending_balance_amount | number : '1.2-2'}}</td>
+                    <td style="text-align: center;">
+                      <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit" (click)="btnEdit(row.id)"><i
+                          class="fa fa-edit"></i></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!--#endregion list view-->
+            </div>
+          </div>
+        </div>
+        <!--#endregion list view-->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--#region lookup bank-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalBank" style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupBank" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupbank;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupbank.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowBank(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup bank-->
+
+<!--#region lookup currency-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalCurrency"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupCurrency" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupcurrency;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupcurrency.numberIndex+i+1}}</td>
+                  <td style="width: 20%;text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.description }}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowCurrency(row.code, row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion lookup currency-->

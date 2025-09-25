@@ -1,0 +1,302 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <!--#region watermark-->
+      <div class="watermark" hidden>
+        <h6>{{this.companyName}}</h6>
+        <h6>{{this.userName}}</h6>
+        <h6>{{this.sysDate | date}} {{this.currentTime}}</h6>
+      </div>
+      <!--#endregion watermark-->
+
+      <div class="card-header ">
+        <h4 class="card-title">Asset Info</h4>
+      </div>
+      <div class="card-body ">
+        <!--#region form-->
+        <form #deliverydetailForm="ngForm"
+          (ngSubmit)="onFormSubmit(deliverydetailForm.value, deliverydetailForm.valid)">
+
+          <!--#region button Save, Back-->
+          <button [hidden]="this.model.status !== 'HOLD'" type="submit" class="btn btn-info btn-round"
+            data-role="R00020670022074C">Save
+          </button>
+
+          <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+          <!--#endregion button Save, Back-->
+
+          <!--#region row-->
+          <div class="row">
+            <input hidden type="text" class="form-control" [ngModel]="this.params" name="p_id" readonly>
+
+            <!--#region asset_no -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Asset No</label>
+                <input type="text" class="form-control" [ngModel]="model.asset_no" name="p_asset_no" readonly>
+              </div>
+            </div>
+            <!--#endregion asset_no -->
+
+            <!--#region asset_name -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Asset Name</label>
+                <input type="text" class="form-control" [ngModel]="model.asset_name" name="p_asset_name" readonly>
+              </div>
+            </div>
+            <!--#endregion asset_name -->
+
+            <!--#region asset_year -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Asset Year</label>
+                <input type="text" class="form-control col-md-4" [ngModel]="model.asset_year" name="p_asset_year"
+                  readonly>
+              </div>
+            </div>
+            <!--#endregion asset_year -->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region unit_source-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Unit Source</label>
+                <input type="text" class="form-control col-md-4" [ngModel]="model.unit_source" name="p_unit_source"
+                  readonly #unit_source="ngModel" readonly>
+              </div>
+            </div>
+            <!--#endregion unit_source-->
+
+            <!--#region asset_condition -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Asset Condition</label>
+                <input type="text" class="form-control col-md-4" [ngModel]="model.asset_condition"
+                  name="p_asset_condition" readonly>
+              </div>
+            </div>
+            <!--#endregion asset_condition -->
+
+            <!--#region fa_code -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Fa Code</label>
+                <input type="text" class="form-control" [ngModel]="model.fa_code" name="p_fa_code" readonly>
+              </div>
+            </div>
+            <!--#endregion fa_code -->
+
+            <!--#region fa_name -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Fa Name</label>
+                <input type="text" class="form-control" [ngModel]="model.fa_name" name="p_fa_name" readonly>
+              </div>
+            </div>
+            <!--#endregion fa_name -->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region billing_to_name-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="billing_to_name" class="control-label">Billing To Name</label>
+                <input readonly type="text" class="form-control" [ngModel]="model.billing_to_name" maxlength="250"
+                  name="p_billing_to_name" required #billing_to_name="ngModel">
+              </div>
+            </div>
+            <!--#endregion billing_to_name-->
+
+            <!--#region deliver_to_name -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Deliver To Name *</label>
+                <input [disabled]="model.status !== 'HOLD'" type="text" class="form-control"
+                  [ngModel]="model.deliver_to_name" name="p_deliver_to_name" required #deliver_to_name="ngModel">
+                <small
+                  *ngIf="(deliver_to_name.errors?.required && deliver_to_name.touched) || (deliver_to_name.errors?.required && deliverydetailForm.submitted)"
+                  class="text-danger">
+                  Deliver To Name is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion deliver_to_name -->
+
+            <!--#region billing_mode_date-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Billing Date</label>
+                <input readonly type="text" class="form-control col-md-4" [ngModel]="model.billing_mode_date"
+                  name="p_billing_mode_date" required #billing_mode_date="ngModel" maxlength="4"
+                  pattern="{{NumberOnlyPattern}}">
+              </div>
+            </div>
+            <!--#endregion billing_mode_date-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region billing_to_area_no + billing_to_phone_no-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label">Billing To Phone No.</label>
+                <div class="row">
+                  <div class="col-md-4">
+                    <input readonly type="text" class="form-control" [ngModel]="model.billing_to_area_no"
+                      name="p_billing_to_area_no" required #billing_to_area_no="ngModel" maxlength="4"
+                      pattern={{NumberOnlyPattern}}>
+                  </div>
+                  -
+                  <div class="col-md-7">
+                    <input readonly type="text" class="form-control" [ngModel]="model.billing_to_phone_no"
+                      name="p_billing_to_phone_no" maxlength="15" required #billing_to_phone_no="ngModel"
+                      pattern={{NumberOnlyPattern}}>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--#endregion billing_to_area_no + billing_to_phone_no-->
+
+            <!--#region deliver_to_area_no + deliver_to_phone_no-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label">Deliver To Phone No.
+                  *</label>
+                <div class="row">
+                  <div class="col-md-4">
+                    <input [disabled]="model.status !== 'HOLD'" type="text" class="form-control"
+                      [ngModel]="model.deliver_to_area_no" name="p_deliver_to_area_no" required
+                      #deliver_to_area_no="ngModel" maxlength="4" pattern={{NumberOnlyPattern}}>
+                  </div>
+                  -
+                  <div class="col-md-7">
+                    <input [disabled]="model.status !== 'HOLD'" type="text" class="form-control"
+                      [ngModel]="model.deliver_to_phone_no" name="p_deliver_to_phone_no" maxlength="15" required
+                      #deliver_to_phone_no="ngModel" pattern={{NumberOnlyPattern}}>
+                  </div>
+                </div>
+              </div>
+              <small
+                *ngIf="(deliver_to_area_no.errors?.required && deliver_to_area_no.touched || deliver_to_phone_no.errors?.required && deliver_to_phone_no.touched || deliver_to_area_no.errors?.pattern && deliver_to_area_no.touched || deliver_to_phone_no.errors?.pattern && deliver_to_phone_no.touched)|| (deliver_to_area_no.errors?.required && deliver_to_phone_no.errors?.required && deliverydetailForm.submitted)"
+                class="text-danger">
+                Deliver To Phone No is required and format should be <i>0-9</i>.
+              </small>
+            </div>
+            <!--#endregion deliver_to_area_no + deliver_to_phone_no-->
+
+            <!--#region billing_to_faktur_type-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="labelgsubcode">Faktur Transaction Code</label>
+                <input readonly type="text" class="form-control" [ngModel]="model.billing_to_faktur_type"
+                  maxlength="250" name="p_billing_to_faktur_type" required #billing_to_faktur_type="ngModel">
+              </div>
+            </div>
+            <!--#endregion billing_to_faktur_type-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region billing_to_address-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="package_description" class="control-label">Billing To Address</label>
+                <textarea readonly type="text" class="form-control" [ngModel]="model.billing_to_address"
+                  name="p_billing_to_address" required #billing_to_address="ngModel" maxlength="4000"></textarea>
+              </div>
+            </div>
+            <!--#endregion billing_to_address-->
+
+            <!--#region deliver_to_address-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="package_description" class="control-label">Deliver To Address *</label>
+                <textarea [disabled]="model.status !== 'HOLD'" type="text" class="form-control"
+                  [ngModel]="model.deliver_to_address" name="p_deliver_to_address" required
+                  #deliver_to_address="ngModel" maxlength="4000"></textarea>
+                <small
+                  *ngIf="(deliver_to_address.errors?.required && deliver_to_address.touched) || (deliver_to_address.errors?.required && deliverydetailForm.submitted)"
+                  class="text-danger">
+                  Deliver To Address is required
+                </small>
+              </div>
+            </div>
+            <!--#endregion deliver_to_address-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region document_no-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>
+                  Billing To NPWP No
+                </label>
+                <input id="npwp" type="text" class="form-control" [(ngModel)]="this.model.billing_to_npwp"
+                  name="p_billing_to_npwp" readonly required #p_billing_to_npwp="ngModel" readonly>
+              </div>
+            </div>
+            <!--#endregion document_no-->
+          </div>
+          <!--#endregion row-->
+        </form>
+        <!--#endregion form-->
+        <!--#region list view-->
+        <div *ngIf="param != null">
+          <span layout="row horizontal-divider">
+            <hr flex />
+          </span>
+          <div class="row">
+            <div class="card-header ">
+              <h4 class="card-title">Amortization</h4>
+            </div>
+            <div class="col-md-12">
+              <!--#region list view-->
+              <table id="datatableApplicationAmortization" datatable [dtOptions]="dtOptions"
+                class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+                <thead>
+                  <tr>
+                    <th style="display: none;"></th>
+                    <th class="disabled-sorting">No</th>
+                    <th>Installment No</th>
+                    <th>Due Date</th>
+                    <th>Billing Date</th>
+                    <th>Billing Amount</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of listamortization;let i=index ">
+                    <td class="if-no-edit-btn" style="display: none;"></td>
+                    <td class="if-no-edit-btn" style="text-align: center;">{{listamortization.numberIndex+i+1}}</td>
+                    <td style="width: 10%;text-align: center;">{{row.installment_no}}</td>
+                    <td style="width: 15%;text-align: center;">{{row.due_date}}</td>
+                    <td style="width: 15%;text-align: center;">{{row.billing_date}}</td>
+                    <td style="width: 20%;text-align: right;">{{row.billing_amount | number : '1.2-2'}}</td>
+                    <td style="width: 40%;">{{row.description}}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <!--#endregion list view-->
+            </div>
+          </div>
+        </div>
+        <!--#endregion list view-->
+      </div>
+    </div>
+  </div>
+</div>

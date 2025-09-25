@@ -1,0 +1,96 @@
+<router-outlet></router-outlet>
+
+
+<div id="hideMainPanel" class="main-content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Client List</h4>
+        </div>
+        <div class="card-body">
+          <!--#region button add-->
+          <div class="toolbar">
+            <button class="btn btn-info btn-round" (click)="btnAdd()" data-role="R00022550012256C">
+              Add
+            </button>
+          </div>
+          <!--#endregion button add-->
+
+          <!--#region row-->
+          <div class="row">
+            <!--#region Client Type-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Client Type</label>
+                <select class="form-control col-md-6" [ngModel]="this.tampType" (change)="clientType($event)">
+                  <option value='PERSONAL'>PERSONAL</option>
+                  <option value='CORPORATE'>CORPORATE</option>
+                </select>
+              </div>
+            </div>
+            <!--#endregion Client Type-->
+          </div>
+          <!--#endregion row-->
+
+          <!--#region list view-->
+          <table id="datatableClientPersonalList" datatable [dtOptions]="dtOptions"
+            class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th style="display: none;"></th>
+                <th>Code</th>
+                <th>Client Type</th>
+                <th>Full Name</th>
+                <th [hidden]="this.tampType !== 'PERSONAL'">
+                  Mother Maiden Name
+                </th>
+                <th [hidden]="this.tampType !== 'PERSONAL'">
+                  Place of Birth
+                </th>
+                <th [hidden]="this.tampType !== 'CORPORATE'">
+                  Established Date
+                </th>
+                <th [hidden]="this.tampType !== 'CORPORATE'">
+                  Status
+                </th>
+                <th [hidden]="this.tampType !== 'PERSONAL'">Date of Birth</th>
+                <th>Validate</th>
+                <th style="text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of listclientpersonal">
+                <td class="if-no-edit-btn" style="display: none;"></td>
+                <td style="width: 15%;">{{row.client_no}}</td>
+                <td style="width: 15%;">{{row.client_type}}</td>
+                <td style="width: 20%;">{{row.full_name}}</td>
+                <td style="width: 20%;" [hidden]="this.tampType !== 'PERSONAL'">
+                  {{row.mother_maiden_name}}
+                </td>
+                <td style="width: 25%;" [hidden]="this.tampType !== 'PERSONAL'">
+                  {{row.place_of_birth}}
+                </td>
+                <td style="width: 15%;text-align: center;" [hidden]="this.tampType !== 'PERSONAL'">
+                  {{row.date_of_birth}}
+                </td>
+                <td style="width: 20%;text-align: center;" [hidden]="this.tampType !== 'CORPORATE'">
+                  {{row.est_date}}
+                </td>
+                <td style="width: 20%;text-align: center;" [hidden]="this.tampType !== 'CORPORATE'">
+                  {{row.corporate_status_desc}}
+                </td>
+                <td style="width: 10%;text-align: center;">{{row.is_validate}}</td>
+                <td style="text-align: center;">
+                  <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit"
+                    (click)="btnEdit(row.client_code)"><i class="fa fa-edit"></i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--#endregion list view-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

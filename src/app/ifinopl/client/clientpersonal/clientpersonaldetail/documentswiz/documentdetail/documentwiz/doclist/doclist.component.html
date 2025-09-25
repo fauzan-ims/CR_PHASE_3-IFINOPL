@@ -1,0 +1,69 @@
+<router-outlet></router-outlet>
+
+<div id="hideMainPanelWiz" class="main-content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="toolbar">
+        <!--#region button add, delete-->
+        <button [hidden]="plafond_status !== 'HOLD'" class="btn btn-info btn-round" (click)="btnAdd()"
+          data-role="R00022550162256C">
+          Add
+        </button>
+        <button [hidden]="plafond_status !== 'HOLD'" class="btn btn-danger btn-round" (click)="btnDeleteAll()"
+          data-role="R00022550072256D">
+          Delete
+        </button>
+        <!--#endregion button add, delete-->
+      </div>
+
+      <!--#region list view-->
+      <table id="datatableClientDoc" datatable [dtOptions]="dtOptions"
+        class="table table-striped table-bordered row-border hover" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th class="disabled-sorting">No</th>
+            <th class="disabled-sorting" [hidden]="plafond_status !== 'HOLD'">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" id="checkall" [(ngModel)]="selectedAll"
+                    (change)="selectAllTable();" />
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </th>
+            <th>Document Type</th>
+            <th>Document No</th>
+            <th>Document Status</th>
+            <th>Effective Date</th>
+            <th>Default</th>
+            <th style="text-align: center;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of listdoc; let i = index">
+            <td style="text-align: center;">{{listdoc.numberIndex+i+1}}</td>
+            <td class="disabled-sorting" [hidden]="plafond_status !== 'HOLD'">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="row.selected"
+                    (change)="checkIfAllTableSelected($event, row.id, row.is_existing_client);">
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </td>
+            <td style="width: 20%;">{{row.doc_type_desc}}</td>
+            <td style="width: 25%;">{{row.document_no}}</td>
+            <td style="width: 25%;">{{row.doc_status}}</td>
+            <td style="width: 15%;text-align: center;">{{row.eff_date}}</td>
+            <td style="width: 15%;text-align: center;">{{row.is_default}}</td>
+            <td style="text-align: center;">
+              <a class="btn btn-warning btn-link btn-icon btn-sm edit" title="Edit" (click)="btnEdit(row.id)"><i
+                  class="fa fa-edit"></i></a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!--#endregion list view-->
+    </div>
+  </div>
+</div>

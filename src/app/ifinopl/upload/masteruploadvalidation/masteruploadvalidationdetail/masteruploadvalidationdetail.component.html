@@ -1,0 +1,90 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <div class="card-header ">
+          <h5 class="card-title">Upload Info</h5>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #masteruploadvalidationdetailForm="ngForm"
+            (ngSubmit)="onFormSubmit(masteruploadvalidationdetailForm.value, masteruploadvalidationdetailForm.valid)">
+            <!--#region button submit dan back-->
+            <button type="submit" class="btn btn-info btn-round" data-role="R00002730000000C">Save</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button submit dan back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region code-->
+              <div class="col-md-4">
+                <div [hidden]="model.code != null" class="row" style="margin-bottom: -15px; padding-top: 30px;">
+                  <h1 class="col-md-4" style="font-size: 12px;">Code</h1>
+                  <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                    Generate-</h1>
+                </div>
+                <div [hidden]="model.code == null" class="form-group">
+                  <label>Code *</label>
+                  <input type="text" class="form-control" [ngModel]="model.code" maxlength="50" name="p_code" [readonly]="isReadOnly">
+                </div>
+              </div>
+              <!--#endregion code-->
+
+              <!--#region Description-->
+              <div class="col-md-4">
+                <div class="form-group" >
+                  <label for="description" class="control-label">Description *</label>
+                  <input type="text" class="form-control" [ngModel]="model.description" maxlength="250" name="p_description" required
+                    #description="ngModel" maxlength="250">
+                  <small *ngIf="(description.errors?.required && description.touched) || (description.errors?.required && masteruploadvalidationdetailForm.submitted)" class="text-danger">
+                    Description is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion Description-->
+
+              <!--#region SP Name-->
+              <div class="col-md-4">
+                <div class="form-group" >
+                  <label for="sp_name" class="control-label">SP Name *</label>
+                  <input type="text" class="form-control" [ngModel]="model.sp_name" maxlength="250" name="p_sp_name" required
+                    #sp_name="ngModel" maxlength="250">
+                  <small *ngIf="(sp_name.errors?.required && sp_name.touched) || (sp_name.errors?.required && masteruploadvalidationdetailForm.submitted)" class="text-danger">
+                    SP Name is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion SP Name-->
+
+            </div>
+
+            <div class="row">
+              <!--#region active-->
+              <div class="col-md-4">
+                <div class="form-check mt-3" style="margin-left: -35px;">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" [ngModel]="model.is_active" name="p_is_active">
+                      Active
+                      <span class="form-check-sign"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion active-->
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+        </div>
+        <div class="card-footer ">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

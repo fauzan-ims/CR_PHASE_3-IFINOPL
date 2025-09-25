@@ -1,0 +1,201 @@
+import { OnInit, ViewChild, Component, ElementRef } from '@angular/core';
+import 'rxjs/add/operator/map'
+import { Router, ActivatedRoute } from '@angular/router';
+import { DataTableDirective } from 'angular-datatables';
+import { BaseComponent } from '../../../../../../../../../base.component';
+import { DALService } from '../../../../../../../../../DALservice.service';
+import swal from 'sweetalert2';
+import { NgForm } from '@angular/forms';
+import { Location } from '@angular/common';
+
+@Component({
+  moduleId: module.id,
+  selector: 'app-root',
+  templateUrl: './doclist.component.html'
+})
+
+export class DoclistComponent extends BaseComponent implements OnInit {
+  // get param from url
+
+  param = this.getRouteparam.snapshot.paramMap.get('id');
+  params = this.getRouteparam.snapshot.paramMap.get('id2');
+  type = this.getRouteparam.snapshot.paramMap.get('type');
+  from = this.getRouteparam.snapshot.paramMap.get('from');
+  page = this.getRouteparam.snapshot.paramMap.get('page');
+  paramss = this.getRouteparam.snapshot.paramMap.get('id');
+
+  // variable
+  public plafond_status: String;
+  public tampType: String;
+  public listdoc: any = [];
+  private dataTampPush: any = [];
+  private APIController: String = 'ClientDoc';
+  private APIRouteForGetRows: String = 'GetRows';
+  private APIRouteForGetDelete: String = 'Delete';
+  private RoleAccessCode = 'R00022550000010A';
+
+  // form 2 way binding
+  model: any = {};
+
+  // checklist
+  public selectedAll: any;
+  private checkedList: any = [];
+
+  // spinner
+  showSpinner: Boolean = false;
+  // end
+
+  // ini buat datatables
+  @ViewChild(DataTableDirective)
+  dtElement: DataTableDirective;
+  dtOptions: DataTables.Settings = {};
+
+  constructor(private dalservice: DALService,
+    private _location: Location,
+    public route: Router,
+    public getRouteparam: ActivatedRoute,
+    private _elementRef: ElementRef) { super(); }
+
+  ngOnInit() {
+    this.compoSide('', this._elementRef, this.route);
+    this.callGetRole(this.userId, this._elementRef, this.dalservice, this.RoleAccessCode, this.route);
+    this.plafond_status = $('#plafondStatus').val();
+    this.loadData();
+  }
+
+  //#region button add
+  btnAdd() {
+    this.route.navigate(['/client/subclientpersonallist/clientpersonaldetail/' + this.param + '/' + this.params + '/' + this.type + '/' + this.from + '/' + this.page + '/documentdetail/' + this.param + '/' + this.type + '/docdetail/', this.param], { skipLocationChange: true });
+  }
+  //#endregion button add
+
+  //#region button edit
+  btnEdit(codeEdit: string) {
+    this.route.navigate(['/client/subclientpersonallist/clientpersonaldetail/' + this.param + '/' + this.params + '/' + this.type + '/' + this.from + '/' + this.page + '/documentdetail/' + this.param + '/' + this.type + '/docdetail/', this.param, codeEdit], { skipLocationChange: true });
+  }
+  //#endregion button edit
+
+  //#region checkbox all table
+  btnDeleteAll() {
+    this.checkedList = [];
+    for (let i = 0; i < this.listdoc.length; i++) {
+      if (this.listdoc[i].selected) {
+        this.checkedList.push(this.listdoc[i].id);
+      }
+    }
+
+    // jika tidak di checklist
+    if (this.checkedList.length === 0) {
+      swal({
+        title: this._listdialogconf,
+        buttonsStyling: false,
+        confirmButtonClass: 'btn btn-danger'
+      }).catch(swal.noop)
+      return
+    }
+    this.dataTampPush = [];
+    swal({
+      title: 'Are you sure?',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonClass: 'btn btn-success',
+      cancelButtonClass: 'btn btn-danger',
+      confirmButtonText: 'Yes',
+      buttonsStyling: false
+    }).then((result) => {
+      this.showSpinner = true;
+      if (result.value) {
+        for (let J = 0; J < this.checkedList.length; J++) {
+          const code = this.checkedList[J];
+
+          this.dataTampPush.push({
+            'p_id': code
+          });
+
+          this.dalservice.Delete(this.dataTampPush, this.APIController, this.APIRouteForGetDelete)
+            .subscribe(
+              res => {
+                if (this.checkedList.length == J + 1) {
+                  this.showSpinner = false;
+                  $('#clientDetail').click();
+                  this.showNotification('bottom', 'right', 'success');
+                  $('#datatableClientDoc').DataTable().ajax.reload();
+                }
+              },
+              error => {
+                this.showSpinner = false;
+                const parse = JSON.parse(error);
+                this.swalPopUpMsg(parse.data);
+              });
+        }
+      } else {
+        this.showSpinner = false;
+      }
+    });
+  }
+
+  selectAllTable() {
+    for (let i = 0; i < this.listdoc.length; i++) {
+      if (this.listdoc[i].is_existing_client !== '1') {
+        this.listdoc[i].selected = this.selectedAll;
+      }
+    }
+  }
+
+  checkIfAllTableSelected() {
+    this.selectedAll = this.listdoc.every(function (item: any) {
+      return item.selected === true;
+    })
+  }
+  //#endregion checkbox all table
+
+  //#region load all data
+  loadData() {
+    this.dtOptions = {
+      'pagingType': 'first_last_numbers',
+      'pageLength': 10,
+      'processing': true,
+      'serverSide': true,
+      responsive: true,
+      lengthChange: false, // hide lengthmenu
+      searching: true, // jika ingin hilangin search box nya maka false
+      ajax: (dtParameters: any, callback) => {
+
+        dtParameters.paramTamp = [];
+        dtParameters.paramTamp.push({
+          'p_client_code': this.param // this.param  //'PSN.2004.000001'
+        });
+
+
+        this.dalservice.Getrows(dtParameters, this.APIController, this.APIRouteForGetRows).subscribe(resp => {
+          const parse = JSON.parse(resp);
+          this.listdoc = parse.data;
+
+          if (parse.data != null) {
+            this.listdoc.numberIndex = dtParameters.start;
+          }
+
+          // if use checkAll use this
+          $('#checkall').prop('checked', false);
+          // end checkall
+
+          callback({
+            draw: parse.draw,
+            recordsTotal: parse.recordsTotal,
+            recordsFiltered: parse.recordsFiltered,
+            data: []
+          });
+
+        }, err => console.log('There was an error while retrieving Data(API) !!!' + err));
+      },
+      columnDefs: [{ orderable: false, width: '5%', targets: [0, 1, 7] }], // for disabled coloumn
+      language: {
+        search: '_INPUT_',
+        searchPlaceholder: 'Search records',
+        infoEmpty: '<p style="color:red;" > No Data Available !</p> '
+      },
+    }
+  }
+  //#endregion load all data
+
+}

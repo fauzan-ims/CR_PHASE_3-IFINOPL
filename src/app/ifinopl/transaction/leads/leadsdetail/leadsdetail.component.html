@@ -1,0 +1,434 @@
+<div class="main-content">
+  <!-- spinner region -->
+  <div class="panel-container-spinner" *ngIf="showSpinner">
+    <app-spinner class="spinner-container"></app-spinner>
+  </div>
+  <!-- end spinner region -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <div class="card-header ">
+          <h4 class="card-title">Leads Info</h4>
+        </div>
+        <div class="card-body ">
+          <!--#region form-->
+          <form #leadsdetailForm="ngForm" (ngSubmit)="onFormSubmit(leadsdetailForm.value, leadsdetailForm.valid)">
+
+            <!--#region button save dan back-->
+            <button type="button" class="btn btn-success btn-round"
+              [hidden]="model.prospect_status !== 'LEADS' || param == null" (click)="btnProceed(model.code)"
+              data-role="R00002640000000O">Proceed</button>
+            <button type="button" class="btn btn-success btn-round" [hidden]="model.prospect_status !== 'CAPTURE'"
+              (click)="btnPost(model.code)" data-role="R00002640000265O">Post</button>
+            <button type="button" class="btn btn-warning btn-round" [hidden]="model.prospect_status !== 'CAPTURE'"
+              (click)="btnCancel(model.code)" data-role="R00002650000266R">Cancel</button>
+            <button type="button" class="btn btn-warning btn-round" [hidden]="model.prospect_status !== 'CAPTURE'"
+              (click)="btnReject(model.code)" data-role="R00002650000266R">Reject</button>
+            <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
+            <!--#endregion button save dan back-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region Client_code-->
+              <input type="text" class="form-control" [ngModel]="model.client_code" name="p_client_code" hidden>
+              <!--#endregion client_code-->
+
+              <!--#region prospect_no-->
+              <div class="col-md-4">
+                <div [hidden]="model.code != null" class="row" style="margin-bottom: -15px; padding-top: 30px;">
+                  <h1 class="col-md-4" style="font-size: 12px;">Prospect No</h1>
+                  <h1 class="col-md-8" style="font-size: 12px;">-Auto
+                    Generate-</h1>
+                </div>
+                <div [hidden]="model.code == null" class="form-group">
+                  <label>Prospect No</label>
+                  <input type="text" class="form-control" [ngModel]="model.code" maxlength="50" name="p_code"
+                    [readonly]="isReadOnly">
+                </div>
+              </div>
+              <!--#endregion prospect_no-->
+
+              <!--#region lookup SysBranch code -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label labelmodule">Branch</label>
+                  <div class="col-md-12 buttons btn-lookup-margin">
+                    <span>
+                      {{model.branch_name}}
+                    </span>
+                    <input type="text" [ngModel]="model.branch_name" maxlength="250" name="p_branch_name" hidden
+                      #branch_name="ngModel">
+                    <input type="text" [ngModel]="model.branch_code" maxlength="50" name="p_branch_code" hidden>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion lookup SysBranch code -->
+
+              <!--#region prospect_status-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Prospect Status</label>
+                  <input type="text" class="form-control" [ngModel]="model.prospect_status" maxlength="10"
+                    name="p_prospect_status" readonly>
+                </div>
+              </div>
+              <!--#endregion prospect_status-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region entry_date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="entry_date" class="control-label">Entry Date *</label>
+                  <input [ngStyle]="getStyles(isReadOnly)" [readonly]="isReadOnly" class="form-control col-md-6"
+                    placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.entry_date" name="p_entry_date"
+                    [options]="myDatePickerOptions" (click)="entry_date.toggleCalendar()" #p_entry_date="ngModel"
+                    #entry_date="angular-mydatepicker" autocomplete="off">
+                  <small
+                    *ngIf="(entry_date.errors?.required && entry_date.touched) || (entry_date.errors?.required && leadsdetailForm.submitted)"
+                    class="text-danger">
+                    Entry Date is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion entry_date-->
+
+              <!--#region source-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Source</label>
+                  <input type="text" class="form-control" [ngModel]="model.source" maxlength="50" name="p_source"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion source-->
+
+              <!--#region client type-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Client Type</label>
+                  <input type="text" class="form-control" [ngModel]="model.client_type" maxlength="10"
+                    name="p_client_type" readonly>
+                </div>
+              </div>
+              <!--#endregion client type-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region lookup marketing code-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="package_description" class="control-label">Marketing</label>
+                  <input type="text" class="form-control" [ngModel]="model.name" name="p_name" required #name="ngModel"
+                    readonly>
+                  <small
+                    *ngIf="(name.errors?.required && name.touched) || (name.errors?.required && leadsdetailForm.submitted)"
+                    class="text-danger">
+                    Marketing is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion lookup marketing code -->
+
+              <!--#region corporate_contact_person-->
+              <div class="col-md-4" [hidden]="model.client_type != 'CORPORATE'">
+                <div class="form-group">
+                  <label for="package_description" class="control-label">Contact Person</label>
+                  <input type="text" class="form-control" maxlength="250" name="p_corporate_contact_person"
+                    [ngModel]="model.corporate_contact_person" #corporate_contact_person="ngModel"
+                    [disabled]="model.client_type != 'CORPORATE'" readonly>
+                </div>
+              </div>
+              <!--#endregion corporate_contact_person-->
+
+              <!--#region client status-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="package_description" class="control-label">Client Status</label>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <input type="text" class="form-control" [ngModel]="model.client_status" maxlength="10"
+                        name="p_client_status" #client_status="ngModel" readonly>
+                    </div>
+                    <div class="col-md-3">
+                      <button type="button" class="btn btn-success btn-round" (click)="btnCheck(model.code)"
+                        data-role="R00002650000266U">Check</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--#endregion client status-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region client_name-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="package_description" class="control-label">Client Name</label>
+                  <input type="text" class="form-control" [ngModel]="model.client_name" maxlength="250"
+                    name="p_client_name" required #client_name="ngModel" readonly>
+                  <small
+                    *ngIf="(client_name.errors?.required && client_name.touched) || (client_name.errors?.required && leadsdetailForm.submitted)"
+                    class="text-danger">
+                    Client Name is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion client_name-->
+
+              <!--#region personal_id_no-->
+              <div class="col-md-4" [hidden]="model.client_type != 'PERSONAL'">
+                <div class="form-group">
+                  <label for="package_description" class="control-label">ID No.</label>
+                  <input [disabled]="model.client_type != 'PERSONAL'" type="text" class="form-control"
+                    [ngModel]="model.personal_id_no" name="p_personal_id_no" #personal_id_no="ngModel" readonly>
+                </div>
+              </div>
+              <!--#endregion personal_id_no-->
+
+              <!--#region corporate_npwp_no-->
+              <div class="col-md-4" [hidden]="model.client_type != 'CORPORATE'">
+                <div class="form-group">
+                  <label for="package_description" class="control-label">NPWP No.</label>
+                  <input [disabled]="model.client_type != 'CORPORATE'" type="text" class="form-control"
+                    [ngModel]="model.corporate_npwp_no" name="p_corporate_npwp_no" #corporate_npwp_no="ngModel"
+                    readonly>
+                </div>
+              </div>
+              <!--#endregion corporate_npwp_no-->
+
+              <!--#region phone_area_no + phone_no-->
+              <div class="col-md-4">
+                <div class="form-group"
+                  [class.has-error]="phone_area_no.invalid && phone_area_no.touched || phone_no.invalid && phone_no.touched">
+                  <label for="phone_area_no && phone_no" class="control-label">Phone No.</label>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <input type="text" class="form-control" [ngModel]="model.phone_area_no" maxlength="4"
+                        name="p_phone_area_no" required #phone_area_no="ngModel" maxlength="4"
+                        pattern={{NumberOnlyPattern}} readonly>
+                    </div>
+                    -
+                    <div class="col-md-7">
+                      <input type="text" class="form-control" [ngModel]="model.phone_no" maxlength="10"
+                        name="p_phone_no" maxlength="15" required #phone_no="ngModel" pattern={{NumberOnlyPattern}}
+                        readonly>
+                    </div>
+                  </div>
+                </div>
+                <small
+                  *ngIf="(phone_area_no.errors?.required && phone_area_no.touched || phone_no.errors?.required && phone_no.touched) || (phone_area_no.errors?.required && leadsdetailForm.submitted)"
+                  class="text-danger">
+                  Phone No is required
+                </small>
+                <small
+                  *ngIf="phone_area_no.errors?.pattern && phone_area_no.touched || phone_no.errors?.pattern && phone_no.touched"
+                  class="text-danger">
+                  Phone No is required and format should be <i>0-9</i>.
+                </small>
+              </div>
+              <!--#endregion phone_area_no + phone_no-->
+            </div>
+            <!--#endregion row-->
+
+            <!--#region row-->
+            <div class="row">
+              <!--#region personal_place_of_birth-->
+              <div class="col-md-4" [hidden]="model.client_type != 'PERSONAL'">
+                <div class="form-group">
+                  <label for="package_description" class="control-label">Place of Birth</label>
+                  <input [disabled]="model.client_type != 'PERSONAL'" type="text" class="form-control"
+                    [ngModel]="model.personal_place_of_birth" name="p_personal_place_of_birth"
+                    #personal_place_of_birth="ngModel" readonly>
+                </div>
+              </div>
+              <!--#endregion place_of_birth-->
+
+              <!--#region personal_date_of_birth-->
+              <div class="col-md-4" [hidden]="model.client_type != 'PERSONAL'">
+                <div class="form-group">
+                  <label for="personal_date_of_birth" class="control-label">Date of Birth</label>
+                  <input [ngStyle]="getStyles(isReadOnly)" [readonly]="isReadOnly"
+                    [disabled]="model.client_type != 'PERSONAL'" class="form-control col-md-6" placeholder="dd/mm/yyyy"
+                    angular-mydatepicker [ngModel]="model.personal_date_of_birth" name="p_personal_date_of_birth"
+                    [options]="myDatePickerOptions" (click)="personal_date_of_birth.toggleCalendar()"
+                    #p_personal_date_of_birth="ngModel" #personal_date_of_birth="angular-mydatepicker"
+                    autocomplete="off" readonly>
+                </div>
+              </div>
+              <!--#endregion personal_date_of_birth-->
+
+              <!--#region email-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="email" class="control-label">Email</label>
+                  <input type="email" class="form-control" [ngModel]="model.email" name="p_email" #email="ngModel"
+                    pattern={{EmailPattern}} readonly>
+                </div>
+                <small *ngIf="email.errors?.pattern && email.touched" class="text-danger">
+                  Email is required and format should be <i>john@doe.com</i>.
+                </small>
+              </div>
+              <!--#endregion email-->
+
+              <!--#region address-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="address" class="control-label">Address</label>
+                  <textarea type="text" class="form-control" [ngModel]="model.address" maxlength="250" name="p_address"
+                    required #address="ngModel" readonly></textarea>
+                  <small
+                    *ngIf="(address.errors?.required && address.touched) || (address.errors?.required && leadsdetailForm.submitted)"
+                    class="text-danger">
+                    Address is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion address-->
+
+              <!--#region remark-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="remark" class="control-label">Remark</label>
+                  <textarea type="text" class="form-control" [ngModel]="model.remark" maxlength="4000" name="p_remark"
+                    required #remark="ngModel" readonly></textarea>
+                  <small
+                    *ngIf="(remark.errors?.required && remark.touched) || (remark.errors?.required && leadsdetailForm.submitted)"
+                    class="text-danger">
+                    Description is required
+                  </small>
+                </div>
+              </div>
+              <!--#endregion remark-->
+            </div>
+            <!--#endregion row-->
+          </form>
+          <!--#endregion form-->
+        </div>
+
+        <!--#region wizard-->
+        <div class="wizard-custom-margin" [hidden]="model.prospect_status === 'LEADS'">
+          <!--#region wizard container -->
+          <div class="wizard-container">
+            <div class="card-wizard" style="opacity: 1 !important; min-height: 0px;" data-color="primary"
+              id="wizardProfile">
+              <div class="text-center">
+                <div class="wizard-navigation">
+                  <ul>
+                    <li class="nav-item">
+                      <a class="nav-link" (click)="offerwiz()" href="#offerdetail" data-toggle="tab" role="tab"
+                        aria-controls="offer" aria-selected="true">
+                        Follow Up
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" (click)="logwiz()" href="#loglist" data-toggle="tab" role="tab"
+                        aria-controls="log" aria-selected="true">
+                        Log
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--#endregion wizard container-->
+        </div>
+        <!--endregion wizard-->
+        <router-outlet (activate)="onRouterOutletActivate($event)"></router-outlet>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<!-- <router-outlet (activate)="onRouterOutletActivate($event)"></router-outlet> -->
+
+<!--#region modal lookup SysBranch code-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSysBranch"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupSysBranch" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th>Code</th>
+                  <th>Name</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupsysbranch">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="width: 20%; text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.name }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowSysBranch(row.code, row.name)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup SysBranch code-->
+
+<!--#region modal lookup marketing code-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalMarketing"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
+            <table id="datatableLookupMarketing" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupmarketing">
+                  <td class="if-no-edit-btn" style="display: none;"></td>
+                  <td style="width: 20%; text-align: center;">{{ row.code }}</td>
+                  <td style="width: 80%;">{{ row.name }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowMarketing(row.code, row.name)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--#endregion modal lookup marketing code-->
