@@ -304,24 +304,31 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
                 //   // p_credit_note_code: this.creditnotecode,
                 //   // p_invoice_no: this.model.invoice_no
                 // }));
+
+                //--------------------------------------------------------------------------------------------------------------------
                 this.listinvoicedetail.push(this.JSToNumberFloats({
                   p_due_date_change_code: getBillingDateChangeCode[i],
                   p_installment_no: getInstallment[i],
                   p_asset_no: getAssetNo[i],
                   p_id: getInstallment[i],
                   p_billing_date: (() => {
-                    let raw = getNewBillingDateDay[i] == '' ? getBillDate[i] : getNewBillingDateDay[i];
 
-                    // kalau dari angular-mydatepicker (object)
-                    if (raw && raw.singleDate && raw.singleDate.jsDate) {
-                      raw = raw.singleDate.jsDate;
+                    let raw = getNewBillingDateDay[i];
+
+                    if (!raw || raw.trim() === '') {
+                      raw = getBillDate[i];
+                    }
+
+                    if (typeof raw === 'string') {
+                      raw = raw.replace(/(\d{2})[\/\-](\d{2})[\/\-](\d{4})/, '$3-$2-$1');
                     }
 
                     const dateObj = new Date(raw);
                     return !isNaN(dateObj.getTime())
-                      ? dateObj.toISOString().split('T')[0]  // yyyy-MM-dd
+                      ? dateObj.toISOString().split('T')[0]
                       : null;
                   })()
+                  //--------------------------------------------------------------------------------------------------------------------
                 }));
                 i++
               }
