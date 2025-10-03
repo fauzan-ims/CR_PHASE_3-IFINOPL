@@ -910,4 +910,12 @@ export class InvoiceDeliverydetailComponent extends BaseComponent implements OnI
         });
     }
     //#endregion button print tanda terima
+
+    onMethodChange(newValue: string) {
+        // console.log('Method berubah:', newValue);
+        this.model.method = newValue;
+        console.log(this.model.method);
+        
+        // this.methodChanged = true; // bisa dipakai sebagai kondisi
+    }
 }

@@ -32,8 +32,17 @@
               class="btn btn-warning btn-round" (click)="btnCancel(model.code)">Cancel</button>
             <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
             <button type="button" style='float: right;'
-              class="btn btn-info btn-print-round btn-round custom-button-width" (click)="btnPrintSP(model.code)"
-              data-role="R00021020002104P" [hidden]="param == null">Print SP</button>
+              class="btn btn-info btn-print-round btn-round custom-button-width"
+              [hidden]="model.letter_type !== 'SP1'" (click)="btnPrintSP(model.letter_no)"
+              data-role="R00021020002104P">Print SP</button>
+            <button type="button" style='float: right;'
+              class="btn btn-info btn-print-round btn-round custom-button-width"
+              [hidden]="model.letter_type !== 'SP2'" (click)="btnPrintSP(model.letter_no)"
+              data-role="R00021020002104P">Print SP</button>
+            <button type="button" style='float: right;'
+              class="btn btn-info btn-print-round btn-round custom-button-width"
+              [hidden]="model.letter_type !== 'SOMASI'" (click)="btnPrintSP(model.letter_no)"
+              data-role="R00021020002104P">Print SP</button>
             <!-- <button type="button" style='float: right;'
             class="btn btn-info btn-print-round btn-round custom-button-width" (click)="btnPrintSomasiPenyelesaianKewajiban()"
             data-role="R00021020002104P" [hidden]="param == null || isHideButtonPrint !== true">Print
@@ -176,7 +185,7 @@
                     <input type="hidden" class="form-control" [ngModel]="model.delivery_collector_code"
                       name="p_delivery_collector_code" #delivery_collector_code="ngModel">
                     <input type="hidden" class="form-control" [ngModel]="model.delivery_collector_name"
-                      name="p_delivery_collector_name">
+                      name="p_delivery_collector_name" required>
                   </div>
                   <small
                     [hidden]="delivery_collector_code.valid || (delivery_collector_code.pristine && !spdeliveryForm.submitted)"
@@ -207,11 +216,10 @@
                       (click)="btnLookupDeliveryAddress()" data-toggle="modal" data-target="#lookupModalDeliveryAddress"
                       href="#"><i class="fa fa-search-plus"></i></button>
                     {{model.delivery_address}}
-                    <input type="hidden" class="form-control" [ngModel]="model.delivery_address"
+                    <input type="hidden" class="form-control" [ngModel]="model.delivery_address" required
                       name="p_delivery_address">
                   </div>
-                  <!-- <small
-                    [hidden]="delivery_address.valid || (delivery_address.pristine && !spdeliveryForm.submitted)"
+                  <!-- <small [hidden]="delivery_address.valid || (delivery_address.pristine && !spdeliveryForm.submitted)"
                     class="text-danger">
                     Delivery Address is required
                   </small> -->
@@ -224,7 +232,12 @@
                 <div class="form-group">
                   <label for="delivery_to_name" class="control-label">Delivery To Name *</label>
                   <input [readonly]="isButton" type="text" class="form-control" [ngModel]="model.delivery_to_name"
-                    required name="p_delivery_to_name" #delivery_to_name="ngModel">
+                    required name="p_delivery_to_name" #delivery_to_name="ngModel" required>
+                    <small
+                      *ngIf="(delivery_to_name.errors?.required && delivery_to_name.touched) || (delivery_to_name.errors?.required && spdeliveryForm.submitted)"
+                      class="text-danger">
+                      Delivery To Name is required
+                    </small>
                 </div>
               </div>
               <!--#endregion Delivery To Name-->
@@ -234,7 +247,12 @@
                 <div class="form-group">
                   <label for="client_phone_no" class="control-label">Client Phone No *</label>
                   <input [readonly]="isButton" type="text" class="form-control" [ngModel]="model.client_phone_no"
-                    required name="p_client_phone_no" #client_phone_no="ngModel">
+                    required name="p_client_phone_no" #client_phone_no="ngModel" required>
+                  <small
+                    *ngIf="(client_phone_no.errors?.required && client_phone_no.touched) || (client_phone_no.errors?.required && spdeliveryForm.submitted)"
+                    class="text-danger">
+                    Client Phone No is required
+                  </small>
                 </div>
               </div>
               <!--#endregion Client Phone No-->
@@ -262,7 +280,7 @@
               <!--#region SP no-->
               <div class="col-md-4">
                 <div class="form-group">
-                  <label for="letter_no" class="control-label">SP no </label>
+                  <label for="letter_no" class="control-label">SP No </label>
                   <input [readonly]="isReadOnly" no="text" class="form-control" [ngModel]="model.letter_no"
                     name="p_letter_no" #letter_no="ngModel">
                 </div>
@@ -379,7 +397,7 @@
                 <div class="form-group">
                   <label for="up_print_sp" class="control-label">UP Print SP *</label>
                   <input [readonly]="isButton" type="text" class="form-control" [ngModel]="model.up_print_sp" required
-                    name="p_up_print_sp" #up_print_sp="ngModel">
+                    name="p_up_print_sp" #up_print_sp="ngModel" required>
 
                   <small
                     *ngIf="(up_print_sp.errors?.required && up_print_sp.touched) || (up_print_sp.errors?.required && spdeliveryForm.submitted)"
@@ -395,7 +413,8 @@
                 <div class="form-group">
                   <label for="delivery_remarks" class="control-label">Remark *</label>
                   <textarea type="text" class="form-control" maxlength="4000" [ngModel]="model.delivery_remarks"
-                    name="p_delivery_remarks" required #delivery_remarks="ngModel" [disabled]="isButton"></textarea>
+                    name="p_delivery_remarks" required #delivery_remarks="ngModel" [disabled]="isButton"
+                    required></textarea>
                   <small
                     *ngIf="(delivery_remarks.errors?.required && delivery_remarks.touched) || (delivery_remarks.errors?.required && spdeliveryForm.submitted)"
                     class="text-danger">
@@ -438,184 +457,184 @@
   </div>
 </div>
 
-  <!--#region modal lookup Branch-->
-  <div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSysBranch"
-    style="margin-top: -65px">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body" style="overflow:hidden;">
-          <div class="col-md-12">
-            <div class="card-body col-md-12">
+<!--#region modal lookup Branch-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalSysBranch"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
 
-              <table id="datatableLookupBranch" class="table table-striped table-bordered hover" cellspacing="0"
-                style="min-width: 100%;">
-                <thead>
-                  <tr>
-                    <th style="display: none;"></th>
-                    <th class="disabled-sorting">No</th>
-                    <th style="width: 20%;">Code</th>
-                    <th style="width: 75%;">Name</th>
-                    <th style="text-align: center;">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let row of lookupbranch;let i=index ">
-                    <td style="display: none;"></td>
-                    <td style="text-align: center;">{{lookupbranch.numberIndex+i+1}}</td>
-                    <td style="text-align: center;">{{ row.code }}</td>
-                    <td>{{ row.name }}</td>
-                    <td class="text-right">
-                      <button class="btn btn-outline-default btn-round"
-                        (click)="btnSelectRowBranch(row.code, row.name)">Select</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <table id="datatableLookupBranch" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th style="width: 20%;">Code</th>
+                  <th style="width: 75%;">Name</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupbranch;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupbranch.numberIndex+i+1}}</td>
+                  <td style="text-align: center;">{{ row.code }}</td>
+                  <td>{{ row.name }}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowBranch(row.code, row.name)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!--#endregion modal lookup Branch-->
+</div>
+<!--#endregion modal lookup Branch-->
 
-  <!--#region modal lookup DeliveryCourier-->
-  <div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalDeliveryCourier"
-    style="margin-top: -65px">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body" style="overflow:hidden;">
-          <div class="col-md-12">
-            <div class="card-body col-md-12">
+<!--#region modal lookup DeliveryCourier-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalDeliveryCourier"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
 
-              <table id="datatableLookupDeliveryCourier" class="table table-striped table-bordered hover"
-                cellspacing="0" style="min-width: 100%;">
-                <thead>
-                  <tr>
-                    <th style="display: none;"></th>
-                    <th class="disabled-sorting">No</th>
-                    <th>Code</th>
-                    <th>Name</th>
-                    <th style="text-align: center;">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let row of lookupDeliveryCourier;let i=index ">
-                    <td style="display: none;"></td>
-                    <td style="text-align: center;">{{lookupDeliveryCourier.numberIndex+i+1}}</td>
-                    <td style="text-align: center; width: 25%;">{{ row.code }}</td>
-                    <td style="width: 75%;">{{ row.description }}</td>
-                    <td class="text-right">
-                      <button class="btn btn-outline-default btn-round"
-                        (click)="btnSelectRowDeliveryCourier(row.code,row.description)">Select</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <table id="datatableLookupDeliveryCourier" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th>Code</th>
+                  <th>Name</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupDeliveryCourier;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupDeliveryCourier.numberIndex+i+1}}</td>
+                  <td style="text-align: center; width: 25%;">{{ row.code }}</td>
+                  <td style="width: 75%;">{{ row.description }}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowDeliveryCourier(row.code,row.description)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!--#endregion lookup DeliveryCourier-->
+</div>
+<!--#endregion lookup DeliveryCourier-->
 
-  <!--#region modal lookup Delivery-->
-  <div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalDeliverycollector"
-    style="margin-top: -65px">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body" style="overflow:hidden;">
-          <div class="col-md-12">
-            <div class="card-body col-md-12">
+<!--#region modal lookup Delivery-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalDeliverycollector"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
 
-              <table id="datatableLookupDeliveryCollector" class="table table-striped table-bordered hover"
-                cellspacing="0" style="min-width: 100%;">
-                <thead>
-                  <tr>
-                    <th style="display: none;"></th>
-                    <th class="disabled-sorting">No</th>
-                    <th style="width: 20%;">Code</th>
-                    <th style="width: 75%;">Name</th>
-                    <th style="text-align: center;">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let row of lookupDeliverycollector;let i=index ">
-                    <td style="display: none;"></td>
-                    <td style="text-align: center;">{{lookupDeliverycollector.numberIndex+i+1}}</td>
-                    <td style="text-align: center;">{{ row.code }}</td>
-                    <td>{{ row.name }}</td>
-                    <td class="text-right">
-                      <button class="btn btn-outline-default btn-round"
-                        (click)="btnSelectRowDeliverycollector(row.code,row.name)">Select</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <table id="datatableLookupDeliveryCollector" class="table table-striped table-bordered hover"
+              cellspacing="0" style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th style="width: 20%;">Code</th>
+                  <th style="width: 75%;">Name</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupDeliverycollector;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupDeliverycollector.numberIndex+i+1}}</td>
+                  <td style="text-align: center;">{{ row.code }}</td>
+                  <td>{{ row.name }}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowDeliverycollector(row.code,row.name)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!--#endregion lookup DeliveryCollector-->
+</div>
+<!--#endregion lookup DeliveryCollector-->
 
-  <!--#region modal lookup DeliveryAddress-->
-  <div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalDeliveryAddress"
-    style="margin-top: -65px">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body" style="overflow:hidden;">
-          <div class="col-md-12">
-            <div class="card-body col-md-12">
+<!--#region modal lookup DeliveryAddress-->
+<div class="modal bd-example-modal-lg" tabindex="-1" aria-hidden="true" id="lookupModalDeliveryAddress"
+  style="margin-top: -65px">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:hidden;">
+        <div class="col-md-12">
+          <div class="card-body col-md-12">
 
-              <table id="datatableLookupDeliveryAddress" class="table table-striped table-bordered hover"
-                cellspacing="0" style="min-width: 100%;">
-                <thead>
-                  <tr>
-                    <th style="display: none;"></th>
-                    <th class="disabled-sorting">No</th>
-                    <th style="width: 40%;">Address</th>
-                    <th style="width: 15%;">Delivery To Name</th>
-                    <th style="width: 15%;">Client Phone</th>
-                    <th style="width: 15%;">Client NPWP</th>
-                    <th style="width: 15%;">Client Email</th>
-                    <th style="text-align: center;">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let row of lookupDeliveryAddress;let i=index ">
-                    <td style="display: none;"></td>
-                    <td style="text-align: center;">{{lookupDeliveryAddress.numberIndex+i+1}}</td>
-                    <td style="text-align: left;">{{ row.delivery_address }}</td>
-                    <td>{{ row.delivery_to_name }}</td>
-                    <td>{{ row.client_phone_no }}</td>
-                    <td>{{ row.client_npwp }}</td>
-                    <td>{{ row.client_email }}</td>
-                    <td class="text-right">
-                      <button class="btn btn-outline-default btn-round"
-                        (click)="btnSelectRowDeliveryAddress(row.delivery_address,row.delivery_to_name, row.client_phone_no, row.client_npwp, row.client_email)">Select</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <table id="datatableLookupDeliveryAddress" class="table table-striped table-bordered hover" cellspacing="0"
+              style="min-width: 100%;">
+              <thead>
+                <tr>
+                  <th style="display: none;"></th>
+                  <th class="disabled-sorting">No</th>
+                  <th style="width: 40%;">Address</th>
+                  <th style="width: 15%;">Delivery To Name</th>
+                  <th style="width: 15%;">Client Phone</th>
+                  <th style="width: 15%;">Client NPWP</th>
+                  <th style="width: 15%;">Client Email</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of lookupDeliveryAddress;let i=index ">
+                  <td style="display: none;"></td>
+                  <td style="text-align: center;">{{lookupDeliveryAddress.numberIndex+i+1}}</td>
+                  <td style="text-align: left;">{{ row.delivery_address }}</td>
+                  <td>{{ row.delivery_to_name }}</td>
+                  <td>{{ row.client_phone_no }}</td>
+                  <td>{{ row.client_npwp }}</td>
+                  <td>{{ row.client_email }}</td>
+                  <td class="text-right">
+                    <button class="btn btn-outline-default btn-round"
+                      (click)="btnSelectRowDeliveryAddress(row.delivery_address,row.delivery_to_name, row.client_phone_no, row.client_npwp, row.client_email)">Select</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!--#endregion lookup DeliveryAddress-->
+</div>
+<!--#endregion lookup DeliveryAddress-->

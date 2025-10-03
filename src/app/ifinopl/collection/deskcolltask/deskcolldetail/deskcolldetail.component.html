@@ -32,7 +32,12 @@
 
                         <button type="button" class="btn btn-danger btn-round" (click)="btnBack()">Back</button>
                         <!--#endregion button submit dan back-->
-
+                        <button type="button" style='float: right;'
+                            class="btn btn-info btn-print-round btn-round custom-button-width"
+                            (click)="btnPrintTandaTerima()" data-role="R00024270000002P"
+                            [hidden]="param == null || this.model.is_print_tanda_terima=='0'"
+                            style="position: absolute; right: 0px;">Print
+                            Tanda Terima</button>
                         <!--#region row-->
                         <div class="row">
                             <!--#region agreement external no-->
@@ -341,10 +346,10 @@
                                     <label [hidden]="this.isFU">Next FU Date</label>
                                     <input [ngStyle]="getStyles(model.desk_status !== 'HOLD' || !this.isFU )"
                                         class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
-                                        [ngModel]="model.next_fu_date" name="p_next_fu_date" (change)="changeFUDate($event)"
-                                        [options]="myDatePickerOptions" (click)="next_fu_date.toggleCalendar()"
-                                        #p_next_fu_date="ngModel" #next_fu_date="angular-mydatepicker"
-                                        autocomplete="off" [readonly]="isFUDate"
+                                        [ngModel]="model.next_fu_date" name="p_next_fu_date"
+                                        (change)="changeFUDate($event)" [options]="myDatePickerOptions"
+                                        (click)="next_fu_date.toggleCalendar()" #p_next_fu_date="ngModel"
+                                        #next_fu_date="angular-mydatepicker" autocomplete="off" [readonly]="isFUDate"
                                         [required]="model.is_need_next_fu" />
                                     <small
                                         *ngIf="(p_next_fu_date.errors?.required && p_next_fu_date.touched) || (p_next_fu_date.errors?.required && DeskcollForm.submitted)"

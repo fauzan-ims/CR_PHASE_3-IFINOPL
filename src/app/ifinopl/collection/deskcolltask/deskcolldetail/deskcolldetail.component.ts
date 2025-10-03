@@ -58,6 +58,10 @@ export class DeskColltaskdetailComponent extends BaseComponent implements OnInit
   private APIRouteForPastDueAmortGetrows: String = 'ExecSpForGetrowsDeskcoll';
   private APIRouteForApplyToAll: String = 'ExecSpForApplyToAll';
 
+  // report
+  private APIControllerReport: String = 'Report';
+  private APIRouteForDownloadReport: String = 'getReport';
+
   // form 2 way binding
   model: any = {};
 
@@ -587,10 +591,10 @@ export class DeskColltaskdetailComponent extends BaseComponent implements OnInit
     this.model.is_need_next_fu = event.target.checked;
 
     if (this.model.is_need_next_fu) {
-      if (this.model.result_code === 'MD005') {  
+      if (this.model.result_code === 'MD005') {
         // NO RESPOND
         this.model.next_fu_date = this.Date(); // H+1
-      } else if (this.model.result_code !== 'MD004') { 
+      } else if (this.model.result_code !== 'MD004') {
         // Selain JANJI BAYAR & NO RESPOND
         this.model.next_fu_date = this.Date2(); // H+7
       } else {
@@ -616,12 +620,12 @@ export class DeskColltaskdetailComponent extends BaseComponent implements OnInit
         }
       }
     } else {
-      this.model.next_fu_date = undefined; 
+      this.model.next_fu_date = undefined;
     }
   }
 
 
-  
+
 
   //#region currentDate
   DateOld() {
@@ -766,37 +770,37 @@ export class DeskColltaskdetailComponent extends BaseComponent implements OnInit
   // #endregion currentDate
 
   applyReasonRule(code: string) {
-  this.model.result_code = code;
+    this.model.result_code = code;
 
-  if (code === 'MD004') { // JANJI BAYAR
-    this.model.is_need_next_fu = false;
-    this.model.next_fu_date = null;
+    if (code === 'MD004') { // JANJI BAYAR
+      this.model.is_need_next_fu = false;
+      this.model.next_fu_date = null;
 
-    this.isFU = false; // checkbox bisa edit
-    this.isFUDate = false;   // date bisa edit
-  } 
-  else if (code === 'MD005') { // NO RESPOND
-    this.model.is_need_next_fu = true;
-    this.model.next_fu_date = this.Date(); // H+1
+      this.isFU = false; // checkbox bisa edit
+      this.isFUDate = false;   // date bisa edit
+    }
+    else if (code === 'MD005') { // NO RESPOND
+      this.model.is_need_next_fu = true;
+      this.model.next_fu_date = this.Date(); // H+1
 
-    this.isFU = true;  // checkbox terkunci
-    this.isFUDate = true;    // date terkunci
-  } 
-  else { // Selain itu
-    this.model.is_need_next_fu = true;
-    this.model.next_fu_date = this.Date2(); // H+7
+      this.isFU = true;  // checkbox terkunci
+      this.isFUDate = true;    // date terkunci
+    }
+    else { // Selain itu
+      this.model.is_need_next_fu = true;
+      this.model.next_fu_date = this.Date2(); // H+7
 
-    this.isFU = true;  // checkbox terkunci
-    this.isFUDate = false;   // date bisa edit
+      this.isFU = true;  // checkbox terkunci
+      this.isFUDate = false;   // date bisa edit
+    }
   }
-}
 
-// helper tambah hari
-// addDays(date: Date, days: number): Date {
-//   const result = new Date(date);
-//   result.setDate(result.getDate() + days);
-//   return result;
-// }
+  // helper tambah hari
+  // addDays(date: Date, days: number): Date {
+  //   const result = new Date(date);
+  //   result.setDate(result.getDate() + days);
+  //   return result;
+  // }
 
   //#region btnApplyToAll
   btnApplyToAll(isValid: boolean) {
@@ -852,4 +856,28 @@ export class DeskColltaskdetailComponent extends BaseComponent implements OnInit
     })
   }
   //#endregion btnApplyToAll
+  //#region button print tanda terima
+  btnPrintTandaTerima() {
+    this.showSpinner = true;
+    const dataParam = {
+      TableName: 'RPT_PRINT_DETAIL_KONTRAK_OVERDUE',
+      SpName: 'xsp_rpt_print_detail_kontrak_overdue',
+      reportparameters: {
+        p_user_id: this.userId,
+        p_code: this.param,
+        p_register_no: this.model.code,
+        p_print_option: 'PDF'
+      }
+    };
+
+    this.dalservice.ReportFile(dataParam, this.APIControllerReport, this.APIRouteForDownloadReport).subscribe(res => {
+      this.printRptNonCore(res);
+      this.showSpinner = false;
+    }, err => {
+      this.showSpinner = false;
+      const parse = JSON.parse(err);
+      this.swalPopUpMsg(parse.data);
+    });
+  }
+  //#endregion button print tanda terima
 }

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataTableDirective } from 'angular-datatables';
 import { BaseComponent } from '../../../../../base.component';
@@ -37,6 +37,9 @@ export class ApplicationtbodocumentdetailComponent extends BaseComponent impleme
   private APIRouteForPriviewFile: String = 'Priview';
 
   private RoleAccessCode = 'R00024730000001A'; // role access 
+
+
+  @Output() dataSaved = new EventEmitter<void>();
 
   // form 2 way binding
   model: any = {};
@@ -107,18 +110,26 @@ export class ApplicationtbodocumentdetailComponent extends BaseComponent impleme
             this.tampHiddenMemo = false;
           }
 
+          //   setTimeout(() => {
+          //     this.documentsswiz(this.model.application_no);
+          //     // this.documentsswiz();
+          //   }, 200);
+          //   this.showSpinner = false;
+          // },
           setTimeout(() => {
             this.documentsswiz(this.model.application_no);
-            // this.documentsswiz();
+            const table = $('#datatableApplicationTboDocument').DataTable();
+            table.ajax.reload();
           }, 200);
           this.showSpinner = false;
-        },
-        error => {
-          this.showSpinner = false;
-          const parse = JSON.parse(error);
-          this.swalPopUpMsg(parse.data);
-        });
-  }
+
+          error => {
+            this.showSpinner = false;
+            const parse = JSON.parse(error);
+            this.swalPopUpMsg(parse.data);
+          }
+  })
+}
   //#endregion getrow data
 
   //#region button back
@@ -160,6 +171,7 @@ export class ApplicationtbodocumentdetailComponent extends BaseComponent impleme
               const parse = JSON.parse(res);
               if (parse.result === 1) {
                 this.showNotification('bottom', 'right', 'success');
+                window.location.reload();
                 this.callGetrow();
                 $('#TboDetail').click();
                 this.showSpinner = false;
@@ -204,6 +216,7 @@ export class ApplicationtbodocumentdetailComponent extends BaseComponent impleme
               const parse = JSON.parse(res);
               if (parse.result === 1) {
                 this.showNotification('bottom', 'right', 'success');
+                this.dataSaved.emit();  // 🔥 --fzn kirim signal ke luar
                 this.callGetrow();
                 $('#TboDetail').click();
                 this.showSpinner = false;
@@ -255,6 +268,7 @@ export class ApplicationtbodocumentdetailComponent extends BaseComponent impleme
             const parse = JSON.parse(res);
             if (parse.result === 1) {
               this.showNotification('bottom', 'right', 'success');
+              this.dataSaved.emit();  // 🔥 --fzn kirim signal ke luar
               this.callGetrow();
             } else {
               this.swalPopUpMsg(parse.data);
@@ -292,6 +306,10 @@ export class ApplicationtbodocumentdetailComponent extends BaseComponent impleme
               const parse = JSON.parse(res);
               if (parse.result === 1) {
                 this.showNotification('bottom', 'right', 'success');
+                window.location.reload();
+                this.dataSaved.emit();  // 🔥 --fzn kirim signal ke luar
+                // this.route.navigate(['/doclist'], { state: { reload: true } });
+                // this.route.navigate(['/application/subtbodocumentlist/tbodocumentdetail/' + this.param + '/doclist/', this.param, aplino], { skipLocationChange: true });
                 this.callGetrow();
                 this.documentsswiz(id);
                 $('#TboDetail').click();

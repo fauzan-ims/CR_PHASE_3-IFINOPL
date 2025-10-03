@@ -138,8 +138,8 @@
                 <label>Unit Source</label>
                 <select class="form-control col-md-6" [disabled]="this.params !== null" [ngModel]="model.unit_source"
                   name="p_unit_source" (change)="changeCondition($event)">
-                  <option value='Purchase'>Purchase</option>
-                  <option value='Stock'>Stock</option>
+                  <option value='Purchase'>PURCHASE</option>
+                  <option value='Stock'>STOCK</option>
                 </select>
               </div>
             </div>
@@ -149,8 +149,8 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Condition</label>
-                <select class="form-control col-md-6" [disabled]="this.params !== null"
-                  [ngModel]="model.asset_condition" name="p_asset_condition">
+                <select class="form-control col-md-6" [disabled]="this.params !== null" (change)="isCondition($event)"
+                  [ngModel]="this.condition || model.asset_condition" name="p_asset_condition">
                   <option value='NEW'>NEW</option>
                   <option value='USED'>USED</option>
                 </select>
