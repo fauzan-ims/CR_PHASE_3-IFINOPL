@@ -27,6 +27,8 @@ export class ApprovalsurveydetailComponent extends BaseComponent implements OnIn
 
   private APIRouteForGetRow: String = 'GetRow';
 
+  private RoleAccessCode = 'R00020690000010A';
+
   // form 2 way binding
   model: any = {};
 

@@ -21,6 +21,8 @@ export class ApprovalfinalchecklistComponent extends BaseComponent implements On
   private APIRouteForGetRows: String = 'GetRowsForApplicationWorkflowPrinting';
   private APIRouteForDownloadOfferingLater: String = 'PrinOfferingLater';
 
+  private RoleAccessCode = 'R00020690000010A';
+
   // spinner
   showSpinner: Boolean = false;
   // end

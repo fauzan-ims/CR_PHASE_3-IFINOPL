@@ -20,6 +20,7 @@ export class ApprovalapprovaldetailComponent extends BaseComponent implements On
   private dataTamp: any = [];
   private APIController: String = 'MasterWorkflow';
   private APIRouteForGetRow: String = 'GETROW';
+  private RoleAccessCode = 'R00020690000010A'; 
 
   // form 2 way binding
   model: any = {};

@@ -23,6 +23,8 @@ export class LegaldetailComponent extends BaseComponent implements OnInit {
 
   private APIRouteForGetRow: String = 'GetRow';
 
+  private RoleAccessCode = 'R00019900000000A';
+
   // form 2 way binding
   model: any = {};
 

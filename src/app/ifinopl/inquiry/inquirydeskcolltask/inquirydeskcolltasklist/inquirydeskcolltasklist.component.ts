@@ -17,7 +17,7 @@ export class InquiryDeskcolltasklistComponent extends BaseComponent implements O
     // variable
     public deskcolltaskData: any = [];
     public isReadOnly: Boolean = false;
-    private RoleAccessCode = 'R00020970002098A';
+    private RoleAccessCode = 'R00024780000001A';
 
 
     // form 2 way binding

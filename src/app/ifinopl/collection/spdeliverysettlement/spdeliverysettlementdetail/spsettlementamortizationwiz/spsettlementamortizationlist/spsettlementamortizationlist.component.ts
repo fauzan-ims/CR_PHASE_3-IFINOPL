@@ -28,7 +28,7 @@ export class SpSettlementAmortizationlistComponent extends BaseComponent impleme
   private APIRouteForGetRows: String = 'GetRowsForAmortInvoice';
   private APIRouteForGetRow: String = 'GetRow';
 
-  private RoleAccessCode = 'R00020970002098A';
+  private RoleAccessCode = 'R00021030000000A';
 
   // form 2 way binding
   model: any = {};

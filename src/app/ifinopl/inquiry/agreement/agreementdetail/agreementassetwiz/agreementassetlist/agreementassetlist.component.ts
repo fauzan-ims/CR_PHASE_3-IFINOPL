@@ -30,7 +30,7 @@ export class AgreementassetlistComponent extends BaseComponent implements OnInit
   private APIRouteForGetRow: String = 'GetRow';
   private APIRouteForDelete: String = 'DELETE';
 
-  private RoleAccessCode = 'R00022400000000A'; // role access 
+  private RoleAccessCode = 'R00020560000000A'; // role access 
 
   // checklist
   public selectedAll: any;

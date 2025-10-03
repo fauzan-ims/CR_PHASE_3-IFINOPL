@@ -26,6 +26,7 @@ export class SurveydetailComponent extends BaseComponent implements OnInit {
   private APIController: String = 'ApplicationMain';
 
   private APIRouteForGetRow: String = 'GetRow';
+  private RoleAccessCode = 'R00019900000000A';
 
   // form 2 way binding
   model: any = {};

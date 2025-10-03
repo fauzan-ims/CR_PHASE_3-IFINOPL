@@ -28,7 +28,7 @@ export class SpAmortizationManuallistComponent extends BaseComponent implements 
   private APIRouteForGetRows: String = 'GetRowsForAmortInvoice';
   private APIRouteForGetRow: String = 'GetRow';
 
-  private RoleAccessCode = 'R00020970002098A';
+  private RoleAccessCode = 'R00020990000000A';
 
   // form 2 way binding
   model: any = {};
