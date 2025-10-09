@@ -337,8 +337,8 @@ $('#datatableApplicationDocument tbody tr').each((i, row) => {
     });
   }
 });
-
-
+// console.log(this.listdataDoc);
+// return;
   // Web service
   this.dalservice.Update(this.listdataDoc, this.APIController, this.APIRouteForUpdate)
     .subscribe(

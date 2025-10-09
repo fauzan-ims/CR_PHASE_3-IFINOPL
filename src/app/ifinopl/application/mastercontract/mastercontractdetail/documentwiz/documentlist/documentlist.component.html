@@ -52,13 +52,13 @@
                 </div>
               </td>
              <td style="width: 40%;">
-                <textarea [disabled]="isDisable"
+                <textarea [disabled]="isDisable || !(isDatepickerDisabled(row) || isCheckboxDisabled(row))"
                   class="form-control" type="text" value="{{row.remarks}}" name="p_remarks"></textarea>
               </td>
               <td style="width: 5%; text-align: center;">
                 <div class="form-check">
                   <label class="form-check-label">
-                    <input [disabled]="isDisable" class="form-check-input" type="checkbox"name="p_is_valid"
+                    <input [disabled]="isDisable || !(isDatepickerDisabled(row) || isCheckboxDisabled(row))" class="form-check-input" type="checkbox"name="p_is_valid"
                       [(ngModel)]="row.is_valid" >
                     <span class="form-check-sign"></span>
                   </label>

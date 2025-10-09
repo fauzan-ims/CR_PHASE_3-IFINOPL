@@ -33,7 +33,7 @@
         "urlReportAcc": "https://qaifinancing.dipostar.org/api/v5_rpt_api_acc/api/",
         "urlReportSvy": "https://qaifinancing.dipostar.org/api/v5_rpt_api_svy/api/",
         "urlReportScr": "https://qaifinancing.dipostar.org/api/v5_rpt_api_scor/api/",
-        "urlReportOpl": "http://localhost:61673/api/",
+        "urlReportOpl": "https://qaifinancing.dipostar.org/api/v5_rpt_api_opl/api/",
         "urlReportBase": "https://qaifinancing.dipostar.org/api/v5_rpt_api_base/api/",
         "urlReportAms": "https://qaifinancing.dipostar.org/api/v5_rpt_api_ams/api/",
         "urlReportBam": "https://qaifinancing.dipostar.org/api/v5_rpt_ifinbam_api/api/",
@@ -42,7 +42,7 @@
         "urlMainMenu": "https://qaifinancing.dipostar.org/ifinancing/mainmenu/allmodule/main",
         "urlGetToken": "https://qaifinancing.dipostar.org/token/v5_token/api/Authenticate/request",
         "urlRefreshToken": "https://qaifinancing.dipostar.org/token/v5_token/api/Authenticate/refresh-token",
-        "urlAddrOAToken": "https://org.dipostar.com/api/organization/user/loginbyad",
+        "urlAddrOAToken": "https://qaifinancing.dipostar.org/api/organization/user/loginbyad",
         "ThirdParty": "0"
     }
 }

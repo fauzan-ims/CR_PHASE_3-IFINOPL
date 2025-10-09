@@ -186,26 +186,29 @@
               </div>
               <!--#endregion rounding billing_mode-->
 
-            <!--#region billing_mode_date-->
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="billing_mode_date" class="control-label">Date *</label>
-                <input [disabled]="this.pageType != null" [readonly]="this.model.billing_mode === 'NORMAL'" type="text"
-                  class="form-control col-md-4" [ngModel]="model.billing_mode_date" name="p_billing_mode_date" required
-                  #billing_mode_date="ngModel" maxlength="4" pattern="{{NumberOnlyPattern}}">
-                <small
-                  *ngIf="(billing_mode_date.errors?.required && billing_mode_date.touched) || (billing_mode_date.errors?.required && changeduedateForm.submitted)"
-                  class="text-danger">
-                  Date is required
-                </small>
-                <small *ngIf="billing_mode_date.errors?.pattern && billing_mode_date.touched" class="text-danger">
-                  Date is required and format should be <i>0-9</i>
-                </small>
+              <!--#region billing_mode_date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="billing_mode_date" class="control-label">Date *</label>
+                  <input [disabled]="this.pageType != null"
+                    [readonly]="this.model.billing_mode === 'NORMAL' || this.model.billing_mode === 'END MONTH'"
+                    type="text" class="form-control col-md-4" [ngModel]="model.billing_mode_date"
+                    name="p_billing_mode_date" required #billing_mode_date="ngModel" maxlength="4"
+                    pattern="{{NumberOnlyPattern}}"
+                    [value]="this.model.billing_mode === 'NORMAL' || this.model.billing_mode === 'END MONTH' ? '0' : model.billing_mode_date">
+                  <small
+                    *ngIf="(billing_mode_date.errors?.required && billing_mode_date.touched) || (billing_mode_date.errors?.required && changeduedateForm.submitted)"
+                    class="text-danger">
+                    Date is required
+                  </small>
+                  <small *ngIf="billing_mode_date.errors?.pattern && billing_mode_date.touched" class="text-danger">
+                    Date is required and format should be <i>0-9</i>
+                  </small>
+                </div>
               </div>
-            </div>
-            <!--#endregion billing_mode_date-->
+              <!--#endregion billing_mode_date-->
 
-              
+
               <!--#region is_prorate-->
               <div class="col-md-4">
                 <label>Prorate *</label>

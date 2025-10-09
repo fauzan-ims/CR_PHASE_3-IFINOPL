@@ -615,6 +615,7 @@ export class DeskColltaskdetailComponent extends BaseComponent implements OnInit
       if (this.model.result_code != null) {
         if (this.model.result_code == 'MD005') {
           this.Date();
+          // } else if (this.model.result_code != 'MD005' && this.model.result_code != 'MD004') {
         } else if (this.model.result_code != 'MD005' && this.model.result_code != 'MD004') {
           this.Date2();
         }
@@ -776,14 +777,14 @@ export class DeskColltaskdetailComponent extends BaseComponent implements OnInit
       this.model.is_need_next_fu = false;
       this.model.next_fu_date = null;
 
-      this.isFU = false; // checkbox bisa edit
+      this.isFU = true; // checkbox bisa edit
       this.isFUDate = false;   // date bisa edit
     }
     else if (code === 'MD005') { // NO RESPOND
       this.model.is_need_next_fu = true;
       this.model.next_fu_date = this.Date(); // H+1
 
-      this.isFU = true;  // checkbox terkunci
+      this.isFU = false;  // checkbox terkunci
       this.isFUDate = true;    // date terkunci
     }
     else { // Selain itu
