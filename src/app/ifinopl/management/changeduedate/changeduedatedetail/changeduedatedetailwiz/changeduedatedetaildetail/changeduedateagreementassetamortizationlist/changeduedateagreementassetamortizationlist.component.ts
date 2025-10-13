@@ -18,6 +18,7 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
   param = this.getRouteparam.snapshot.paramMap.get('id');
   params = this.getRouteparam.snapshot.paramMap.get('id2');
   code = this.getRouteparam.snapshot.paramMap.get('id3');
+  pageType = this.getRouteparam.snapshot.paramMap.get('page');
 
   // variable
   public listchangeduedateagreementamortizationhistory: any = [];
@@ -29,13 +30,14 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
   public asset_name: String;
   public listinvoicedetail: any = [];
   public listinvoicedetaildata: any = [];
+  public NumberOnlyPattern = this._numberonlyformat;
 
   //controller
   private APIController: String = 'DueDateChangeAmortizationHistory';
   private APIControllerDueDateChangeMain: String = 'DueDateChangeMain';
   private APIControllerAgreementAsset: String = 'AgreementAsset';
   private APIControllerDueDateChangeDetail: String = 'DueDateChangeDetail';
-
+  
   //rooute
   private APIRouteForGetRow: String = 'GetRow';
   private APIRouteForGetRows: String = 'GetRows';

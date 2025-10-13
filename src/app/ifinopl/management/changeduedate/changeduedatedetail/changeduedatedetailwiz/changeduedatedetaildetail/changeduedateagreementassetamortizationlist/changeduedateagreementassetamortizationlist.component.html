@@ -144,7 +144,7 @@
                                     pattern="{{NumberOnlyPattern}}"
                                     [value]="this.model.billing_mode === 'NORMAL' || this.model.billing_mode === 'END MONTH' ? '0' : model.billing_mode_date">
                                 <small
-                                    *ngIf="(billing_mode_date.errors?.required && billing_mode_date.touched) || (billing_mode_date.errors?.required && changeduedateForm.submitted)"
+                                    *ngIf="(billing_mode_date.errors?.required && billing_mode_date.touched) || (billing_mode_date.errors?.required && btnSaveList)"
                                     class="text-danger">
                                     Date is required
                                 </small>
