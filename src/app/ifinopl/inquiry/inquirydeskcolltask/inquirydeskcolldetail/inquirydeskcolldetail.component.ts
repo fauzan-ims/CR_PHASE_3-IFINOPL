@@ -38,7 +38,7 @@ export class InquiryDeskColltaskdetailComponent extends BaseComponent implements
   private dataRoleTamp: any = [];
   private dataTamp: any = [];
   private setStyle: any = [];
-  private RoleAccessCode = 'R00020970002098A';
+  private RoleAccessCode = 'R00024780000001A';
   public isFU: boolean = false;
   public system_date = new Date();
   public nextFUDate: any = [];

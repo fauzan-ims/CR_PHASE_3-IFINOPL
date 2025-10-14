@@ -21,6 +21,8 @@ export class ApprovaldetailComponent extends BaseComponent implements OnInit {
   private APIController: String = 'MasterWorkflow';
   private APIRouteForGetRow: String = 'GETROW';
 
+   private RoleAccessCode = 'R00019900000000A';
+
   // form 2 way binding
   model: any = {};
 

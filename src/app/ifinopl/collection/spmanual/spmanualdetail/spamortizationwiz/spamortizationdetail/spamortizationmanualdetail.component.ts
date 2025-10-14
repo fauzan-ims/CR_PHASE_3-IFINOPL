@@ -33,7 +33,7 @@ export class SpAmortizationManualdetailComponent extends BaseComponent implement
     private APIRouteForLookup: String = 'GetRowsForLookup';
     private APIRouteForGetRowsAgreement: String = 'GetRowsAgreement';
 
-    private RoleAccessCode = 'R00020670000000A'; // role access 
+    private RoleAccessCode = 'R00020990000000A'; // role access 
 
     // form 2 way binding
     model: any = {};

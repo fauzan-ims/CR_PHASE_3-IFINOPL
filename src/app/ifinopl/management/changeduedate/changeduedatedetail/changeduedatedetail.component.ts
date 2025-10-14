@@ -22,6 +22,7 @@ declare function hideTabWizard(): any;
 export class ChangeduedatedetailComponent extends BaseComponent implements OnInit {
   // get param from url
   param = this.getRouteparam.snapshot.paramMap.get('id');
+  pageType = this.getRouteparam.snapshot.paramMap.get('page');
 
   // variable
   public NumberOnlyPattern = this._numberonlyformat;
@@ -98,8 +99,10 @@ export class ChangeduedatedetailComponent extends BaseComponent implements OnIni
 
       this.changeduedateassetwiz();
     } else {
+      // this.callGetrow();
       this.model.change_status = 'HOLD';
       this.showSpinner = false;
+      this.model.billing_mode_date = 0;
     }
   }
 
@@ -478,11 +481,12 @@ export class ChangeduedatedetailComponent extends BaseComponent implements OnIni
     });
   }
 
-  btnSelectRowAgreement(agreement_no: String, agreement_external_no: String, agreement_desc: string, billtype: string, billmode: string, pror: string) {
+  btnSelectRowAgreement(agreement_no: String, agreement_external_no: String, agreement_desc: string, billtype: string, pror: string, billmode: string) {
     this.model.agreement_no           = agreement_no;
     this.model.agreement_external_no  = agreement_external_no;
     this.model.client_name            = agreement_desc;
     this.model.billing_type           = billtype;
+    // this.model.billing_mode_date      = billmodedate;
     this.model.billing_mode           = billmode;
     this.model.is_prorate             = pror;
     $('#lookupModalAgreement').modal('hide');

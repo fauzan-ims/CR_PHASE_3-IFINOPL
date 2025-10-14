@@ -23,7 +23,7 @@
 
             <!--#region button submit dan back-->
             <button type="submit" [hidden]="model.change_status != 'HOLD'" class="btn btn-info btn-round"
-              data-role="R00007180000719C">Save</button>
+              data-role="R00007180002719C">Save</button>
             <button type="button" [hidden]="this.param == null || model.change_status != 'HOLD'"
               class="btn btn-success btn-round" (click)="btnProceed(model.code)"
               data-role="R00007180000719O">Proceed</button>
@@ -177,28 +177,38 @@
                   <label>Billing Mode</label>
                   <!-- <select class="form-control col-md-6" name="p_billing_mode" [ngModel]="model.billing_mode" (change)="PageStatus($event)"> -->
                   <select class="form-control col-md-6" name="p_billing_mode" [(ngModel)]="model.billing_mode">
-                    <option value="NORMAL">Normal</option>
-                    <option value="BEFORE DUE">Before Due</option>
-                    <option value="DATE">Date</option>
-                    <option value="END MONTH">End Month</option>
+                    <option value="NORMAL">NORMAL</option>
+                    <option value="BEFORE DUE">BEFORE DUE</option>
+                    <option value="DATE">DATE</option>
+                    <option value="END MONTH">END MONTH</option>
                   </select>
                 </div>
               </div>
               <!--#endregion rounding billing_mode-->
 
-              <!--#region Date-->
-              <div class="col-md-4" [hidden]="model.billing_mode !== 'BEFORE DUE' && model.billing_mode !== 'DATE'">
+              <!--#region billing_mode_date-->
+              <div class="col-md-4">
                 <div class="form-group">
-                  <label>Date</label>
-                  <input class="form-control col-md-6" placeholder="dd/mm/yyyy" angular-mydatepicker
-                    [ngModel]="model.date" name="p_date" [options]="myDatePickerOptions"
-                    #change_exp_date="angular-mydatepicker" autocomplete="off" readonly />
-
+                  <label for="billing_mode_date" class="control-label">Date *</label>
+                  <input [disabled]="this.pageType != null"
+                    [readonly]="this.model.billing_mode === 'NORMAL' || this.model.billing_mode === 'END MONTH'"
+                    type="text" class="form-control col-md-4" [ngModel]="model.billing_mode_date"
+                    name="p_billing_mode_date" required #billing_mode_date="ngModel" maxlength="4"
+                    pattern="{{NumberOnlyPattern}}"
+                    [value]="this.model.billing_mode === 'NORMAL' || this.model.billing_mode === 'END MONTH' ? '0' : model.billing_mode_date">
+                  <small
+                    *ngIf="(billing_mode_date.errors?.required && billing_mode_date.touched) || (billing_mode_date.errors?.required && changeduedateForm.submitted)"
+                    class="text-danger">
+                    Date is required
+                  </small>
+                  <small *ngIf="billing_mode_date.errors?.pattern && billing_mode_date.touched" class="text-danger">
+                    Date is required and format should be <i>0-9</i>
+                  </small>
                 </div>
               </div>
-              <!--#endregion Date-->
+              <!--#endregion billing_mode_date-->
 
-              
+
               <!--#region is_prorate-->
               <div class="col-md-4">
                 <label>Prorate *</label>
@@ -457,7 +467,7 @@
                   <td style="width: 80%;">{{ row.client_name}}</td>
                   <td class="text-right">
                     <button class="btn btn-outline-default btn-round"
-                      (click)="btnSelectRowAgreement(row.agreement_no, row.agreement_external_no, row.client_name, row.billing_type, row.billing_mode, row.prorate)">Select</button>
+                      (click)="btnSelectRowAgreement(row.agreement_no, row.agreement_external_no, row.client_name, row.billing_type, row.prorate, row.billing_mode)">Select</button>
                   </td>
                 </tr>
               </tbody>

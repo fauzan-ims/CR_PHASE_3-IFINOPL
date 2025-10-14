@@ -65,7 +65,7 @@ export class DocumentlistComponent extends BaseComponent implements OnInit {
   private APIRouteForGetRowsForDelete: String = 'ExecSpForGetRowsForDelete';
   private APIRouteForUpdateIsValid: String = 'ExecSpForUpdateIsValid';
 
-  private RoleAccessCode = 'R00020690000010A'; // role access 
+  private RoleAccessCode = 'R00022360000000A'; // role access 
 
   // form 2 way binding
   model: any = {};
@@ -337,8 +337,8 @@ $('#datatableApplicationDocument tbody tr').each((i, row) => {
     });
   }
 });
-
-
+// console.log(this.listdataDoc);
+// return;
   // Web service
   this.dalservice.Update(this.listdataDoc, this.APIController, this.APIRouteForUpdate)
     .subscribe(

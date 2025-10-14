@@ -359,18 +359,24 @@ export class SpdeliverydetailComponent extends BaseComponent implements OnInit {
   //#region button PrintSP
   btnPrintSP(letter_no: any) {
     this.showSpinner = true;
+    this.model.report_code_sp = this.param
+    this.model.table_name_sp1
 
     const rptParam = {
       p_user_id: this.userId,
       p_letter_no: letter_no,
-      p_code: this.model.report_code_sp,
+      // p_code: this.model.report_code_sp,
+      p_code: this.param,
       p_report_name: this.model.report_name_sp,
       p_print_option: 'PDF'
     }
 
     const dataParam = {
-      TableName: this.model.table_name_sp,
-      SpName: this.model.sp_name_sp,
+      // TableName: this.model.table_name_sp1,
+      // SpName: this.model.sp_name_sp1,
+      // reportparameters: rptParam
+      TableName: 'RPT_SURAT_PERINGATAN',
+      SpName: 'xsp_rpt_surat_peringatan',
       reportparameters: rptParam
     };
 
@@ -392,6 +398,9 @@ console.log(dataParam);
   //#region button PrintSP2
   btnPrintSP2(letter_no: any) {
     this.showSpinner = true;
+    this.model.report_code_sp2 = 'RPT.2301.000004';
+    this.model.table_name_sp2 = 'RPT_SURAT_PERINGATAN_II';
+    this.model.sp_name_sp2 = 'xsp_rpt_surat_peringatan_ii';
 
     const rptParam = {
       p_user_id: this.userId,

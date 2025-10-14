@@ -32,7 +32,7 @@ export class SpSettlementAmortizationdetailComponent extends BaseComponent imple
     private APIRouteForGetRow: String = 'GetRowInvoiceAmort';
     private APIRouteForLookup: String = 'GetRowsForLookup';
 
-    private RoleAccessCode = 'R00020670000000A'; // role access 
+    private RoleAccessCode = 'R00021030000000A'; // role access 
 
     // form 2 way binding
     model: any = {};

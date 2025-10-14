@@ -138,8 +138,8 @@
                 <label>Unit Source</label>
                 <select class="form-control col-md-6" [disabled]="this.params !== null" [ngModel]="model.unit_source"
                   name="p_unit_source" (change)="changeCondition($event)">
-                  <option value='Purchase'>Purchase</option>
-                  <option value='Stock'>Stock</option>
+                  <option value='Purchase'>PURCHASE</option>
+                  <option value='Stock'>STOCK</option>
                 </select>
               </div>
             </div>
@@ -149,8 +149,8 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Condition</label>
-                <select class="form-control col-md-6" [disabled]="this.params !== null"
-                  [ngModel]="model.asset_condition" name="p_asset_condition">
+                <select class="form-control col-md-6" [disabled]="this.params !== null" (change)="isCondition($event)"
+                  [ngModel]="this.condition || model.asset_condition" name="p_asset_condition">
                   <option value='NEW'>NEW</option>
                   <option value='USED'>USED</option>
                 </select>
@@ -1019,7 +1019,7 @@
             <!--#endregion billing_mode-->            
 
             <!--#region billing_mode_date-->
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
               <div class="form-group">
                 <label for="billing_mode_date" class="control-label">Date *</label>
                 <input [disabled]="this.pageType != null" [readonly]="this.model.billing_mode === 'NORMAL'" type="text"
@@ -1034,8 +1034,30 @@
                   Date is required and format should be <i>0-9</i>
                 </small>
               </div>
-            </div>
+            </div> -->
             <!--#endregion billing_mode_date-->
+
+                          <!--#region billing_mode_date-->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="billing_mode_date" class="control-label">Date *</label>
+                  <input [disabled]="this.pageType != null"
+                    [readonly]="this.model.billing_mode === 'NORMAL' || this.model.billing_mode === 'END MONTH'"
+                    type="text" class="form-control col-md-4" [ngModel]="model.billing_mode_date"
+                    name="p_billing_mode_date" required #billing_mode_date="ngModel" maxlength="4"
+                    pattern="{{NumberOnlyPattern}}"
+                    [value]="this.model.billing_mode === 'NORMAL' || this.model.billing_mode === 'END MONTH' ? '0' : model.billing_mode_date">
+                  <small
+                    *ngIf="(billing_mode_date.errors?.required && billing_mode_date.touched) || (billing_mode_date.errors?.required && assetdetailForm.submitted)"
+                    class="text-danger">
+                    Date is required
+                  </small>
+                  <small *ngIf="billing_mode_date.errors?.pattern && billing_mode_date.touched" class="text-danger">
+                    Date is required and format should be <i>0-9</i>
+                  </small>
+                </div>
+              </div>
+              <!--#endregion billing_mode_date-->
 
             <!--#region radio button prorate-->
             <div class="col-md-4">

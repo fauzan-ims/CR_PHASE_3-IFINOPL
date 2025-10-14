@@ -54,7 +54,7 @@
                             </div>
                             <button type="button" style='float: right;'
                                 class="btn btn-info btn-print-round btn-round custom-button-width"
-                                (click)="btnPrintTandaTerima()" data-role="R00024270000002P"
+                                (click)="btnPrintTandaTerima()" data-role="R00020740022078P"
                                 [hidden]="param == null || this.model.is_print_tanda_terima=='0'"
                                 style="position: absolute; right: 0px;">Print
                                 Tanda Terima</button>
@@ -142,7 +142,7 @@
                                         <div class="form-check-radio form-check-inline">
                                             <label class="form-check-label">
                                                 <input [disabled]="model.status !== 'HOLD'" class="form-check-input"
-                                                    type="radio" name="p_method" value="INTERNAL"
+                                                    type="radio" name="p_method" value="INTERNAL" (ngModelChange)="onMethodChange($event)"
                                                     [(ngModel)]="model.method">Internal
                                                 <span class="form-check-sign"></span>
                                             </label>
@@ -150,7 +150,7 @@
                                         <div class="form-check-radio form-check-inline">
                                             <label class="form-check-label">
                                                 <input [disabled]="model.status !== 'HOLD'" class="form-check-input"
-                                                    type="radio" name="p_method" value="EXTERNAL"
+                                                    type="radio" name="p_method" value="EXTERNAL" (ngModelChange)="onMethodChange($event)"
                                                     [(ngModel)]="model.method">External
                                                 <span class="form-check-sign"></span>
                                             </label>
@@ -158,7 +158,7 @@
                                         <div class="form-check-radio form-check-inline">
                                             <label class="form-check-label">
                                                 <input [disabled]="model.status !== 'HOLD'" class="form-check-input"
-                                                    type="radio" name="p_method" value="EMAIL"
+                                                    type="radio" name="p_method" value="EMAIL" (ngModelChange)="onMethodChange($event)"
                                                     [(ngModel)]="model.method">E-mail
                                                 <span class="form-check-sign"></span>
                                             </label>
@@ -174,7 +174,7 @@
                                     <label for="external_pic_name" class="control-label">External PIC Name *</label>
                                     <input type="text" [readonly]="model.status !== 'HOLD'" class="form-control"
                                         [ngModel]="model.external_pic_name" maxlength="250" name="p_external_pic_name"
-                                        [required]="model.method !== 'INTERNAL'" #external_pic_name="ngModel"
+                                        [required]="model.method === 'EXTERNAL'" #external_pic_name="ngModel"
                                         [disabled]="model.method !== 'EXTERNAL'">
                                     <small
                                         *ngIf="(external_pic_name.errors?.required && external_pic_name.touched) || (external_pic_name.errors?.required && deliveryForm.submitted)"
@@ -344,7 +344,7 @@
                                     </label>
                                     <input type="text" class="form-control" [ngModel]="model.delivery_doc_reff_no"
                                         maxlength="50" name="p_delivery_doc_reff_no"
-                                        [required]="model.delivery_result === 'ACCEPTED' || model.status !== 'ON PROCESS'"
+                                        [required]="model.delivery_result === 'ACCEPTED' && model.status !== 'ON PROCESS'"
                                         #delivery_doc_reff_no="ngModel" [readonly]="model.status === 'DONE'">
                                     <small
                                         *ngIf="(delivery_doc_reff_no.errors?.required && delivery_doc_reff_no.touched) || (delivery_doc_reff_no.errors?.required && deliveryForm.submitted)"
@@ -360,12 +360,12 @@
                                 [hidden]="model.delivery_result !== 'ACCEPTED' || model.status !== 'ON PROCESS'">
                                 <div class="form-group">
                                     <label for="p_delivery_received_date" class="control-label">Received Date *</label>
-                                    <input [ngStyle]="getStyles(model.status !== 'HOLD')" class="form-control col-md-6"
+                                    <input class="form-control col-md-6"
                                         placeholder="dd/mm/yyyy" angular-mydatepicker
                                         [ngModel]="model.delivery_received_date" name="p_delivery_received_date"
                                         [options]="myDatePickerOptions"
                                         (click)="delivery_received_date.toggleCalendar()"
-                                        [required]="model.delivery_result === 'ACCEPTED'|| model.status !== 'ON PROCESS'"
+                                        [required]="model.delivery_result === 'ACCEPTED'&& model.status !== 'ON PROCESS'"
                                         #p_delivery_received_date="ngModel"
                                         #delivery_received_date="angular-mydatepicker" autocomplete="off"
                                         [readonly]="model.status !== 'ON PROCESS'" />
@@ -385,7 +385,7 @@
                                     <label for="delivery_received_by" class="control-label">Received By *</label>
                                     <input type="text" class="form-control" [ngModel]="model.delivery_received_by"
                                         maxlength="250" name="p_delivery_received_by"
-                                        [required]="model.delivery_result === 'ACCEPTED' || model.status !== 'ON PROCESS'"
+                                        [required]="model.delivery_result === 'ACCEPTED' && model.status !== 'ON PROCESS'"
                                         #delivery_received_by="ngModel" [readonly]="model.status !== 'ON PROCESS'">
                                     <small
                                         *ngIf="(delivery_received_by.errors?.required && delivery_received_by.touched) || (delivery_received_by.errors?.required && deliveryForm.submitted)"
@@ -421,7 +421,7 @@
                                 [hidden]="model.delivery_result !== 'FAILED' || model.status !== 'ON PROCESS'">
                                 <div class="form-group">
                                     <label for="p_delivery_reject_date" class="control-label">Reject Date *</label>
-                                    <input [ngStyle]="getStyles(model.status !== 'HOLD')" class="form-control col-md-6"
+                                    <input class="form-control col-md-6"
                                         placeholder="dd/mm/yyyy" angular-mydatepicker
                                         [ngModel]="model.delivery_reject_date" name="p_delivery_reject_date"
                                         [options]="myDatePickerOptions" (click)="delivery_reject_date.toggleCalendar()"

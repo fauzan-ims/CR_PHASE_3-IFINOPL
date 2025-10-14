@@ -18,6 +18,7 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
   param = this.getRouteparam.snapshot.paramMap.get('id');
   params = this.getRouteparam.snapshot.paramMap.get('id2');
   code = this.getRouteparam.snapshot.paramMap.get('id3');
+  pageType = this.getRouteparam.snapshot.paramMap.get('page');
 
   // variable
   public listchangeduedateagreementamortizationhistory: any = [];
@@ -28,13 +29,15 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
   public asset_no: String;
   public asset_name: String;
   public listinvoicedetail: any = [];
+  public listinvoicedetaildata: any = [];
+  public NumberOnlyPattern = this._numberonlyformat;
 
   //controller
   private APIController: String = 'DueDateChangeAmortizationHistory';
   private APIControllerDueDateChangeMain: String = 'DueDateChangeMain';
   private APIControllerAgreementAsset: String = 'AgreementAsset';
   private APIControllerDueDateChangeDetail: String = 'DueDateChangeDetail';
-
+  
   //rooute
   private APIRouteForGetRow: String = 'GetRow';
   private APIRouteForGetRows: String = 'GetRows';
@@ -243,6 +246,51 @@ export class ChangeduedateagreementassetamortizationlistComponent extends BaseCo
 
   //#region button save in list 
   btnSaveList() {
+// -----------------------------------------------------------------------------
+    this.listinvoicedetaildata.push(this.JSToNumberFloats({                  
+      p_asset_no: $('[name="p_asset_no"]')
+      .map(function () { return $(this).val(); }).get(),
+      p_asset_type_name: $('[name="p_asset_type_name"]')
+      .map(function () { return $(this).val(); }).get(),
+      p_asset_name: $('[name="p_asset_name"]')
+      .map(function () { return $(this).val(); }).get(),
+      p_asset_year: $('[name="p_asset_year"]')
+      .map(function () { return $(this).val(); }).get(),
+      p_asset_condition: $('[name="p_asset_condition"]')
+      .map(function () { return $(this).val(); }).get(),
+      p_asset_amount: $('[name="p_asset_amount"]')
+      .map(function () { return $(this).val(); }).get(),
+      p_billing_mode: $('[name="p_billing_mode"]')
+      .map(function () { return $(this).val(); }).get(),
+      p_billing_mode_date: $('[name="p_billing_mode_date"]')
+      .map(function () { return $(this).val(); }).get(),
+      p_prorate: $('[name="p_prorate"]')
+      .map(function () { return $(this).val(); }).get(),
+    }));
+    // this.earlyterminationData = this.JSToNumberFloats(earlyterminationForm);
+    // const usersJson: any[] = Array.of(this.earlyterminationData);
+
+      // this.dalservice.Update(usersJson, this.APIController, this.APIRouteForUpdate)
+      this.dalservice.Update(this.listinvoicedetaildata, this.APIControllerAgreementAsset, this.APIRouteForUpdate)
+        .subscribe(
+          res => {
+            const parse = JSON.parse(res);
+            if (parse.result === 1) {
+              this.showNotification('bottom', 'right', 'success');
+              this.showSpinner = false;
+            } else {
+              this.swalPopUpMsg(parse.data);
+              this.showSpinner = false;
+            }
+          },
+          error => {
+            const parse = JSON.parse(error);
+            this.swalPopUpMsg(parse.data);
+            this.showSpinner = false;
+          });
+// --------------------------------------------------------------------------------
+
+
     this.showSpinner = true;
     this.listinvoicedetail = [];
 

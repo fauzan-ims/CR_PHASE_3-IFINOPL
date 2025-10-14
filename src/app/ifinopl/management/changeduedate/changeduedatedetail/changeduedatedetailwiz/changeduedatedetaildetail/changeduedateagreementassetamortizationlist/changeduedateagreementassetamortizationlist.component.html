@@ -117,47 +117,70 @@
                     <!--#region changeduedate detail row-->
                     <div class="row">
 
-                        <!--#region Status-->
+                        <!--#region billing_mode-->
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Billing Mode</label>
-                                <select class="form-control col-md-6">
-                                    <!-- <select class="form-control col-md-6" [ngModel]="this.tampStatus"
-                                    (change)="PageStatus($event)"> -->
-                                    <option value="Normal">Normal</option>
-                                    <option value="Before Due">Before Due</option>
-                                    <option value="Date">Date</option>
-                                    <option value="End Month">End Month</option>
+                                <!-- <select class="form-control col-md-6" name="p_billing_mode" [ngModel]="model.billing_mode" (change)="PageStatus($event)"> -->
+                                <select class="form-control col-md-6" name="p_billing_mode"
+                                    [(ngModel)]="model.billing_mode">
+                                    <option value="NORMAL">Normal</option>
+                                    <option value="BEFORE DUE">Before Due</option>
+                                    <option value="DATE">Date</option>
+                                    <option value="END MONTH">End Month</option>
                                 </select>
                             </div>
                         </div>
-                        <!--#endregion rounding Status-->
+                        <!--#endregion rounding billing_mode-->
 
-                        <!--#region print_option-->
+                        <!--#region billing_mode_date-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="billing_mode_date" class="control-label">Date *</label>
+                                <input [disabled]="this.pageType != null"
+                                    [readonly]="this.model.billing_mode === 'NORMAL' || this.model.billing_mode === 'END MONTH'"
+                                    type="text" class="form-control col-md-4" [ngModel]="model.billing_mode_date"
+                                    name="p_billing_mode_date" required #billing_mode_date="ngModel" maxlength="4"
+                                    pattern="{{NumberOnlyPattern}}"
+                                    [value]="this.model.billing_mode === 'NORMAL' || this.model.billing_mode === 'END MONTH' ? '0' : model.billing_mode_date">
+                                <small
+                                    *ngIf="(billing_mode_date.errors?.required && billing_mode_date.touched) || (billing_mode_date.errors?.required && btnSaveList)"
+                                    class="text-danger">
+                                    Date is required
+                                </small>
+                                <small *ngIf="billing_mode_date.errors?.pattern && billing_mode_date.touched"
+                                    class="text-danger">
+                                    Date is required and format should be <i>0-9</i>
+                                </small>
+                            </div>
+                        </div>
+                        <!--#endregion billing_mode_date-->
+
+                        <!--#region prorate-->
                         <div class="col-md-4">
                             <label>Prorate *</label>
                             <div class="form-group col-md-12">
                                 <div class="row">
                                     <div class="form-check-radio form-check-inline">
                                         <label class="form-check-label">
-                                            <input class="form-check-input" type="radio" name="p_print_option"
-                                                value="Yes" [(ngModel)]="model.print_option">Yes
+                                            <input class="form-check-input" type="radio" name="p_prorate" value="YES"
+                                                [(ngModel)]="model.prorate">Yes
                                             <span class="form-check-sign"></span>
                                         </label>
                                     </div>
                                     <div class="form-check-radio form-check-inline">
                                         <label class="form-check-label">
-                                            <input class="form-check-input" type="radio" name="p_print_option"
-                                                value="No" [(ngModel)]="model.print_option">No
+                                            <input class="form-check-input" type="radio" name="p_prorate" value="NO"
+                                                [(ngModel)]="model.prorate">No
                                             <span class="form-check-sign"></span>
                                         </label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!--#endregion print_option-->
+                        <!--#endregion prorate-->
+                        <!--#endregion changeduedate detail row-->
                     </div>
-                    <!--#endregion changeduedate detail row-->
 
                     <!--#endregion form-->
                     <span layout="row horizontal-divider">
@@ -198,10 +221,12 @@
                                             <td class="if-no-edit-btn" style="display: none;">
                                                 {{row.installment_no}}
                                                 <input type="hidden" name="p_id_doc" [value]="row.installment_no" />
-                                                <input type="hidden" name="p_due_date_change_code" [value]="row.due_date_change_code" />
+                                                <input type="hidden" name="p_due_date_change_code"
+                                                    [value]="row.due_date_change_code" />
                                                 <input type="hidden" name="p_asset_no_row" [value]="row.asset_no" />
                                                 <input type="hidden" name="p_billing_date" [value]="row.billing_date" />
-                                                <input type="hidden" name="p_installment_no" [value]="row.installment_no" />
+                                                <input type="hidden" name="p_installment_no"
+                                                    [value]="row.installment_no" />
                                             </td>
                                             <td style="text-align: center;">
                                                 {{listchangeduedateagreementamortizationhistory.numberIndex+i+1}}</td>

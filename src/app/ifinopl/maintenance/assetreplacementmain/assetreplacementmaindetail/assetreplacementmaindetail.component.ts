@@ -277,7 +277,7 @@ export class AssetreplacementmaindetailComponent extends BaseComponent implement
                         this.isData = true
                     }
 
-                    
+
 
                     // if use checkAll use this
                     $('#checkall').prop('checked', false);
@@ -757,40 +757,32 @@ export class AssetreplacementmaindetailComponent extends BaseComponent implement
         // this.showSpinner = true;
         this.listassetreplacementdetailData = [];
 
-        var i = 0;
+        let i = 0;
+        const getID = $('[name="p_id_detail"]').map(function () { return $(this).val(); }).get();
+        const getEstimate = $('[name="p_estimate_return_date"]').map(function () { return $(this).val(); }).get();
+        const getRemark = $('[name="p_remarks"]').map(function () { return $(this).val(); }).get();
+        const getDeliveryAddress = $('[name="p_delivery_address"]').map(function () { return $(this).val(); }).get();
+        const getContactName = $('[name="p_contact_name"]').map(function () { return $(this).val(); }).get();
+        const getContactPhoneNo = $('[name="p_contact_phone_no"]').map(function () { return $(this).val(); }).get();
 
-        var getID = $('[name="p_id_detail"]')
-            .map(function () { return $(this).val(); }).get();
-
-        var getEstimate = $('[name="p_estimate_return_date"]')
-            .map(function () { return $(this).val(); }).get();
-
-        var getRemark = $('[name="p_remarks"]')
-            .map(function () { return $(this).val(); }).get();
-
+        console.log(getRemark
+            , getDeliveryAddress
+            , getContactName
+            , getContactPhoneNo);
+            
         while (i < getID.length) {
+            const estimateDate = getEstimate[i] !== "" ? this.dateFormatList(getEstimate[i]) : null;
+            this.listassetreplacementdetailData.push(
+                this.JSToNumberFloats({
+                    p_id: getID[i],
+                    p_estimate_return_date: estimateDate,
+                    p_delivery_address: getDeliveryAddress[i],
+                    p_contact_name: getContactName[i],
+                    p_contact_phone_no: getContactPhoneNo[i],
+                    p_remark: getRemark[i]
+                })
+            );
 
-            while (i < getEstimate.length) {
-
-                while (i < getRemark.length) {
-                    let estimateDate = null;
-
-                    if (getEstimate[i] !== "") {
-                        estimateDate = this.dateFormatList(getEstimate[i]);
-                    }
-
-                    this.listassetreplacementdetailData.push(
-                        this.JSToNumberFloats({
-                            p_id: getID[i],
-                            p_estimate_return_date: estimateDate,
-                            p_remark: getRemark[i]
-                        })
-                    )
-                    i++;
-                }
-                i++;
-
-            }
             i++;
         }
 
@@ -887,9 +879,9 @@ export class AssetreplacementmaindetailComponent extends BaseComponent implement
                     p_id: getID[i],
                     p_new_fa_code: code,
                     p_new_fa_name: item_name,
-                    p_new_fa_ref_no_01 : plat_no,
-                    p_new_fa_ref_no_02 : chassis_no,
-                    p_new_fa_ref_no_03 : engine_no,
+                    p_new_fa_ref_no_01: plat_no,
+                    p_new_fa_ref_no_02: chassis_no,
+                    p_new_fa_ref_no_03: engine_no,
                 });
             }
             i++;

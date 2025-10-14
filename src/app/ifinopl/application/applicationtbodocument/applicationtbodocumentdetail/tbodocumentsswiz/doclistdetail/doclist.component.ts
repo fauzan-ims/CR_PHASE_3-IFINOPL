@@ -559,4 +559,12 @@ export class TboDoclistComponent extends BaseComponent implements OnInit {
     window.open(this.DocumentIframe + encodeURIComponent(tempEncrypted.toString()))
   }
   //#endregion iframe lite dms
+
+
+  reloadTable() {
+  if ($.fn.DataTable.isDataTable('#datatableApplicationTboDocument')) {
+    $('#datatableApplicationTboDocument').DataTable().ajax.reload(null, false);
+  }
+}
+
 }

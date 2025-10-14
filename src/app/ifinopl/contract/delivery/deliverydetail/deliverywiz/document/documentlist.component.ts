@@ -61,7 +61,7 @@ export class DocumentlistComponent extends BaseComponent implements OnInit {
   private APIRouteForGenerate: String = 'ExecSpForGenerate';
   private APIRouteForGetRowsForDelete: String = 'ExecSpForGetRowsForDelete';
 
-  private RoleAccessCode = 'R00019900000000A'; // role access 
+  private RoleAccessCode = 'R00020670000000A'; // role access 
 
   // form 2 way binding
   model: any = {};

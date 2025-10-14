@@ -22,6 +22,7 @@ export class ApprovallegaldetailComponent extends BaseComponent implements OnIni
   private APIControllerApplicationMain: String = 'ApplicationMain';
 
   private APIRouteForGetRow: String = 'GetRow';
+  private RoleAccessCode = 'R00020690000010A';
 
   // form 2 way binding
   model: any = {};

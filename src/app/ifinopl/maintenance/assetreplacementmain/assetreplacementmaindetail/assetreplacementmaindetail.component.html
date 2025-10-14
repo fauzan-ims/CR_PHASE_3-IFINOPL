@@ -323,7 +323,7 @@
                                                 [readonly]="row.replacement_type === 'PERMANENT' || model.status !== 'HOLD'"
                                                 [ngStyle]="getStyles(row.replacement_type === 'PERMANENT' || model.status !== 'HOLD')" />
                                         </td>
-                                        <td style="width: 10%; text-align: left;" class="if-no-edit-btn">
+                                        <!-- <td style="width: 10%; text-align: left;" class="if-no-edit-btn">
                                             {{row.delivery_address}}
                                         </td>
                                         <td style="width: 10%; text-align: left;" class="if-no-edit-btn">
@@ -331,6 +331,15 @@
                                         </td>
                                         <td style="width: 10%; text-align: left;" class="if-no-edit-btn">
                                             {{row.contact_phone_no}}
+                                        </td> -->
+                                        <td style="width: 10%; text-align: left;">
+                                            <input class="form-control" placeholder="Delivery Address" [readonly]="model.status !== 'HOLD'" value="{{row.delivery_address}}" name="p_delivery_address" />
+                                        </td>
+                                        <td style="width: 10%; text-align: left;">
+                                            <input class="form-control" placeholder="Contact Name" [readonly]="model.status !== 'HOLD'" value="{{row.contact_name}}" name="p_contact_name" />
+                                        </td>
+                                        <td style="width: 10%; text-align: left;">
+                                            <input class="form-control" placeholder="Contact Phone No" [readonly]="model.status !== 'HOLD'" value="{{row.contact_phone_no}}" name="p_contact_phone_no" />
                                         </td>
                                         <td style="width: 20%;">
                                             <textarea [readonly]="model.status !== 'HOLD'" id="remark{{i}}"

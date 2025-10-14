@@ -34,23 +34,37 @@
                         <td class="if-no-edit-btn" style="width: 40%;">{{row.asset_no}} <br> {{row.asset_name}}</td>
                         <td class="if-no-edit-btn" style="width: 5%;text-align: center;">{{row.at_installment_no}}
                         </td>
-                        <td class="if-no-edit-btn" style="width: 10%; text-align: center;">
-                            {{row.old_due_date_day | date:'dd/MM/yyyy'}}
-                            <input class="form-control" placeholder="dd/mm/yyyy"
+                        <td class="if-no-edit-btn" style="width: 10%;">
+                            {{row.old_due_date_day}}
+                            <input 
+                                class="form-control" 
+                                placeholder="dd/mm/yyyy"
                                 [readonly]="row.is_change === true || row.change_status !== 'HOLD'"
-                                value="{{row.new_due_date_day}}" name="p_new_due_date_day"
-                                [options]="myDatePickerOptions" (click)="p_new_due_date_day.toggleCalendar()"
-                                #p_new_due_date_day="angular-mydatepicker" autocomplete="off" angular-mydatepicker
-                                [ngStyle]="getStyles(row.is_change === true)" />
+                                value="{{row.new_due_date_day}}" 
+                                name="p_new_due_date_day"
+                                [options]="myDatePickerOptions" 
+                                (click)="p_new_due_date_day.toggleCalendar()"
+                                #p_new_due_date_day="angular-mydatepicker" 
+                                autocomplete="off" 
+                                angular-mydatepicker
+                                [ngStyle]="getStyles(row.is_change === true)" 
+                            />
                         </td>
                         <td class="if-no-edit-btn" style="width: 10%;">
-                            {{row.old_billing_date_day | date:'dd/MM/yyyy'}}
-                            <input class="form-control" placeholder="dd/mm/yyyy"
+                            {{row.old_billing_date_day}}
+                            <input 
+                                class="form-control" 
+                                placeholder="dd/mm/yyyy"
                                 [readonly]="row.is_change_billing_date === true || row.change_status !== 'HOLD'"
-                                value="{{row.new_due_date_day}}" name="p_new_billing_date_day"
-                                [options]="myDatePickerOptions" (click)="p_new_billing_date_day.toggleCalendar()"
-                                #p_new_billing_date_day="angular-mydatepicker" autocomplete="off" angular-mydatepicker
-                                [ngStyle]="getStyles(row.is_change_billing_date === true)" />
+                                value="{{row.new_billing_date_day}}" 
+                                name="p_new_billing_date_day"
+                                [options]="myDatePickerOptions" 
+                                (click)="p_new_billing_date_day.toggleCalendar()"
+                                #p_new_billing_date_day="angular-mydatepicker" 
+                                autocomplete="off" 
+                                angular-mydatepicker
+                                [ngStyle]="getStyles(row.is_change_billing_date === true)" 
+                            />
                         </td>
                         <td style="width: 25%;text-align: right;">{{row.os_rental_amount | number : '1.2-2'}}</td>
                         <td style="width: 5%; text-align: center; display: none;">

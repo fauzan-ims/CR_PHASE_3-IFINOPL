@@ -57,6 +57,7 @@ export class AssetdetailComponent extends BaseComponent implements OnInit {
   public setStyle: any;
   public isOTR: boolean = false;
   public isBBNClient: boolean = false;
+  public condition: String;
   private APIControllerMasterCategory: String;
   private APIControllerMasterSubcategory: String;
   private APIControllerMasterMerk: String;
@@ -168,6 +169,7 @@ export class AssetdetailComponent extends BaseComponent implements OnInit {
       this.model.gps_installation_amount = 0;
       this.model.gps_monthly_amount = 0;
       this.model.start_miles = 0;
+      this.condition = 'NEW';
     }
   }
 
@@ -1340,7 +1342,9 @@ export class AssetdetailComponent extends BaseComponent implements OnInit {
             'p_type_code': this.model.asset_type_code,
             'p_merk_code': this.model.merk_code,
             'p_model_code': this.model.model_code,
-            'p_type_item_code': this.model.type_code
+            'p_type_item_code': this.model.type_code,
+            // 'p_condition': this.model.asset_condition
+            'p_condition': this.condition
           });
 
           this.dalservice.GetrowsAms(dtParameters, this.APIControllerMasterFixAsset, this.APIRouteForFixedAssetLookup).subscribe(resp => {
@@ -1982,4 +1986,11 @@ export class AssetdetailComponent extends BaseComponent implements OnInit {
     $('#lookupModalMileageCategory').modal('hide');
   }
   //#endregion MileageCategory lookup
+
+  //#region isSimulation
+  isCondition(event) {
+    this.condition = event.target.value;
+    // $('#datatableApplicationMainList').DataTable().ajax.reload();
+  }
+  //#endregion isSimulation
 }

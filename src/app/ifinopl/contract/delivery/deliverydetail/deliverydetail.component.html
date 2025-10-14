@@ -36,7 +36,7 @@
             <button [hidden]="model.status !== 'VERIFICATION'" type="button"
               class="btn btn-success btn-print-round custom-button-width" (click)="btnPostWithNote(this.param)"
               data-role="R00020670022076O">Post With Note</button>
-            <button [hidden]="model.status === 'HOLD' || model.status === 'POST' || model.status === 'CANCEL'"
+            <button [hidden]="model.status !== 'VERIFICATION' || model.status === 'POST' || model.status === 'CANCEL'"
               type="button" class="btn btn-warning btn-round" (click)="btnReturn(this.param)"
               data-role="R00020670022070R">Return</button>
             <button [hidden]="model.status !== 'HOLD'" type="button" class="btn btn-warning btn-round"

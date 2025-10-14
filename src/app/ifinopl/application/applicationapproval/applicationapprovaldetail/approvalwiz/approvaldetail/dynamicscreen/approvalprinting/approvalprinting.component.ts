@@ -24,6 +24,7 @@ export class ApprovalprintingComponent extends BaseComponent implements OnInit {
 
   private APIRouteForGetRow: String = 'GetRow';
   private APIRouteForUpdateAgreementDate: String = 'UpdateAgreementDate';
+  private RoleAccessCode = 'R00020690000010A';
 
   // form 2 way binding
   model: any = {};
