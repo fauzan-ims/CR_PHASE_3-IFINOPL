@@ -36,7 +36,10 @@
             <button [hidden]="model.status !== 'VERIFICATION'" type="button"
               class="btn btn-success btn-print-round custom-button-width" (click)="btnPostWithNote(this.param)"
               data-role="R00020670022076O">Post With Note</button>
-            <button [hidden]="model.status !== 'VERIFICATION' || model.status === 'POST' || model.status === 'CANCEL'"
+            <!-- <button [hidden]="model.status !== 'VERIFICATION' || model.status === 'POST' || model.status === 'CANCEL'"
+              type="button" class="btn btn-warning btn-round" (click)="btnReturn(this.param)"
+              data-role="R00020670022070R">Return</button> -->
+            <button [hidden]="model.status !== 'VERIFICATION' && model.status !== 'ON PROCESS'"
               type="button" class="btn btn-warning btn-round" (click)="btnReturn(this.param)"
               data-role="R00020670022070R">Return</button>
             <button [hidden]="model.status !== 'HOLD'" type="button" class="btn btn-warning btn-round"
@@ -249,7 +252,7 @@
               <!--#region file_path   <i class="fa fa-edit"></i>-->
               <div class="col-md-4" [hidden]="model.status === 'HOLD'">
                 <div class="form-group">
-                  <label>File</label>
+                  <label>File Signed Agreement</label>
                   <div class="row" style="margin-left: 30px;">
                     <div class="fileinput fileinput-new text-center" data-provides="fileinput">
                       <div [hidden]="model.status !== 'ON PROCESS' || this.tampHidden !== true">
@@ -294,12 +297,12 @@
               <!--#endregion result-->
 
               <!--#region file_path_memo   <i class="fa fa-edit"></i>-->
-              <div class="col-md-4" [hidden]="model.status !== 'VERIFICATION'">
+              <div class="col-md-4" [hidden]="model.status !== 'VERIFICATION' && model.status !== 'ON PROCESS'">
                 <div class="form-group">
                   <label>File Memo</label>
                   <div class="row" style="margin-left: 30px;">
                     <div class="fileinput fileinput-new text-center" data-provides="fileinput">
-                      <div [hidden]="model.status !== 'VERIFICATION' || this.tampHiddenMemo !== true">
+                      <div [hidden]="model.status !== 'VERIFICATION' && model.status !== 'ON PROCESS' || this.tampHiddenMemo !== true">
                         <span class="btn btn-info btn-round btn-file ">
                           <input type="file" (change)="onUpload($event, model.id, 'memo')" id="fileControl" />
                           <span>UPLOAD</span>
@@ -307,7 +310,7 @@
                         {{tempFileMemo}}
                       </div>
                       <div [hidden]="this.tampHiddenMemo !== false">
-                        <a [hidden]="model.status !== 'VERIFICATION'"
+                        <a [hidden]="model.status !== 'VERIFICATION' && model.status !== 'ON PROCESS'"
                           class="btn btn-danger btn-round btn-file custom-button-width" type="button"
                           (click)="deleteImage(model.file_memo, model.file_path_memo, 'memo')">
                           <span><i class="fa fa-trash"></i></span></a>
@@ -323,13 +326,13 @@
               <!--#endregion file_path_memo-->
 
               <!--#region exp_date-->
-              <div class="col-md-4" [hidden]="model.status !== 'VERIFICATION'">
+              <div class="col-md-4" [hidden]="model.status !== 'VERIFICATION' && model.status !== 'ON PROCESS'">
                 <div class="form-group">
                   <label for="p_exp_date" class="control-label">Expired Date</label>
-                  <input [ngStyle]="getStyles(model.status !== 'VERIFICATION')" class="form-control col-md-6"
+                  <input [ngStyle]="getStyles(model.status !== 'ON PROCESS')" class="form-control col-md-6"
                     placeholder="dd/mm/yyyy" angular-mydatepicker [ngModel]="model.exp_date" name="p_exp_date"
                     [options]="myDatePickerOptions" (click)="exp_date.toggleCalendar()" #p_exp_date="ngModel"
-                    #exp_date="angular-mydatepicker" autocomplete="off" [readonly]="model.status !== 'VERIFICATION'" />
+                    #exp_date="angular-mydatepicker" autocomplete="off" [readonly]="model.status !== 'ON PROCESS'" />
                 </div>
               </div>
               <!--#endregion application_date-->

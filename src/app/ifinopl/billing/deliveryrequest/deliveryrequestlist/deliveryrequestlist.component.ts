@@ -28,6 +28,7 @@ export class DeliveryRequestlistComponent extends BaseComponent implements OnIni
   public client_name: String;
   private dataTampProceed: any = [];
   public lookupclientname: any = [];
+  public tampStatus: String;
 
   // form 2 way binding
   model: any = {};
@@ -70,6 +71,7 @@ export class DeliveryRequestlistComponent extends BaseComponent implements OnIni
     this.callGetRole(this.userId, this._elementRef, this.dalservice, this.RoleAccessCode, this.route);
     this.compoSide(this._location, this._elementRef, this.route);
     this.loadData();
+    this.tampStatus = '';
   }
 
   //#region ddl from date
@@ -174,7 +176,8 @@ export class DeliveryRequestlistComponent extends BaseComponent implements OnIni
           'p_branch_code': this.branch_code,
           'p_from_date': (this.model.from_date != null && this.model.from_date !== "undefined-undefined-") ? this.model.from_date : '',
           'p_to_date': (this.model.to_date != null && this.model.to_date !== "undefined-undefined-") ? this.model.to_date : '',
-          'p_client_no': this.client_no
+          'p_client_no': this.client_no,
+          'p_delivery_status': this.tampStatus
         });
 
         this.dalservice.Getrows(dtParameters, this.APIController, this.APIRouteForGetRows).subscribe(resp => {
@@ -415,4 +418,10 @@ export class DeliveryRequestlistComponent extends BaseComponent implements OnIni
     $('#datatabledeliveryrequest').DataTable().ajax.reload();
   }
   //#endregion resteClientName
+      //#region ddl master module
+    PageStatus(event: any) {
+        this.tampStatus = event.target.value;
+        $('#datatabledeliveryrequest').DataTable().ajax.reload();
+    }
+    //#endregion ddl master module
 }

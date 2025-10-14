@@ -6,6 +6,7 @@ import { BaseComponent } from '../../../../../../../base.component';
 import { DALService } from '../../../../../../../DALservice.service';
 import swal from 'sweetalert2';
 import { NgForm } from '@angular/forms';
+import * as CryptoJS from "crypto-js";
 
 @Component({
   moduleId: module.id,

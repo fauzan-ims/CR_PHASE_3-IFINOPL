@@ -42,7 +42,7 @@ export class AssetallocationdetailComponent extends BaseComponent implements OnI
   private APIRouteForUpdateRentalStatus: String = 'UpdateRentalStatus';
   private APIRouteForUpdateForFixAsset: String = 'UpdateForFixAsset';
   private APIRouteForGetRows: String = 'GetRowsForAssetAllocation';
-  private APIRouteForFixedAssetLookup: String = 'GetRowsForFixedAssetLookup';
+  private APIRouteForFixedAssetLookup: String = 'GetRowsForFixedAssetLookupForAssetAllocation';
   private APIRouteForProceed: String = 'ExecSpForProceedAssetAllocation';
   private APIRouteForPost: String = 'ExecSpForPostAssetAllocation';
   private APIRouteForPurchaseRequest: String = 'ExecSpForPurchaseRequest';
