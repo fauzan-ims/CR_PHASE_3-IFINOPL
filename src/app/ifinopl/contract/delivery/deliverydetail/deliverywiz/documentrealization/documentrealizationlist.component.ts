@@ -103,13 +103,13 @@ export class DocumentrealizationlistComponent extends BaseComponent implements O
   //#endregion callGetrowRealization
 
   isCheckboxDisabled(row: any): boolean {
-  const statusDisabled = !(this.model.status === 'HOLD' || this.model.status === 'VERIFICATION');
+  const statusDisabled = !(this.model.status === 'ON PROCESS' || this.model.status === 'VERIFICATION');
   const promiseDateFilled = !!row.promise_date; // true kalau ada date
   return statusDisabled || promiseDateFilled;
 }
 
 isDatepickerDisabled(row: any): boolean {
-  const statusDisabled = !(this.model.status === 'HOLD' || this.model.status === 'VERIFICATION');
+  const statusDisabled = !(this.model.status === 'ON PROCESS' || this.model.status === 'VERIFICATION');
   const receivedChecked = !!row.is_received; // true kalau dicentang
   return statusDisabled || receivedChecked;
 }

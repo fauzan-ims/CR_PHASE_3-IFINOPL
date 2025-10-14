@@ -328,6 +328,7 @@
                       </td>
                       <td style="width: 10%;">
                         Year : {{row.asset_year}}
+                        <br> Unit Source : {{row.unit_source}}
                         <br> Condition : {{row.asset_condition}}
                         <br> Colour : {{row.colour}}
                         <span [hidden]="row.transmisi === ''"><br> Transmition : {{row.transmisi}}</span>
@@ -364,8 +365,20 @@
                           (click)="btnClearFixedAsset(row.asset_no, row.fa_code, 'fixedAsset')">
                           Clear
                         </button>
-                        <button
+                        <!-- <button
                           [hidden]="row.asset_condition === 'USED' || row.fa_code === null || (row.purchase_status !== 'REALIZATION' && row.replacement_fa_code === null)"
+                          class="btn btn-info btn-print-round" type="button"
+                          (click)="btnClearFixedAssetproc(row.asset_no, row.fa_code, 'Procurement')">
+                          Clear Asset GRN
+                        </button> -->
+                        <!-- <button
+                          [hidden]="row.asset_condition === 'USED' || row.fa_code === null || (row.purchase_status !== 'REALIZATION' && row.replacement_fa_code === null)"
+                          class="btn btn-info btn-print-round" type="button"
+                          (click)="btnClearFixedAssetproc(row.asset_no, row.fa_code, 'Procurement')">
+                          Clear Asset GRN
+                        </button> -->
+                        <button
+                          [hidden]="row.unit_source === 'STOCK' || row.fa_code === null || (row.purchase_status !== 'REALIZATION' && row.replacement_fa_code === null)"
                           class="btn btn-info btn-print-round" type="button"
                           (click)="btnClearFixedAssetproc(row.asset_no, row.fa_code, 'Procurement')">
                           Clear Asset GRN
