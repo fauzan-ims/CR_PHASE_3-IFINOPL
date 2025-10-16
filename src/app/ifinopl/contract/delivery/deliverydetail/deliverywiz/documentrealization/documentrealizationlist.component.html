@@ -11,7 +11,7 @@
       <div class="card-body">
 
         <!--#region button submit-->
-        <button [hidden]="!(model.status === 'HOLD' || model.status === 'VERIFICATION')" type="button" class="btn btn-info btn-round" (click)="btnSavelist()"
+        <button [hidden]="!(model.status === 'ON PROCESS' || (model.status === 'VERIFICATION' && model.file_memo !== null))" type="button" class="btn btn-info btn-round" (click)="btnSavelist()"
           data-role="R00020670022075C">
           Save</button>
         <button type="button" class="btn btn-info btn-round" (click)="btnOpenLD()">
@@ -45,6 +45,11 @@
                   [options]="myDatePickerOptions"(click)="p_promise_date.toggleCalendar()"#p_promise_date="angular-mydatepicker"
                   autocomplete="off"[disabled]="isDatepickerDisabled(row)" />
               </td>
+              <!-- <td style="width: 10%;">
+                <input class="form-control" placeholder="dd/mm/yyyy"angular-mydatepicker name="p_promise_date" value="{{row.promise_date}}"
+                  [options]="myDatePickerOptions"(click)="p_promise_date.toggleCalendar()"#p_promise_date="angular-mydatepicker"
+                  autocomplete="off"[disabled]="!(model.status === 'ON PROCESS')" />
+              </td> -->
               <td style="width: 5%; text-align: center;">
                 <div class="form-check">
                   <label class="form-check-label">
@@ -54,14 +59,40 @@
                   </label>
                 </div>
               </td>
-             <td style="width: 40%;">
+              <!-- <td style="width: 5%; text-align: center;">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input"name="p_is_received" type="checkbox" [(ngModel)]="row.is_received"
+                        [disabled]="!(model.status === 'ON PROCESS')">
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </td> -->
+             <!-- <td style="width: 40%;">
                 <textarea   [disabled]="model.status !== 'VERIFICATION'" 
                   class="form-control" type="text" value="{{row.remarks}}" name="p_remarks"> </textarea>
+              </td> -->
+             <!-- <td style="width: 40%;">
+                <textarea   [disabled]="!(model.status === 'ON PROCESS' || (model.status === 'VERIFICATION' && model.file_memo !== null))" 
+                  class="form-control" type="text" value="{{row.remarks}}" name="p_remarks"> </textarea>
+              </td> -->
+             <td style="width: 40%;">
+                <textarea   [disabled]="!(model.status === 'VERIFICATION')" 
+                  class="form-control" type="text" value="{{row.remarks}}" name="p_remarks"> </textarea>
               </td>
-              <td style="width: 5%; text-align: center;">
+              <!-- <td style="width: 5%; text-align: center;">
                 <div class="form-check">
                   <label class="form-check-label">
                     <input [disabled]="model.status !== 'VERIFICATION'" class="form-check-input" type="checkbox"name="p_is_valid"
+                      [(ngModel)]="row.is_valid" >
+                    <span class="form-check-sign"></span>
+                  </label>
+                </div>
+              </td> -->
+              <td style="width: 5%; text-align: center;">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input [disabled]="!(model.status === 'VERIFICATION')" class="form-check-input" type="checkbox"name="p_is_valid"
                       [(ngModel)]="row.is_valid" >
                     <span class="form-check-sign"></span>
                   </label>

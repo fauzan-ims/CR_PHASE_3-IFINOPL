@@ -28,7 +28,7 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <!--#region button submit dan back-->
-                                <button [hidden]="model.status === 'DONE' && model.status === 'CANCEL'" type="submit" class="btn btn-info btn-round"
+                                <button [hidden]="model.status === 'DONE' || model.status === 'CANCEL'" type="submit" class="btn btn-info btn-round"
                                     data-role="R00020740002075C">Save</button>
 
                                 <button [hidden]="model.code == null || model.status !== 'HOLD'" type="button"
@@ -248,7 +248,7 @@
                                 <div class="form-group">
                                     <label for="client_address" class="control-label">Billing To Address</label>
                                     <textarea type="text" class="form-control" [ngModel]="model.client_address"
-                                        name="p_client_address" #client_address="ngModel" readonly>
+                                        name="p_client_address" #client_address="ngModel" [readonly] = "model.status !== 'HOLD'">
                                         </textarea>
                                 </div>
                             </div>
@@ -322,7 +322,7 @@
                             <!--#endregion aging-->
 
                             <!--#region delivery_result-->
-                            <div class="col-md-4" [hidden]="model.status !== 'ON PROCESS'">
+                            <div class="col-md-4" [hidden]="!(model.status === 'ON PROCESS' || model.status === 'DONE')">
                                 <div class="form-group">
                                     <label>Result</label>
                                     <select class="form-control col-md-6" [disabled]="model.status !== 'ON PROCESS'"
@@ -340,11 +340,14 @@
                                 <div class="form-group">
                                     <label for="delivery_doc_reff_no" class="control-label">
                                         <!-- <span [hidden]="model.delivery_result === 'ACCEPTED'">Resi No</span> -->
-                                        <span [hidden]="model.delivery_result !== 'ACCEPTED'">Resi No *</span>
+                                        <span [hidden]="model.delivery_result !== 'ACCEPTED'">Resi No</span>
                                     </label>
-                                    <input type="text" class="form-control" [ngModel]="model.delivery_doc_reff_no"
+                                    <!-- <input type="text" class="form-control" [ngModel]="model.delivery_doc_reff_no"
                                         maxlength="50" name="p_delivery_doc_reff_no"
                                         [required]="model.delivery_result === 'ACCEPTED' && model.status !== 'ON PROCESS'"
+                                        #delivery_doc_reff_no="ngModel" [readonly]="model.status === 'DONE'"> -->
+                                    <input type="text" class="form-control" [ngModel]="model.delivery_doc_reff_no"
+                                        maxlength="50" name="p_delivery_doc_reff_no"
                                         #delivery_doc_reff_no="ngModel" [readonly]="model.status === 'DONE'">
                                     <small
                                         *ngIf="(delivery_doc_reff_no.errors?.required && delivery_doc_reff_no.touched) || (delivery_doc_reff_no.errors?.required && deliveryForm.submitted)"
@@ -359,13 +362,12 @@
                             <div class="col-md-4"
                                 [hidden]="model.delivery_result !== 'ACCEPTED' || model.status !== 'ON PROCESS'">
                                 <div class="form-group">
-                                    <label for="p_delivery_received_date" class="control-label">Received Date *</label>
+                                    <label for="p_delivery_received_date" class="control-label">Received Date</label>
                                     <input class="form-control col-md-6"
                                         placeholder="dd/mm/yyyy" angular-mydatepicker
                                         [ngModel]="model.delivery_received_date" name="p_delivery_received_date"
                                         [options]="myDatePickerOptions"
                                         (click)="delivery_received_date.toggleCalendar()"
-                                        [required]="model.delivery_result === 'ACCEPTED'&& model.status !== 'ON PROCESS'"
                                         #p_delivery_received_date="ngModel"
                                         #delivery_received_date="angular-mydatepicker" autocomplete="off"
                                         [readonly]="model.status !== 'ON PROCESS'" />
@@ -382,10 +384,9 @@
                             <div class="col-md-4"
                                 [hidden]="model.delivery_result !== 'ACCEPTED' || model.status !== 'ON PROCESS'">
                                 <div class="form-group">
-                                    <label for="delivery_received_by" class="control-label">Received By *</label>
+                                    <label for="delivery_received_by" class="control-label">Received By</label>
                                     <input type="text" class="form-control" [ngModel]="model.delivery_received_by"
                                         maxlength="250" name="p_delivery_received_by"
-                                        [required]="model.delivery_result === 'ACCEPTED' && model.status !== 'ON PROCESS'"
                                         #delivery_received_by="ngModel" [readonly]="model.status !== 'ON PROCESS'">
                                     <small
                                         *ngIf="(delivery_received_by.errors?.required && delivery_received_by.touched) || (delivery_received_by.errors?.required && deliveryForm.submitted)"
@@ -425,7 +426,7 @@
                                         placeholder="dd/mm/yyyy" angular-mydatepicker
                                         [ngModel]="model.delivery_reject_date" name="p_delivery_reject_date"
                                         [options]="myDatePickerOptions" (click)="delivery_reject_date.toggleCalendar()"
-                                        [required]="model.delivery_result === 'FAILED' || model.status === 'ON PROCESS'"
+                                        [required]="model.delivery_result === 'FAILED' && model.status === 'ON PROCESS'"
                                         #p_delivery_reject_date="ngModel" #delivery_reject_date="angular-mydatepicker"
                                         autocomplete="off" [readonly]="model.status !== 'ON PROCESS'" />
                                     <small
@@ -450,7 +451,7 @@
                                             <i class="fa fa-search-plus"></i></button> {{model.delivery_reason_desc}}
                                         <input id="DeliveryReasonCode" type="text" hidden name="p_delivery_reason_code"
                                             [ngModel]="model.delivery_reason_code"
-                                            [required]="model.delivery_result === 'FAILED' || model.status === 'ON PROCESS'"
+                                            [required]="model.delivery_result === 'FAILED' && model.status === 'ON PROCESS'"
                                             #delivery_reason="ngModel" />
                                     </div>
                                     <small

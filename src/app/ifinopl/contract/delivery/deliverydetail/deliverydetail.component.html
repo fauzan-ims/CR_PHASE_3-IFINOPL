@@ -310,7 +310,7 @@
                         {{tempFileMemo}}
                       </div>
                       <div [hidden]="this.tampHiddenMemo !== false">
-                        <a [hidden]="model.status !== 'VERIFICATION' && model.status !== 'ON PROCESS'"
+                        <a [hidden]="model.status !== 'ON PROCESS'"
                           class="btn btn-danger btn-round btn-file custom-button-width" type="button"
                           (click)="deleteImage(model.file_memo, model.file_path_memo, 'memo')">
                           <span><i class="fa fa-trash"></i></span></a>

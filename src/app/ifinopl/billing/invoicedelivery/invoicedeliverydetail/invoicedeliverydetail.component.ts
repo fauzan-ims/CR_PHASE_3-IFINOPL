@@ -292,6 +292,8 @@ export class InvoiceDeliverydetailComponent extends BaseComponent implements OnI
 
     //#region form submit
     onFormSubmit(deliveryForm: NgForm, isValid: boolean) {
+
+
         // validation form submit
         if (!isValid) {
             swal({
@@ -307,6 +309,19 @@ export class InvoiceDeliverydetailComponent extends BaseComponent implements OnI
         }
 
         this.batchData = this.JSToNumberFloats(deliveryForm);
+
+        // ✅ inject p_method dari model.method biar backend gak error
+        if (this.model && this.model.method) {
+            this.batchData.p_method = this.model.method;
+        } 
+        // else {
+        //     // kalau method kosong, bisa kasih default biar backend gak error juga
+        //     this.batchData.p_method = this.batchData.p_method || 'INTERNAL';
+        // }
+
+        console.log('BatchData before send:', this.batchData);
+
+
         const usersJson: any[] = Array.of(this.batchData);
 
         if (this.param != null) {
@@ -915,7 +930,7 @@ export class InvoiceDeliverydetailComponent extends BaseComponent implements OnI
         // console.log('Method berubah:', newValue);
         this.model.method = newValue;
         console.log(this.model.method);
-        
+
         // this.methodChanged = true; // bisa dipakai sebagai kondisi
     }
 }
